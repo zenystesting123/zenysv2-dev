@@ -21,24 +21,33 @@ export const environment = {
     // appId: "1:926474914640:web:276883d07682610c237a55",
     // measurementId: "G-S18ZSBDGY2"
 
-    //Settings for development environment
-    apiKey: 'AIzaSyBI56WjWQbehuQKXtWW6fPm6RRF0KRQCBw',
-    authDomain: 'zenysdevelopment.firebaseapp.com',
-    databaseURL: 'https://zenysdevelopment.firebaseio.com',
-    projectId: 'zenysdevelopment',
-    storageBucket: 'zenysdevelopment.appspot.com',
-    messagingSenderId: '1059747170002',
-    appId: '1:1059747170002:web:ad21cf215001a49c9a8f0b',
-    measurementId: 'G-HWESCK7QW6',
+    //Settings for development environment (OLD - COMMENTED OUT)
+    // apiKey: 'AIzaSyBI56WjWQbehuQKXtWW6fPm6RRF0KRQCBw',
+    // authDomain: 'zenysdevelopment.firebaseapp.com',
+    // databaseURL: 'https://zenysdevelopment.firebaseio.com',
+    // projectId: 'zenysdevelopment',
+    // storageBucket: 'zenysdevelopment.appspot.com',
+    // messagingSenderId: '1059747170002',
+    // appId: '1:1059747170002:web:ad21cf215001a49c9a8f0b',
+    // measurementId: 'G-HWESCK7QW6',
+
+    //Settings for NEW zenysv2dev environment
+    apiKey: "AIzaSyDPNitsu_KAt7goZXQ5_y-PYpEhZAWqfsI",
+    authDomain: "zenysv2dev.firebaseapp.com",
+    projectId: "zenysv2dev",
+    storageBucket: "zenysv2dev.firebasestorage.app",
+    messagingSenderId: "123233203726",
+    appId: "1:123233203726:web:c62b2b8f862b39d001ee5f",
+    measurementId: "G-3KGHTG6WCT"
         //Settings for Production environment
-        /*apiKey: '  AIzaSyCHXy0lc_CPwPa8mPL0WIRGlvsjsWbUJb4',
+       /*apiKey: '  AIzaSyCHXy0lc_CPwPa8mPL0WIRGlvsjsWbUJb4',
          authDomain: 'zenysproduction.firebaseapp.com',
          projectId: 'zenysproduction',
          storageBucket: 'zenysproduction.appspot.com',
         messagingSenderId: '1059747170002',
        appId: '1:461454236300:web:62fca20bfcfd31740bb9a9',
          measurementId: 'G-GMK88N8BFL'*/
- },
+  },
 
   cloudFunctions: {
     // for testing
@@ -127,7 +136,7 @@ export const environment = {
       'https://asia-east2-zenysdevelopment.cloudfunctions.net/autoCall',
     leadCaptureForm:
       'https://asia-east2-zenysdevelopment.cloudfunctions.net/leadCaptureForm',
-
+    voxBayAutoCall: 'https://asia-east2-zenysdevelopment.cloudfunctions.net/voxBayAutoCall'
     // createAccountLink: "http://localhost:5000/zenysdevelopment/asia-east2/createAccountLink",
 
     // updatePaymentAmountOnEdit:
@@ -174,22 +183,29 @@ export const environment = {
   // RAZORPAY_KEY_SECRET: '75D5l2ZA6JQDEoWnoMufoaIq', //secret key for test mode
   RAZORPAY_KEY_ID: 'rzp_test_80BuFHmAHC5gaW', //API key for test mode
   RAZORPAY_KEY_SECRET: '7LL8oqtYxzq1Y3dEwOUxwzCP', //secret key for test mode
-  RZP_MONTHLY_PLAN_ID: {
+  RZP_MONTHLY_PLAN_ID: { //gold monthly plan
     India: 'plan_HUM07eOoNPL468',
     Europe: 'plan_monthly_gold_enrope',
     US: 'plan_monthly_gold_Us',
   },
-  RZP_YEARY_PLAN_ID: {
+  RZP_YEARY_PLAN_ID: { // gold yearly plan
     India: 'plan_HUM0WNozVCbSHX',
     Europe: 'plan_yearly_gold_europe',
     US: 'plan_yearly_gold_Us',
   },
-  RZP_MONTHLY_PLAN_ID_DMD: {
+
+  RZP_YEARY_PLAN_ID_SLV: {// silver yearly plan
+    India: 'plan_LQs0wRwbuhaWUu',
+    Europe: 'plan_LQs2hfkODaXzU7',
+    US: 'plan_LQs3QlzfSuiSAJ',
+  },
+
+  RZP_MONTHLY_PLAN_ID_DMD: {  //diamond monthly plan
     India: 'plan_HzzTGb8mkk5PXs',
     Europe: 'plan_monthly_diamond_europe',
     US: 'plan_monthly_diamond_Us',
   },
-  RZP_YEARY_PLAN_ID_DMD: {
+  RZP_YEARY_PLAN_ID_DMD: {// diamond yearly plan
     India: 'plan_HzzTs3K4RsVF9s',
     Europe: 'plan_yearly_diamond_europe',
     US: 'plan_yearly_diamond_Us',
@@ -199,17 +215,17 @@ export const environment = {
   YEARLY_AMOUNT_GOLD: { India: 590000, Europe: 6000, US: 5000 },
   MONTHLY_AMOUNT_DMD: { India: 94400, Europe: 8000, US: 8000 },
   YEARLY_AMOUNT_DMD: { India: 944000, Europe: 10000, US: 9000 },
+  YEARLY_AMOUNT_SLV: { India: 350000, Europe: 5000, US: 6500 },
   //
   CURRENCY: {
     India: 'INR',
     Europe: 'EUR',
     US: 'USD',
   },
-  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1',
+  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', // Will be created if doesn't exist
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
-  englishChannelId:'ak2bWsReIEZVXxcObGsfx9DMQpM2',
-  leadCaptureDomain: 'https://leadcapturedev.web.app'
+  LogoutTime: 900000,
 };
 
 /*

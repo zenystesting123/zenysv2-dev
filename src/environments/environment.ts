@@ -21,15 +21,24 @@ export const environment = {
     // appId: "1:926474914640:web:276883d07682610c237a55",
     // measurementId: "G-S18ZSBDGY2"
 
-    //Settings for development environment
-    apiKey: 'AIzaSyBI56WjWQbehuQKXtWW6fPm6RRF0KRQCBw',
-    authDomain: 'zenysdevelopment.firebaseapp.com',
-    databaseURL: 'https://zenysdevelopment.firebaseio.com',
-    projectId: 'zenysdevelopment',
-    storageBucket: 'zenysdevelopment.appspot.com',
-    messagingSenderId: '1059747170002',
-    appId: '1:1059747170002:web:ad21cf215001a49c9a8f0b',
-    measurementId: 'G-HWESCK7QW6',
+    //Settings for development environment (OLD - COMMENTED OUT)
+    // apiKey: 'AIzaSyBI56WjWQbehuQKXtWW6fPm6RRF0KRQCBw',
+    // authDomain: 'zenysdevelopment.firebaseapp.com',
+    // databaseURL: 'https://zenysdevelopment.firebaseio.com',
+    // projectId: 'zenysdevelopment',
+    // storageBucket: 'zenysdevelopment.appspot.com',
+    // messagingSenderId: '1059747170002',
+    // appId: '1:1059747170002:web:ad21cf215001a49c9a8f0b',
+    // measurementId: 'G-HWESCK7QW6',
+
+    //Settings for NEW zenysv2dev environment
+    apiKey: "AIzaSyDPNitsu_KAt7goZXQ5_y-PYpEhZAWqfsI",
+    authDomain: "zenysv2dev.firebaseapp.com",
+    projectId: "zenysv2dev",
+    storageBucket: "zenysv2dev.firebasestorage.app",
+    messagingSenderId: "123233203726",
+    appId: "1:123233203726:web:c62b2b8f862b39d001ee5f",
+    measurementId: "G-3KGHTG6WCT"
         //Settings for Production environment
        /*apiKey: '  AIzaSyCHXy0lc_CPwPa8mPL0WIRGlvsjsWbUJb4',
          authDomain: 'zenysproduction.firebaseapp.com',
@@ -38,7 +47,7 @@ export const environment = {
         messagingSenderId: '1059747170002',
        appId: '1:461454236300:web:62fca20bfcfd31740bb9a9',
          measurementId: 'G-GMK88N8BFL'*/
- },
+  },
 
   cloudFunctions: {
     // for testing
@@ -213,7 +222,7 @@ export const environment = {
     Europe: 'EUR',
     US: 'USD',
   },
-  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1',
+  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', // Will be created if doesn't exist
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
   englishChannelId:'ak2bWsReIEZVXxcObGsfx9DMQpM2',

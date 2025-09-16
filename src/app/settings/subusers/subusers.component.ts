@@ -1773,9 +1773,14 @@ export class SubusersComponent implements OnInit, OnDestroy {
               //Once a new user is added, create a contact in Zenys account
               this.mainaccountserv
                 .createCustomer(user.uid, form1, user.email, null)
-                .then(() => {
-                  this.mainaccountserv.updateContactSequenceNumber();
-                  //console.log("saved to zenys")
+                .subscribe({
+                  next: () => {
+                    this.mainaccountserv.updateContactSequenceNumber();
+                    //console.log("saved to zenys")
+                  },
+                  error: (error) => {
+                    console.error('Error creating customer:', error);
+                  }
                 });
             })
             .catch((error) => {

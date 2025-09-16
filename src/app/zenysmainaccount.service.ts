@@ -3,6 +3,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { changeLogModel, Profile } from './data-models';
 import { Pipelines } from './model/pipeline.modal';
+import { MainAccountInitService } from './main-account-init.service';
+import { Observable, of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +13,47 @@ import { Pipelines } from './model/pipeline.modal';
 export class ZenysmainaccountService {
   custStatus: string='';
   pipelineId:number;
-  zenysMainAccountID = environment.ZenysMainAccount;
-  assignedToName = environment.ZenysAssignedToName;
+  zenysMainAccountID: string = '';
+  assignedToName: string = '';
   contactSequentialNumber:number
   customerPipelines:Pipelines[]=[];
-  constructor(private db: AngularFirestore) {
+  private isInitialized = false;
+
+  constructor(
+    private db: AngularFirestore,
+    private mainAccountInit: MainAccountInitService
+  ) {
+    this.initializeMainAccount();
+  }
+
+  /**
+   * Initialize the main account and load related data
+   */
+  private initializeMainAccount(): void {
+    this.mainAccountInit.initializeMainAccount().subscribe({
+      next: ({accountId, assignedToName}) => {
+        this.zenysMainAccountID = accountId;
+        this.assignedToName = assignedToName;
+        this.isInitialized = true;
+
+        // Load data after initialization
+        this.loadMainAccountData();
+      },
+      error: (error) => {
+        console.error('Failed to initialize main account:', error);
+        // Fallback to environment values
+        this.zenysMainAccountID = environment.ZenysMainAccount || 'fallback_account';
+        this.assignedToName = environment.ZenysAssignedToName || 'SuperUser';
+        this.isInitialized = true;
+        this.loadMainAccountData();
+      }
+    });
+  }
+
+  /**
+   * Load main account data after initialization
+   */
+  private loadMainAccountData(): void {
     this.getsaleStatus().subscribe((data: any) => {
       if(data){
         if(data.contactSequentialNumber){
@@ -32,20 +71,42 @@ export class ZenysmainaccountService {
         this.pipelineId = customerPipeline.customerPipelines[0].pipelineId;
       }
     });
+  }
 
+  /**
+   * Ensure the service is initialized before use
+   */
+  private ensureInitialized(): Observable<boolean> {
+    if (this.isInitialized) {
+      return of(true);
+    }
+
+    return new Observable(observer => {
+      const checkInitialized = () => {
+        if (this.isInitialized) {
+          observer.next(true);
+          observer.complete();
+        } else {
+          setTimeout(checkInitialized, 100);
+        }
+      };
+      checkInitialized();
+    });
   }
 
   createCustomer(customerId, form, email, addressDetails) {
-    //console.log(customerId)
-    let changeLog = <changeLogModel>{};
-    changeLog[0] = {
-      changedBy: this.zenysMainAccountID,
-      changedByName: this.assignedToName,
-      changesFrom: 'newSignupData',
-      dateModified: new Date().getTime(),
-      currentValues: '',
-      previousValues: '',
-    };
+    return this.ensureInitialized().pipe(
+      switchMap(() => {
+        //console.log(customerId)
+        let changeLog = <changeLogModel>{};
+        changeLog[0] = {
+          changedBy: this.zenysMainAccountID,
+          changedByName: this.assignedToName,
+          changesFrom: 'newSignupData',
+          dateModified: new Date().getTime(),
+          currentValues: '',
+          previousValues: '',
+        };
     let lost =false;
     let won =false;
     let inPipeline =false;
@@ -133,13 +194,21 @@ export class ZenysmainaccountService {
       lastNoteId: '',
       assignedToDate: new Date().getTime(),
     };
-    // console.log(data)
-    return this.db
-      .doc('users/' + this.zenysMainAccountID + '/customers/' + customerId)
-      .set(data);
+        // console.log(data)
+        return this.db
+          .doc('users/' + this.zenysMainAccountID + '/customers/' + customerId)
+          .set(data);
+      }),
+      catchError(error => {
+        console.error('Error creating customer:', error);
+        throw error;
+      })
+    );
   }
   getsaleStatus() {
-    return this.db.doc('users/' + this.zenysMainAccountID).valueChanges();
+    return this.ensureInitialized().pipe(
+      switchMap(() => this.db.doc('users/' + this.zenysMainAccountID).valueChanges())
+    );
   }
   getInvoicesFromZenys(id) {
     return this.db
@@ -270,6 +339,8 @@ updateContactSequenceNumber() {
     .update({ contactSequentialNumber:this.contactSequentialNumber });
 }
 getcustomerStatus() {
-  return this.db.doc('users/' + this.zenysMainAccountID+'/pipelines/customerPipelines').valueChanges();
+  return this.ensureInitialized().pipe(
+    switchMap(() => this.db.doc('users/' + this.zenysMainAccountID+'/pipelines/customerPipelines').valueChanges())
+  );
 }
 }

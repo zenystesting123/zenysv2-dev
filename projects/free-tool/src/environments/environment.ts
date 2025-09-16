@@ -152,7 +152,7 @@ export const environment = {
     Europe:"EUR",
     US:"USD"
   },
-  ZenysMainAccount:"yKQgLQv52WUiTRFTrqt3kFQhogy1",
+  ZenysMainAccount:"yKQgLQv52WUiTRFTrqt3kFQhogy1", // Will be created if doesn't exist
   ZenysAssignedToName:"SuperUser"
 };
 

@@ -66,8 +66,13 @@ export class CreateProfileService {
         //Once a new user is created, automatically create a contact in Zenys account
         this.mainaccService
           .createCustomer(uid, form1, email, form2)
-          .then((resp) => {
-            this.mainaccService.updateContactSequenceNumber();
+          .subscribe({
+            next: (resp) => {
+              this.mainaccService.updateContactSequenceNumber();
+            },
+            error: (error) => {
+              console.error('Error creating customer:', error);
+            }
           });
       });
   }
@@ -103,8 +108,13 @@ export class CreateProfileService {
         //Once a new user is created, automatically create a contact in Zenys account
         this.mainaccService
           .createCustomer(uid, form1, email, form2)
-          .then((resp) => {
-            this.mainaccService.updateContactSequenceNumber();
+          .subscribe({
+            next: (resp) => {
+              this.mainaccService.updateContactSequenceNumber();
+            },
+            error: (error) => {
+              console.error('Error creating customer:', error);
+            }
           });
       });
   }
