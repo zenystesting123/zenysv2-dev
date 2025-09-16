@@ -62,9 +62,13 @@ export class ZenysmainaccountService {
       }
     });
     this.getcustomerStatus().subscribe((customerPipeline: any) => {
-      if(!!customerPipeline.customerPipelines){
+      if(customerPipeline && customerPipeline.customerPipelines && customerPipeline.customerPipelines.length > 0){
         this.custStatus = customerPipeline.customerPipelines[0].pipelineStages[0].stageId;
         this.pipelineId = customerPipeline.customerPipelines[0].pipelineId;
+      } else {
+        // Set default values if no pipeline data is available
+        this.custStatus = 'lead';
+        this.pipelineId = 1;
       }
     });
   }
@@ -90,9 +94,34 @@ export class ZenysmainaccountService {
     });
   }
 
+  /**
+   * Ensure pipeline data is loaded before creating customers
+   */
+  private ensurePipelineDataLoaded(): Observable<boolean> {
+    return new Observable(observer => {
+      const checkPipelineData = () => {
+        if (this.custStatus && this.pipelineId) {
+          observer.next(true);
+          observer.complete();
+        } else if (this.isInitialized) {
+          // If initialized but no pipeline data, use defaults
+          this.custStatus = 'lead';
+          this.pipelineId = 1;
+          observer.next(true);
+          observer.complete();
+        } else {
+          setTimeout(checkPipelineData, 100);
+        }
+      };
+      checkPipelineData();
+    });
+  }
+
   createCustomer(customerId, form, email) {
     return this.ensureInitialized().pipe(
+      switchMap(() => this.ensurePipelineDataLoaded()),
       switchMap(() => {
+
         //console.log(customerId)
         const data = {
           // zenysCustId:customerId,

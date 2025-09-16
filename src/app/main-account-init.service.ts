@@ -54,9 +54,15 @@ export class MainAccountInitService {
    */
   private checkMainAccountExists(): Observable<boolean> {
     const mainAccountId = environment.ZenysMainAccount;
+    if (!mainAccountId) {
+      return of(false);
+    }
     return this.db.doc(`users/${mainAccountId}`).valueChanges().pipe(
       map(data => !!data),
-      catchError(() => of(false))
+      catchError((error) => {
+        console.warn('Error checking main account existence:', error);
+        return of(false);
+      })
     );
   }
 
@@ -108,7 +114,43 @@ export class MainAccountInitService {
             }
           ]
         }
-      ]
+      ],
+      // Add pipeline configuration at root level for easier access
+      pipelines: {
+        customerPipelines: [
+          {
+            pipelineId: 1,
+            pipelineName: 'Default Pipeline',
+            pipelineStages: [
+              {
+                stageId: 'lead',
+                stageName: 'Lead',
+                stageOrder: 1
+              },
+              {
+                stageId: 'prospect',
+                stageName: 'Prospect',
+                stageOrder: 2
+              },
+              {
+                stageId: 'opportunity',
+                stageName: 'Opportunity',
+                stageOrder: 3
+              },
+              {
+                stageId: 'won',
+                stageName: 'Won',
+                stageOrder: 4
+              },
+              {
+                stageId: 'lost',
+                stageName: 'Lost',
+                stageOrder: 5
+              }
+            ]
+          }
+        ]
+      }
     };
 
     return from(this.db.doc(`users/${mainAccountId}`).set(mainAccountData)).pipe(

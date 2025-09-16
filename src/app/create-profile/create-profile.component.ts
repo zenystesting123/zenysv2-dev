@@ -2,7 +2,7 @@
   Description : create profile page
   input: common service userdatas subscription
   ---------------------------------------------------------------- */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonService } from '../common.service';
 import { Subscription } from 'rxjs';
@@ -50,7 +50,8 @@ export class CreateProfileComponent implements OnInit {
     private searchService: SearchService,
     private analytics: AngularFireAnalytics,
     private router: Router,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -89,6 +90,9 @@ export class CreateProfileComponent implements OnInit {
           country: ['', [Validators.minLength(2)]],
           gstnumber: [''],
         });
+
+        // Trigger change detection after forms are created
+        this.cdr.detectChanges();
       }
     });
   }
