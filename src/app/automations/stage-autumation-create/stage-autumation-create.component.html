@@ -1,0 +1,129 @@
+<div *ngIf="userPlan.automation">
+  <div class="container-fluid spinner" *ngIf="!loadComplete">
+    <mat-spinner></mat-spinner>
+  </div>
+  <mat-toolbar class="border-bottom" *ngIf="loadComplete" style="flex: 0 0 64px;"
+    [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon [ngStyle]="{ color: '#2A6AF6' }"> arrow_back </mat-icon>
+    </button>
+    <span style="color: rgba(0, 0, 0, 0.87)"><span style="text-transform: capitalize">{{ mode }}</span>
+      Automation</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+  </mat-toolbar>
+  <div *ngIf="loadComplete" >
+    <br>
+    <div class="card container-md alignmiddle">
+
+      <div class="card-body">
+        <h3 class="card-title">Stage transition automation</h3>
+        <p class="card-text">Automatically update the status of {{fieldNameContact}}s, {{fieldNameSale}}s and {{fieldNameService}}s</p>
+<br>
+        <form [formGroup]="firstFormGroup"  *ngIf="firstFormGroup" class="example-form">
+          <!-- <div class="container"> -->
+          <mat-form-field   appearance="fill" style="width:600px">
+            <mat-label>Name of the automation</mat-label>
+            <input matInput formControlName="name" >
+          </mat-form-field>
+          <br>
+          <br>
+          Update
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [compareWith]="compareFn" formControlName="action" (selectionChange)="consoler()">
+              <mat-option *ngFor="let sateaction of stageActions" [value]="sateaction">
+                {{sateaction.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          in
+          <mat-form-field appearance="outline">
+            <mat-label>pipeline</mat-label>
+            <mat-select  formControlName="pipeline" (selectionChange)="consoler($event,firstFormGroup.value.action.value)">
+              <mat-option *ngFor="let pipelinenames of valueList[firstFormGroup.value.action.value]"
+                [value]="pipelinenames.value">
+                {{pipelinenames.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          from&nbsp;
+          <mat-form-field appearance="outline" *ngIf="!!firstFormGroup.value.action">
+            <mat-label>value from</mat-label>
+            <mat-select [compareWith]="compareFn2" formControlName="valueChangeFrom" >
+              <mat-option value="any">
+                Any Stage
+              </mat-option>
+              <div *ngIf="firstFormGroup.value.action.value=='contact'">
+                <mat-option *ngFor="let contactstat of pipelineStatus.contact"
+                  [value]="contactstat.stageId">{{ contactstat.name }}</mat-option>
+              </div>
+              <div *ngIf="firstFormGroup.value.action.value=='sale'">
+                <mat-option *ngFor="let salesStage of pipelineStatus.sale"
+                  [value]="salesStage.stageId">{{ salesStage.name }}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+          to&nbsp;
+          <mat-form-field appearance="outline" *ngIf="!!firstFormGroup.value.action">
+            <mat-label>value to</mat-label>
+            <mat-select [compareWith]="compareFn2" formControlName="valueChangeTo">
+              <div *ngIf="firstFormGroup.value.action.value=='contact'">
+                <mat-option *ngFor="let contactstat of pipelineStatus.contact"
+                  [value]="contactstat.stageId">{{ contactstat.name }}</mat-option>
+              </div>
+              <div *ngIf="firstFormGroup.value.action.value=='sale'">
+                <mat-option *ngFor="let salesStage of pipelineStatus.sale"
+                  [value]="salesStage.stageId">{{ salesStage.name }}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          when
+          <br>
+          <mat-form-field appearance="outline" *ngIf="!!firstFormGroup.value.action">
+            <mat-label>Trigger</mat-label>
+            <mat-select [compareWith]="compareFn" formControlName="trigger">
+              <mat-option *ngFor="let trigger of stageTransitionTriggers[firstFormGroup.value.action.value]"
+                [value]="trigger">{{ trigger.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>&nbsp;
+          <mat-form-field appearance="outline" *ngIf="firstFormGroup.value.trigger.name==newTriggerValue.name">
+            <mat-label>pipeline</mat-label>
+            <mat-select [compareWith]="compareFn2" (selectionChange)="showStageIn($event)" formControlName="conditionPipeline"
+              [required]="firstFormGroup.value.trigger.name==newTriggerValue.name">
+              <mat-option *ngFor="let pipelinenames of valueList['sale']" [value]="pipelinenames.value">
+                {{pipelinenames.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+         <span *ngIf="!!firstFormGroup.value.action && firstFormGroup.value.trigger.name==newTriggerValue.name" >&nbsp;is updated to &nbsp;</span>
+          <mat-form-field appearance="outline" *ngIf="firstFormGroup.value.trigger.name==newTriggerValue.name">
+            <mat-label>Condition</mat-label>
+            <mat-select [compareWith]="compareFn2"   formControlName="condition"
+              [required]="firstFormGroup.value.trigger.name==newTriggerValue.name">
+              <mat-option *ngFor="let salesStage of pipelineStatus.sale"
+                [value]="salesStage.stageId">{{ salesStage.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <mat-card-actions>
+            <div style="float: right">
+              <button mat-button [disabled]="firstFormGroup.invalid || createClicked || !networkCheck.onNetworkCheck()"
+                (click)="StageData();createClicked=true" color="accent"><span style="text-transform: capitalize">{{
+                  mode == "edit" ? "Save" : mode
+                  }}</span></button>
+            </div>
+          </mat-card-actions>
+
+          <!-- </div> -->
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div *ngIf="!userPlan.automation">
+  <h3>
+    Please upgrade to diamond plan to use the automation feature.
+  </h3>
+</div>

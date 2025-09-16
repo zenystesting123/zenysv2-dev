@@ -1,0 +1,106 @@
+<section class="invoice-template">
+    <div>
+        <div class="border" style="background-color: white;">
+            <div class="container-fluid " id="printsection" #printsection>
+                <div id="invoice-template" class="card-body pb-0">
+                    <div class="row">
+                        <div class="row">
+
+                            <div class="col-5 d-flex flex-column justify-content-center align-items-center"
+                                [ngStyle]="{'background-color':previewService.docColor}" >
+                                <h2 
+                                    *ngIf="!previewService.docData.cancel"  style="color: white;">
+                                    {{ previewService.docData.docTitle }}
+                                </h2>
+                                <h2 
+                                    *ngIf="previewService.docData.cancel"  style="color: white;">
+                                    {{ previewService.docData.docTitle }} (Cancelled)
+                                </h2>
+                                <h2 
+                                    *ngIf="previewService.docData.docTitle == '' && !previewService.docData.cancel "  style="color: white;">
+                                    {{ previewService.docType }}
+                                </h2>
+                                <h2 
+                                    *ngIf="previewService.docData.docTitle == '' && previewService.docData.cancel "  style="color: white;">
+                                    {{ previewService.docType }} (Cancelled)
+                                </h2>
+
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2" *ngIf="previewService.logo">
+                                <app-logo-preview></app-logo-preview>
+                            </div>
+                            <div class="col-4 align-items-top text-left">
+                                <app-bill-from-name></app-bill-from-name>
+                                <app-bill-from-preview></app-bill-from-preview>
+
+                            </div>
+                        </div>
+
+
+                        <div id="invoice-customer-details" class="row" style="padding-top:20px ;">
+
+                            <!--Bill to address-->
+                            <div class="col-4 text-left">
+                                <app-bill-to-preview></app-bill-to-preview>
+                            </div>
+                            <!--Delivery address-->
+                            <div class="col-4  text-left">
+                                <app-delivered-to-preview></app-delivered-to-preview>
+                            </div>
+                            <div class="col-4  text-left">
+                                <app-statename-placeofsupply *ngIf="previewService.docType !='Estimate'">
+                                </app-statename-placeofsupply>
+                            </div>
+                        </div>
+                        <app-doc-detail-preview-estimate *ngIf="previewService.docType =='Estimate'">
+                        </app-doc-detail-preview-estimate>
+
+                        <app-doc-details-preview-quotation *ngIf="previewService.docType =='Quotation'">
+                        </app-doc-details-preview-quotation>
+
+                        <app-doc-details-preview-invoice *ngIf="previewService.docType =='Invoice'">
+                        </app-doc-details-preview-invoice>
+
+                        <app-additional-field-preview></app-additional-field-preview>
+
+                        <div id="invoice-items-details">
+                            <br />
+                            <app-table-preview></app-table-preview>
+                        </div>
+                        <div class="row">
+                            <hr class="hr-highlight" [style.border-color]="previewService.docColor" />
+                        </div>
+                        <div class="row unbreak">
+                            <!--Bank Account details-->
+                            <div class="col-6 text-left">
+                                <app-bank-details></app-bank-details>
+                            </div>
+                            <div class="col-6">
+                                <app-item-summary-preview></app-item-summary-preview>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <hr class="hr-highlight" [style.border-color]="previewService.docColor"
+                                *ngIf=" previewService.docData.notes || previewService.signature" />
+                        </div>
+                        <div class="row unbreak">
+                            <div class="col-8 align-items-center">
+                                <div class="terms-conditions mb-2">
+                                    <app-additional-notes *ngIf="previewService.docData.notes"></app-additional-notes>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <app-user-sign-and-details-preview></app-user-sign-and-details-preview>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <hr class="hr-highlight" [style.border-color]="previewService.docColor" />
+                        </div>
+                        <app-footer-preview></app-footer-preview>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

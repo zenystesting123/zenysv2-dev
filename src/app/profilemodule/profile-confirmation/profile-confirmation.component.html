@@ -1,0 +1,55 @@
+<div class="padding">
+    <div *ngIf="value.smode=='imageDelete'">
+        <h3 style="font-size: 20px;"> Do you want to delete this Image?</h3>
+        <br>
+        <div class="rig">
+            <button mat-button color="accent"
+                (click)="deletedImg(value.taskId,value.orginalPath,value.path)">YES</button>
+            &nbsp;&nbsp;
+            <button mat-button color="basic" (click)="close()">NO</button>
+        </div>
+    </div>
+
+    <div *ngIf="value.smode=='galleryMax'">
+        <!-- <div class="center">
+        <mat-icon class="size" color="warining">error_outline</mat-icon>
+      </div> -->
+        <h3 style="font-size: 20px;"> You can only add 20 Images in gallery</h3>
+        <br>
+        <div class="rig">
+            <button mat-button color="accent" (click)="close()">OK</button>
+        </div>
+        <!-- </div> -->
+    </div>
+    <div *ngIf="value.smode=='profileMax'">
+        <h3 style="font-size: 20px;"> You can only add 4 documents in profile</h3>
+        <br>
+        <div class="rig">
+            <button mat-button color="accent" (click)="close()">OK</button>
+        </div>
+    </div>
+    <div *ngIf="value.smode=='profileServiceMax'">
+        <h3 style="font-size: 20px;"> You can only add 5 service in profile</h3>
+        <br>
+        <div class="rig">
+            <button mat-button color="accent" (click)="close()">OK</button>
+        </div>
+    </div>
+    <div *ngIf="value.smode=='attachmentDelete'">
+        <h3 style="font-size: 20px;"> Do you want to delete {{value.orginalPath}}?</h3>
+        <div class="rig">
+            <button mat-button color="accent"
+                (click)="deletedAttachment(value.userId,value.saleId,value.taskId,value.path,value.url,value.size)">YES</button>
+            &nbsp;&nbsp;
+            <button mat-button color="basic" (click)="close()">NO</button>
+        </div>
+    </div>
+    <div *ngIf="value.smode=='serviceDeleteProfile'">
+        <h3 style="font-size: 20px;">Do you want to Delete {{value.title}} ?</h3>
+        <div class="rig">
+            <button mat-button color="accent"
+                (click)="deletedServiceProfile(value.userId,value.taskId,value.url)">YES</button> &nbsp;&nbsp;
+            <button mat-button color="basic" (click)="close()">NO</button>
+        </div>
+    </div>
+</div>

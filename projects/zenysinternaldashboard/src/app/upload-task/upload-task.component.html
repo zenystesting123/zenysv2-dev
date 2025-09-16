@@ -1,0 +1,56 @@
+<mat-toolbar>
+    <button mat-icon-button aria-label="back" title="back">
+        <mat-icon>
+            arrow_back
+        </mat-icon>
+    </button>
+    Download and Upload Task
+    <span class="example-spacer"></span>
+
+</mat-toolbar>
+<div class="container-fluid" style="min-height: 900px;">
+    <div class="card" style="padding: 5%;">
+        <h2 style="text-align: center;color: black;">Download Task</h2>
+        <div class="data-card">
+            <div class="form-group mb-2">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Enter super user ID</mat-label>
+                    <input matInput [(ngModel)]="superUserId" name="superUserId" type="text" required rows="1"
+                        maxlength="100" />
+                </mat-form-field>
+                <button mat-raised-button color="accent" style="margin-left: 8px;" (click)="getTasks()">
+                    FETCH
+                </button>
+            </div>
+        </div>
+        <div style="color: black;text-align: center;" *ngIf="showData">
+            <div *ngIf="loadingData">
+                Fetching data............
+            </div>
+            <div *ngIf="!loadingData">
+                {{taskLength}} Tasks Found!
+
+                <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="downloadCsv()">
+                    Download as CSV
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card" style="padding: 5%;">
+        <h2 style="text-align: center;color: black;">Upload Task</h2>
+        <div class="data-card">
+            <div class="form-group mb-2">
+                <!-- <mat-form-field class="example-full-width">
+                    <mat-label>Enter super user ID</mat-label>
+                    <input matInput [(ngModel)]="superUserId" name="superUserId" type="text" required rows="1"
+                        maxlength="100" />
+                </mat-form-field> -->
+                <button mat-raised-button color="accent" style="margin-left: 8px;"  (click)="openUpload()">
+                    Upload Task
+                </button>
+                <input type="file" class="custom-file-input csv-selector" (change)="csvUploadFuntionTasks($event)" style="display: none"
+                accept=".csv" />
+            </div>
+        </div>
+    </div>
+</div>

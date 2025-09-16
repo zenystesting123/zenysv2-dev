@@ -1,0 +1,189 @@
+<div class="container-fluid" style="background-color: ghostwhite; height: 100vh">
+  <div class="container-fluid col-sm-12 col-md-6" style="max-width: 1000px">
+    <br /><br />
+    <br /><br />
+    <mat-card>
+      <h1 class="mat-h1 mat-headline">
+        Some basic details, and we are ready to go!
+      </h1>
+      <br />
+      <div class="row">
+        <div class="col-md-6">
+          <img src="assets/images/register.png" alt="pic1" style="
+            padding: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            opacity: 1;
+            background: transparent 0% 0% no-repeat padding-box;
+          " />
+        </div>
+        <div class="col-md-6">
+          <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step *ngIf="createProfileFormGroup" [stepControl]="createProfileFormGroup" [completed]="createProfileFormGroup.valid">
+
+              <form *ngIf="createProfileFormGroup" [formGroup]="createProfileFormGroup">
+                <ng-template matStepLabel>Fill out basic details</ng-template>
+                <div class="row">
+                  <div class="col-6">
+                    <!-- firstname -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>First Name</mat-label>
+                      <input matInput placeholder="First name" formControlName="firstname">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <!-- last name -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Last Name</mat-label>
+                      <input matInput placeholder="Last name" formControlName="lastname">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-5">
+                    <!-- country code -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Code</mat-label>
+                      <mat-select placeholder="Country Code" formControlName="countryCode">
+                        <mat-option *ngFor="let country of countries" [value]="country.dial_code">
+                          {{country.code}} {{country.dial_code}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-7">
+                    <!-- phone -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Contact Number</mat-label>
+                      <input matInput placeholder="Contact Number" formControlName="phone" onkeypress="return  event.charCode >= 48 && event.charCode <= 57">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <!-- company name -->
+                    <mat-form-field class="full-width" appearance="fill" style="width: 100%">
+                      <mat-label>Company Name</mat-label>
+                      <input matInput placeholder="Company name" formControlName="company">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+
+                    <!-- category -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Category</mat-label>
+                      <mat-select placeholder="Category" formControlName="category">
+                        <mat-option *ngFor="let cat of categoryList" [value]="cat">
+                          {{cat}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <!-- category others -->
+                    <mat-form-field class="full-width" appearance="fill"
+                      *ngIf="this.createProfileFormGroup?.get('category').value === 'Others' ">
+                      <mat-label>Other category</mat-label>
+                      <input matInput placeholder="Other category" formControlName="categoryOthers">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div>
+                  <button mat-raised-button matStepperNext color="primary" [disabled]="!createProfileFormGroup?.valid">Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="addressFormGroup">
+
+              <form *ngIf="addressFormGroup" [formGroup]="addressFormGroup">
+                <ng-template matStepLabel>Fill out your address</ng-template>
+                <div class="row">
+                  <div class="col-6">
+                    <!-- Country -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Country</mat-label>
+                      <mat-select placeholder="Country" formControlName="country">
+                        <mat-option *ngFor="let country of countries" [value]="country.name">
+                          {{country.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <!-- state -->
+                    <!-- if country is not india -->
+                    <mat-form-field class="full-width" appearance="fill" *ngIf="this.addressFormGroup?.get('country')?.value !== 'India' ">
+                      <mat-label>State</mat-label>
+                      <input matInput placeholder="State" formControlName="state">
+                    </mat-form-field>
+                    <!-- if country is India -->
+                    <mat-form-field class="full-width" appearance="fill" *ngIf="this.addressFormGroup?.get('country')?.value === 'India' ">
+                      <mat-label>State</mat-label>
+                      <mat-select placeholder="State" formControlName="state">
+                        <mat-option *ngFor="let st of states" [value]="st">
+                          {{st}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12">
+                    <!-- billing address line 1 -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Address line 1</mat-label>
+                      <input matInput placeholder="Address line 1" formControlName="street1">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+
+                    <!-- billing address line 2 -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>Address line 2</mat-label>
+                      <input matInput placeholder="Address line 2" formControlName="street2">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <!-- city -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>District</mat-label>
+                      <input matInput placeholder="District" formControlName="city">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <!-- pin -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>PIN/ZIP</mat-label>
+                      <input matInput placeholder="PIN/ZIP" formControlName="pincode">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <!-- city -->
+                    <mat-form-field class="full-width" appearance="fill">
+                      <mat-label>TAX Identification Number</mat-label>
+                      <input matInput placeholder="TAX Identification Number" formControlName="gstnumber">
+                    </mat-form-field>
+                  </div>
+                  </div>
+                <div>
+                  <button color="primary" mat-raised-button matStepperNext [disabled]="!addressFormGroup?.valid"
+                    (click)="onSubmits('btn_prof_create')">Submit</button>
+                </div>
+              </form>
+            </mat-step>
+          </mat-horizontal-stepper>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

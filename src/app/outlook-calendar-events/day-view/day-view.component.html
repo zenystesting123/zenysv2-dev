@@ -1,0 +1,58 @@
+<!---------------tool bar start------------->
+<mat-toolbar style="flex: 0 0 64px; z-index: 10;text-align: center;justify-content: center;align-items: center;"
+  class="border-bottom" [ngStyle]="{ 'background-color': 'white' }">
+  <button mat-icon-button n (click)="onDecrementDay()" title="Previous">
+    <mat-icon color="accent">keyboard_arrow_left</mat-icon>
+  </button>
+  <h2 class="text-uppercase"> {{ outlookCalendarEventService.selectedDay |date :'fullDate' }}</h2>
+  <button mat-icon-button (click)="onIncrementDay()" title="Next">
+    <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+  </button>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</mat-toolbar>
+<!---------------tool bar ends------------->
+<!---------------if it day visible------------->
+<div *ngIf="outlookCalendarEventService.dayVisible" style="padding: 30px">
+  <br />
+  <!---------------Divide to 24 rows 1 hour each------------->
+  <div class="row" *ngFor="let in of counter(24); let i = index">
+    <!---------------divide to two column------------->
+    <div class="column border" style="width: 7%; height: 60px; line-height: 60px;overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      -webkit-box-orient: vertical;" *ngIf="i == 0">
+      12 AM
+    </div>
+    <div class="column border" style="width: 7%; height: 60px; line-height: 60px;overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* number of lines to show */
+      -webkit-box-orient: vertical;" *ngIf="i != 0">
+      <div *ngIf="12 > i">{{ i }} AM</div>
+      <div *ngIf="12 == i">{{ i }} PM</div>
+      <div *ngIf="i > 12">{{ i % 12 }} PM</div>
+    </div>
+    <!---------------display event based on start time corresponding to hour row------------->
+    <div class="column border" style="width: 90%; height: 60px">
+      <div class="wrapper">
+        <div class="col-item border" *ngFor="let item of getEvent(i)" style="
+            width: 100%;
+            height: 60px;
+            border-radius: 5px;
+            line-height: 38px;
+            color: white;
+            background-color: #2196f3;
+            overflow: hidden;
+            display: flex;
+          " (click)="onViewDetails(item)">
+          {{ item.summary }}&nbsp;
+          {{ item.start.dateTime | date: "shortTime" }} -
+          {{ item.end.dateTime | date: "EEEE, MMM d, y, h:mm a" }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <br />
+</div>

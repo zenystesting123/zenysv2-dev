@@ -1,0 +1,202 @@
+<!-- <mat-toolbar *ngIf="!isMobilesize"
+  class="mat-elevation-z2"
+  [ngStyle]="{ 'background-color': 'white' }"
+>
+  <button mat-icon-button title="back" (click)="onBack()">
+    <mat-icon color="accent"> arrow_back </mat-icon>
+  </button>
+  <span>Search Services</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <span class="example-spacer"></span>
+
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
+<mat-toolbar *ngIf="isMobilesize"
+  class="mat-elevation-z2"
+  [ngStyle]="{ 'background-color': 'white' }"
+>
+  <button mat-icon-button title="back" (click)="onBack()">
+    <mat-icon color="accent"> arrow_back </mat-icon>
+  </button>
+  <span>Search Services</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <span class="example-spacer"></span>
+
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <span class="example-spacer"></span>
+</mat-toolbar> -->
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <mat-toolbar class="mat-elevation-z1" style="top: 64px;background-color: white; position: fixed;">
+  
+    <span class="example-spacer"></span>
+    <mat-select class="col-md-auto" style="font-size: 14px;border: 1px solid rgba(0, 0, 0, 0.12); box-sizing: border-box; border-radius: 4px;padding-left: 12px ;padding-right: 12px ; max-width: 160px;" mat-raised-button [ngStyle]="{'height':'36px'}" placeholder="Category" [(ngModel)]="category">
+      <mat-option value="{{category}}" (click)="filterCategory(category)" *ngFor="let category of categoryList">{{category}}</mat-option>
+    </mat-select>
+    
+    &nbsp;  &nbsp;
+      <div class="form-row">
+        <div class="col-12">
+        <mat-form-field style="width: 300px;font-size:15px;"  >
+            <input ngx-google-places-autocomplete [options]='options' placeholder="Choose location" matInput [(ngModel)]="fullAddress" name=fullAddress
+                aria-label="Sale" #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" />
+        </mat-form-field>
+        </div>
+    </div>
+    <button mat-icon-button color="accent" (click)="search()" title="search">
+      <mat-icon>search</mat-icon>
+    </button>
+      <!-- <mat-form-field class="example-full-width" style="font-size: 15px;">
+        <mat-label>State</mat-label>
+        <mat-select
+          #state
+          [(ngModel)]="profileState"
+          (ngModelChange)="profileStat()"
+          name="profileState"
+        >
+          <mat-option *ngFor="let s of location" value="{{ s.state }}"
+            >{{ s.state }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      &nbsp;&nbsp;
+      <mat-form-field *ngIf="dist" class="example-full-width" style="width:170px;font-size: 15px;">
+        <mat-label>District</mat-label>
+        <mat-select
+          #district
+          [(ngModel)]="profileDistrict"
+          name="profileDistrict"
+          (ngModelChange)="profileDist()"
+        >
+          <mat-option *ngFor="let s of districted" value="{{ s }}">{{
+            s
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      &nbsp;&nbsp;&nbsp;&nbsp; -->
+        
+      <button mat-icon-button color="warn" (click)="resetData()" title="Clear filter">
+      <mat-icon>clear</mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+    </mat-toolbar>
+  <div
+    class="container-fluid"
+    *ngIf="progressBarStatus"
+    style="background-color: ghostwhite; min-height: 800px; margin-top: 128px; overflow-y: auto;"
+  >
+    <div class="container-xl">
+      <div *ngIf="routeFilterApplied">
+        <br>
+        <h3 style="color: black; font-size: 18px;">Showing {{routeCategory}} Professionals in {{routeLocation}}</h3>
+      </div>
+      <br />
+      <div *ngIf="filteredProfile.length == 0">
+        <h3 class="color">No service provider found!</h3>
+      </div>
+  
+      <div >
+        <ng-container *ngFor="let profile of filteredProfile"
+        >
+          <app-public-profile-card  [profile]="profile"></app-public-profile-card>
+        </ng-container>
+      </div>
+  
+  
+    </div>
+  </div>
+</div>
+
+
+
+<div  class="container-fluid"
+  *ngIf="progressBarStatus && isMobilesize"
+  style="background-color: ghostwhite; min-height: 800px; width: 100%; margin: 0; padding: 0;"
+> 
+<mat-toolbar
+class="mat-elevation-z2" style="top: 56px;"
+[ngStyle]="{ 'background-color': 'white' }"
+>
+
+
+<mat-toolbar-row>
+Find Service Provider
+<span class="example-spacer"></span>
+<mat-icon (click)="showToolbar()">filter_list</mat-icon>
+</mat-toolbar-row>
+<mat-toolbar-row *ngIf="mobToolbar">
+  <span class="example-spacer"></span>
+  <mat-select class="col-md-auto" style="font-size: 14px;border: 1px solid rgba(0, 0, 0, 0.12); box-sizing: border-box; border-radius: 4px;padding-left: 12px ;padding-right: 12px ; max-width: 160px;" mat-raised-button [ngStyle]="{'height':'36px'}" placeholder="Category" [(ngModel)]="category">
+    <mat-option value="{{category}}" (click)="filterCategory(category)" *ngFor="let category of categoryList">{{category}}</mat-option>
+  </mat-select>
+<span class="example-spacer"></span>
+</mat-toolbar-row>
+<mat-toolbar-row *ngIf="mobToolbar">
+  <!-- <button mat-icon-button title="back" (click)="onLocation()" *ngIf="!isLocatonClicked">
+    <mat-icon  color="accent"> location_on </mat-icon>
+  </button>
+  <mat-form-field class="example-full-width" style="font-size: 15px;width: 50%;" *ngIf="isLocatonClicked">
+    <mat-label>State</mat-label>
+    <mat-select
+      #state
+      [(ngModel)]="profileState"
+      (ngModelChange)="profileStat()"
+      name="profileState"
+    >
+      <mat-option *ngFor="let s of location" value="{{ s.state }}"
+        >{{ s.state }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  &nbsp;&nbsp;
+  <mat-form-field  class="example-full-width" *ngIf="dist" style="font-size: 15px;width: 50%;">
+    <mat-label>District</mat-label>
+    <mat-select
+      #district
+      [(ngModel)]="profileDistrict"
+      name="profileDistrict"
+      (ngModelChange)="profileDist()"
+    >
+      <mat-option *ngFor="let s of districted" value="{{ s }}">{{
+        s
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field> -->
+  <span class="example-spacer"></span>
+<div class="form-row">
+    <div class="col-12">
+    <mat-form-field style="font-size:15px; min-width: 220px;"  >
+        <input ngx-google-places-autocomplete [options]='options' placeholder="Choose location" matInput [(ngModel)]="fullAddress" name=fullAddress
+            aria-label="Sale" #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" />
+    </mat-form-field>
+    </div>
+</div>
+<button mat-icon-button color="accent" (click)="search()" title="search">
+  <mat-icon>search</mat-icon>
+</button>
+<button mat-icon-button color="warn" (click)="resetData()" title="Clear filter">
+  <mat-icon>clear</mat-icon>
+</button>
+<span class="example-spacer"></span>
+</mat-toolbar-row>
+</mat-toolbar>
+
+<div class="container-fluid" [ngStyle]="{ 'margin-top.px' : mobMarginTop }">
+  <br>
+  <div *ngIf="filteredProfile.length == 0">
+    <h3 class="color">No service provider found!</h3>
+  </div>
+
+    <ng-container *ngFor="let profile of filteredProfile"
+    >
+      <app-public-profile-card class="cardListItem" [profile]="profile"></app-public-profile-card>
+    </ng-container>
+</div>
+
+
+</div>

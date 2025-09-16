@@ -1,0 +1,29 @@
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  .example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+  
+  .example-header {
+    min-height: 64px;
+    padding: 8px 24px 0;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 750px;
+  }
+  .mat-column-select {
+    overflow: visible;
+  }
+  mat-cell{
+    margin-right: 16px !important;
+  }

@@ -1,0 +1,90 @@
+<div class="no-v-scroll">
+  <mat-toolbar class="border-bottom" style="flex: 0 0 64px;z-index: 10" [ngStyle]="{ 'background-color': 'white' }"
+    style="position: sticky">
+    <mat-icon mat-list-icon class="material-symbols-outlined text-primary">bar_chart
+    </mat-icon>&nbsp;
+    <span>Reports</span> &nbsp;
+    <span class="example-spacer"></span>
+
+
+    <button mat-button color="primary" aria-label="Add report" (click)="createNewReport()"
+      [disabled]="!onCheckNetwork()">
+      Add Report
+    </button>&nbsp;&nbsp;
+  </mat-toolbar>
+  <div class="container-fluid" style=" overflow-y:scroll;height:100%; ">
+    <div class="row">
+      <div class="col-md-2">
+        <mat-nav-list>
+          <div mat-subheader>Report groups</div>
+          <a mat-list-item (click)="selection('customer')" *ngIf="commonService.userPlan.contactAccess"
+            [ngStyle]="commonService.selectedReportListModule=='customer'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameContact}} Reports</a>
+          <a mat-list-item (click)="selection('sale')" *ngIf="commonService.userPlan.saleAccess"
+            [ngStyle]="commonService.selectedReportListModule=='sale'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameSale}} Reports</a>
+          <a mat-list-item (click)="selection('products')" *ngIf="commonService.userPlan.productsAccess"
+            [ngStyle]="commonService.selectedReportListModule=='products'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameItems}} Reports</a>
+          <a mat-list-item (click)="selection('services')" *ngIf="commonService.userPlan.serviceAccess"
+            [ngStyle]="commonService.selectedReportListModule=='services'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameService}} Reports</a>
+          <a mat-list-item (click)="selection('task')"
+            *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess"
+            [ngStyle]="commonService.selectedReportListModule=='task'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameTask}} Reports</a>
+          <a mat-list-item (click)="selection('call')"
+            *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess"
+            [ngStyle]="commonService.selectedReportListModule=='call'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameFollowup}} Reports</a>
+          <a mat-list-item (click)="selection('invoice')"
+            *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.invoicesAccess"
+            [ngStyle]="commonService.selectedReportListModule=='invoice'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameInvoice}} Reports</a>
+          <a mat-list-item (click)="selection('quotation')"
+            *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.quotationsAccess"
+            [ngStyle]="commonService.selectedReportListModule=='quotation'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameQuotation}} Reports</a>
+          <a mat-list-item (click)="selection('estimate')"
+            *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.estimatesAccess"
+            [ngStyle]="commonService.selectedReportListModule=='estimate'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameEstimate}} Reports</a>
+          <a mat-list-item (click)="selection('expense')" *ngIf="commonService.userPlan.expenseAccess"
+            [ngStyle]="commonService.selectedReportListModule=='expense'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameExpense}} Reports</a>
+          <a mat-list-item (click)="selection('payment')" *ngIf="commonService.userPlan.collectionsAccess"
+            [ngStyle]="commonService.selectedReportListModule=='payment'?{'color':'blue'} : {'color': 'black'}">
+            {{fieldNameCollection}} Reports</a>
+
+        </mat-nav-list>
+      </div>
+      <div class="col-md-10 container">
+        <br>
+        <!-- <mat-action-list > -->
+        <div mat-subheader>Select a report</div>
+        <div *ngFor="let item of reportArray;let i = index;">
+          <div class="row" id="listrow">
+            <div class="col-11" id="hoverColor" [routerLink]="['/dash/custom-report/report',item.id]"
+              style="min-height: 30px;" >
+              <span id="spancentre">{{ item.title }}</span>
+            </div>
+
+            <div class="col-1">
+              <!-- delete a report -->
+              <button mat-icon-button title="Delete Report" (click)="deleteReport(item.id,item.title)" id="pointer">
+                <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+              </button>
+            </div>
+            <mat-divider></mat-divider>
+          </div>
+        </div>
+        <!-- </mat-action-list> -->
+      </div>
+    </div>
+  </div>
+  <!-- If access is restricted -->
+  <div *ngIf="!commonService.userPlan.dashboardAccess" class="container" style="text-align: center">
+    <br />
+    <h3>No Access</h3>
+  </div>
+</div>

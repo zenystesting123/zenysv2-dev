@@ -1,0 +1,99 @@
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.danger{
+  color: #f77700
+}
+.container-xl {
+  margin-top: 4%;
+}
+.hr-sect {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.939);
+  margin: 8px 0px;
+}
+.hr-sect:before,
+.hr-sect:after {
+  content: "";
+  flex-grow: 1;
+  background: rgba(9, 34, 220, 0.933);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 8px;
+}
+.border {
+  padding: 10px;
+  border: 15px solid rgba(29, 4, 255, 0.885);
+  margin: 0;
+}
+table {
+  width: 100%;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.demo-table {
+  width: 100%;
+}
+
+.demo-table .mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.demo-table .mat-row:hover .mat-cell {
+  border-color: currentColor;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+.nopadd {
+  padding-left: 0px;
+}
+::ng-deep .mat-tab-list .mat-tab-labels {
+  background-color: white;
+}
+::ng-deep.zeropad .mat-list-item-content {
+  padding: 0 !important;
+}
+.custclass {
+  padding-left: 0 !important;
+}
+.required::after {
+  content: "*";
+}
+.col-7 p {
+  margin-bottom: 0 !important;
+}
+.col-6 p {
+  margin-bottom: 0 !important;
+}
+::ng-deep .mat-card-header-text {
+  margin: 0 !important;
+}
+.margin0 {
+  margin-bottom: 0;
+}
+.margintop16 {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+.popupMob{
+  word-wrap: break-word;
+}

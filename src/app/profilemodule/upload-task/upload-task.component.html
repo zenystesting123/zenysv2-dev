@@ -1,0 +1,28 @@
+
+<div class="col-3 left">
+
+    <div *ngIf="snapshot | async as snap">
+
+    <!-- {{ snap.bytesTransferred }} of {{ snap.totalKiloBytes }}  -->
+
+    <div *ngIf="downloadURL as url">
+        <h3>sucess!</h3>
+        <img [src]="url" height="200px" width="300px"><br>
+        <!-- <a [href]="url" target="_blank" rel="noopener">Download Me!</a> -->
+    </div> 
+<!-- 
+    <button (click)="task.pause()" [disabled]="!isActive(snap)">Pause</button>
+    <button (click)="task.cancel()" [disabled]="!isActive(snap)">Cancel</button>
+    <button (click)="task.resume()" [disabled]="!(snap?.state === 'paused')">Resume</button> -->
+    </div>
+    <div class="progress" *ngIf="uploadProgress$ | async as progress">
+                  
+        <div class="progress-bar progress-bar-animated" *ngIf="progress!='100'" [ngStyle]="{ 'width': progress + '%' }">
+         Uploading {{progress | number: '1.0-0'}} % 
+        </div>
+        <div class="progress-bar progress-bar-animated" *ngIf="progress=='100'" [ngStyle]="{ 'width': progress + '%' }">
+         Completed {{resetBar()}}
+         </div>
+
+     </div>
+</div>

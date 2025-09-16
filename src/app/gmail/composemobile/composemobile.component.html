@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row" color="primary">
+        <div class="col-12">
+        <mat-icon class="example-tab-icon" style="float: left;" (click)="clickClose.emit()" color=primary>arrow_back_ios</mat-icon>
+        <h3 style="color: #3F51B5;float: left;">Compose</h3>
+        
+        <button mat-icon-button  (click)="sndMail2()" style="float:right"><mat-icon style="color: #3F51B5">send</mat-icon></button>
+        <button mat-icon-button (click)="files.click()" style="color: #3F51B5;float:right"><mat-icon>attach_file</mat-icon></button>
+    </div>
+    </div>
+    <mat-divider></mat-divider> 
+    <div class="row">
+        <mat-form-field appearance="fill" class="col-sm-12 col-md-12">
+            <mat-label>To Address</mat-label>
+            <input [(ngModel)]="mailid"  matInput required>
+          </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field appearance="fill" class="col-sm-12 col-md-12">
+            <mat-label>Subject</mat-label>
+            <input [(ngModel)]="mailsubject"  matInput required>
+          </mat-form-field>
+    </div>
+<angular-editor  [placeholder]="'Enter text here...'"  [(ngModel)]="mailbody" [config]="editorConfig"></angular-editor>
+<br>
+<div >
+    <button mat-button [matMenuTriggerFor]="menu" style="float:right" [disabled]="templates.length==0">Choose Template</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngFor="let template of templates" (click)="selectTemplate(template)">{{template.templateName}}</button>
+      
+    </mat-menu>
+    
+     <div class="chip" *ngFor="let file of files2;let i = index">
+        <div class="chip-content">{{file.filename}}</div>
+        <div class="chip-close" (click)="deleteFile(i)">
+            <svg class="chip-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path></svg>
+        
+        </div>
+      </div>
+  </div>
+  <input type="file" (change)="fileChangeEvent($event)" #files [hidden]="true">
+
+</div>

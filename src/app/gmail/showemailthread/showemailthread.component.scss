@@ -1,0 +1,31 @@
+#web{
+    width:80%;
+    margin-left: 50px;
+}
+#mob{
+    width:100%
+}
+.GeeksForGeeks{
+    // width: 500px;
+    word-wrap: break-word;
+    }
+
+    :host ::ng-deep .innerHtml * { 
+        // display: inline-flex;
+        max-width: 80vw;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+      .spinner {
+        width: 100px;
+        height: 100px;
+    
+        
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+          
+        margin: auto;
+    }

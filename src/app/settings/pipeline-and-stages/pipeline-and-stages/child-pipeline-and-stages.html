@@ -1,0 +1,271 @@
+<!-- Heading -->
+<h2 mat-dialog-title *ngIf="inputData.type == 'add'">
+  Add {{inputData.statusFieldName}}
+</h2>
+<h2 mat-dialog-title *ngIf="inputData.type == 'edit'">
+  Edit {{inputData.statusFieldName}}
+</h2>
+<h2 mat-dialog-title *ngIf="inputData.type == 'delete'">
+  Delete {{inputData.statusFieldName}}
+</h2>
+<h2 mat-dialog-title *ngIf="inputData.type == 'deletePipeline'">
+  Delete {{inputData.pipelineFieldName}}
+</h2>
+<h2 mat-dialog-title *ngIf="inputData.type == 'delete_Pipeline'">
+  Delete {{inputData.pipelineFieldName}}
+</h2>
+<h2 mat-dialog-title *ngIf="inputData.type == 'addNewPipeline'">
+  Add {{inputData.pipelineFieldName}}
+</h2>
+
+<!-- DIALOG CONTENT -->
+<!-- contact status add -->
+<mat-dialog-content class="mat-typography" *ngIf="inputData.type == 'add'">
+  <mat-form-field style="width: 300px;">
+    <mat-label>Value</mat-label>
+    <input matInput #values="ngModel" [(ngModel)]="addedStatus" maxlength="25" minlength="1">
+  </mat-form-field>
+  <h3 *ngIf="(!!inputData.ageChecked)">
+    Enter Age
+  </h3>
+  <mat-form-field style="width: 300px;" *ngIf="(!!inputData.ageChecked)">
+    <mat-label>Age</mat-label>
+    <input matInput #values="ngModel" [(ngModel)]="addedStatusAge" type="number">
+  </mat-form-field>
+</mat-dialog-content>
+
+<!-- contact status edit -->
+<mat-dialog-content class="mat-typography" *ngIf="inputData.type == 'edit'">
+  <mat-form-field>
+    <mat-label> New {{statusFieldName}} name </mat-label>
+    <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+  </mat-form-field>
+  <br>
+  <div *ngIf="!!inputData.ageChecked">
+    <h2>Edit {{statusFieldName}} age</h2>
+    <mat-form-field>
+      <mat-label> New {{statusFieldName}} age </mat-label>
+      <input matInput [(ngModel)]="editedStatusAge" type="number">
+    </mat-form-field>
+  </div>
+  <br>
+  <!-- <span class="caption">
+    Note: All existing {{inputData.fieldNameContact}}s in this {{inputData.statusName}} will be automatically updated with new {{inputData.statusName}} name
+  </span> -->
+  <br>
+  <br>
+</mat-dialog-content>
+
+<!-- contact status delete -->
+<mat-dialog-content class="mat-typography"
+  *ngIf="!!customers && inputData.mode == 'Customer' && inputData.type == 'delete'">
+  <h3>
+    Do you want to delete {{inputData.statusName}} from {{inputData.fieldName}}
+    {{inputData.statusFieldName}}?
+  </h3>
+  <h3 *ngIf="!!customers && customers.length == 1">
+    {{customers.length}} {{inputData.fieldName}} found with this {{inputData.statusFieldName}}, please move this
+    {{inputData.fieldName}} to any other {{inputData.statusFieldName}}
+  </h3>
+  <h3 *ngIf="!!customers && customers.length > 1">
+    {{customers.length}} {{inputData.fieldName}}s found with this {{inputData.statusFieldName}}, please move these
+    {{inputData.fieldName}}s to any other {{inputData.statusFieldName}}
+  </h3>
+
+  <!-- status select field -->
+  <mat-form-field *ngIf="!!customers && customers.length > 0">
+    <mat-label>Value</mat-label>
+    <mat-select [(ngModel)]="selectedStatus" placeholder="Select a {{inputData.statusFieldName}}"
+      (ngModelChange)="eventSelection()">
+      <mat-option *ngFor="let status of statusArrayToDisplay" [value]="status.stageId">{{ status.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- reason for rejection field -->
+  <mat-form-field style="margin-left: 0;"
+    *ngIf="this.selectedStatus === this.statusArray[this.statusArray.length - 1]?.stageId && this.inputData.displayBoolean === true ">
+    <mat-label>Reason for rejection</mat-label>
+    <mat-select [(ngModel)]="rejectionReasonValue" placeholder="Select an option" (ngModelChange)="reasonSelection()">
+      <mat-option *ngFor="let s of this.inputData.rejectionReasonArr" value="{{ s }}">{{s}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <div *ngIf="!!customers && customers.length > 0 && this.updatingDb === true" class="center"
+    style="width: 280px;height: 100px;">
+    <div style="width:150px;float: left;">
+      <mat-spinner [diameter]="70"> </mat-spinner>
+    </div>
+    <div style=" float: left;">
+      <h4>Updating {{inputData.statusFieldName}} in {{inputData.fieldName}}s</h4>
+      <p>
+        Progress: {{ uploadProgress | number: "1.0-0" }}% Complete
+      </p>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<!-- sales stage delete -->
+<mat-dialog-content class="mat-typography"
+  *ngIf="!!services && inputData.mode == 'sales' && inputData.type == 'delete'">
+  <h3>
+    Do you want to delete {{inputData.statusName}} from {{inputData.fieldName}}
+    {{inputData.statusFieldName}}?
+  </h3>
+  <h3 *ngIf="!!sales && sales.length == 1">
+    {{sales.length}} {{inputData.fieldName}} found with this {{inputData.statusFieldName}}, please move this
+    {{inputData.fieldName}} to any other {{inputData.statusFieldName}}
+  </h3>
+  <h3 *ngIf="!!sales && sales.length > 1">
+    {{sales.length}} {{inputData.fieldName}}s found with this {{inputData.statusFieldName}}, please move these
+    {{inputData.fieldName}}s to any other {{inputData.statusFieldName}}
+  </h3>
+  <mat-form-field *ngIf="!!sales && sales.length > 0">
+    <mat-label>Value</mat-label>
+    <mat-select [(ngModel)]="selectedStatus" placeholder="Select a {{inputData.statusFieldName}}"
+      (ngModelChange)="eventSelection()">
+      <mat-option *ngFor="let status of statusArrayToDisplay" [value]="status.stageId">{{ status.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- reason for rejection field -->
+  <mat-form-field style="margin-left: 0;"
+    *ngIf="this.selectedStatus === this.statusArray[this.statusArray.length - 1]?.stageId && this.inputData.displayBoolean === true ">
+    <mat-label>Reason for rejection</mat-label>
+    <mat-select [(ngModel)]="rejectionReasonValue" placeholder="Select an option" (ngModelChange)="reasonSelection()">
+      <mat-option *ngFor="let s of this.inputData.rejectionReasonArr" value="{{ s }}">{{s}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <div *ngIf="!!sales && sales.length > 0 && this.updatingDb === true" class="center"
+    style="width: 280px;height: 100px;">
+    <div style="width:150px;float: left;">
+      <mat-spinner [diameter]="70"> </mat-spinner>
+    </div>
+    <div style=" float: left;">
+      <h4>Updating {{inputData.statusFieldName}} in {{inputData.fieldName}}s</h4>
+      <p>
+        Progress: {{ uploadProgress | number: "1.0-0" }}% Complete
+      </p>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<!-- service status delete -->
+<mat-dialog-content class="mat-typography"
+  *ngIf="!!services && inputData.mode == 'Service' && inputData.type == 'delete'">
+  <h3>
+    Do you want to delete {{inputData.statusName}} from {{inputData.fieldName}}
+    {{inputData.statusFieldName}}?
+  </h3>
+  <h3 *ngIf="!!services && services.length == 1">
+    {{services.length}} {{inputData.fieldName}} found with this {{inputData.statusFieldName}}, please move this
+    {{inputData.fieldName}} to any other {{inputData.statusFieldName}}
+  </h3>
+  <h3 *ngIf="!!services && services.length > 1">
+    {{services.length}} {{inputData.fieldName}}s found with this {{inputData.statusFieldName}}, please move these
+    {{inputData.fieldName}}s to any other {{inputData.statusFieldName}}
+  </h3>
+  <mat-form-field *ngIf="!!services && services.length > 0">
+    <mat-label>Value</mat-label>
+    <mat-select [(ngModel)]="selectedStatus" placeholder="Select a {{inputData.statusFieldName}}"
+      (ngModelChange)="eventSelection()">
+      <mat-option *ngFor="let status of statusArrayToDisplay" [value]="status.stageId">{{ status.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- reason for rejection field -->
+  <mat-form-field style="margin-left: 0;"
+    *ngIf="this.selectedStatus === this.statusArray[this.statusArray.length - 1]?.stageId && this.inputData.displayBoolean === true ">
+    <mat-label>Reason for rejection</mat-label>
+    <mat-select [(ngModel)]="rejectionReasonValue" placeholder="Select an option" (ngModelChange)="reasonSelection()">
+      <mat-option *ngFor="let s of this.inputData.rejectionReasonArr" value="{{ s }}">{{s}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <div *ngIf="!!services && services.length > 0 && this.updatingDb === true" class="center"
+    style="width: 280px;height: 100px;">
+    <div style="width:150px;float: left;">
+      <mat-spinner [diameter]="70"> </mat-spinner>
+    </div>
+    <div style=" float: left;">
+      <h4>Updating {{inputData.statusFieldName}} in {{inputData.fieldName}}s</h4>
+      <p>
+        Progress: {{ uploadProgress | number: "1.0-0" }}% Complete
+      </p>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<!-- contact pipeline cannot delete -->
+<mat-dialog-content class="mat-typography" *ngIf="inputData.type == 'deletePipeline'">
+  <h3 *ngIf="inputData.dataLength === 1">
+    {{inputData.dataLength}} {{inputData.fieldName}} is present in this {{inputData.pipelineName}}, please
+    re-assign this {{inputData.fieldName}}
+  </h3>
+  <h3 *ngIf="inputData.dataLength > 1">
+    {{inputData.dataLength}} {{inputData.fieldName}}s are present in this {{inputData.pipelineName}}, please
+    re-assign these {{inputData.fieldName}}s
+  </h3>
+</mat-dialog-content>
+
+<!-- contact pipeline delete -->
+<mat-dialog-content class="mat-typography" *ngIf="inputData.type == 'delete_Pipeline'">
+  <h3>
+    Do you want to delete this {{inputData.pipelineName}} from {{inputData.fieldName}}
+    {{inputData.pipelineFieldName}}?
+  </h3>
+</mat-dialog-content>
+
+<!-- add new pipeline -->
+<mat-dialog-content class="mat-typography" *ngIf="inputData.type == 'addNewPipeline'">
+  <mat-form-field>
+    <mat-label> New {{inputData.pipelineFieldName}} name </mat-label>
+    <input matInput [(ngModel)]="inputData.pipelineName" maxlength="25" minlength="1">
+  </mat-form-field>
+</mat-dialog-content>
+
+<!-- Buttons section -->
+<mat-dialog-actions align="end">
+
+  <button mat-button mat-dialog-close (click)=" onNoClick()" [disabled]="disableCancelBtn">
+    Cancel
+  </button>
+
+  <button *ngIf="inputData.type == 'add'" mat-button color="primary" [disabled]="!this.addedStatus"
+    (click)="addPipelineStage()" [disabled]="disableButton">Add</button>
+
+  <button *ngIf="inputData.type == 'edit'" mat-button color="primary"
+    [disabled]="!this.editedStatus||!this.editedStatusAge || disableButton"
+    (click)="updatePipelineStage()">Update</button>
+
+  <button *ngIf="!!customers && customers.length > 0 && inputData.type == 'delete' && inputData.mode == 'Customer'"
+    mat-button color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="!!customers && customers.length === 0 && inputData.type == 'delete' && inputData.mode == 'Customer'"
+    mat-button color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="!!sales && sales.length > 0 && inputData.type == 'delete' && inputData.mode == 'sales'" mat-button
+    color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="!!sales && sales.length === 0 && inputData.type == 'delete' && inputData.mode == 'sales'" mat-button
+    color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="!!services && services.length > 0 && inputData.type == 'delete' && inputData.mode == 'Service'"
+    mat-button color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="!!services && services.length === 0 && inputData.type == 'delete' && inputData.mode == 'Service'"
+    mat-button color="warn" (click)="deletePipelineStage()" [disabled]="disableButton">Delete</button>
+
+  <button *ngIf="inputData.type == 'deletePipeline'" mat-button color="warn" disabled>Delete</button>
+
+  <button *ngIf="inputData.type == 'delete_Pipeline'" mat-button color="warn"
+    [mat-dialog-close]="'Delete'">Delete</button>
+
+  <button *ngIf="inputData.type == 'addNewPipeline'" mat-button color="primary"
+    [mat-dialog-close]="inputData.pipelineName">Add</button>
+
+</mat-dialog-actions>

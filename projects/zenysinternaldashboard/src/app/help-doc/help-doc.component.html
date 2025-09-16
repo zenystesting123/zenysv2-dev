@@ -1,0 +1,151 @@
+<mat-toolbar>
+    <button mat-icon-button aria-label="back" title="back" (click)="onBack()">
+        <mat-icon>
+            arrow_back
+        </mat-icon>
+    </button>
+    HELP DOCUMENTS
+    <span class="example-spacer"></span>
+    <button mat-raised-button color="accent" (click)="logout()">LOGOUT</button>
+</mat-toolbar>
+<div class="container-fluid" style="min-height: 900px;">
+    <div class="row">
+        <div class="col-2">
+            <mat-selection-list #pages  [multiple]="false" class="zeropad">
+                <mat-list-option *ngFor="let page of typesOfPages" [value]="page" (click)="selectedPage(page)">
+                    {{page}}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+        <div class="col-10" style="background-color: ghostwhite; color: black; padding-bottom: 50px;">
+            <div class="container" >
+                selected page: {{displayPage}}
+                <br>
+                <br>
+                <!-- Video URL -->
+                <h2>Video URL for the selected Page</h2>
+                <mat-form-field  style="width: 80%;" appearance="fill">
+                    <mat-label>Video URL</mat-label>
+                    <input matInput [(ngModel)]="this.videoURL" name="videoURL" required>
+                </mat-form-field>
+                <button mat-raised-button color="accent" style="margin-left: 8px;" (click)="saveVideo()">
+                    SAVE
+                </button>
+                <!-- Snippet section starts here -->
+                <h2>Snippets</h2>
+                <!-- <div *ngFor="let snippet of snippetsArray" >
+                    <h3>{{snippet.title}}</h3>
+                    <p>{{snippet.snippet}} </p>
+                    <br>
+                    <p>{{snippet.content}}</p>
+                    <br>
+                    <p>{{snippet.contentLink}}</p>
+                </div> -->
+
+                <!-- Table -->
+                <button mat-raised-button color="accent" (click)="addRow()" style="margin-bottom: 16px;">
+                    ADD SNIPPET
+                </button>
+
+                <br>
+                <div class="example-container mat-elevation-z8">
+
+                    <!-- <div class="example-header">
+                        <mat-form-field>
+                            <input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                            <button mat-icon-button matSuffix aria-label="clear" *ngIf="filter.value" (click)="filter.value=''; applyFilter('');">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                        </mat-form-field>
+                    </div> -->
+
+                    <mat-table #table [dataSource]="dataSource">
+
+                        !-- position Column -->
+                        <ng-container matColumnDef="position">
+                            <mat-header-cell *matHeaderCellDef> Position </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field floatLabel="never">
+                                    <input matInput placeholder="position" [value]="element.position" [(ngModel)]="element.position">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- title Column -->
+                        <ng-container matColumnDef="title">
+                            <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field floatLabel="never">
+                                    <input matInput placeholder="title" [value]="element.title" [(ngModel)]="element.title">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- snippet Column -->
+                        <ng-container matColumnDef="snippet">
+                            <mat-header-cell *matHeaderCellDef> Short Snippet </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field floatLabel="never">
+                                    <textarea matInput placeholder="snippet" [value]="element.snippet" [(ngModel)]="element.snippet"></textarea>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- content Column -->
+                        <ng-container matColumnDef="content">
+                            <mat-header-cell *matHeaderCellDef>Detailed Content </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field floatLabel="never">
+                                    <textarea matInput placeholder="content" [value]="element.content" [(ngModel)]="element.content"></textarea>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- contentLink Column -->
+                        <ng-container matColumnDef="contentLink">
+                            <mat-header-cell *matHeaderCellDef> Link for detailed description </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field floatLabel="never">
+                                    <input matInput placeholder="contentLink" [value]="element.contentLink" [(ngModel)]="element.contentLink">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- Actions Column -->
+                        <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef> &nbsp;&nbsp;&nbsp;&nbsp;Actions </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <button mat-button color="warn" (click)="remove(element)">Delete Snippet</button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                </div>
+
+                <br><br>
+                <button mat-raised-button style="float: right;" color="accent" (click)="saveChanges()">
+                    Save Changes
+                </button>
+                <!-- <button mat-raised-button style="float: right; margin-right: 8px;">
+                    Cancel
+                </button> -->
+
+
+                <!-- Snippet section ends here -->
+            </div>
+            <!-- <div class="container" *ngIf="oninit" style="display: flex; justify-content: center; text-align: center;">
+                <br>
+                <br>
+
+                <h2>Add Supporting Documents for New Page</h2>
+                <mat-form-field  style="width: 80%;" appearance="fill">
+                    <mat-label>Select URLs</mat-label>
+                    <input matInput [(ngModel)]="this.videoURL" name="videoURL" required>
+                </mat-form-field>
+            </div> -->
+        </div>
+    </div>
+</div>

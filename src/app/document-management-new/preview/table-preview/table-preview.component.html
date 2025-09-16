@@ -1,0 +1,110 @@
+<div class="table1">
+    <table class="table">
+      <thead style="background-color: white;">
+        <tr id="tabheader" class="text-center">
+          <th>No</th>
+          <th>Item & Description</th>
+          <th class="text-center" *ngIf="previewService.hsnCodeDisplay">HSN/SAC Code</th>
+          <th class="text-center">Qty</th>
+          <th class="text-center" *ngIf="previewService.docData.includeUnit == true">
+            Unit
+          </th>
+          <th class="text-center" class="text-center">Rate</th>
+          <th class="text-center" *ngIf="previewService.docData.includeDiscount">Discount %</th>
+          <th class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.taxType == 'vat'
+                        ">
+            VAT %
+          </th>
+          <th class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState != true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            SGST %
+          </th>
+          <th class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState != true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            CGST %
+          </th>
+          <th class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState == true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            IGST %
+          </th>
+          <th class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.includeCess == true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            Cess %
+          </th>
+          <th class="text-center">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of previewService.itemList; index as in">
+          <td class="text-center" id="tabrow">{{ in + 1 }}</td>
+          <td id="tabrow">
+            {{ i.item }}
+            <pre style="color: #504f4f">{{
+                          i.description
+                        }}</pre>
+          </td>
+          <td id="tabrow" class="text-center" *ngIf="previewService.hsnCodeDisplay">{{ i.hsnCode }}</td>
+          <td id="tabrow" class="text-center">{{ i.qty }}</td>
+          <td id="tabrow" class="text-center" *ngIf="previewService.docData.includeUnit == true">
+            {{ i.unit }}
+          </td>
+          <td id="tabrow" class="text-center">{{ i.rate }}</td>
+          <td id="tabrow" class="text-center" *ngIf="previewService.docData.includeDiscount">
+            {{ i.discountRate + "%" }}
+          </td>
+          <td id="tabrow" class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.taxType == 'vat'
+                        ">
+            {{ i.vatRate + "%" }}
+          </td>
+
+          <td id="tabrow" class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState != true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            {{ i.sgstRate + "%" }}
+          </td>
+          <td id="tabrow" class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState != true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            {{ i.cgstRate + "%" }}
+          </td>
+          <td id="tabrow" class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.interState == true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            {{ i.igstRate + "%" }}
+          </td>
+          <td id="tabrow" class="text-center" *ngIf="
+                          previewService.docData.includeTax == true &&
+                          previewService.docData.includeCess == true &&
+                          previewService.docData.taxType == 'gst'
+                        ">
+            {{ i.cessRate + "%" }}
+          </td>
+          <td class="text-center" id="tabrow">
+            {{ i.amountInclTax }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

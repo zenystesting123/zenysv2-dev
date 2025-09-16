@@ -1,0 +1,47 @@
+<div class="bg-light" style="height: 100vh;">
+  <br> <br>
+  <!-- for web view -->
+  <div *ngIf="!isMobilesize" class="container border bg-white" style="  padding: 50px; margin-top: 150px; max-width:800px;
+   color: #1565C0; border-radius: 5px;text-align: center;">
+    <div class="d-flex flex-column justify-content-center" style="padding: auto;">
+      <div class="row">
+        <div class="col-md-6">
+          <img src="assets/images/login.png" alt="pic1" style="
+        padding: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
+        opacity: 1;
+        background: transparent 0% 0% no-repeat padding-box;
+      " />
+        </div>
+        <div class="col-md-6">
+          <div class="p-2 ">
+            <h2 style="color: #1565C0;">Sign Up or Login</h2>
+          </div>
+          <div class="p-2 ">
+            <firebase-ui></firebase-ui>
+          </div>
+          <div class="p-2 text-muted">
+
+By creating an account, you agree to the <a href="https://zenys.org/page-terms-and-services.html">Terms of Service</a> and <a href="https://zenys.org/page-privacy.html">Privacy Policy</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- For mobile view -->
+<div class="mobile d-flex flex-column" *ngIf="isMobilesize">
+  <img src="assets/images/login.png" alt="pic1" style="
+  background: transparent 0% 0% no-repeat padding-box;width: 80%; " />
+  <div class="p-2 ">
+    <h2 style="color: black; margin: 0; padding: 0;">Login or Sign Up</h2>
+  </div>
+  <div class="p-2 ">
+    <firebase-ui></firebase-ui>
+  </div>
+</div>

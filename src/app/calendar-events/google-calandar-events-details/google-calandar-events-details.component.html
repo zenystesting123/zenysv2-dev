@@ -1,0 +1,109 @@
+<!-----------------Create/Update Events------------------------->
+<div *ngIf="data.scenario != 'delete' && data.scenario != 'view'">
+  <h1 mat-dialog-title *ngIf="data.scenario == 'create'">Add Event</h1>
+  <h1 mat-dialog-title *ngIf="data.scenario == 'update'">Update Event</h1>
+  <div mat-dialog-content style="overflow: auto">
+    <form #form="ngForm">
+      <div class="form-group">
+        <mat-form-field class="example-full-width">
+          <mat-label>Summary</mat-label>
+          <input matInput required name="summary" #summary="ngModel" [(ngModel)]="data.result.summary" type="text" />
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput type="text" name="description" #description="ngModel"
+            [(ngModel)]="data.result.description"></textarea>
+        </mat-form-field>
+      </div>
+      <app-searchable-date-picker [startsAt]="startsAt" [endsAt]="endsAt"
+        [scenarioForDatePicker]="scenarioForDatePicker"
+        (dateTimeChanges)="dateTimeChanges($event)"></app-searchable-date-picker>
+
+     
+
+      <!-- search customer  -->
+      <app-search-popup [superUserId]="superUserId" [userId]="userId" [contDataAccessRule]="contDataAccessRule"
+        [fieldNameContact]="fieldNameContact" [subUsers]="subUsers" [superUserBranchId]="superUserBranchId"
+        (customerSelect)="customerSelect($event)" [onlyCustomerSearch]="onlyCustomerSearch">
+      </app-search-popup>
+
+      <!-- search user -->
+      <app-common-user-search [allSubUsers]="allSubUsers" [useremailSearch]="useremailSearch"
+        (userEmitEvent)="userEmitEvent($event)"></app-common-user-search>
+        <mat-chip-list #chipList aria-label="Attendees selection">
+          <mat-chip *ngFor="let attendees of emailList;let i=index" [selectable]="selectable"
+            [removable]="removable" (removed)="remove(attendees)">
+            {{ attendees }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+    </form>
+    <div mat-dialog-actions style="float: right">
+      <button mat-button (click)="onNoClick()">Cancel</button>
+      <button mat-button cdkFocusInitial (click)="onSubmit(form, 'btn_create_meet_web')"
+        *ngIf="data.scenario == 'create'" [disabled]="!form.valid || startsAt > endsAt || !onCheckNetwork()"
+        color="accent">
+        Submit
+      </button>
+      <button mat-button cdkFocusInitial (click)="onUpdate(form)" *ngIf="data.scenario == 'update'"
+        [disabled]="!form.valid || startsAt > endsAt || !onCheckNetwork()" color="accent">
+        Update
+      </button>
+    </div>
+  </div>
+</div>
+<!-----------------delete Events------------------------->
+<div *ngIf="data.scenario == 'delete'">
+  <h1 mat-dialog-title *ngIf="data.scenario == 'delete'">Delete Event</h1>
+  <div mat-dialog-content>Do you want to delete this event?</div>
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button cdkFocusInitial (click)="onDelete()" color="warn">Delete</button>
+  </div>
+</div>
+<!-----------------view Event Details------------------------->
+<div *ngIf="data.scenario == 'view'">
+  <div>
+    <h1 mat-dialog-title style="padding-left: 20px">Meeting</h1>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon color="accent" mat-list-icon>summarize</mat-icon>
+        <div mat-line>{{ data.result.summary }}</div>
+        <div mat-line>
+          {{ data.result.start.dateTime | date: "EEEE,MMM d, h:mm a" }} -
+
+          {{
+          (data.result.start.dateTime | date: "shortDate") ==
+          (data.result.end.dateTime | date: "shortDate")
+          ? (data.result.end.dateTime | date: "h:mm a")
+          : (data.result.end.dateTime | date: "MMM d, h:mm a")
+          }}
+        </div>
+      </mat-list-item>
+      <mat-list-item *ngIf="emailList != ''">
+        <mat-icon color="accent" mat-list-icon>people</mat-icon>
+        <div mat-line>{{ data.result.attendees.length }} guest</div>
+      </mat-list-item>
+      <mat-list-item *ngIf="emailList != ''" style="flex: auto; height: auto">
+        <div mat-line *ngFor="let att of data.result.attendees">
+          <mat-icon matListAvatar>
+            <ngx-avatar #avatar name="{{ att.email }}" textSizeRatio="2" size="25">
+            </ngx-avatar>
+          </mat-icon>
+          {{ att.email }}
+        </div>
+      </mat-list-item>
+      <mat-list-item *ngIf="data.result.description" style="flex: auto; height: auto">
+        <mat-icon color="accent" mat-list-icon>note</mat-icon>
+        <pre mat-line>{{ data.result.description }}</pre>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onUpdateEvent()">Edit</button>
+    <button mat-button (click)="onDeleteEvent()" color="warn">Delete</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  </div>
+</div>

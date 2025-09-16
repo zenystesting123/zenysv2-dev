@@ -1,0 +1,29 @@
+.custom{
+  height: 216px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+}
+.example-margin {
+  margin: 0 10px;
+}
+:host::ng-deep.mat-checkbox-layout{
+  white-space: normal !important;
+  }
+
+  :host::ng-deep.mat-checkbox-inner-container{
+      margin-top: 4px;
+  }
+
+  .center {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

@@ -1,0 +1,132 @@
+<!-- <p>add-experience-popup works!</p> -->
+<h1 mat-dialog-title *ngIf=" data.type == 'academics'&& data.scenario != 'delete' ">
+  {{ data.scenario == "create" ? "Add" : "Edit" }} Academic Details
+</h1>
+<h1 mat-dialog-title *ngIf=" data.type == 'workExp' && data.scenario != 'delete'">
+  {{ data.scenario == "create" ? "Add" : "Edit" }} Experience Details
+</h1>
+<div mat-dialog-content>
+  <form
+    *ngIf="
+      data.type == 'academics' &&
+      (data.scenario == 'create' || data.scenario == 'edit')
+    "
+    [formGroup]="form"
+    class="container"
+  >
+   
+
+    <br />
+    <div class="row">
+      <mat-form-field class="col-6">
+        <mat-label>Class</mat-label>
+        <input
+          formControlName="className"
+          matInput
+          placeholder="eg: class X,class XII etc.."
+        />
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>Board</mat-label>
+        <input
+          formControlName="boardName"
+          matInput
+          placeholder="eg: CBSE,ICSE..."
+        />
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>Year of Passing</mat-label>
+        <input formControlName="year" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>Marks in percentage</mat-label>
+        <input formControlName="percentage" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-12">
+        <mat-label>Comments</mat-label>
+        <textarea formControlName="comments" matInput></textarea>
+      </mat-form-field>
+    </div>
+    
+  </form>
+  <form
+    *ngIf="
+      data.type == 'workExp' &&
+      (data.scenario == 'create' || data.scenario == 'edit')
+    "
+    [formGroup]="form"
+    class="container"
+  >
+   
+    <br />
+    <div class="row">
+      <mat-form-field class="col-6">
+        <mat-label>Organization Name</mat-label>
+        <input
+          formControlName="organizationName"
+          matInput
+          placeholder="eg: Google,Microsoft etc.."
+        />
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>Position</mat-label>
+        <input
+          formControlName="position"
+          placeholder="eg: software developer, accountant etc.."
+          matInput
+        />
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>Start Date</mat-label>
+        <input formControlName="startDate" matInput [matDatepicker]="picker1" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker1"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="col-6">
+        <mat-label>End Date</mat-label>
+        <input formControlName="endDate" matInput [matDatepicker]="picker2" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker2"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="col-12">
+        <mat-label>Comments</mat-label>
+        <textarea formControlName="comments" matInput></textarea>
+      </mat-form-field>
+    </div>
+    
+  </form>
+</div>
+
+  <div mat-dialog-actions *ngIf=" data.scenario != 'delete'" class="padd">
+    <button (click)="dialogRef.close()" mat-button>Close</button>
+
+    <button
+      mat-button
+      color="primary"
+      [disabled]="form.invalid || form.pristine"
+      (click)="onSave()"
+    >
+      Save
+    </button>
+  </div>
+  <!-- for delete -->
+  <div *ngIf="data.scenario == 'delete'">
+    <h2 mat-dialog-title >
+      Are you sure to delete the
+    {{ data.type == "academics" ? "academic detail" : "experience detail" }} ?
+    </h2>
+   
+    <div mat-dialog-actions class="padd">
+      <button (click)="dialogRef.close()" mat-button>Close</button>
+      <button color="warn" (click)="dialogRef.close('Yes')" mat-button>Delete</button>
+    </div>
+  </div>

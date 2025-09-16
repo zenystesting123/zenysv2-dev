@@ -1,0 +1,28 @@
+
+<!-- If the user skip to save customer this message will appeare on creating a document -->
+<div *ngIf="data.heading == 'Sale'">
+  <h3>{{data.fieldNameContact}} will be automatically created with the provided details<br>
+    Provide a title for this {{data.fieldNameSale}}:</h3>
+</div>
+<!-- Select popup -->
+<h3 mat-dialog-title *ngIf="data.heading != 'Sale'">{{ data.label }}</h3>
+<div mat-dialog-content>
+  <form class="example-form">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label> {{ data.label }}</mat-label>
+      <input type="text" placeholder=" {{ data.placeHolderText }}" matInput [formControl]="searchFilterCtrl"
+        [matAutocomplete]="auto" maxlength="100" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredProduct | async" [value]="option">
+          {{ option.value }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <!-- submit button -->
+  <div style="float: right">
+    <button mat-button color="accent" (click)="onAdd()" *ngIf="data.enableAdd">
+      Submit
+    </button>
+  </div>
+</div>

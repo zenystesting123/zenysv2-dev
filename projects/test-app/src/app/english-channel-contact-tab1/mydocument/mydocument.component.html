@@ -1,0 +1,1628 @@
+<div class="container">
+  <br />
+  <!--Class X Certificate-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Class X Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="documentX" class="caption filename-style">
+              {{ documentX?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('class10', documentX)"
+            [disabled]="documentX?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="documentX?.downloadURL">
+            <button mat-button color="primary" [disabled]="!documentX">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(documentX)"
+            [disabled]="!documentX"
+          >
+            Delete
+          </button>
+        </div>
+
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!documentX">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'class10')"
+              [(ngModel)]="documentX.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <span *ngIf="documentX?.verification == 'verified'">
+            <mat-icon class="icon-verified" title="Verified"
+              >check</mat-icon
+            ></span
+          >
+
+          <span *ngIf="documentX?.verification == 'rejected'"
+            ><mat-icon class="icon-reject" title="Rejected"
+              >close</mat-icon
+            ></span
+          >
+          <span *ngIf="documentX?.verification == 'pending'"
+            ><mat-icon class="material-icons" title="Pending"
+              >priority_high</mat-icon
+            ></span
+          > -->
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+<!-- Class XII -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Class XII Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="documentXII" class="caption filename-style">
+              {{ documentXII?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+            accept=".pdf"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('class12', documentXII)"
+            [disabled]="documentXII?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="documentXII?.downloadURL">
+            <button mat-button color="primary" [disabled]="!documentXII">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(documentXII)"
+            [disabled]="!documentXII"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!documentXII">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'class12')"
+              [(ngModel)]="documentXII.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Degree Certificate-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Degree Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docDegree" class="caption filename-style">
+              {{ docDegree?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('degree', docDegree)"
+            [disabled]="docDegree?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docDegree?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docDegree">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docDegree)"
+            [disabled]="!docDegree"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docDegree">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'degree')"
+              [(ngModel)]="docDegree.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Degree Marklist-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Degree Semester Mark List</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docDegreeMarklist" class="caption filename-style">
+              {{ docDegreeMarklist?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('degreeSemMarklist', docDegreeMarklist)"
+            [disabled]="docDegreeMarklist?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docDegreeMarklist?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docDegreeMarklist">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docDegreeMarklist)"
+            [disabled]="!docDegreeMarklist"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docDegreeMarklist">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'degreeSemMarklist')
+              "
+              [(ngModel)]="docDegreeMarklist.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Degreee Provisional Certificate-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Degree Provisional Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docDegreeProvisional" class="caption filename-style">
+              {{ docDegreeProvisional?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('degreeProvisional', docDegreeProvisional)"
+            [disabled]="docDegreeProvisional?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docDegreeProvisional?.downloadURL">
+            <button
+              mat-button
+              color="primary"
+              [disabled]="!docDegreeProvisional"
+            >
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docDegreeProvisional)"
+            [disabled]="!docDegreeProvisional"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docDegreeProvisional">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'degreeProvisional')
+              "
+              [(ngModel)]="docDegreeProvisional.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Degree consolidated-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Degree Consolidated Mark List</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docDegreeConsolidated" class="caption filename-style">
+              {{ docDegreeConsolidated?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="
+              inputAttachment('degreeConsolidated', docDegreeConsolidated)
+            "
+            [disabled]="docDegreeConsolidated?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docDegreeConsolidated?.downloadURL">
+            <button
+              mat-button
+              color="primary"
+              [disabled]="!docDegreeConsolidated"
+            >
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docDegreeConsolidated)"
+            [disabled]="!docDegreeConsolidated"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docDegreeConsolidated">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'degreeConsolidated')
+              "
+              [(ngModel)]="docDegreeConsolidated.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--IELTS Certificate-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">IELTS Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docIeltsCertificate" class="caption filename-style">
+              {{ docIeltsCertificate?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('ielts', docIeltsCertificate)"
+            [disabled]="docIeltsCertificate?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docIeltsCertificate?.downloadURL">
+            <button
+              mat-button
+              color="primary"
+              [disabled]="!docIeltsCertificate"
+            >
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docIeltsCertificate)"
+            [disabled]="!docIeltsCertificate"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docIeltsCertificate">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'ielts')"
+              [(ngModel)]="docIeltsCertificate.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Passport Document-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Passport</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docPassport" class="caption filename-style">
+              {{ docPassport?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('passport', docPassport)"
+            [disabled]="docPassport?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docPassport?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docPassport">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docPassport)"
+            [disabled]="!docPassport"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docPassport">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'passport')"
+              [(ngModel)]="docPassport.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Letter Of Recommendation-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Letter Of Recommendations (LOR) 1</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docLOR1" class="caption filename-style">
+              {{ docLOR1?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('LetterOfRecommendation1', docLOR1)"
+            [disabled]="docLOR1?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docLOR1?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docLOR1">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docLOR1)"
+            [disabled]="!docLOR1"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docLOR1">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'LetterOfRecommendation1')
+              "
+              [(ngModel)]="docLOR1.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Letter of recommendation 2-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Letter Of Recommendations (LOR) 2</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docLOR2" class="caption filename-style">
+              {{ docLOR2?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('LetterOfRecommendation2', docLOR2)"
+            [disabled]="docLOR2?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docLOR2?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docLOR2">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docLOR2)"
+            [disabled]="!docLOR2"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docLOR2">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'LetterOfRecommendation2')
+              "
+              [(ngModel)]="docLOR2.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Statement of purpose-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Statement Of Purpose (SOP)</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docStatementOfPurpose" class="caption filename-style">
+              {{ docStatementOfPurpose?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+            accept=".pdf,image/jpg,.docx"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="
+              inputAttachment('statementOfPurpose', docStatementOfPurpose)
+            "
+            [disabled]="docStatementOfPurpose?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docStatementOfPurpose?.downloadURL">
+            <button
+              mat-button
+              color="primary"
+              [disabled]="!docStatementOfPurpose"
+            >
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docStatementOfPurpose)"
+            [disabled]="!docStatementOfPurpose"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docStatementOfPurpose">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'statementOfPurpose')
+              "
+              [(ngModel)]="docStatementOfPurpose.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Resume  document-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Resume</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docResume" class="caption filename-style">
+              {{ docResume?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+            accept=".pdf,.docx,image/png"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('resume', docResume)"
+            [disabled]="docResume?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docResume?.downloadURL">
+            <button mat-button color="primary" [disabled]="!docResume">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docResume)"
+            [disabled]="!docResume"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docResume">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'resume')"
+              [(ngModel)]="docResume.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Medium Of Instruction-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Medium Of Instructions (MOI)</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="docMediumOfInstruction" class="caption filename-style">
+              {{ docMediumOfInstruction?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="
+              inputAttachment('mediumOfInstruction', docMediumOfInstruction)
+            "
+            [disabled]="docMediumOfInstruction?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="docMediumOfInstruction?.downloadURL">
+            <button
+              mat-button
+              color="primary"
+              [disabled]="!docMediumOfInstruction"
+            >
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(docMediumOfInstruction)"
+            [disabled]="!docMediumOfInstruction"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!docMediumOfInstruction">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="
+                verificationChange($event.value, 'mediumOfInstruction')
+              "
+              [(ngModel)]="docMediumOfInstruction.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- cas -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">CAS certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="cas" style="color: #78909c" class="caption">
+              {{ cas?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('cas', cas)"
+            [disabled]="cas?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="cas?.downloadURL">
+            <button mat-button color="primary" [disabled]="!cas">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(cas)"
+            [disabled]="!cas"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!cas">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'cas')"
+              [(ngModel)]="cas.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+    <!-- Medical Certificate -->
+    <mat-card class="mb-3">
+      <mat-card-content>
+        <div class="d-flex justify-content-between bd-highlight mb-3">
+          <div class="p-1 bd-highlight flex-grow-1">
+            <div class="row">
+              <h3 class="subheading-2">Medical Certificate</h3>
+            </div>
+            <div class="row">
+              <span *ngIf="medicalCert" style="color: #78909c" class="caption">
+                {{ medicalCert?.fileName }}</span
+              >
+            </div>
+          </div>
+          <div class="p-1 bd-highlight">
+            <input
+              type="file"
+              #file
+              (change)="selectFile($event)"
+              class="attachment-selector1"
+              [hidden]="true"
+            />
+            <button
+              mat-button
+              color="primary"
+              (click)="inputAttachment('medicalCert', medicalCert)"
+              [disabled]="medicalCert?.verification == 'verified' || fileUploadDisable"
+            >
+              Upload
+            </button>
+            <a target="_blank" [href]="medicalCert?.downloadURL">
+              <button mat-button color="primary" [disabled]="!medicalCert">
+                Download
+              </button></a
+            >
+            <button
+              mat-button
+              color="warn"
+              (click)="openDialog(medicalCert)"
+              [disabled]="!medicalCert"
+            >
+              Delete
+            </button>
+          </div>
+          <div class="p-1 bd-highlight">
+            <mat-form-field appearance="fill" *ngIf="!!medicalCert">
+              <mat-label>Document Status</mat-label>
+              <mat-select
+                (selectionChange)="verificationChange($event.value, 'medicalCert')"
+                [(ngModel)]="medicalCert.verification"
+              >
+                <mat-option value="pending"> Pending </mat-option>
+                <mat-option value="rejected"> Rejected </mat-option>
+                <mat-option value="verified"> Verified </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  <!-- Financial Proof-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Financial Proof</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="financialProof" style="color: #78909c" class="caption">
+              {{ financialProof?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('financialProof', financialProof)"
+            [disabled]="financialProof?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="financialProof?.downloadURL">
+            <button mat-button color="primary" [disabled]="!financialProof">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(financialProof)"
+            [disabled]="!financialProof"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!financialProof">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'financialProof')"
+              [(ngModel)]="financialProof.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- Bank Cover Letter -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Bank Cover Letter</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="bankCoverLetter" style="color: #78909c" class="caption">
+              {{ bankCoverLetter?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('bankCoverLetter', bankCoverLetter)"
+            [disabled]="bankCoverLetter?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="bankCoverLetter?.downloadURL">
+            <button mat-button color="primary" [disabled]="!bankCoverLetter">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(bankCoverLetter)"
+            [disabled]="!bankCoverLetter"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!bankCoverLetter">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'bankCoverLetter')"
+              [(ngModel)]="bankCoverLetter.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- Offer Letter -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Offer Letter</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="offerLetter" style="color: #78909c" class="caption">
+              {{ offerLetter?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('offerLetter', offerLetter)"
+            [disabled]="offerLetter?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="offerLetter?.downloadURL">
+            <button mat-button color="primary" [disabled]="!offerLetter">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(offerLetter)"
+            [disabled]="!offerLetter"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!offerLetter">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'offerLetter')"
+              [(ngModel)]="offerLetter.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- Fee reciept -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Fee Reciept</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="feeReciept" style="color: #78909c" class="caption">
+              {{ feeReciept?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('feeReciept', feeReciept)"
+            [disabled]="feeReciept?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="feeReciept?.downloadURL">
+            <button mat-button color="primary" [disabled]="!feeReciept">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(feeReciept)"
+            [disabled]="!feeReciept"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!feeReciept">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'feeReciept')"
+              [(ngModel)]="feeReciept.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- Birth Certificate -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Birth Certificate</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="birthCert" style="color: #78909c" class="caption">
+              {{ birthCert?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('birthCert', birthCert)"
+            [disabled]="birthCert?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="birthCert?.downloadURL">
+            <button mat-button color="primary" [disabled]="!birthCert">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(birthCert)"
+            [disabled]="!birthCert"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!birthCert">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'birthCert')"
+              [(ngModel)]="birthCert.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+<!-- BRP card -->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">BRP Card</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="brpCard" style="color: #78909c" class="caption">
+              {{ brpCard?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('brpCard', brpCard)"
+            [disabled]="brpCard?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="brpCard?.downloadURL">
+            <button mat-button color="primary" [disabled]="!brpCard">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(brpCard)"
+            [disabled]="!brpCard"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!brpCard">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'brpCard')"
+              [(ngModel)]="brpCard.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--OTHERS-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Others 1</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="others1" style="color: #78909c" class="caption">
+              {{ others1?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('others1', others1)"
+            [disabled]="others1?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="others1?.downloadURL">
+            <button mat-button color="primary" [disabled]="!others1">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(others1)"
+            [disabled]="!others1"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!others1">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'others1')"
+              [(ngModel)]="others1.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--others 2-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Others 2</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="others2" style="color: #78909c" class="caption">
+              {{ others2?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('others2', others2)"
+            [disabled]="others2?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="others2?.downloadURL">
+            <button mat-button color="primary" [disabled]="!others2">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(others2)"
+            [disabled]="!others2"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!others2">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'others2')"
+              [(ngModel)]="others2.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!--others 2-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Others 3</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="others3" style="color: #78909c" class="caption">
+              {{ others3?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('others3', others3)"
+            [disabled]="others3?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="others3?.downloadURL">
+            <button mat-button color="primary" [disabled]="!others3">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(others3)"
+            [disabled]="!others3"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!others3">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'others3')"
+              [(ngModel)]="others3.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!--others 4-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Others 4</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="others4" style="color: #78909c" class="caption">
+              {{ others4?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('others4', others4)"
+            [disabled]="others4?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="others4?.downloadURL">
+            <button mat-button color="primary" [disabled]="!others4">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(others4)"
+            [disabled]="!others4"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!others4">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'others4')"
+              [(ngModel)]="others4.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!--Others 5-->
+  <mat-card class="mb-3">
+    <mat-card-content>
+      <div class="d-flex justify-content-between bd-highlight mb-3">
+        <div class="p-1 bd-highlight flex-grow-1">
+          <div class="row">
+            <h3 class="subheading-2">Others 5</h3>
+          </div>
+          <div class="row">
+            <span *ngIf="others5" style="color: #78909c" class="caption">
+              {{ others5?.fileName }}</span
+            >
+          </div>
+        </div>
+        <div class="p-1 bd-highlight">
+          <input
+            type="file"
+            #file
+            (change)="selectFile($event)"
+            class="attachment-selector1"
+            [hidden]="true"
+          />
+          <button
+            mat-button
+            color="primary"
+            (click)="inputAttachment('others5', others5)"
+            [disabled]="others5?.verification == 'verified' || fileUploadDisable"
+          >
+            Upload
+          </button>
+          <a target="_blank" [href]="others5?.downloadURL">
+            <button mat-button color="primary" [disabled]="!others5">
+              Download
+            </button></a
+          >
+          <button
+            mat-button
+            color="warn"
+            (click)="openDialog(others5)"
+            [disabled]="!others5"
+          >
+            Delete
+          </button>
+        </div>
+        <div class="p-1 bd-highlight">
+          <mat-form-field appearance="fill" *ngIf="!!others5">
+            <mat-label>Document Status</mat-label>
+            <mat-select
+              (selectionChange)="verificationChange($event.value, 'others5')"
+              [(ngModel)]="others5.verification"
+            >
+              <mat-option value="pending"> Pending </mat-option>
+              <mat-option value="rejected"> Rejected </mat-option>
+              <mat-option value="verified"> Verified </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <br />
+</div>

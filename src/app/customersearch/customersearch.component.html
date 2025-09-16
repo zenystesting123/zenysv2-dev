@@ -1,0 +1,26 @@
+<div mat-dialog-content>
+  <form class="example-form">
+    <mat-form-field class="example-full-width" >
+      <mat-label>Contact Name</mat-label>
+      <input type="text"
+
+             placeholder="Choose Contact"
+             aria-label="Contact"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto"
+             [(ngModel)]="selectedCust">
+             <button mat-button *ngIf="selectedCust" matSuffix mat-icon-button aria-label="Clear" (click)="selectedCust=''">
+              <mat-icon>close</mat-icon>
+            </button>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of filteredOptions  | async" [value]="option">
+         {{ option.firstName }} {{ option.secondName }} | 
+          {{companycheck(option.companyName)}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+ 
+

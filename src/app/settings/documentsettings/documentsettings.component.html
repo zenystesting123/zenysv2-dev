@@ -1,0 +1,1119 @@
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar class="border-bottom" *ngIf="commonService.userPlan.settingsAccess && commonService.userPlan.documentsAccess"
+    style="flex: 0 0 64px;" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Document Settings</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+  </mat-progress-bar>
+
+  <div style="background-color: #f8f9fb; overflow-y: auto">
+    <!-- DISPLAY MESSAGE IF ACCESS IS NOT PERMITTED -->
+    <div *ngIf="(progressBarStatus && notEdit) || !commonService.userPlan.documentsAccess" class="container-xl" style="text-align: center">
+      Access denied!
+    </div>
+
+    <!-- CONTENT STARTS HERE -->
+    <div *ngIf="progressBarStatus && !notEdit && commonService.userPlan.documentsAccess" style="min-height: 900px">
+      <mat-tab-group  [(selectedIndex)]="index">
+        <!-- LAYOUT -->
+        <mat-tab label="LAYOUT">
+          <!-- DOC TEMPLATE -->
+          <br>
+          <div class="container-xxl border" style="background-color: white;border-radius: 5px;">
+            <h2 [ngStyle]="{ padding: '10px' }">DOCUMENT TEMPLATE</h2>
+            <mat-card-header class="card-container-left">
+              <h3 [ngStyle]="{ padding: '10px' }">Choose Theme Color</h3>
+            </mat-card-header>
+            <div class="row" style="margin: 0px;">
+              <div class="col-2 custmcolorpalette">
+                <p [style.background]="docColor" style="width: 205px; height: 30px; border-radius: 4px"></p>
+              </div>
+              <div class="col-5">
+                <button style="height: auto" [(colorPicker)]="docColor" mat-icon-button color="primary"
+                  aria-label="Example icon button with a home icon" (colorPickerChange)="updateThemeColor()">
+                  <mat-icon color="primary">palette</mat-icon>
+                </button>
+              </div>
+              <div class="col-5"></div>
+            </div>
+            <mat-card-header class="card-container-left">
+              <h3 [ngStyle]="{ padding: '10px' }">
+                Please select the template you want to use for printing
+                {{ fieldNameEstimate }}s, {{ fieldNameQuotation }}s and
+                {{ fieldNameInvoice }}s
+              </h3>
+            </mat-card-header>
+            <div class="row" style="margin: 0px;">
+              <div class="custm">
+                <img class="img" (click)="mouseEnter1('image')" src="assets/images/temp1.png" alt="Template1"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp1Click" (ngModelChange)="temp1()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;1</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter2('image')" src="assets/images/temp2.png" alt="Template2"
+                  width="205" height="289" style="border-radius: 4px" />
+
+                <mat-checkbox class="checkbox" [(ngModel)]="temp2Click" (ngModelChange)="temp2()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;2</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter3('image')" src="assets/images/temp3.png" alt="Template3"
+                  width="205" height="289" style="border-radius: 4px" />
+
+                <mat-checkbox class="checkbox" [(ngModel)]="temp3Click" (ngModelChange)="temp3()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;3</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter4('image')" src="assets/images/temp4.png" alt="Template4"
+                  width="205" height="289" style="border-radius: 4px" />
+
+                <mat-checkbox class="checkbox" [(ngModel)]="temp4Click" (ngModelChange)="temp4()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;4</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter5('image')" src="assets/images/temp5.png" alt="Template5"
+                  width="205" height="289" style="border-radius: 4px" />
+
+                <mat-checkbox class="checkbox" [(ngModel)]="temp5Click" (ngModelChange)="temp5()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;5</label>
+              </div>
+            </div>
+            <div class="row" style="margin: 0px;">
+              <div class="custm">
+                <img class="img" (click)="mouseEnter6('image')" src="assets/images/temp6.png" alt="Template6"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp6Click" (ngModelChange)="temp6()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;6</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter7('image')" src="assets/images/temp7.png" alt="Template7"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp7Click" (ngModelChange)="temp7()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;7</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter8('image')" src="assets/images/temp8.png" alt="Template8"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp8Click" (ngModelChange)="temp8()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;8</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter9('image')" src="assets/images/temp9.png" alt="Template9"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp9Click" (ngModelChange)="temp9()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;9</label>
+              </div>
+              <div class="custm">
+                <img class="img" (click)="mouseEnter10('image')" src="assets/images/temp10.png" alt="Template10"
+                  width="205" height="289" style="border-radius: 4px" />
+                <mat-checkbox class="checkbox" [(ngModel)]="temp10Click" (ngModelChange)="temp10()"></mat-checkbox>
+                <label style="font-size: 20px; margin-top: 10px; margin-left: 45px">Template&nbsp;10</label>
+              </div>
+            </div>
+            <br />
+            <mat-divider></mat-divider>
+            <br />
+            <!-- LOGO AND SIGNATURE -->
+            <h2 [ngStyle]="{ padding: '10px' }">LOGO & SIGNATURE</h2>
+            <mat-card-header class="card-container-left">
+              <h3 [ngStyle]="{ padding: '10px' }">
+                Add your organization's logo and authorized signatory sign to
+                print these in {{ fieldNameEstimate }}s, {{ fieldNameQuotation }}s
+                and {{ fieldNameInvoice }}s
+              </h3>
+            </mat-card-header>
+            <div class="row" style="margin: 0px;">
+              <mat-card [ngStyle]="{
+                  width: '317px',
+                  height: '481px',
+                  'margin-left': '40px',
+                  'margin-bottom': '10px',
+                  'border-radius': '4px',
+                  'align-items': 'center',
+                  'justify-content': 'center',
+                  'text-align': 'center'
+                }">
+                <mat-card-header>
+                  <mat-card-title class="card-container-left">
+                    My Logo
+                  </mat-card-title>
+                  <mat-card-title class="card-container-right">
+                    <mat-slide-toggle [(ngModel)]="logoStatus" [disabled]="!logoExisting"
+                      (ngModelChange)="logoStatusUpdate()" [ngStyle]="{ float: 'right', 'margin-right': '0px' }">
+                    </mat-slide-toggle>
+                    &nbsp;&nbsp;
+                  </mat-card-title>
+                </mat-card-header>
+                <br />
+
+                <mat-card-content [ngStyle]="{ height: '350px' }">
+                  <h4 style="font-size: 16px">
+                    Add the Logo by default in all {{ fieldNameSale }}s documents
+                  </h4>
+
+                  <img mat-card-image *ngIf="dbL" mat-card-imag [src]="userLogo ? userLogo : logoplacehoplder"
+                    alt="Card logo" class="resize" />
+
+                  <div class="card resize" *ngIf="logoLoader">
+                    <mat-spinner style="margin-left: 30%; margin-top: 30%" color="primary"></mat-spinner>
+                  </div>
+
+                  <img mat-card-image *ngIf="prvL && downloadURL | async as url" mat-card-imag
+                    [src]="url ? url : logoplacehoplder" alt="Card image cap" class="resize" />
+                </mat-card-content>
+
+                <mat-card-actions>
+                  <button style="float: right; margin-right: 15px; bottom: 10px" type="button" (click)="openL()"
+                    mat-raised-button color="accent">
+                    UPLOAD
+                  </button>
+                  <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+                    (change)="startUpload2($event.target.files)" style="display: none" accept="image/png, image/jpeg" />
+                </mat-card-actions>
+              </mat-card>
+
+              <mat-card [ngStyle]="{
+                  width: '317px',
+                  height: '481px',
+                  'margin-left': '20px',
+                  'margin-bottom': '10px',
+                  'border-radius': '4px',
+                  'align-items': 'center',
+                  'justify-content': 'center',
+                  'text-align': 'center'
+                }">
+                <mat-card-header>
+                  <mat-card-title class="card-container-left">
+                    My Signature
+                  </mat-card-title>
+                  <mat-card-title class="card-container-right">
+                    <mat-slide-toggle [(ngModel)]="signStatus" [disabled]="!signExisting"
+                      (ngModelChange)="signStatusUpdate()" [ngStyle]="{ float: 'right', 'margin-right': '0px' }">
+                    </mat-slide-toggle>
+                    &nbsp;&nbsp;
+                  </mat-card-title>
+                </mat-card-header>
+                <br />
+
+                <mat-card-content [ngStyle]="{ height: '350px' }">
+                  <h4 style="font-size: 16px">
+                    Add the Signature by default in all {{ fieldNameSale }}s
+                    documents
+                  </h4>
+
+                  <img mat-card-image *ngIf="dbS" mat-card-imag [src]="userSign ? userSign : signplaceholder"
+                    alt="Card sign" class="resize" />
+
+                  <div class="card resize" *ngIf="signLoader">
+                    <mat-spinner style="margin-left: 30%; margin-top: 30%" color="primary"></mat-spinner>
+                  </div>
+
+                  <img mat-card-image *ngIf="prvS && downloadURL1 | async as url2" mat-card-imag
+                    [src]="url2 ? url2 : signplaceholder" alt="Card image cap" class="resize" />
+                </mat-card-content>
+                <mat-card-actions>
+                  <button style="float: right; margin-right: 15px; bottom: 10px" type="button" (click)="openS()"
+                    mat-raised-button color="accent">
+                    UPLOAD
+                  </button>
+                  <input type="file" class="custom-file-input sign-selector" id="inputGroupFile01"
+                    (change)="startUpload1($event.target.files)" style="display: none" accept="image/png, image/jpeg" />
+                </mat-card-actions>
+              </mat-card>
+            </div>
+            <br />
+            <mat-divider></mat-divider>
+            <br />
+            <!-- DEFAULT CONTENT -->
+            <h2 [ngStyle]="{ padding: '10px' }">DEFAULT CONTENT</h2>
+            <mat-card-header class="card-container-left">
+              <h3 [ngStyle]="{ padding: '10px' }">
+                Configure default currency, tax identification number, bank
+                account details and default notes to be displayed in
+                {{ fieldNameEstimate }}s, {{ fieldNameQuotation }}s and
+                {{ fieldNameInvoice }}s
+              </h3>
+            </mat-card-header>
+
+            <!-- EDIT AND UPDATE BUTTONS -->
+            <mat-card-actions *ngIf="notEditMode" style="margin-left: 10px;">
+              <button style="margin-left: 30px" type="button" color="accent" mat-raised-button
+                (click)="onTogglenotEditMode()">
+                <i class="ft-check-square mr-1"></i> Edit
+              </button>
+              <button [disabled]="true" type="button" mat-raised-button color="accent">
+                <i class="ft-check-square mr-1"></i> Update
+              </button>
+              <br />
+            </mat-card-actions>
+
+            <!-- DEFAULT CARD while loaded -->
+            <div *ngIf="notEditMode" class="frame" style="background-color: white;">
+              <h3> General Info </h3>
+              <mat-card-content>
+                <br />
+                <div class="box">
+                  <div class="col-6 custom">Default Currency:</div>
+                  <div class="col-6 custom">
+                    {{ documentData.currency }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">Tax Type:</div>
+                  <div class="col-6 custom fullcap">
+                    {{ documentData.taxType }}
+                  </div>
+                </div>
+
+                <div class="box">
+                  <div class="col-6 custom">Tax Identification Number:</div>
+                  <div class="col-6 custom">
+                    {{ documentData.gstnumber }}
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-divider></mat-divider>
+              <br /><br />
+              <h3>
+                Bank Account Details in {{ fieldNameSale }}s Documents
+              </h3>
+              <mat-card-content>
+                <br />
+                <div class="box">
+                  <div class="col-6 custom">
+                    Account Number, Branch and IFSC details
+                  </div>
+                  <div class="col-6 custom" style="height: auto">
+                    <pre>{{ documentData.bankDetails }}</pre>
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-divider *ngIf="commonService.userPlan.estimatesAccess"></mat-divider>
+              <br *ngIf="commonService.userPlan.estimatesAccess"/><br *ngIf="commonService.userPlan.estimatesAccess"/>
+              <h3 *ngIf="commonService.userPlan.estimatesAccess"> {{ fieldNameEstimate }} Details </h3>
+              <mat-card-content *ngIf="commonService.userPlan.estimatesAccess">
+                <br />
+
+                <div class="box">
+                  <div class="col-6 custom">
+                    Default notes in {{ fieldNameEstimate }}:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ documentData.estimateNote }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ estimateContactDetails.contactName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Number:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ estimateContactDetails.contactNumber }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Email:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ estimateContactDetails.email }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Signatory Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ estimateContactDetails.signatoryName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Designation:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ estimateContactDetails.designation }}
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-divider *ngIf="commonService.userPlan.quotationsAccess"></mat-divider>
+              <br *ngIf="commonService.userPlan.quotationsAccess"/><br *ngIf="commonService.userPlan.quotationsAccess"/>
+              <h3 *ngIf="commonService.userPlan.quotationsAccess"> {{ fieldNameQuotation }} Details </h3>
+              <mat-card-content *ngIf="commonService.userPlan.quotationsAccess">
+                <br />
+
+                <div class="box">
+                  <div class="col-6 custom">
+                    Default notes in {{ fieldNameQuotation }}:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ documentData.quotationNote }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ quotationContactDetails.contactName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Number:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ quotationContactDetails.contactNumber }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Email:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ quotationContactDetails.email }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Signatory Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ quotationContactDetails.signatoryName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Designation:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ quotationContactDetails.designation }}
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-divider *ngIf="commonService.userPlan.invoicesAccess"></mat-divider>
+              <br *ngIf="commonService.userPlan.invoicesAccess"/><br *ngIf="commonService.userPlan.invoicesAccess"/>
+              <h3 *ngIf="commonService.userPlan.invoicesAccess"> {{ fieldNameInvoice }} Details </h3>
+              <mat-card-content *ngIf="commonService.userPlan.invoicesAccess">
+                <br />
+                <div class="box">
+                  <div class="col-6 custom">
+                    Default notes in {{ fieldNameInvoice }}:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ documentData.invoiceNote }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ invoiceContactDetails.contactName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Contact Number:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ invoiceContactDetails.contactNumber }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Email:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ invoiceContactDetails.email }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Signatory Name:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ invoiceContactDetails.signatoryName }}
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="col-6 custom">
+                    Designation:
+                  </div>
+
+                  <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                    {{ invoiceContactDetails.designation }}
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-divider></mat-divider>
+              <br />
+              <br />
+            </div>
+
+            <!-- EDIT MODE FORM -->
+            <form *ngIf="!notEditMode" #userForm1="ngForm" novalidate>
+
+              <!-- BACK AND UPDATE BUTTONS -->
+              <mat-card-actions style="margin-left: 0px;">
+                <button *ngIf="!notEditMode" style="margin-left: 40px" mat-raised-button type="button"
+                  (click)="onTogglenotEditMode()">
+                  <i class="ft-check-square mr-1"></i> Cancel
+                </button>
+                <button *ngIf="notEditMode" style="margin-left: 30px" type="button" color="accent" mat-raised-button
+                  (click)="onTogglenotEditMode()">
+                  <i class="ft-check-square mr-1"></i> Edit
+                </button>
+                <button [disabled]="notEditMode || !userForm1.valid" mat-raised-button color="accent" (click)="onUpdated(userForm1)">
+                  <i class="ft-check-square mr-1"></i> Save
+                </button>
+                <br />
+              </mat-card-actions>
+
+              <!-- general info card -->
+              <div style="align-items: center;justify-content: center;text-align: center;">
+                <mat-card [ngStyle]="{ width: '991px' }" style=" margin-left: 40px;">
+                  <h3> General Info </h3>
+                  <br />
+                  <mat-card-content>
+                    <div class="box">
+                      <div class="col-3">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Default currency</mat-label>
+                          <mat-select [disabled]="notEditMode" #currency="ngModel" [ngModel]="documentData?.currency"
+                            (ngModelChange)="(documentData.currency)" name="currency" required>
+                            <mat-option value="{{ currency.isoCode }}" *ngFor="let currency of currencyList">
+                              {{ currency.currencyName }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-3">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Tax Type</mat-label>
+                          <mat-select [disabled]="notEditMode" #taxType="ngModel" [ngModel]="documentData?.taxType"
+                            (ngModelChange)="(documentData.taxType)" name="taxType" required>
+                            <mat-option value="gst" selected="selected">GST</mat-option>
+                            <mat-option value="vat">VAT </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Tax Identification Number/ GST/ VAT</mat-label>
+                          <input [disabled]="notEditMode" matInput #gstnumber="ngModel"
+                            [ngModel]="documentData?.gstnumber" (ngModelChange)="(documentData.gstnumber)"
+                            name="gstnumber" type="string" minlength="4" maxlength="100" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6"></div>
+                      <div class="col-6">
+                        <small class="form-text text-muted danger" *ngIf="
+                          !gstnumber.valid &&
+                          (gstnumber.dirty || gstnumber.touched)
+                        ">valid data is required!</small>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                <br />
+
+                <!-- bank a/c details -->
+                <mat-card [ngStyle]="{ width: '991px' }" style=" margin-left: 40px;">
+                  <h3>
+                    Bank Account Details in {{ fieldNameSale }}s Documents
+                  </h3>
+                  <br />
+                  <mat-card-content>
+                    <div class="box">
+                      <div class="col-12">
+                        <mat-form-field class="example-full-width" appearance="fill">
+                          <mat-label>Bank Account details in {{ fieldNameSale }}s
+                            Documents</mat-label>
+                          <textarea rows="3" [disabled]="notEditMode" matInput pl #bank="ngModel"
+                            [ngModel]="documentData?.bankDetails" (ngModelChange)="(documentData.bankDetails)"
+                            name="bankDetails" type="text" cols="26" rows="3"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                <br />
+
+                <!-- EStimate details -->
+                <mat-card *ngIf="commonService.userPlan.estimatesAccess" [ngStyle]="{ width: '991px'}" style=" margin-left: 40px;">
+                  <h3> {{ fieldNameEstimate }} Details </h3>
+                  <mat-card-content>
+                    <br />
+
+                    <div class="box">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Default notes in {{ fieldNameEstimate }}</mat-label>
+                          <textarea rows="3" [disabled]="notEditMode" matInput #estimateNote="ngModel"
+                            [ngModel]="documentData?.estimateNote" (ngModelChange)="(documentData.estimateNote)"
+                            name="estimateNote" type="text" cols="38" rows="3"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!-- estimate contact details -->
+                    <div class="box">
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #estimateContactDetails.contactName="ngModel"
+                            [ngModel]="estimateContactDetails?.contactName" (ngModelChange)="(estimateContactDetails.contactName)"
+                            name="estimateContactDetails.contactName" type="text" cols="38" rows="3" minlength="2" maxlength="60"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Number</mat-label>
+                          <input type="text" [disabled]="notEditMode" matInput #estimateContactDetails.contactNumber="ngModel"
+                            [ngModel]="estimateContactDetails?.contactNumber" (ngModelChange)="(estimateContactDetails.contactNumber)"
+                            name="estimateContactDetails.contactNumber" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Email</mat-label>
+                          <input type="email" email  [disabled]="notEditMode" matInput #estimateContactDetails.email="ngModel"
+                            [ngModel]="estimateContactDetails?.email" (ngModelChange)="(estimateContactDetails.email)"
+                            name="estimateContactDetails.email" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Signatory Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #estimateContactDetails.signatoryName="ngModel"
+                            [ngModel]="estimateContactDetails?.signatoryName" (ngModelChange)="(estimateContactDetails.signatoryName)"
+                            name="estimateContactDetails.signatoryName" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Designation</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #estimateContactDetails.designation="ngModel"
+                            [ngModel]="estimateContactDetails?.designation" (ngModelChange)="(estimateContactDetails.designation)"
+                            name="estimateContactDetails.designation" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                <br />
+
+                <!-- quotation details -->
+                <mat-card *ngIf="commonService.userPlan.quotationsAccess" [ngStyle]="{ width: '991px' }" style=" margin-left: 40px;">
+                  <h3>
+                    {{ fieldNameQuotation }} Details
+                  </h3>
+                  <mat-card-content>
+                    <br />
+
+                    <div class="box">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Default notes in {{ fieldNameQuotation }}</mat-label>
+                          <textarea rows="3" [disabled]="notEditMode" matInput #quotation="ngModel"
+                            [ngModel]="documentData?.quotationNote" (ngModelChange)="(documentData.quotationNote)"
+                            name="quotationNote" type="text" cols="35" rows="3"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                      <!-- quotation contact details -->
+                    <div class="box">
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #quotationContactDetails.contactName="ngModel"
+                            [ngModel]="quotationContactDetails?.contactName" (ngModelChange)="(quotationContactDetails.contactName)"
+                            name="quotationContactDetails.contactName" type="text" cols="38" rows="3" minlength="2" maxlength="60"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Number</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #quotationContactDetails.contactNumber="ngModel"
+                            [ngModel]="quotationContactDetails?.contactNumber" (ngModelChange)="(quotationContactDetails.contactNumber)"
+                            name="quotationContactDetails.contactNumber" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Email</mat-label>
+                          <input type="email" email  [disabled]="notEditMode" matInput #quotationContactDetails.email="ngModel"
+                            [ngModel]="quotationContactDetails?.email" (ngModelChange)="(quotationContactDetails.email)"
+                            name="quotationContactDetails.email" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Signatory Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #quotationContactDetails.signatoryName="ngModel"
+                            [ngModel]="quotationContactDetails?.signatoryName" (ngModelChange)="(quotationContactDetails.signatoryName)"
+                            name="quotationContactDetails.signatoryName" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Designation</mat-label>
+                          <input type="text" [disabled]="notEditMode" matInput #quotationContactDetails.designation="ngModel"
+                            [ngModel]="quotationContactDetails?.designation" (ngModelChange)="(quotationContactDetails.designation)"
+                            name="quotationContactDetails.designation" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                <br />
+
+                <!-- invoice details -->
+                <mat-card *ngIf="commonService.userPlan.invoicesAccess" [ngStyle]="{ width: '991px' }" style=" margin-left: 40px;">
+                  <h3> {{ fieldNameInvoice }} Details </h3>
+                  <mat-card-content>
+                    <br />
+                    <div class="box">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Default notes in {{ fieldNameInvoice }}</mat-label>
+                          <textarea [disabled]="notEditMode" matInput #invoice="ngModel"
+                            [ngModel]="documentData?.invoiceNote" name="invoiceNote" type="text"
+                            (ngModelChange)="(documentData.invoiceNote)" cols="38" rows="3"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                      <!-- invoce contact details -->
+                    <div class="box">
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #invoiceContactDetails.contactName="ngModel"
+                            [ngModel]="invoiceContactDetails?.contactName" (ngModelChange)="(invoiceContactDetails.contactName)"
+                            name="invoiceContactDetails.contactName" type="text" cols="38" rows="3" minlength="2" maxlength="60"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Contact Number</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #invoiceContactDetails.contactNumber="ngModel"
+                            [ngModel]="invoiceContactDetails?.contactNumber" (ngModelChange)="(invoiceContactDetails.contactNumber)"
+                            name="invoiceContactDetails.contactNumber" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-4">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Email</mat-label>
+                          <input type="email" email [disabled]="notEditMode" matInput #invoiceContactDetails.email="ngModel"
+                            [ngModel]="invoiceContactDetails?.email" (ngModelChange)="(invoiceContactDetails.email)"
+                            name="invoiceContactDetails.email" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Signatory Name</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #invoiceContactDetails.signatoryName="ngModel"
+                            [ngModel]="invoiceContactDetails?.signatoryName" (ngModelChange)="(invoiceContactDetails.signatoryName)"
+                            name="invoiceContactDetails.signatoryName" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill" class="example-full-width">
+                          <mat-label>Designation</mat-label>
+                          <input type="text"  [disabled]="notEditMode" matInput #invoiceContactDetails.designation="ngModel"
+                            [ngModel]="invoiceContactDetails?.designation" (ngModelChange)="(invoiceContactDetails.designation)"
+                            name="invoiceContactDetails.designation" type="text" cols="38" rows="3"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <br />
+            </form>
+          </div>
+
+
+        </mat-tab>
+
+        <!-- GENERAL SETTINGS -->
+        <mat-tab label="GENERAL SETTINGS">
+          <br>
+          <div class="container-xxl border" style="background-color: white;border-radius: 5px;">
+            <!-- DOCUMENT NUMBERING -->
+            <h2 [ngStyle]="{ padding: '10px' }">DOCUMENT NUMBERING</h2>
+            <h3 [ngStyle]="{ padding: '10px' }">
+              Configure Document Number and Prefix
+            </h3>
+
+            <div class="container-fluid" style="background-color: white;">
+              <div class="row">
+                <div class="col-4" *ngIf="commonService.userPlan.estimatesAccess">
+                  <mat-card>
+                    <mat-card-title> {{ fieldNameEstimate }} Details </mat-card-title>
+                    <mat-card-content>
+                      <br />
+                      <div class="box">
+                        <div class="col-6 custom">
+                          {{ fieldNameEstimate }} Number Prefix:
+                        </div>
+                        <div class="col-6 custom" style="height: auto; word-wrap: break-word">
+                          {{ documentData.estimateNumberPrefix }}
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6 custom">
+                          Next {{ fieldNameEstimate }} Number:
+                        </div>
+                        <div class="col-6 custom">
+                          {{ nextEstimateNumber }}
+                        </div>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-button color="accent" (click)="
+                        onDocumentNumberReset(
+                          'Estimate',
+                          documentData.estimateNumberPrefix,
+                          nextEstimateNumber
+                        )
+                      ">
+                        Reset
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+
+                </div>
+                <div class="col-4" *ngIf="commonService.userPlan.quotationsAccess">
+                  <mat-card>
+                    <mat-card-title> {{ fieldNameQuotation }} Details </mat-card-title>
+                    <mat-card-content>
+                      <br />
+                      <div class="box">
+                        <div class="col-6 custom">
+                          {{ fieldNameQuotation }} Number Prefix:
+                        </div>
+                        <div class="col-6">
+                          {{ documentData.quotationNumberPrefix }}
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6 custom">
+                          Next {{ fieldNameQuotation }} Number:
+                        </div>
+                        <div class="col-6">
+                          {{ nextQuotationNumber }}
+                        </div>
+                      </div>
+
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-button color="accent" (click)="
+                        onDocumentNumberReset(
+                          'Quotation',
+                          documentData.quotationNumberPrefix,
+                          nextQuotationNumber
+                        )
+                      ">
+                        Reset
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+
+                </div>
+                <div class="col-4" *ngIf="commonService.userPlan.invoicesAccess">
+                  <mat-card>
+                    <mat-card-title> {{ fieldNameInvoice }} Details </mat-card-title>
+                    <mat-card-content>
+                      <br />
+                      <div class="box">
+                        <div class="col-6 custom">
+                          {{ fieldNameInvoice }} Number Prefix:
+                        </div>
+                        <div class="col-6">
+                          {{ documentData.invoiceNumberPrefix }}
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6 custom">
+                          Next {{ fieldNameInvoice }} Number:
+                        </div>
+                        <div class="col-6 custom">
+                          {{ nextInvoiceNumber }}
+                        </div>
+                      </div>
+
+
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-button color="accent" (click)="
+                        onDocumentNumberReset(
+                          'Invoice',
+                          documentData.invoiceNumberPrefix,
+                          nextInvoiceNumber
+                        )
+                      ">
+                        Reset
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </div>
+              <br />
+              <mat-divider></mat-divider>
+              <br />
+            </div>
+
+            <!-- DOCUMENT NUMBERING -->
+            <h2 [ngStyle]="{ padding: '10px' }">Configure Required Fields</h2>
+            <div class="frame" style="background-color: white">
+              <mat-card-content>
+                <h3 [ngStyle]="{ padding: '10px' }">
+                  Configure required fields for creating documents
+                </h3>
+                <div class="container-fluid" style="background-color: white;">
+                  <div class="row">
+                    <div class="col-4">
+                      Tag {{fieldNameOrganization}}
+                      <br><br>
+                      <div class="row">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.estimatesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="estorg" [(ngModel)]="estimateOrgTag">
+                              {{fieldNameEstimate}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.quotationsAccess"><br *ngIf="commonService.userPlan.quotationsAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.quotationsAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="quoorg" [(ngModel)]="quotationOrgTag">
+                              {{fieldNameQuotation}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.invoicesAccess"><br *ngIf="commonService.userPlan.invoicesAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.invoicesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="invorg" [(ngModel)]="invoiceOrgTag">
+                              {{fieldNameInvoice}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4" >
+                      Tag {{fieldNameContact}}
+                      <br><br>
+                      <div class="row">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.estimatesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="estcontcat" [(ngModel)]="estimateContactTag">
+                              {{fieldNameEstimate}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.quotationsAccess"><br *ngIf="commonService.userPlan.quotationsAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.quotationsAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="quocontcat" [(ngModel)]="quotationContactTag">
+                              {{fieldNameQuotation}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.invoicesAccess"><br *ngIf="commonService.userPlan.invoicesAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.invoicesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="invcontcat" [(ngModel)]="invoiceContactTag">
+                              {{fieldNameInvoice}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4" *ngIf="commonService.userPlan.saleAccess">
+                      Tag {{fieldNameSale}}
+                      <br><br>
+                      <div class="row">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.estimatesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="estsale" [(ngModel)]="estimateSaleTag">
+                              {{fieldNameEstimate}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.quotationsAccess"><br *ngIf="commonService.userPlan.quotationsAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.quotationsAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="quosale" [(ngModel)]="quotationSaleTag">
+                              {{fieldNameQuotation}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br *ngIf="commonService.userPlan.invoicesAccess"><br *ngIf="commonService.userPlan.invoicesAccess">
+                        <div class="col-12 custom" *ngIf="commonService.userPlan.invoicesAccess">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="invsale" [(ngModel)]="invoiceSaleTag">
+                              {{fieldNameInvoice}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button style="float: right" mat-button color="accent" (click)="saveRequiredFields()">
+                    Save
+                  </button>
+                </div>
+              </mat-card-content>
+            </div>
+
+            <!-- showing hsn/sac code -->
+            <h2 [ngStyle]="{ padding: '10px' }">Display HSN/SAC Code</h2>
+            <div class="frame" style="background-color: white">
+              <mat-card-content>
+                <h3 [ngStyle]="{ padding: '10px' }">
+                  Configure HSN/SAC Code display
+                </h3>
+                <div class="container-fluid" style="background-color: white;">
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="row">
+                        <div class="col-12 custom">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="hsnCodeDisplayEstimate" [(ngModel)]="hsnCodeDisplay.estimate">
+                              {{fieldNameEstimate}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br><br>
+                        <div class="col-12 custom">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="hsnCodeDisplayQuotation" [(ngModel)]="hsnCodeDisplay.quotation">
+                              {{fieldNameQuotation}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                        <br><br>
+                        <div class="col-12 custom">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" id="hsnCodeDisplayInvoice" [(ngModel)]="hsnCodeDisplay.invoice">
+                              {{fieldNameInvoice}}
+                            </mat-checkbox>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button style="float: right" mat-button color="accent" (click)="hsnCodeDisplaySettings()">
+                    Save
+                  </button>
+                </div>
+              </mat-card-content>
+            </div>
+
+            <!-- DUE PAYMENT NOTIFICATION -->
+            <div *ngIf="commonService.userPlan.duePaymentNotification">
+              <h2 [ngStyle]="{ padding: '10px' }">DUE PAYMENT NOTIFICATION</h2>
+              <app-payment-due></app-payment-due>
+            </div>
+            <br />
+            <br />
+            <!-- DOCUMENT APPROVAL -->
+            <h2 [ngStyle]="{ padding: '10px' }">DOCUMENT APPROVAL</h2>
+            <app-document-approval></app-document-approval>
+            <br />
+            <br />
+            <!-- DOCUMENT AUTOMATIONS -->
+            <h2 [ngStyle]="{ padding: '10px' }">Online payment link creation</h2>
+            <mat-card class="container">
+              <mat-card-content>
+                <h3>Create payment link when</h3>
+                <mat-slide-toggle [(ngModel)]="estimateAutoPayLinkEnabled" *ngIf="commonService.userPlan.estimatesAccess"
+                  (change)="paymentLinkAuto($event,'estimate')">an Estimate is created</mat-slide-toggle><br *ngIf="commonService.userPlan.estimatesAccess">
+                <br *ngIf="commonService.userPlan.estimatesAccess">
+                <mat-slide-toggle [(ngModel)]="quotationAutoPayLinkEnabled" *ngIf="commonService.userPlan.quotationsAccess"
+                  (change)="paymentLinkAuto($event,'quotation')">a Quotation is created</mat-slide-toggle><br *ngIf="commonService.userPlan.quotationsAccess">
+                <br *ngIf="commonService.userPlan.quotationsAccess">
+                <mat-slide-toggle [(ngModel)]="invoiceAutoPayLinkEnabled" *ngIf="commonService.userPlan.invoicesAccess"
+                  (change)="paymentLinkAuto($event,'invoice')">an Invoice is created</mat-slide-toggle>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <br>
+        </mat-tab>
+        <mat-tab label="ADDITIONAL FIELDS">
+          <br>
+          <div class="ml-2 mr-2">
+            <mat-tab-group *ngIf="index == 2" [selectedIndex]="0">
+              <mat-tab label="ESTIMATE" *ngIf="commonService.userPlan.estimatesAccess">
+                <app-additionalfield-common [superUserId]="superUserId" [superUserDetails]="superUserDetails"
+                  [usrProfileData]="usrProfileData" [customFieldName]="fieldNameEstimate"
+                  [customFieldUnique]="currentCustomField" [customDeleteKey]="'deleteFieldEstimate'"
+                  [additionalFieldArrName]="'customFieldsEstimate'"></app-additionalfield-common>
+              </mat-tab>
+              <mat-tab label="QUOTATION" *ngIf="commonService.userPlan.quotationsAccess">
+                <app-additionalfield-common [superUserId]="superUserId" [superUserDetails]="superUserDetails"
+                  [usrProfileData]="usrProfileData" [customFieldName]="fieldNameQuotation"
+                  [customFieldUnique]="currentCustomFieldQuotation" [customDeleteKey]="'deleteFieldQuotation'"
+                  [additionalFieldArrName]="'customFieldsQuotation'"></app-additionalfield-common>
+              </mat-tab>
+              <mat-tab label="INVOICE" *ngIf="commonService.userPlan.invoicesAccess">
+                <app-additionalfield-common [superUserId]="superUserId" [superUserDetails]="superUserDetails"
+                  [usrProfileData]="usrProfileData" [customFieldName]="fieldNameInvoice"
+                  [customFieldUnique]="currentCustomFieldInvoices" [customDeleteKey]="'deleteFieldInvoice'"
+                  [additionalFieldArrName]="'customFieldsInvoices'"></app-additionalfield-common>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </mat-tab>
+
+
+        <br>
+      </mat-tab-group>
+      <br />
+    </div>
+  </div>
+</div>

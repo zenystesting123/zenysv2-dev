@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Report lead </h1>
+<div mat-dialog-content>
+<section >
+    <ul>
+        <li>
+            <mat-checkbox [(ngModel)] ="incorrectContact" class="example-margin">Incorrect contact details</mat-checkbox>
+        </li>
+        <li>
+            <mat-checkbox [(ngModel)] = "incorrectRequirement" class="example-margin">Incorrect requirement mentioned</mat-checkbox>
+        </li>
+        <li>
+            <mat-checkbox [(ngModel)] = "reqMet" class="example-margin">Requirement already met</mat-checkbox>
+        </li>
+    </ul>
+
+    </section>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onSubmit()">Submit </button>
+  <button mat-button  (click)="onCancel()" cdkFocusInitial>Cancel</button>
+</div>

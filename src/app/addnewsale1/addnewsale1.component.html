@@ -1,0 +1,538 @@
+<!-- title starts here -->
+<h1 mat-dialog-title>
+  {{ this.titleName }}
+  {{
+  fieldNameSale?.length > 25
+  ? (fieldNameSale | slice: 0:25) + ".."
+  : fieldNameSale
+  }}
+</h1>
+<div *ngIf="!this.loader && userForm">
+  <mat-dialog-content style="min-height: auto">
+    <!-- form starts here -->
+    <form [formGroup]="userForm">
+      <!-- tab for basic details starts here -->
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <!-- Common component for customer and org search -->
+          <app-common-org-tag [scenario]="data.scenario" [customerId]="customerId" [orgId]="orgId"
+            [contactSelected]="contactSelected" [companySelected]="orgSelected" [compName]="orgName"
+            [userName]="custData?.firstName" (orgNameEvent)="orgNameEventHander($event)"
+            (contSelectedEvent)="contSelectedEventHander($event)" (orgIdEvent)="orgIdEventHander($event)">
+          </app-common-org-tag>
+          <br />
+          <!-- Sale Title -->
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{ saleSettings.saleTitle.displayName }}</mat-label>
+            <input matInput formControlName="saleTitle" name="saleTitle" type="text" rows="1" />
+            <mat-error *ngIf="this.userForm.get('saleTitle').errors?.required">
+              {{ saleSettings.saleTitle.displayName }} is required
+            </mat-error>
+            <mat-error *ngIf="this.userForm.get('saleTitle').errors?.minlength">
+              {{ saleSettings.saleTitle.displayName }} should be atleast 2
+              characters
+            </mat-error>
+            <mat-error *ngIf="this.userForm.get('saleTitle').errors?.maxlength">
+              {{ saleSettings.saleTitle.displayName }} should be less than 100
+              characters
+            </mat-error>
+            <mat-error *ngIf="this.userForm.get('saleTitle').hasError('onlySpace')">
+              Please provide a valid {{ saleSettings.saleTitle.displayName }}
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <!-- Estimated Value -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.estimatedValue.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{
+                  saleSettings.estimatedValue.displayName
+                  }}</mat-label>
+                <input matInput formControlName="estimatedValue" name="estimatedValue" type="number" />
+                <mat-error *ngIf="this.userForm.get('estimatedValue').errors?.required">
+                  {{ saleSettings.estimatedValue.displayName }} is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!-- Collection Mode -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.collectionMode.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{
+                  saleSettings.collectionMode.displayName
+                  }}</mat-label>
+                <mat-select name="collectionMode" formControlName="collectionMode">
+                  <mat-option value="100% on completion">100% on completion</mat-option>
+                  <mat-option value="100% upfront">100% upfront</mat-option>
+                  <mat-option value="Milestone"> Milestone</mat-option>
+                  <mat-option value="Partial upfront and on completion">
+                    Partial upfront and on completion
+                  </mat-option>
+                  <mat-option value="On Delivery">On Delivery</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.userForm.get('collectionMode').errors?.required">
+                  {{ saleSettings.collectionMode.displayName }} is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Start Date -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.startDate.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{ saleSettings.startDate.displayName }}</mat-label>
+                <input matInput [matDatepicker]="picker" name="startDate" formControlName="startDate" />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="this.userForm.get('startDate').errors?.required">
+                  {{ saleSettings.startDate.displayName }} is required
+                </mat-error>
+                <mat-error *ngIf="this.userForm.get('startDate').errors?.invalid">
+                  Enter a valid date
+                </mat-error>
+                <mat-error *ngIf="this.userForm.get('startDate').hasError('requiredFromDate')">Please provide a valid
+                  date</mat-error>
+              </mat-form-field>
+            </div>
+            <!-- Expected Completion Date -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.expCompletionDate.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{
+                  saleSettings.expCompletionDate.displayName
+                  }}</mat-label>
+                <input matInput [matDatepicker]="pickers" name="expCompletionDate"
+                  formControlName="expCompletionDate" />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="pickers"></mat-datepicker-toggle>
+                <mat-datepicker #pickers></mat-datepicker>
+                <mat-error *ngIf="
+                    this.userForm.get('expCompletionDate').errors?.required
+                  ">
+                  {{ saleSettings.expCompletionDate.displayName }} is required
+                </mat-error>
+                <mat-error *ngIf="this.userForm.get('expCompletionDate').errors?.invalid">
+                  Enter a valid date
+                </mat-error>
+              </mat-form-field>
+              <small class="danger" *ngIf="this.dateError === true">
+                Please set an End Date that is after the Start Date
+              </small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Pipeline -->
+            <div class="col-md-6 col-sm-12"
+              *ngIf="saleSettings.selectedSalePipeline.display && commonService.userPlan.salePipelineAccess && commonService.userPlan.multiPipelineAccess">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{
+                  saleSettings.selectedSalePipeline.displayName
+                  }}</mat-label>
+                <mat-select matNativeControl id="salePipeline" name="salePipeline"
+                  formControlName="selectedSalePipeline" (valueChange)="pipelineChangedEvent($event)">
+                  <mat-option *ngFor="let t of salePipelines; let i = index" [value]="t.pipelineId">{{ t.pipelineName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    this.userForm.get('selectedSalePipeline').errors?.required
+                  ">
+                  {{ saleSettings.selectedSalePipeline.displayName }} is
+                  required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!-- Stages -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.salesStage.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{ saleSettings.salesStage.displayName }}</mat-label>
+                <mat-select (valueChange)="statusSelected($event)" matNativeControl id="mySelectId" name="salesStage"
+                  formControlName="salesStage">
+                  <mat-option *ngFor="let s of statusArray; let i = index" [value]="s.stageId">{{
+                    s.name
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.userForm.get('salesStage').errors?.required">
+                  {{ saleSettings.salesStage.displayName }} is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- reason for rejection -->
+          <div class="form-row"
+            *ngIf="this.saleSettings.rejectionReasonVal?.display === true && this.userForm.get('salesStage').value === this.statusArray[this.statusArray.length - 1]?.stageId ">
+            <div class="col-12">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{
+                  (saleSettings.rejectionReasonVal?.displayName)?(saleSettings.rejectionReasonVal?.displayName):
+                  'Reason for rejection' }}</mat-label>
+                <mat-select formControlName="rejectionReasonVal" id="rejectionReasonValue" name="rejectionReasonValue"
+                  placeholder="Required">
+                  <mat-option *ngFor="let s of rejectionReasonArr" value="{{ s }}">{{
+                    s
+                    }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Priority -->
+            <div class="col-md-6 col-sm-12" *ngIf="saleSettings.priority.display">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>{{ saleSettings.priority.displayName }}</mat-label>
+                <mat-select matNativeControl id="mySelectId" name="priority" formControlName="priority">
+                  <mat-option value="dis" selected disabled>....</mat-option>
+                  <mat-option value="High">High</mat-option>
+                  <mat-option value="Medium">Medium</mat-option>
+                  <mat-option value="Low">Low</mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.userForm.get('priority').errors?.required">
+                  {{ saleSettings.priority.displayName }} is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <mat-form-field class="example-full-width" appearance="fill" *ngIf="saleSettings.description.display">
+            <mat-label>{{ saleSettings.description.displayName }}</mat-label>
+            <textarea type="text" rows="2" matInput formControlName="description"
+              [required]="saleSettings.description.mandatory">
+            </textarea>
+            <mat-error *ngIf="this.userForm.get('description').errors?.required">
+              {{ saleSettings.description.displayName }} is required
+            </mat-error>
+          </mat-form-field>
+          <br />
+          <!-- Additional Fields -->
+
+          <div class="form-row">
+            <ng-container *ngFor="
+                let addFieldsGroup of this.userForm.get('additionalFields')
+                  .controls;
+                let i = index;
+                trackBy: identify
+              " [formGroup]="addFieldsGroup">
+              <!-- Display only active fields -->
+              <div *ngIf="additionalFields[i].isActive"
+                [ngClass]="additionalFields[i].fieldType == 'textarea' || additionalFields[i].fieldType == 'date_time'? 'col-12': 'col-6'">
+                <div *ngIf="additionalFields[i].fieldType == 'category'">
+                  <mat-form-field class="add-width" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <mat-select formControlName="fieldValue" name="additionalField" placeholder="Required">
+                      <mat-option *ngIf="additionalFields[i].mandatory == false" value="">None</mat-option>
+                      <mat-option *ngFor="let s of additionalFields[i].categories" value="{{ s }}">{{ s }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+                  <mat-form-field class="add-width" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input matInput formControlName="fieldValue" name="additionalField" type="text" />
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'number'" style="padding-bottom: 0px">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input matInput formControlName="fieldValue" name="additionalField" type="number" />
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'textarea'" style="padding-bottom: 0px">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <textarea matInput placeholder="Description" formControlName="fieldValue"
+                      name="additionalField"></textarea>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'date'">
+                  <mat-form-field class="add-width" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input matInput [matDatepicker]="addtfield_i" name="additionalField" formControlName="fieldValue" />
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="addtfield_i"></mat-datepicker-toggle>
+                    <mat-datepicker #addtfield_i></mat-datepicker>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.invalid
+                    ">
+                      Enter a valid date
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <!--Test starts here-->
+                <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+                  <mat-form-field class="dateTime-wdith" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} Date</mat-label>
+                    <input matInput [matDatepicker]="addtfield_date_time" name="additionalField"
+                      formControlName="fieldValue" />
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+                    <mat-datepicker #addtfield_date_time></mat-datepicker>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').touched &&
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue').errors
+                        ?.invalid
+                    ">
+                      Enter a valid date
+                    </mat-error>
+                  </mat-form-field>
+                  <!--time-->
+                  <mat-form-field class="dateTime-wdith" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} Time </mat-label>
+                    <input matInput type="time" formControlName="fieldValue2" name="defaultValue">
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue2').touched &&
+                      additionalField.controls[i].get('fieldValue2').errors
+                        ?.required
+                    " style="padding-top: 0px">
+                      {{ additionalField.controls[i].get("fieldName").value }} is
+                      required
+                    </mat-error>
+                    <mat-error *ngIf="
+                      additionalField.controls[i].get('fieldValue2').errors
+                        ?.invalid
+                    ">
+                      Enter a valid date
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <!--Test endss here-->
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="form-row">
+            <!-- Assigned To -->
+            <app-common-user-search *ngIf="saleSettings.assignedTo.display" [allSubUsers]="allSubUsers"
+              [assignedToName]="this.userData.assignedToName" [assignedTo]="assignedTo"
+              [disableReAssign]="disableReAssign" (assignedToEvent)="assignedToEventHander($event)"
+              (assignedToNameEvent)="assignedToNameEventHander($event)"></app-common-user-search>
+          </div>
+          <!-- Branch -->
+          <div class="form-row" *ngIf="branches?.length > 0 && commonService.userPlan.branchEnabled">
+            <app-common-branch [associatedBranch]="associatedBranch" [branches]="branches" [allSubUsers]="allSubUsers"
+              (branchEvent)="branchIdEventHandler($event)">
+            </app-common-branch>
+          </div>
+
+        </div>
+        <!-- Product name  and Code-->
+        <div class="col-md-6 col-sm-12">
+          <h3 class="caption h3-dialog">Add {{
+            fieldNameItems == "Products and Service"
+            ? "Item"
+            : fieldNameItems
+            }}</h3>
+
+          <!--Select category-->
+          <div class="form-row">
+            <div class="col-md-12 col-sm-12">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Select {{ fieldNameItemsCategory }} </mat-label>
+                <input type="text" placeholder="Pick one" aria-label="{{ fieldNameItemsCategory }}" matInput
+                  formControlName="selProdCat" [matAutocomplete]="autoProdCategory" />
+                <button color="accent" *ngIf="this.userForm.get('selProdCat').value" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="clearCategory()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-autocomplete #autoProdCategory="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredOptionsCategory | async" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!--Add product-->
+          <div class="form-row">
+            <div class="col-md-12 col-sm-12">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Select a
+                  {{
+                  fieldNameItems == "Products and Service"
+                  ? "Product"
+                  : fieldNameItems
+                  }}</mat-label>
+                <input matInput formControlName="selectedProduct" [matAutocomplete]="autoProduct" name="selectedProduct"
+                  (ngModelChange)="productSelected()" />
+                <button color="accent" *ngIf="this.userForm.get('selectedProduct').value" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="clearProduct()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-autocomplete #autoProduct="matAutocomplete" [displayWith]="displayFnProduct">
+                  <mat-option *ngFor="let product of filteredOptionsProd | async" [value]="product">
+                    {{ product.prodName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-10 col-sm-10"></div>
+            <div class="col-md-2 col-sm-2">
+              <button mat-button [disabled]="!addProdOption" (click)="addProduct()" color="primary">
+                Add
+              </button>
+            </div>
+          </div>
+
+          <div *ngFor="
+              let productGroup of this.userForm.get('prodFormArray').controls;
+              let i = index
+            " [formGroup]="productGroup" class="mff">
+            <div style="
+                background-color: ghostwhite;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+              ">
+              <div>
+                <p>
+                  {{
+                  productGroup.value.prodName?.length > 40
+                  ? (productGroup.value.prodName | slice: 0:38) + ".."
+                  : productGroup.value.prodName
+                  }}
+                </p>
+              </div>
+              <div class="form-row">
+                <div class="col-md-3" *ngIf="itemsQtyDisplay === true">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>Quantity</mat-label>
+                    <input matInput formControlName="quantity" (ngModelChange)="updateEstValue()"
+                      name="quantity_{{ i }}" type="number" />
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4" *ngIf="productSettings.unitPrice.display">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>{{
+                      productSettings.unitPrice.displayName
+                      }}</mat-label>
+                    <input matInput formControlName="unitPrice" (ngModelChange)="updateEstValue()"
+                      name="unitPrice_{{ i }}" type="number" />
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3" *ngIf="productSettings.discount.display">
+                  <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-label>{{
+                      productSettings.discount.displayName
+                      }}</mat-label>
+                    <input matInput formControlName="discount" (ngModelChange)="updateEstValue()"
+                      name="discount_{{ i }}" type="number" />
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button mat-icon-button color="warn" (click)="removeForm(i)" title="Remove Item">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Add products end here-->
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <!-- form ends here -->
+
+  <!-- action buttons starts here -->
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button color="primary" *ngIf="this.data.scenario == 'create'" [disabled]="
+        !this.userForm.valid ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        (this.isProdCheckMandatory && this.prodArray.length == 0) ||
+        !onCheckNetwork() ||
+        dateError ||
+        disableSubmit ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " (click)="onSubmit(userForm, 'btn_create_sale_web')" mat-button [mat-dialog-close]="data" cdkFocusInitial>
+      Add
+    </button>
+    <button mat-button color="primary" [disabled]="
+        !this.userForm.valid ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        (this.isProdCheckMandatory && this.prodArray.length == 0) ||
+        !onCheckNetwork() ||
+        dateError ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " *ngIf="
+        this.data.scenario == 'createfromCustomer' ||
+        this.data.scenario === 'createfromOrg'
+      " (click)="onSubmit(userForm, 'btn_create_sale_web')" mat-button>
+      Add
+    </button>
+    <button mat-button color="primary" *ngIf="this.data.scenario == 'edit'" [disabled]="
+        !this.userForm.valid ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        (this.isProdCheckMandatory && this.prodArray.length == 0) ||
+        !onCheckNetwork() ||
+        dateError ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " (click)="onSubmit(userForm)" mat-button>
+      Update
+    </button>
+  </div>
+  <!-- action buttons ends here -->
+</div>
+<!-- Loader while updating sales name starts here -->
+<div *ngIf="this.loader" class="center">
+  <mat-spinner [diameter]="24"> </mat-spinner>
+  <h4>Updating new details..</h4>
+</div>
+<!-- Loader while updating sales name ends here -->

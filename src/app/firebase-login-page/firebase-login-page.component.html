@@ -1,0 +1,520 @@
+<div *ngIf="!isMobilesize">
+    <div *ngIf="!loggedIn" class="container " style="  padding: 50px; margin-top: 150px; max-width:800px;
+ color: #1565C0; border-radius: 5px;text-align: center;">
+
+
+        <div class="d-flex flex-column justify-content-center" style="padding: auto;">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="assets/images/login.png" alt="pic1" style="
+      padding: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 90%;
+      opacity: 1;
+      background: transparent 0% 0% no-repeat padding-box;
+    " />
+                </div>
+                <div class="col-md-6">
+                    <div class="p-2 ">
+                        <h2 style="color: #1565C0;">Sign Up or Login</h2>
+                    </div>
+                    <div class="p-2 ">
+                        <button class="btn " style="background-color: rgb(213, 0, 0); color: white;"
+                            (click)="loginWithGoogle()">Login with
+                            Google</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+    <!-- <button class="btn btn-primary" (click)="routerCheck()">route</button> -->
+    <!-- <button class="btn btn-primary" (click)="test()">Test</button> -->
+    <br>
+    <button class="btn " *ngIf="loggedIn"
+        style="background-color: rgb(78, 99, 213); color: white; float: right;margin-right: 120px;"
+        (click)="logOut()">LogOut</button><br><br>
+    <div class="container-lg container-fluid mat-elevation-z1" *ngIf="loggedIn"
+        style=" padding-top: 3%;padding-bottom: 3%;padding-left:30px;padding-right:30px;background-color: white;height: auto;color: black;">
+
+        <h1 class="mat-display-1" *ngIf="mode=='create'">Create Public Profile</h1>
+        <h1 class="mat-display-1" *ngIf="mode!='create'">Edit Public Profile</h1>
+        <br>
+        <form #userForm="ngForm">
+            <h2 class="mat-title">Basic Details</h2>
+            <div class="row">
+                <div class="col-3">
+
+                    <div class="img-container left" ng-repeat="file in imagefinaldata" (click)="open1()">
+
+                        <img *ngIf="!userDp" src="assets/images/default.png" alt="dp" style="margin-top: 20px;"
+                            class="img-fluid img-thumbnail">
+                        <img *ngIf="userDp" [src]="userDp" alt="dp" class="img-fluid img-thumbnail"
+                            style="margin-top: 20px;">
+
+                        <input type="file" class="custom-file-input dp-selector" id="inputGroupFile01"
+                            (change)="startUpload1($event.target.files)" style="display: none"
+                            accept="image/png, image/jpeg">
+                    </div>
+
+                </div>
+                <div class="col-9">
+
+                    <div class="d-flex flex-row bd-highlight">
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_300px">
+                                <mat-label>Company Name</mat-label>
+                                <input matInput #company="ngModel" [ngModel]="form?.profileCompany"
+                                    name="profileCompany" type="text" minlength="1" maxlength="75">
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!company.valid && (company.dirty || company.touched)">valid data is
+                                required!</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex flex-row bd-highlight">
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_300px">
+                                <mat-label>First Name</mat-label>
+                                <input matInput #firstname="ngModel" [ngModel]="form?.profileFirstname"
+                                    name="profileFirstname" type="text" required minlength="2" maxlength="30">
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!firstname.valid && (firstname.dirty || firstname.touched)">valid data is
+                                required!</small>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_300px">
+                                <mat-label>Last Name</mat-label>
+                                <input matInput #lastname="ngModel" [ngModel]="form?.profileLastname"
+                                    name="profileLastname" type="text" required minlength="1" maxlength="30">
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!lastname.valid && (lastname.dirty || lastname.touched)">valid data is
+                                required!</small>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex flex-row bd-highlight">
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_100px">
+                                <mat-label>Code</mat-label>
+                                <mat-select name="countryCode" required [(ngModel)]="countryCode">
+                                    <mat-option *ngFor="let countryCode of CountryCodes"
+                                        value={{countryCode.dial_code}}>
+                                        {{countryCode.code}}&nbsp;{{countryCode.dial_code}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_200px">
+                                <mat-label>Contact no</mat-label>
+                                <input matInput #phone="ngModel" [ngModel]="form?.profilePhone" name="profilePhone"
+                                    type="tel" required minlength="10" maxlength="12">
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!phone.valid && (phone.dirty || phone.touched)">Minimum 10 digits
+                                required!</small>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_300px">
+
+                                <mat-label>Email</mat-label>
+                                <input matInput #email="ngModel" [ngModel]="form?.profileEmail" name="profileEmail"
+                                    type="email" required minlength="4" maxlength="50">
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!email.valid && (email.dirty || email.touched)">valid
+                                email is required!</small>
+
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row bd-highlight">
+                        <div class="p-2 bd-highlight">
+                            <mat-form-field class="width_300px">
+                                <mat-label>Category</mat-label>
+                                <mat-select #category="ngModel" [(ngModel)]="categories" name="category" required>
+                                    <mat-option value="{{category}}" *ngFor="let category of categoryList">
+                                        {{category}}
+                                    </mat-option>
+
+                                </mat-select>
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf=" !category.valid && (category.dirty || category.touched)">Please enter a
+                                valid category!</small>
+                        </div>
+
+
+                        <div class="p-2 bd-highlight " *ngIf="value=='on'">
+                            <mat-form-field class="width_300px">
+                                <input matInput #others="ngModel" name="categoryOthers" [ngModel]="form?.categoryOthers"
+                                    type="text">
+                                <mat-label>Enter your category type</mat-label>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12 col-12">
+                            <div class="form-group mb-2">
+                                <mat-form-field class="width" appearance="fill">
+                                    <mat-label>About</mat-label>
+                                    <textarea matInput #about="ngModel" [ngModel]="form?.about" name="about" type="text"
+                                        required cols="25" rows="3"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+
+
+            <h2 class="mat-title">Address</h2>
+            <p class="mat-caption">Search for your location and update address</p>
+
+            <div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <mat-form-field class="width" appearance="fill">
+                            <mat-label>
+                                <mat-icon> add_location</mat-icon>&nbsp;Search for Location
+                            </mat-label>
+                            <input ngx-google-places-autocomplete [options]='options' placeholder="Search for location"
+                                matInput [(ngModel)]="fullAddress" name=fullAddress aria-label="Sale"
+                                #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" required />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="col-md-4 col-12">
+                        <div class="form-group mb-2 clr">
+
+                            <mat-form-field class="width">
+                                <mat-label>Street </mat-label>
+                                <input matInput #state="ngModel" [(ngModel)]="profileStreet" name="profileStreet"
+                                    type="text" minlength="1" maxlength="30">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-group mb-2 clr">
+
+                            <mat-form-field class="width">
+                                <mat-label>Sublocality </mat-label>
+                                <input matInput [(ngModel)]="sublocality" name="sublocality" type="text" minlength="1"
+                                    maxlength="30">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-12">
+
+                        <mat-form-field class="width">
+
+                            <mat-label>Locality</mat-label>
+
+                            <input matInput #district="ngModel" [(ngModel)]="profileLocality" name="profileLocality"
+                                type="text" minlength="1" maxlength="30">
+
+                        </mat-form-field>
+
+
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="col-md-4 col-12">
+
+                        <mat-form-field class="width">
+
+                            <mat-label>District</mat-label>
+
+                            <input matInput #district="ngModel" [(ngModel)]="profileDistrict" name="profileDistrict"
+                                type="text" required minlength="1" maxlength="30" disabled>
+
+                        </mat-form-field>
+
+
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-group mb-2 clr">
+
+
+                            <mat-form-field class="width">
+                                <mat-label>State</mat-label>
+                                <input matInput #state="ngModel" [(ngModel)]="profileState" name="profileState"
+                                    type="text" required minlength="1" maxlength="30" disabled>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="form-group mb-2">
+                            <mat-form-field class="width">
+                                <mat-label>Country</mat-label>
+                                <input matInput #country="ngModel" [(ngModel)]="profileCountry" name="profileCountry"
+                                    type="text" required minlength="1" maxlength="30" disabled>
+                            </mat-form-field>
+                            <small class="form-text text-muted danger"
+                                *ngIf="!country.valid && (country.dirty || country.touched)">valid data is
+                                required!</small>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <br>
+
+            <br>
+
+
+            <h2 class="mat-title">Website & Social Media</h2>
+
+            <div class="form-row">
+                <div class="col-md-6 col-12">
+                    <div class="form-group mb-2">
+                        <mat-form-field class="width">
+                            <mat-label>Website</mat-label>
+                            <input matInput #website="ngModel" [ngModel]="form?.website" name="website" type="text"
+                                minlength="5" maxlength="150">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="form-group mb-2">
+                        <mat-form-field class="width">
+                            <mat-label>Facebook Link</mat-label>
+                            <input matInput #facebook="ngModel" [ngModel]="form?.facebook" name="facebook" type="text"
+                                minlength="5" maxlength="150">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 col-12">
+                    <div class="form-group mb-2">
+                        <mat-form-field class="width">
+                            <mat-label>Instagram Link</mat-label>
+                            <input matInput #instagram="ngModel" [ngModel]="form?.instagram" name="instagram"
+                                type="text" minlength="3" maxlength="150">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="form-group mb-2">
+                        <mat-form-field class="width">
+                            <mat-label>Linkedin Link</mat-label>
+                            <input matInput #linkedin="ngModel" [ngModel]="form?.linkedin" name="linkedin" type="text"
+                                minlength="3" maxlength="150">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <br>
+
+
+
+            <div *ngIf='!hiddenProfile'>
+
+                <div class="container-fluid">
+                    <h2 class="mat-title">Profile Images</h2>
+                    <br>
+                    <div class="rounded-lg overflow-hidden">
+                        <div class="row mx-n1">
+                            <div class="col-md-8 px-1">
+
+                                <img class="img-container" style="width: 100%;height: 100%;" [src]="ProfileImage1"
+                                    alt="dp" (click)="upload1()">
+
+                            </div>
+                            <div class="col-md-4 d-none d-md-inline-block px-1">
+
+                                <img class="img-container" style="width: 100%;height: 50%;" [src]="ProfileImage2"
+                                    alt="dp" (click)="upload2()">
+
+
+                                <img class="img-container" style="width: 100%;height: 50%;" [src]="ProfileImage3"
+                                    alt="dp" (click)="upload3()">
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div>
+
+                        <input type="file" class="custom-file-input proImg1-selector" id="inputGroupFile01"
+                            (change)="proImg1($event.target.files)" style="display: none" accept="image/png,image/jpeg">
+
+                        <input type="file" class="custom-file-input proImg2-selector" id="inputGroupFile01"
+                            (change)="proImg2($event.target.files)" style="display: none" accept="image/png,image/jpeg">
+
+                        <input type="file" class="custom-file-input proImg3-selector" id="inputGroupFile01"
+                            (change)="proImg3($event.target.files)" style="display: none" accept="image/png,image/jpeg">
+                        <div class="progress" *ngIf="uploadProgress2$ | async as progress">
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress!='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Uploading {{progress | number: '1.0-0'}} %
+                            </div>
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress=='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Completed {{resetBar1()}}
+                            </div>
+                        </div>
+                        <div class="progress" *ngIf="uploadProgress3$ | async as progress">
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress!='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Uploading {{progress | number: '1.0-0'}} %
+                            </div>
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress=='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Completed {{resetBar2()}}
+                            </div>
+                        </div>
+                        <div class="progress" *ngIf="uploadProgress4$ | async as progress">
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress!='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Uploading {{progress | number: '1.0-0'}} %
+                            </div>
+                            <div class="progress-bar progress-bar-animated" *ngIf="progress=='100'"
+                                [ngStyle]="{ 'width': progress + '%' }">
+                                Completed {{resetBar3()}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <h2 class="mat-title">Gallery Images</h2>
+                <div class="container-fluid">
+
+                    <div class="dropzone" dropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+                        [class.hovering]="isHovering">
+                        <h3>Add images to your gallery</h3>
+                        <p>Drag and Drop a File</p>
+
+                        <h3>or</h3>
+
+                        <button type="button" (click)="openL()" mat-raised-button color="accent">Upload</button>
+                        <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+                            (change)="onDrop($event.target.files)" style="display: none" accept="image/png,image/jpeg">
+
+
+
+                    </div>
+                    <br>
+
+
+                    <div *ngFor="let file of files">
+
+                        <upload-gallery-image [file]="file" [ProfileId]="publicProfileId"></upload-gallery-image>
+
+
+                    </div>
+                    <br>
+                    <mat-grid-list cols="5" rowHeight="2:1">
+                        <mat-grid-tile class="grid" *ngFor="let item of gallery; let i = index" [attr.data-index]="i">
+                            <div class="img-container" ng-repeat="file in imagefinaldata" class="cursor">
+                                <img (click)="viewImage(i,item.downloadURL)" [src]='item.thumbnailURL'
+                                    style="object-fit: cover;" class="tile-image logo fts">
+
+                                <button class="deleteImg" mat-icon-button color="warn" aria-label="delete"
+                                    title="Delete image"
+                                    (click)="deleteImage(item.id,item.path,item.templatePath)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+
+                <div class="container-fluid">
+                    <br>&nbsp;<br>&nbsp;<br>
+
+                    <h2 class="mat-title">Products & Services
+                        <button mat-mini-fab color="accent" class="example-icon favorite-icon " title="Add Service"
+                            aria-label="Add service" (click)="addService()">
+                            <mat-icon>library_add</mat-icon>
+                        </button>
+                    </h2>
+
+                    <div>&nbsp;</div>
+                    <div class="d-flex flex-row bd-highlight mb-3" *ngFor="let item of profileService; let i = index">
+                        <mat-card class="example-card full-width ">
+                            <mat-card-content>
+
+                                <div class=" col-12 pads left" style="width: 100%; float: left;">
+                                    <h2 class="mat-h3 mat-subheading-2"> {{item.title}}
+                                        <div class="rig">
+                                            <button mat-icon-button color="accent" aria-label="edit"
+                                                title="Edit services" (click)="editServices(item.id)">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button color="warn" aria-label="delete"
+                                                title="Delete services"
+                                                (click)="deleteServices(item.id,item.title,item.imageURL)">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                        </div>
+                                    </h2>
+                                    <br>
+                                    <p class="mat-body mat-body-1">
+                                        {{item.description}}
+                                    </p>
+                                    <div *ngIf="item.pricing">
+                                        <h4 mat-line *ngIf="item.rateFixed">Price Fixed at {{item.currency}}
+                                            {{item.price}}
+                                            {{item?.unit}}</h4>
+                                        <h4 mat-line *ngIf="!item.rateFixed">Price Starts at {{item.currency}}
+                                            {{item.price}}
+                                            {{item?.unit}}</h4>
+                                    </div>
+                                </div>
+
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+
+
+            <br>
+            <div class="rig">
+                <button mat-button (click)="close()">
+                    BACK
+                </button>&nbsp;
+                <button type="submit" mat-button color="primary" [routerLink]="['/firebase-login']"
+                    [disabled]="!userForm.valid" (click)="userForm.valid  ?  onSubmit(userForm)   : TypeError()"> <i
+                        class="ft-check-square mr-1"></i>
+                    SUBMIT</button>&nbsp;
+                <button *ngIf="publicProfileId" mat-button style="color: rgb(255, 205, 5);" (click)="preview()">
+                    PREVIEW
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div id="printsection">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>Hachiko</mat-card-title>
+      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://growthskills.co/wp-content/uploads/2017/01/Hachiko-the-dog-story-e1481199000602-768x432.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p>
+        The Hachiko is the smallest of the six original and distinct spitz breeds of dog from Japan.
+        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+        bred for hunting.
+      </p>
+    </mat-card-content>
+   
+  </mat-card>
+
+</div>
+
+  <button #printButton style="display: none;"  type="button" class="btn btn-primary btn-print mt-2 mt-md-1" id="orange" [useExistingCss]="true"
+  printSectionId="printsection"  (click)="OnSave()" ngxPrint>Print
+</button>

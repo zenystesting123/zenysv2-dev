@@ -1,0 +1,112 @@
+ <!-- used for normal popup by option is whether update mode or create mode -->
+<h1 mat-dialog-title *ngIf="!value.serviceId">Add Product & Services</h1>
+<h1 mat-dialog-title *ngIf="value.serviceId">Update Product & Services</h1>
+<div mat-dialog-content>
+  <!-- service form starts here -->
+  <form #userForm="ngForm">
+    <div class="col-sm-12 col-md-4 center">
+
+    </div>
+    <div class="row">
+      <div class="col-12 left">
+
+        <div class="row">
+
+          <div class="col-md-12 col-12">
+            <div class="form-group mb-2">
+              <!-- title of the service field starts here-->
+              <mat-form-field class="full-width">
+                <mat-label>Title</mat-label>
+                <input matInput #title="ngModel" [ngModel]="serviceData?.title" name="title" type="text" minlength="1"
+                  maxlength="150" required>
+              </mat-form-field>
+              <!-- title of the service field ends here-->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-12">
+            <div class="form-group mb-2">
+              <!-- description of the service field starts here-->
+              <mat-form-field class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput #description="ngModel" [ngModel]="serviceData?.description" name="description" type="text"
+                  cols="125" rows="2" required></textarea>
+              </mat-form-field>
+              <!-- description of the service field ends here-->
+            </div>
+          </div>
+        </div>
+        <!-- check field to find whether pricing is checked -->
+        <mat-checkbox class="example-margin" [(ngModel)]="checked" (ngModelChange)="check($event)" name="pricing">Add
+          Pricing</mat-checkbox><br>
+        <!-- display only if pricing checked starts here-->
+        <div *ngIf="checked">
+          <h3>Pricing Details </h3>
+          <div class="row">
+            <div class="col-sm-4 col-md-4">
+              <!-- currency type of the service field starts here-->
+              <mat-form-field class="full-width">
+                <mat-label>Currency</mat-label>
+                <mat-select #currency="ngModel" [ngModel]="currencyValue" name="currency" required>
+                  <mat-option value="{{currency.isoCode}}" *ngFor="let currency of currencyList">
+                    {{currency.currencyName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- currency type of the service field ends here-->
+            </div>
+            <div class="col-md-4 col-12">
+              <div class="form-group mb-2">
+                <!--price of the service field starts here-->
+                <mat-form-field class="full-width">
+                  <mat-label>Price</mat-label>
+                  <input matInput #price="ngModel" [ngModel]="serviceData?.price" name="price" type="number" minlength="2"
+                    maxlength="15" required>
+                </mat-form-field>
+                <!--price of the service field ends here-->
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div class="form-group mb-2">
+                <!--unit of the service field starts here-->
+                <mat-form-field class="full-width">
+                  <mat-label>Unit</mat-label>
+                  <input matInput #unit="ngModel" [ngModel]="serviceData?.unit" name="unit" placeholder="per piece/ sqft"
+                    type="text" minlength="1" maxlength="10">
+                </mat-form-field>
+                <!--unit of the service field ends here-->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+                  <!--pricing type of the service starts here-->
+              <mat-radio-group aria-label="Select-option" [ngModel]="rate" #rateFixed name="rateFixed" required>
+                <mat-radio-button [value]="true">Fixed Price
+                </mat-radio-button>&nbsp;
+                <mat-radio-button [value]="false" checked>Starting Price</mat-radio-button>
+              </mat-radio-group>
+                  <!--pricing type of the service ends here-->
+            </div>
+          </div>
+        </div>
+        <!-- display only if pricing checked ends here-->
+      </div>
+
+    </div>
+
+    <br>
+    <!-- action div for close/update/submit buttons starts here -->
+    <div class="rig">
+      <button type="submit" mat-raised-button color="accent"
+        (click)="userForm.valid  ?  onSubmit(userForm)   : TypeError()"> <i class="ft-check-square mr-1"></i>
+        Submit</button>&nbsp;
+      <button mat-raised-button (click)="close()">
+        Close
+      </button>
+    </div>
+    <!-- action div for close/update/submit buttons ends here -->
+  </form>
+  <!-- service form ends here -->
+</div>

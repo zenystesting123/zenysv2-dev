@@ -1,0 +1,483 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar class="border-bottom" *ngIf="commonService.userPlan.settingsAccess"
+    style="flex: 0 0 64px;"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Email Settings</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div
+    class="container-fluid"
+    style="padding: 0%; margin: 0%; overflow-y: auto"
+  >
+    <mat-tab-group *ngIf="commonService.userPlan.settingsAccess">
+      <mat-tab label="EMAIL TEMPLATES">
+        <!-- PROGRESS BAR -->
+        <mat-progress-bar
+          [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+          mode="indeterminate"
+        >
+        </mat-progress-bar>
+
+        <!-- ACCESSS CONTROL CHECK -->
+        <div
+          *ngIf="progressBarStatus && notEdit"
+          class="container-xl"
+          style="text-align: center"
+        >
+          Access denied!
+        </div>
+
+        <!-- USER PLAN CHECK -->
+        <div
+          *ngIf="!userPlan.emailTemplates && progressBarStatus"
+          class="container-xl"
+        >
+          <mat-card> Upgrade your Free Plan </mat-card>
+        </div>
+
+        <!-- IF ACCESS AND PLAN ALLOWS -->
+        <div
+          class="container-fluid"
+          style="min-height: 900px"
+          *ngIf="progressBarStatus && !notEdit && userPlan.emailTemplates"
+        >
+          <div class="row" style="color: black">
+            <!-- LEFT SIDE COLUMN DISPLAYING ALREADY CREATED TEMPLATES -->
+            <div class="col-lg-3">
+              <br />
+              <mat-nav-list>
+                <h3 *ngIf="emailTemplateArray?.length == 0">
+                  Add your first email template!
+                </h3>
+                <a
+                  mat-list-item
+                  *ngFor="let s of emailTemplateArray"
+                  (click)="selectTemplate(s.id)"
+                >
+                  <div mat-line>{{ s.templateName }}</div>
+                  <div mat-line>Subject : {{ s.subject }}</div>
+                  <div mat-line>
+                    <mat-chip-list>
+                      <mat-chip [ngStyle]="{ 'white-space': 'nowrap' }">
+                        {{ dispalyType(s.templateType) }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </a>
+              </mat-nav-list>
+            </div>
+
+            <!-- RIGHT SIDE-WITH ACTION BUTTONS AND FORM FIELDS -->
+            <div
+              class="col-lg-9"
+              style="background-color: ghostwhite; padding-bottom: 30px"
+            >
+              <div style="color: black">
+                <br *ngIf="oninit || templateDisp" />
+                <button
+                  *ngIf="templateDisp"
+                  mat-raised-button
+                  color="warn"
+                  (click)="delete()"
+                  style="margin-left: 16px; float: right"
+                  [disabled]="!networkCheck.onNetworkCheck()"
+                >
+                  Delete Template
+                </button>
+                <!--
+                <button mat-raised-button color="accent" (click)="exportTojson()">Download </button>
+                -->
+
+                <button
+                  *ngIf="templateDisp"
+                  mat-raised-button
+                  color="primary"
+                  (click)="edit()"
+                  style="float: right; margin-left: 16px"
+                  [disabled]="!networkCheck.onNetworkCheck()"
+                >
+                  Edit Template
+                </button>
+                <button
+                  *ngIf="oninit || templateDisp"
+                  mat-raised-button
+                  color="primary"
+                  (click)="createTemplate()"
+                  style="float: right"
+                  [disabled]="!networkCheck.onNetworkCheck()"
+                >
+                  Add New Template
+                </button>
+                <br *ngIf="oninit || templateDisp" /><br
+                  *ngIf="oninit || templateDisp"
+                />
+
+                <div
+                  style="
+                    margin-top: 16px;
+                    padding: 16px;
+                    background-color: white;
+                  "
+                >
+                  <!-- FORM-FIELDS : TEMPLATE NAME AND SUBJECT -->
+                  <div class="row">
+                    <div class="row">
+                      <div class="col-6">
+                        <mat-label class="required">Template Name </mat-label>
+                        <mat-form-field appearance="fill" style="width: 90%">
+                          <input
+                            placeholder="Enter Template Name"
+                            [disabled]="(!editMode && templateDisp) || oninit"
+                            [(ngModel)]="templateName"
+                            matInput
+                            required
+                            name="templateName"
+                          />
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <mat-label class="required">Template For </mat-label>
+                        <mat-form-field appearance="fill" style="width: 90%">
+                          <input
+                            placeholder="Template Type"
+                            [disabled]="true"
+                            [(ngModel)]="tempType"
+                            matInput
+                            required
+                            name="tempType"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <br />
+                    <mat-label class="required">Email Subject </mat-label>
+                    <mat-form-field appearance="fill">
+                      <input
+                        placeholder="Enter Subject"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                        [(ngModel)]="subject"
+                        matInput
+                        required
+                        name="subject"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- ANGULAR-EDITOR -->
+                  <mat-dialog-content class="dialogue">
+                    <angular-editor
+                      id="val"
+                      *ngIf="(editMode || !templateDisp) && !oninit"
+                      [placeholder]="'Enter text here...'"
+                      [(ngModel)]="body"
+                      [config]="editorConfig"
+                      (keyup)="onKeyup($event)"
+                    ></angular-editor>
+                    <angular-editor
+                      *ngIf="(!editMode && templateDisp) || oninit"
+                      [placeholder]="'Enter text here...'"
+                      [(ngModel)]="body"
+                      [config]="editorConfig1"
+                    ></angular-editor>
+                  </mat-dialog-content>
+
+                  <!-- SAVE AND CANCEL BUTTONS -->
+                  <div
+                    mat-dialog-actions
+                    style="margin-top: 16px; padding-left: 2%; float: right"
+                  >
+                    <br />
+                    <!-- <button mat-raised-button *ngIf="(editMode || !oninit) && !templateDisp" (click)="cancel()" style="margin-left: 16px;">Clear Fields</button> -->
+                    <button
+                    mat-icon-button
+                    *ngIf="(editMode || !oninit) && !templateDisp"
+                    (click)="onUploadFile()"
+                    title="Upload File URL"
+                    color="accent"
+                  >
+                    <mat-icon>
+                      <span class="material-icons-outlined">
+                        drive_folder_upload
+                      </span>
+                    </mat-icon>
+                  </button>
+
+                    <button
+                      mat-raised-button
+                      *ngIf="(editMode || !oninit) && !templateDisp"
+                      (click)="onCancel()"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      *ngIf="!oninit && !templateDisp && !editMode"
+                      mat-raised-button
+                      color="primary"
+                      (click)="addTemplate()"
+                    >
+                      Save Template
+                    </button>
+                    <button
+                      *ngIf="editMode"
+                      mat-raised-button
+                      color="primary"
+                      (click)="updateTemplate()"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="SMTP SETTINGS">
+        <!-- <div class="container"> -->
+        <!-- <br> -->
+        <div
+          style="
+            overflow-y: auto;
+            padding-bottom: 30px;
+            min-height: 800px;
+            overflow-x: hidden;
+            background-color: #f8f9fb;
+          "
+          *ngIf="!notEdit && userPlan.bulkEmailEnabled"
+        >
+          <mat-card
+            class="container-xl"
+            style="background-color: white; margin-top: 20px"
+          >
+            <div>
+              <br />
+              <h2>Provide your SMTP connection URI</h2>
+              <mat-form-field
+                appearance="fill"
+                class="col-5"
+                style="margin: 0px; padding: 0px"
+              >
+                <mat-label>Select the SMTP provider</mat-label>
+                <mat-select [(ngModel)]="provider" [disabled]="!editEnable">
+                  <mat-option value="personalMail"
+                    >Personal Mail SMTP</mat-option
+                  >
+                  <mat-option value="mailService"
+                    >Bulk mail Services(eg. Mail Chimp, Send Grid)</mat-option
+                  >
+                  <!-- <mat-option value="mailChimp">Mail Chimp</mat-option>            -->
+                </mat-select>
+              </mat-form-field>
+              <br />
+              <div class="row" *ngIf="provider == 'mailService'">
+
+                <form #myForm1="ngForm">
+                <mat-form-field appearance="fill" class="col-12">
+                  <mat-label>SMTP Connection Url</mat-label>
+                  <input
+                    matInput
+                    [disabled]="!editEnable"
+                    [(ngModel)]="SMTPUrl"
+                    name="smtpUrl"
+                    #smtpUrl="ngModel"
+                    placeholder="smtp://user:host@example.com:port"
+                    required
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>Email Id</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="mailId"
+                    placeholder="example@example.com"
+                    [disabled]="!editEnable"
+                    name="email1"
+                    #email1="ngModel"
+                    email
+                    required
+                  />
+                  <mat-hint
+                    >The mail Id registered in the mail service for sending
+                    mail</mat-hint
+                  >
+                </mat-form-field>
+                <br />
+                <mat-card-actions align="end">
+
+                  <button
+                    style="float: right"
+                    mat-button
+                    form="myForm1"
+                    [disabled]="!myForm1.valid"
+                    *ngIf="editEnable"
+                    color="primary"
+                    (click)="saveSMTP()"
+                  >
+                    {{ SMTPpresent ? "Save" : "Enable" }}
+                  </button>
+                  <button
+                    mat-button
+                    (click)="cancelSMTP()"
+                    color="warn"
+                    style="float: right"
+                    *ngIf="!!editEnable&&SMTPpresent"
+                  >
+                  Cancel
+                  </button>
+                  <button
+                    style="float: right"
+                    mat-button
+                    color="primary"
+                    (click)="toggleEdit()"
+                    *ngIf="!editEnable"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    style="float: right"
+                    mat-button
+                    (click)="testSMTP()"
+                    *ngIf="!!provider && editEnable"
+                  >
+                    Test this Setting
+                  </button>
+                </mat-card-actions>
+              </form>
+              </div>
+
+              <div class="row" *ngIf="provider == 'personalMail'">
+                <form #myForm2="ngForm">
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>Email Id</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="mailId"
+                    placeholder="Ex. zenys@gmail.com"
+                    type="email"
+                    name="email2"
+                    #email2="ngModel"
+                    [disabled]="!editEnable"
+                    email
+                    required
+                    [ngModelOptions]="{standalone: true}"
+                  />
+                  <mat-error *ngIf="email2.invalid"
+                    >Enter a valid email id</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>password</mat-label>
+                  <input
+                    [type]="hide ? 'password' : 'text'"
+                    matInput
+                    [(ngModel)]="password"
+                    [disabled]="!editEnable"
+                    name="pass"
+                    #pass="ngModel"
+                    required
+                  />
+                  <button mat-icon-button matSuffix (click)="hide = !hide">
+                    <mat-icon>
+                      {{ hide ? "visibility_off" : "visibility" }}</mat-icon
+                    >
+                  </button>
+                  <mat-hint
+                    >Your mail password or alternate password for
+                    application</mat-hint
+                  >
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>SMTP server Url</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="smtpServer"
+                    placeholder="Ex. smtp.google.com"
+                    [disabled]="!editEnable"
+                    name="smtpserver"
+                    #smtpserver="ngModel"
+                    required
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>Port Number</mat-label>
+                  <input
+                    type="number"
+                    matInput
+                    [(ngModel)]="port"
+                    [disabled]="!editEnable"
+                    [ngModelOptions]="{standalone: true}"
+                    required
+                  />
+                  <mat-hint>SMTP port</mat-hint>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="fill" class="col-5">
+                  <mat-label>Select the SMTP Encryption type</mat-label>
+                  <mat-select [(ngModel)]="encryption" [disabled]="!editEnable" name="smtpport" #smtpport="ngModel" required>
+                    <mat-option [value]="true">SSL</mat-option>
+                    <mat-option [value]="false">TLS</mat-option>
+                    <!-- <mat-option value="mailChimp">Mail Chimp</mat-option>            -->
+                  </mat-select>
+                </mat-form-field>
+                <mat-card-actions align="end">
+                  <button
+                    mat-button
+                    [disabled]="
+                      myForm2.invalid
+                    "
+                    (click)="saveSMTP()"
+                    color="primary"
+                    style="float: right"
+                    *ngIf="!!editEnable"
+                  >
+                    {{ SMTPpresent ? "Save" : "Enable" }}
+                  </button>
+                  <button
+                    mat-button
+                    (click)="cancelSMTP()"
+                    color="warn"
+                    style="float: right"
+                    *ngIf="!!editEnable&&SMTPpresent"
+                  >
+                  Cancel
+                  </button>
+                  <button
+                    style="float: right"
+                    mat-button
+                    color="primary"
+                    (click)="toggleEdit()"
+                    *ngIf="!editEnable"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    style="float: right"
+                    mat-button
+                    (click)="testSMTP()"
+                    *ngIf="!!provider && editEnable"
+                  >
+                    Test this Setting
+                  </button>
+                </mat-card-actions>
+              </form>
+              </div>
+
+            </div>
+          </mat-card>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <!-- DISPLAY MESSAGE IF ACCESS IS NOT PERMITTED -->
+    <div *ngIf="!commonService.userPlan.settingsAccess" class="container-xl" style="text-align: center">
+      Access denied!
+    </div>
+  </div>
+</div>

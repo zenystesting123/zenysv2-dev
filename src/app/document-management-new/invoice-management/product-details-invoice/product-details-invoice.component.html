@@ -1,0 +1,9 @@
+<mat-expansion-panel (opened)="updatePanleState(true)" (closed)="updatePanleState(false)"
+    [expanded]="invoicesService.productPanel">
+    <mat-expansion-panel-header>
+        <mat-panel-title> Item Details </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-billing-amount-details-invoice [superUserDetails]="superUserDetails" [docData]="docData"></app-billing-amount-details-invoice>
+    <app-product-table-invoice [itemLists]="itemLists"></app-product-table-invoice>
+    <app-product-summary-invoice></app-product-summary-invoice>
+</mat-expansion-panel>

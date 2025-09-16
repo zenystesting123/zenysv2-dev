@@ -1,0 +1,1063 @@
+<h1 mat-dialog-title *ngIf="settingsConfigured">Employee Details</h1>
+<mat-dialog-content *ngIf="!disabledOnView && settingsConfigured && !loader">
+  <div class="row">
+    <div class="col-8">
+      <!-- employeeFirstName -->
+      <mat-form-field appearance="fill" style="width: 48%">
+        <mat-label>Employee First Name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.employeeFirstName"
+          placeholder="eg: John"
+          name="employeeFirstName"
+          required
+          [disabled]="disabledOnView"
+          #fName="ngModel"
+        />
+        <small
+          *ngIf="!fName.valid && (fName.dirty || fName.touched)"
+          class="danger"
+        >
+          First Name is Required.
+        </small>
+      </mat-form-field>
+
+      <!-- employeeSecondName -->
+      <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+        <mat-label>Employee Second Name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.employeeSecondName"
+          placeholder="eg: Doe"
+          name="employeeSecondName"
+          [disabled]="disabledOnView"
+        />
+      </mat-form-field>
+
+      <br />
+
+      <!-- designation -->
+      <mat-form-field appearance="fill" style="width: 48%">
+        <mat-label>Designation</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.designation"
+          placeholder="eg: Web Developer"
+          name="designation"
+          [disabled]="disabledOnView"
+        />
+      </mat-form-field>
+
+      <!-- status -->
+      <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+        <mat-label>Status</mat-label>
+        <mat-select
+          [(ngModel)]="this.status"
+          name="status"
+          [disabled]="disabledOnView"
+        >
+          <mat-option
+            *ngFor="let option of employeeStatusArray"
+            [value]="option"
+            >{{option}}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <br />
+
+      <!-- dateOfBirth -->
+      <mat-form-field appearance="fill" style="width: 48%">
+        <mat-label>Date of Birth</mat-label>
+        <input
+          matInput
+          [matDatepicker]="datepicker"
+          [(ngModel)]="this.dateOfBirth"
+          [disabled]="disabledOnView"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datepicker> </mat-datepicker>
+      </mat-form-field>
+
+      <!-- gender -->
+      <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+        <mat-label>Gender</mat-label>
+        <mat-select
+          [(ngModel)]="this.gender"
+          name="gender"
+          [disabled]="disabledOnView"
+        >
+          <mat-option
+            *ngFor="let option of employeeGenderArray"
+            [value]="option"
+            >{{option}}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <br />
+      <!-- bloodGroup -->
+      <mat-form-field appearance="fill" style="width: 22%">
+        <mat-label>Blood Group</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.bloodGroup"
+          name="bloodGroup"
+          [disabled]="disabledOnView"
+          placeholder="Blood Group"
+        />
+      </mat-form-field>
+
+      <!-- country code -->
+      <mat-form-field style="width: 29%; margin-left: 3%" appearance="fill">
+        <mat-label>Country Code</mat-label>
+        <mat-select [(ngModel)]="defaultCode" name="defaultCode">
+          <mat-option
+            *ngFor="let countryCode of CountryCodes"
+            [value]="countryCode.dial_code"
+          >
+            {{ countryCode.code }}&nbsp;{{ countryCode.dial_code }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- contactNo -->
+      <mat-form-field appearance="fill" style="width: 43%; margin-left: 3%">
+        <mat-label>Contact Number</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="this.contactNo"
+          name="contactNo"
+          [disabled]="disabledOnView"
+          placeholder="eg: 9999999999"
+        />
+      </mat-form-field>
+
+      <br />
+    </div>
+    <div class="col-4">
+      <!-- image -->
+      <img
+        id="blah"
+        [src]="imageSrc || 'data:image/jpeg;base64,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'"
+        alt="your image"
+        width="225px"
+        height="225px"
+      />
+
+      <button
+        mat-raised-button
+        (click)="uploadPhotograph()"
+        color="accent"
+        style="width: 100%; margin-top: 8px"
+      >
+        Upload Photo
+      </button>
+
+      <input
+        type="file"
+        (change)="upload($event)"
+        id="inputFile1"
+        class="attachment-selector"
+        [disabled]="disabledOnView"
+        style="display: none"
+        name="myimage"
+        accept="image/png, image/gif, image/jpeg, image/jpg"
+      />
+
+      <br />
+    </div>
+  </div>
+
+  <!-- personal email -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Personal Email</mat-label>
+    <input
+      type="email"
+      matInput
+      [(ngModel)]="this.personalEmail"
+      placeholder="pat@example.com"
+      name="personalEmail"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- official email -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>Official Email</mat-label>
+    <input
+      type="email"
+      matInput
+      [(ngModel)]="this.officialEmail"
+      placeholder="pat@example.com"
+      name="officialEmail"
+      required
+      [disabled]="disabledOnView"
+      [pattern]="emailPattern"
+      #offEmail="ngModel"
+    />
+    <small
+      *ngIf="!offEmail.valid && (offEmail.dirty || offEmail.touched)"
+      class="danger"
+    >
+      Official Email not valid.
+    </small>
+  </mat-form-field>
+  <br />
+
+  <!-- emergencyContactPerson -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Emergency Contact Person</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.emergencyContactPerson"
+      placeholder="eg: Paul"
+      name="emergencyContactPerson"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- emergencyContactNo -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>Emergency Contact Number</mat-label>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="this.emergencyContactNo"
+      placeholder="eg: 9898989898"
+      name="emergencyContactNo"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+  <!-- date of joining -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Date of Joining</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datepicker2"
+      [(ngModel)]="this.dateOfJoining"
+      [disabled]="disabledOnView"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="datepicker2"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #datepicker2> </mat-datepicker>
+  </mat-form-field>
+
+  <!-- exitDate -->
+  <mat-form-field
+    appearance="fill"
+    class="example-form-field"
+    style="width: 48%; margin-left: 4%"
+  >
+    <mat-label>Exit Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datepicker3"
+      [(ngModel)]="this.exitDate"
+      [disabled]="disabledOnView"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="datepicker3"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #datepicker3> </mat-datepicker>
+  </mat-form-field>
+
+  <br />
+
+  <!-- CRM Access -->
+  <mat-checkbox [(ngModel)]="this.crmAccess" name="crmAccess" id="crmAccess"
+    >Provide CRM Access</mat-checkbox
+  >
+
+  <!-- Subuser account type -->
+  <mat-form-field appearance="fill" style="margin-left: 4%" *ngIf="crmAccess">
+    <mat-label class="required">Account Type</mat-label>
+    <mat-select
+      [(ngModel)]="this.accType"
+      name="accType"
+      [disabled]="disabledOnView"
+    >
+      <mat-option *ngFor="let option of subuserAccTypeArray" [value]="option"
+        >{{option}}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <!-- ReportsTo -->
+  <mat-form-field appearance="fill" style="margin-left: 4%" *ngIf="crmAccess">
+    <mat-label class="required">Reports To</mat-label>
+    <mat-select
+      [(ngModel)]="this.reportsTo"
+      name="reportsTo"
+      [disabled]="disabledOnView"
+    >
+      <mat-option
+        *ngFor="let option of reportsToArray"
+        [value]="option.userId"
+        (click)="reportToSelected(option)"
+        >{{option.firstname}}&nbsp;{{option.lastname}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <br />
+  <br />
+
+  <h3>Communication Address</h3>
+  <!-- commAddLine1 -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Address Line 1</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.commAddLine1"
+      placeholder="Street Address"
+      name="commAddLine1"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- commAddLine2 -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>Address Line 2</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.commAddLine2"
+      placeholder="Street Address Line 2"
+      name="commAddLine2"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+
+  <!-- commAddDist -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>District</mat-label>
+    <input
+      matInput
+      [(ngModel)]="commAddDist"
+      placeholder="District"
+      name="commAddDist"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- commAddState -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>State</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.commAddState"
+      name="commAddState"
+      placeholder="State"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+
+  <!-- commAddCountry -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Country</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.commAddCountry"
+      name="commAddCountry"
+      placeholder="Country"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- commAddZip -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>PIN/Zip</mat-label>
+    <input
+      matInput
+      [disabled]="disabledOnView"
+      [(ngModel)]="this.commAddZip"
+      placeholder="Postal / ZIP Code"
+      name="commAddZip
+      "
+    />
+  </mat-form-field>
+
+  <br />
+
+  <h3>Permanent Address</h3>
+
+  <!-- permAddLine1 -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Address Line 1</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddLine1"
+      placeholder="Street Address"
+      name="permAddLine1"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- permAddLine2 -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>Address Line 2</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddLine2"
+      placeholder="Street Address Line 2"
+      name="permAddLine2"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+
+  <!-- permAddDist -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>District</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddDist"
+      placeholder="District"
+      name="permAddDist"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- permAddState -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>State</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddState"
+      name="permAddState"
+      placeholder="State"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+
+  <!-- permAddCountry -->
+  <mat-form-field appearance="fill" style="width: 48%">
+    <mat-label>Country</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddCountry"
+      name="permAddCountry"
+      placeholder="Country"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <!-- permAddZip -->
+  <mat-form-field appearance="fill" style="width: 48%; margin-left: 4%">
+    <mat-label>PIN/Zip</mat-label>
+    <input
+      matInput
+      [(ngModel)]="this.permAddZip"
+      placeholder="Postal / ZIP Code"
+      name="permAddZip"
+      [disabled]="disabledOnView"
+    />
+  </mat-form-field>
+
+  <br />
+</mat-dialog-content>
+
+<mat-dialog-content *ngIf="disabledOnView && settingsConfigured && !loader">
+  <div>
+    <div class="row">
+      <div class="col-8" style="padding: 0">
+        <br />
+
+        <!-- employeeName -->
+        <div class="box">
+          <div class="col-6">Employee Name</div>
+          <div class="col-6">{{employeeFirstName}} {{employeeSecondName}}</div>
+        </div>
+
+        <br />
+        <!-- employeeNumber -->
+        <div class="box">
+          <div class="col-6">Employee Number</div>
+          <div class="col-6">{{employeeNo}}</div>
+        </div>
+
+        <br />
+
+        <!-- dateOfBirth -->
+        <div class="box">
+          <div class="col-6">Date of Birth</div>
+          <div class="col-6">{{dateOfBirth?.toDate() | date}}</div>
+        </div>
+        <br />
+
+        <!-- gender -->
+        <div class="box">
+          <div class="col-6">Gender</div>
+          <div class="col-6">{{gender}}</div>
+        </div>
+
+        <br />
+
+        <!-- CRM access -->
+        <div class="box" *ngIf="crmAccess">
+          <div class="col-6">CRM Access</div>
+          <div class="col-6">{{accType}}</div>
+        </div>
+
+        <br *ngIf="crmAccess" />
+
+        <div class="box" *ngIf="crmAccess">
+          <div class="col-6">Reports To</div>
+          <div class="col-6">{{reportsToName}}</div>
+        </div>
+
+        <br *ngIf="crmAccess" />
+
+        <!-- designation-->
+        <div class="box">
+          <div class="col-6">Designation</div>
+          <div class="col-6">{{designation}}</div>
+        </div>
+
+        <br />
+        <!-- bloodGroup -->
+        <div class="box">
+          <div class="col-6">Blood Group</div>
+          <div class="col-6">{{bloodGroup}}</div>
+        </div>
+        <br />
+        <!-- status -->
+        <div class="box">
+          <div class="col-6">Status</div>
+          <div class="col-6">{{status}}</div>
+        </div>
+
+        <br />
+
+        <!-- contactNo -->
+        <div class="box">
+          <div class="col-6">Contact Number</div>
+          <div class="col-6">{{defaultCode}} {{contactNo}}</div>
+        </div>
+
+        <br />
+        <!-- personal email -->
+        <div class="box">
+          <div class="col-6">Personal Email</div>
+          <div class="col-6">{{personalEmail}}</div>
+        </div>
+        <br />
+        <!-- official email -->
+        <div class="box">
+          <div class="col-6">Official Email</div>
+          <div class="col-6">{{officialEmail}}</div>
+        </div>
+
+        <br />
+
+        <!-- emergencyContactPerson -->
+        <div class="box">
+          <div class="col-6">Emergency Contact Person</div>
+          <div class="col-6">{{emergencyContactPerson}}</div>
+        </div>
+        <br />
+        <!-- emergencyContactNo -->
+        <div class="box">
+          <div class="col-6">Emergency Contact Number</div>
+          <div class="col-6">{{emergencyContactNo}}</div>
+        </div>
+
+        <br />
+        <!-- date of joining -->
+        <div class="box">
+          <div class="col-6">Date of Joining</div>
+          <div class="col-6">{{dateOfJoining?.toDate() | date}}</div>
+        </div>
+        <br />
+
+        <!-- exitDate -->
+        <div class="box">
+          <div class="col-6">Exit Date</div>
+          <div class="col-6">{{exitDate?.toDate() | date}}</div>
+        </div>
+
+        <br />
+      </div>
+      <div class="col-4" style="padding: 0">
+        <!-- image -->
+        <img
+          id="blah"
+          [src]="imageSrc || 'assets/images/sample_profile_photo.jpg' "
+          alt="your image"
+          width="225px"
+          height="225px"
+        />
+
+        <button
+          style="width: 225px; margin-top: 8px"
+          mat-raised-button
+          color="accent"
+          printSectionId="print-section1"
+          ngxPrint
+          [useExistingCss]="true"
+          *ngIf="this.employeeIDTemp=='template1'"
+        >
+          Generate ID Card
+        </button>
+        <button
+          style="width: 225px; margin-top: 8px"
+          mat-raised-button
+          color="accent"
+          printSectionId="print-section2"
+          ngxPrint
+          [useExistingCss]="true"
+          *ngIf="this.employeeIDTemp=='template2'"
+        >
+          Generate ID Card
+        </button>
+        <!-- <input
+          type="file"
+          (change)="upload($event)"
+          id="inputFile1"
+          class="attachment-selector"
+          [disabled]="disabledOnView"
+        /> -->
+
+        <br />
+      </div>
+    </div>
+  </div>
+
+  <h3>Communication Address</h3>
+
+  <div class="address">
+    <div
+      *ngIf="!commAddLine1 && !commAddLine2 && !commAddDist && !commAddState && !commAddCountry && !commAddZip"
+    >
+      Address not provided
+    </div>
+    <div *ngIf="commAddLine1">{{commAddLine1}}</div>
+    <div *ngIf="commAddLine2">{{commAddLine2}}</div>
+    <div *ngIf="commAddDist && commAddState">
+      {{commAddDist}}, {{commAddState}}
+    </div>
+    <div *ngIf="!commAddState">{{commAddDist}}</div>
+    <div *ngIf="!commAddDist">{{commAddState}}</div>
+    <div *ngIf="!commAddZip">{{commAddCountry}}</div>
+    <div *ngIf="!commAddCountry">{{commAddZip}}</div>
+    <div *ngIf="commAddCountry && commAddZip">
+      {{commAddCountry}}, {{commAddZip}}
+    </div>
+  </div>
+
+  <h3>Permanent Address</h3>
+  <div class="address">
+    <div
+      *ngIf="!permAddLine1 && !permAddLine2 && !permAddDist && !permAddState && !permAddCountry && !permAddZip"
+    >
+      Address not provided
+    </div>
+    <div *ngIf="permAddLine1">{{permAddLine1}}</div>
+    <div *ngIf="permAddLine2">{{permAddLine2}}</div>
+    <div *ngIf="permAddDist && permAddState">
+      {{permAddDist}}, {{permAddState}}
+    </div>
+    <div *ngIf="!permAddState">{{permAddDist}}</div>
+    <div *ngIf="!permAddDist">{{permAddState}}</div>
+    <div *ngIf="!permAddZip">{{permAddCountry}}</div>
+    <div *ngIf="!permAddCountry">{{permAddZip}}</div>
+    <div *ngIf="permAddCountry && permAddZip">
+      {{permAddCountry}}, {{permAddZip}}
+    </div>
+  </div>
+
+  <!-- Print section 1 -->
+  <div class="printSection" id="print-section1">
+    <div class="custom-container">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4">
+          <mat-card class="card">
+            <!-- image -->
+            <img
+              id="profilePhoto"
+              [src]="imageSrc || 'assets/images/sample_profile_photo.jpg' "
+              alt="your image"
+              mat-card-image
+            />
+            <mat-card-content style="text-align: center">
+              <h3 style="text-transform: uppercase">
+                {{employeeFirstName}} {{employeeSecondName}}
+              </h3>
+
+              <h5>{{designation}}</h5>
+
+              <h5 style="text-transform: capitalize">{{companyName}}</h5>
+              <div
+                style="
+                  text-align: center;
+                  position: absolute;
+                  bottom: 0px;
+                  left: 129px;
+                "
+              >
+                <br />
+                <!-- logo -->
+                <img
+                  id="logo"
+                  [src]="logoSrc || 'assets/images/logoplaceholder.PNG' "
+                  alt="your logo"
+                  mat-card-image
+                />
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <br />
+          <br />
+          <mat-card class="card">
+            <mat-card-content>
+              <br />
+              <h4>Mobile: {{defaultCode}} {{contactNo}}</h4>
+              <h4>Emergency Contact:</h4>
+
+              <h6>{{emergencyContactPerson}}</h6>
+              <h6>{{emergencyContactNo}}</h6>
+              <br />
+              <h4>Blood Group: {{bloodGroup}}</h4>
+              <h4>Office Address:</h4>
+
+              <h6 *ngIf="addLine1">{{addLine1}}</h6>
+              <h6 *ngIf="addLine2">{{addLine2}}</h6>
+              <h6 *ngIf="addCity && addState">{{addCity}}, {{addState}}</h6>
+              <h6 *ngIf="!addCity">{{addState}}</h6>
+              <h6 *ngIf="!addState">{{addCity}}</h6>
+              <h6 *ngIf="addCountry && addPIN">{{addCountry}}, {{addPIN}}</h6>
+              <h6 *ngIf="!addCountry">{{addPIN}}</h6>
+              <h6 *ngIf="!addPIN">{{addCountry}}</h6>
+
+              <!-- logo -->
+              <!-- <div
+                style="
+                  text-align: center;
+                  position: absolute;
+                  bottom: 0px;
+                  left: 129px;
+                "
+              >
+                <br />
+
+                <img
+                  id="logo"
+                  [src]="logoSrc || 'assets/images/logoplaceholder.PNG' "
+                  alt="your logo"
+                  mat-card-image
+                />
+              </div> -->
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Print section 2 -->
+  <div class="printSection" id="print-section2">
+    <div class="custom-container">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4">
+          <mat-card class="card2">
+            <mat-card-title-group>
+              <mat-card-title style="text-transform: uppercase">
+                <br />
+                <!-- logo -->
+                <img
+                  id="logo2"
+                  [src]="logoSrc || 'assets/images/logoplaceholder.PNG' "
+                  alt="your logo"
+                  mat-card-image
+                />
+
+                <br />
+                {{employeeFirstName}} {{employeeSecondName}}
+                <br />
+              </mat-card-title>
+              <mat-card-subtitle>
+                {{designation}}
+                <br />
+                {{companyName}}
+              </mat-card-subtitle>
+              <!-- <mat-card-subtitle></mat-card-subtitle> -->
+              <img
+                id="profilePhotoCard2"
+                [src]="imageSrc || 'assets/images/sample_profile_photo.jpg' "
+                alt="your image"
+                mat-card-xl-image
+              />
+            </mat-card-title-group>
+          </mat-card>
+          <br /><br />
+          <mat-card class="card2">
+            <mat-card-title-group>
+              <mat-card-title>
+                <br />
+
+                <!-- logo -->
+                <!-- <img
+                  id="logo2"
+                  [src]="logoSrc || 'assets/images/logoplaceholder.PNG' "
+                  alt="your logo"
+                  mat-card-image
+                /> -->
+              </mat-card-title>
+              <div>
+                <h4>Mobile: {{defaultCode}} {{contactNo}}</h4>
+                <h4>Emergency Contact:</h4>
+
+                <h6 *ngIf="emergencyContactPerson && emergencyContactNo">
+                  {{emergencyContactPerson}}, {{emergencyContactNo}}
+                </h6>
+                <h6 *ngIf="!emergencyContactNo">{{emergencyContactPerson}}</h6>
+                <h6 *ngIf="!emergencyContactPerson">{{emergencyContactNo}}</h6>
+
+                <h4>Blood Group: {{bloodGroup}}</h4>
+                <h4>Office Address:</h4>
+
+                <h6 *ngIf="addLine1 && addLine2">{{addLine1}}, {{addLine2}}</h6>
+                <h6 *ngIf="!addLine1">{{addLine2}}</h6>
+                <h6 *ngIf="!addLine2">{{addLine1}}</h6>
+                <h6 *ngIf="addCity && addState">{{addCity}}, {{addState}}</h6>
+                <h6 *ngIf="!addCity">{{addState}}</h6>
+                <h6 *ngIf="!addState">{{addCity}}</h6>
+                <h6 *ngIf="addCountry && addPIN">{{addCountry}}, {{addPIN}}</h6>
+                <h6 *ngIf="!addCountry">{{addPIN}}</h6>
+                <h6 *ngIf="!addPIN">{{addCountry}}</h6>
+              </div>
+            </mat-card-title-group>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<div
+  mat-dialog-actions
+  style="float: right"
+  *ngIf="settingsConfigured && !loader"
+>
+  <button mat-button (click)="onNoClick1()">Cancel</button>
+  <!-- create button -->
+  <button
+    color="accent"
+    *ngIf="this.data.scenario == 'add'&& this.crmAccess == false"
+    [disabled]="((this.employeeFirstName?.length < 1) || (!this.officialEmail))"
+    mat-button
+    [mat-dialog-close]="[
+    this.employeeFirstName,
+    this.employeeSecondName,
+    this.dateOfBirth,
+    this.gender,
+    this.contactNo,
+    this.personalEmail,
+    this.officialEmail,
+    this.emergencyContactPerson,
+    this.emergencyContactNo,
+    this.commAddLine1,
+    this.commAddLine2,
+    this.commAddDist,
+    this.commAddState,
+    this.commAddCountry,
+    this.commAddZip,
+    this.permAddLine1,
+    this.permAddLine2,
+    this.permAddDist,
+    this.permAddState,
+    this.permAddCountry,
+    this.permAddZip,
+    this.status,
+    this.dateOfJoining,
+    this.exitDate,
+    this.designation,
+    this.bloodGroup,
+    this.urlDownload,
+    this.crmAccess,
+    this.accType,
+    this.reportsTo,
+    this.reportsToName,
+    this.defaultCode
+      ]"
+  >
+    Add
+  </button>
+  <button
+    color="accent"
+    *ngIf="this.data.scenario == 'add' && this.crmAccess == true"
+    [disabled]="((this.employeeFirstName?.length < 1) || (!this.officialEmail) || (!this.accType) || (!this.reportsTo))"
+    mat-button
+    [mat-dialog-close]="[
+  this.employeeFirstName,
+  this.employeeSecondName,
+  this.dateOfBirth,
+  this.gender,
+  this.contactNo,
+  this.personalEmail,
+  this.officialEmail,
+  this.emergencyContactPerson,
+  this.emergencyContactNo,
+  this.commAddLine1,
+  this.commAddLine2,
+  this.commAddDist,
+  this.commAddState,
+  this.commAddCountry,
+  this.commAddZip,
+  this.permAddLine1,
+  this.permAddLine2,
+  this.permAddDist,
+  this.permAddState,
+  this.permAddCountry,
+  this.permAddZip,
+  this.status,
+  this.dateOfJoining,
+  this.exitDate,
+  this.designation,
+  this.bloodGroup,
+  this.urlDownload,
+  this.crmAccess,
+  this.accType,
+  this.reportsTo,
+  this.reportsToName,
+  this.defaultCode
+    ]"
+  >
+    Add
+  </button>
+  <!-- edit button -->
+  <button
+    color="accent"
+    *ngIf="this.data.scenario == 'view' && disabledOnView"
+    mat-button
+    (click)="editOn()"
+  >
+    Edit
+  </button>
+  <!-- Update button -->
+  <button
+    color="accent"
+    *ngIf="this.data.scenario == 'view' && !disabledOnView && this.crmAccess == false"
+    [disabled]="((this.employeeFirstName?.length < 1)|| (!this.officialEmail) )"
+    mat-button
+    [mat-dialog-close]="[
+    this.employeeFirstName,
+    this.employeeSecondName,
+    this.dateOfBirth,
+    this.gender,
+    this.contactNo,
+    this.personalEmail,
+    this.officialEmail,
+    this.emergencyContactPerson,
+    this.emergencyContactNo,
+    this.commAddLine1,
+    this.commAddLine2,
+    this.commAddDist,
+    this.commAddState,
+    this.commAddCountry,
+    this.commAddZip,
+    this.permAddLine1,
+    this.permAddLine2,
+    this.permAddDist,
+    this.permAddState,
+    this.permAddCountry,
+    this.permAddZip,
+    this.status,
+    this.dateOfJoining,
+    this.exitDate,
+    this.designation,
+    this.bloodGroup,
+    this.urlDownload,
+    this.crmAccess,
+    this.accType,
+    this.reportsTo,
+    this.reportsToName,
+    this.defaultCode
+      ]"
+  >
+    Update
+  </button>
+  <button
+    color="accent"
+    *ngIf="this.data.scenario == 'view' && !disabledOnView && this.crmAccess == true"
+    [disabled]="((this.employeeFirstName?.length < 1)|| (!this.accType)|| (!this.reportsTo)|| (!this.officialEmail) )"
+    mat-button
+    [mat-dialog-close]="[
+  this.employeeFirstName,
+  this.employeeSecondName,
+  this.dateOfBirth,
+  this.gender,
+  this.contactNo,
+  this.personalEmail,
+  this.officialEmail,
+  this.emergencyContactPerson,
+  this.emergencyContactNo,
+  this.commAddLine1,
+  this.commAddLine2,
+  this.commAddDist,
+  this.commAddState,
+  this.commAddCountry,
+  this.commAddZip,
+  this.permAddLine1,
+  this.permAddLine2,
+  this.permAddDist,
+  this.permAddState,
+  this.permAddCountry,
+  this.permAddZip,
+  this.status,
+  this.dateOfJoining,
+  this.exitDate,
+  this.designation,
+  this.bloodGroup,
+  this.urlDownload,
+  this.crmAccess,
+  this.accType,
+  this.reportsTo,
+  this.reportsToName,
+  this.defaultCode
+    ]"
+  >
+    Update
+  </button>
+</div>
+
+<div *ngIf="!settingsConfigured && !loader">
+  Please configure Settings first! &nbsp;&nbsp;
+  <span>
+    <button mat-icon-button (click)="gotoSettings()" color="accent">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </span>
+
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick1()">Cancel</button>
+  </div>
+</div>
+
+<div *ngIf="loader">
+  <div
+    style="
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      height: 567px;
+    "
+  >
+    Please wait.....
+  </div>
+</div>

@@ -1,0 +1,284 @@
+<div class="container">
+  <br>
+<mat-radio-group aria-label="Select an option" [(ngModel)]="radioselected">
+  <mat-radio-button value="RazorpayPartner">Enable Razorpay Partner</mat-radio-button><br>
+  <mat-radio-button value="StripeConnect">Enable Stripe Connect</mat-radio-button>
+</mat-radio-group>
+<br>
+<!-- <mat-tab-group> -->
+  <div *ngIf="radioselected=='RazorpayPartner'">
+    <br>
+<div class="container">
+
+<div *ngIf="razorpayPartner=='active'">
+    Your Razorpay Sub merchant account have been created. <span *ngIf="rzrwebhookEnable">Web hook is enabled</span>
+    <span *ngIf="!rzrwebhookEnable">Web hook is not enabled, please follow the steps to enable webhook</span> Make sure to complete the onboarding for payouts. 
+  <button *ngIf="payLinkMode!='RazorpayPartner'" (click)="switchMethod('RazorpayPartner')" mat-button>
+      Switch to Razorpay Partner from stripe connect to create payment links.
+  </button>
+  </div>
+<div *ngIf="(!!!rzrAccountId && !!!razorpayPartner)">
+  <mat-horizontal-stepper
+  class="container-xl"
+  [linear]="true"
+  #stepper
+>
+
+<mat-step [stepControl]="firstFormGroup">
+  <ng-template matStepLabel>Basic Details</ng-template>
+  <form [formGroup]="firstFormGroup" class="alignmiddle">
+    <div class="row">
+      <mat-form-field  class="col-6" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput placeholder="Ex. zenys@gmail.com" formControlName="email" required >
+      </mat-form-field>
+      
+      <mat-form-field class="col-6" appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input type="number" matInput placeholder="Ex. 918547225470" formControlName="phNumber" required >
+      </mat-form-field>
+    </div>
+    
+    <br>
+    <div class="row">
+    <mat-form-field class="col-6" appearance="fill">
+        <mat-label>Legal Business Name</mat-label>
+        <input type="text" matInput placeholder="Ex. Zenys App" formControlName="legalBusinessName" required >
+      </mat-form-field>
+      
+
+      <mat-form-field class="col-6" appearance="fill">
+        <mat-label>Customer Facing Name</mat-label>
+        <input type="text" matInput placeholder="Ex. Zenys App" formControlName="customerFacingName">
+      </mat-form-field>
+      <br>
+    </div>
+      <div>
+        <button style="float: right" color="accent" mat-button matStepperNext>
+          Next
+        </button>
+      </div>
+    </form>
+  
+</mat-step>
+
+<!--       
+  <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Business Type</mat-label>
+      <input type="text" matInput placeholder="zenys@gmail.com" required >
+      </mat-form-field> -->
+      <mat-step [stepControl]="secondFormGroup">
+        <ng-template matStepLabel>Business Details</ng-template>
+        <form [formGroup]="secondFormGroup" class="alignmiddle">
+          <div class="row">
+            <div class="col-6">   
+              <mat-form-field appearance="fill">
+                <mat-label>Select Business type from list  </mat-label>
+                <mat-select formControlName="businessType" required>
+                  <mat-option *ngFor="let businessType of businessTypes" [value]="businessType">
+                    {{businessType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field></div>
+   <div class="col-6">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Business Category from list  </mat-label>
+      <mat-select formControlName="businessCategory" required>
+        <mat-option *ngFor="let businessCategory of businessCategories" [value]="businessCategory">
+          {{businessCategory}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+   </div>
+
+      
+    </div>
+    <div class="row">
+      <div class="col-6">
+      <mat-form-field appearance="fill">
+        <mat-label>Select Business Sub Category from list  </mat-label>
+        <mat-select formControlName="businessSubCategory" required>
+          <mat-option *ngFor="let businessSubCategory of businessSubCategories[secondFormGroup.value.businessCategory]" [value]="businessSubCategory">
+            {{businessSubCategory}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>      
+      
+      <div class="col-6">
+      <mat-form-field appearance="fill">
+        <mat-label>Select Business Model from list  </mat-label>
+        <mat-select formControlName="businessModel">
+          <mat-option *ngFor="let businessModel of businessModels" [value]="businessModel">
+            {{businessModel}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>            
+    </div>
+    <br>
+    <div class="row">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Ex. CRM application"></textarea>
+      </mat-form-field>
+    </div>
+      
+      <div style="float: right">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext color="accent">Next</button>
+      </div>
+        </form>
+        </mat-step>
+
+
+        <mat-step [stepControl]="thirdFormGroup">
+          <ng-template matStepLabel>Business Address</ng-template>
+          <form [formGroup]="thirdFormGroup" class="alignmiddle">
+            <div class="row">
+              <div class="col-6">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Address Line 1</mat-label>
+                  <input matInput formControlName="address1" required >
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Address Line 2</mat-label>
+                  <input  matInput formControlName="address2" required >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-3">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>City</mat-label>
+                  <input type="text" formControlName="city" matInput placeholder="Kochi" required >
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>State</mat-label>
+                  <input type="text" formControlName="state" matInput placeholder="Kerala" required>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Postal Code</mat-label>
+                  <input type="number" formControlName="postalCode" matInput placeholder="689668" required>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Country</mat-label>
+                  <input type="text" formControlName="country" matInput placeholder="India" required>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            
+        
+             
+              <div>
+                <div style="float: right">
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button
+                    *ngIf="!!thirdFormGroup"
+                    [disabled]="thirdFormGroup.invalid || loader"
+                    mat-button
+                    color="accent"
+                    (click)="submit()"
+                  >
+                  <span *ngIf="!loader">
+                    Submit for Razorpay
+                  </span>
+                  <span *ngIf="loader">
+                    <div class="container">
+                    <mat-spinner [diameter]="30"></mat-spinner>
+                    </div>
+                  </span>
+                  </button>
+                </div> 
+              </div>
+            </form>
+          
+        </mat-step>
+        
+
+
+
+
+</mat-horizontal-stepper>
+<mat-divider></mat-divider>
+<br>
+<p>
+ <b>Notes</b>: The data you enter here should be valid else a razorpay account will not be created.
+</p>
+</div>
+  
+</div>
+</div>
+<div *ngIf="radioselected=='StripeConnect'">
+<br>
+  <div class="container">
+  <div *ngIf="!!stripeAccountId && (stripeConnect=='active')">
+    Your Stripe Connect account have been created.Complete the onboarding process to enable payments and payouts.
+    <button *ngIf="payLinkMode!='StripeConnect'" (click)="switchMethod('StripeConnect')" mat-button>
+      Switch to stripe connect from Razorpay Partner to create payment links.
+  </button>
+  </div>
+<div *ngIf="!!stripeAccountId && stripeConnect=='initiated'">
+  Check the inbox of the mail that was provided during onboarding. Complete Stripe onboarding to activate payments and payouts. Once the onboarding is done click on the following button to enable payment link creation.    
+  <button style="float: right" color="accent" 
+  [disabled]="loader"
+  mat-button
+  (click)="retrieveStripe()">
+  <span *ngIf="!loader">
+    Check Stripe Status
+  </span>
+  <span *ngIf="loader">
+      <mat-spinner style="margin:0 auto; text-align: center;" [diameter]="30"></mat-spinner>
+  </span>
+  </button>
+</div>
+<div *ngIf="(!!!stripeAccountId && !!!stripeConnect)">
+
+  <form [formGroup]="stripeFormGroup" class="alignmiddle">
+  <div class="row">
+    <div class="col-6">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput placeholder="zenys@gmail.com" formControlName="email" required >
+      </mat-form-field>
+    </div>
+    <div class="col-6">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="country">
+        <mat-option *ngFor="let countryCode of filteredCountries" [value]="countryCode.code" required>{{countryCode.name}}</mat-option>
+      </mat-select>
+        <!-- <input type="text" matInput placeholder="Zenys App" formControlName="country" required > -->
+      </mat-form-field>
+    </div>
+
+  </div>
+    
+    
+      <div>
+        <button style="float: right" color="accent" 
+        mat-button
+        (click)="submitStripe()" [disabled]="stripeFormGroup.invalid || loader">
+        <span *ngIf="!loader">
+          Submit for Stripe
+        </span>
+        <span *ngIf="loader">
+          <mat-spinner [diameter]="30"></mat-spinner>
+        </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</div>

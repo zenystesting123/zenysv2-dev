@@ -1,0 +1,183 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar
+    style="flex: 0 0 64px; z-index: 10"
+    class="mat-elevation-z2"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Employee Settings</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+
+  <div style="background-color: #f8f9fb; overflow-y: auto">
+    <!-- DISPLAY MESSAGE IF ACCESS IS NOT PERMITTED -->
+    <div
+      *ngIf="progressBarStatus && disableSett"
+      class="container-xl"
+      style="text-align: center"
+    >
+      Access denied!
+    </div>
+    <mat-tab-group>
+      <!-- DOC TEMPLATE -->
+      <mat-tab label="EMPLOYEE NUMBERING">
+        <div *ngIf="progressBarStatus && !disableSett" class="margLeft">
+          <br />
+          <h3>Configure Employee Number and Prefix</h3>
+
+          <mat-card style="width: 550px">
+            <mat-card-content>
+              <div class="box">
+                <div class="col-10">
+                  <h2>Employee Number Details</h2>
+                </div>
+
+                <div class="col-2" style="float: right" *ngIf="!isEditMode">
+                  <button mat-icon-button (click)="onEdit()" color="accent">
+                    <mat-icon> edit </mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="box" *ngIf="!isEditMode">
+                <div class="col-6">Employee Number Prefix</div>
+                <div class="col-6">{{ employeePrefix }}</div>
+              </div>
+              <div class="box" *ngIf="!isEditMode">
+                <div class="col-6 required">Next Employee Number</div>
+                <div class="col-6">{{ employeeNoInit }}</div>
+              </div>
+            </mat-card-content>
+            <mat-card-content *ngIf="isEditMode">
+              <div class="box">
+                <div style="margin-left: 16px; margin-top: 16px;">Employee Number Prefix</div>
+                <div>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Employee Number Prefix</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="this.employeePrefix"
+                      name="employeePrefix"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="box">
+                <div style="margin-left: 16px; margin-top: 16px;" class="required">
+                  Next Employee Number
+                </div>
+                <div>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Next Employee Number</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      [(ngModel)]="this.employeeNoInit"
+                      name="employeeNoInit"
+                      #empnumber="ngModel"
+                      required
+                    />
+                    <mat-error
+                    color="warn"
+                    *ngIf="
+                      !empnumber.valid && (empnumber.dirty || empnumber.touched)
+                    "
+                  >
+                    Required!</mat-error
+                  >
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions
+              *ngIf="isEditMode"
+              style="margin-bottom: 60px; margin-right: 16px"
+            >
+              <button
+                mat-raised-button
+                style="float: right"
+                color="accent"
+                (click)="empSettChanged()"
+                [disabled]="!employeeNoInit"
+              >
+                Submit
+              </button>
+              <button
+                mat-raised-button
+                style="float: right"
+                (click)="onCancel()"
+              >
+                Cancel
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <br />
+        </div>
+      </mat-tab>
+      <mat-tab label="ID CARD TEMPLATE">
+        <div *ngIf="progressBarStatus && !disableSett" class="margLeft">
+          <br />
+          <mat-card-header class="card-container-left">
+            <h3 [ngStyle]="{ padding: '25px' }">
+              Please select the template you want to use for printing ID Card
+            </h3>
+          </mat-card-header>
+
+          <div class="row" style="color: black">
+            <div class="custm">
+              <img
+                class="img"
+                (click)="mouseEnter1('image')"
+                src="assets/images/vId.png"
+                alt="Template1"
+                width="205"
+                height="289"
+                style="border-radius: 4px"
+              />
+              <mat-checkbox
+                class="checkbox"
+                [(ngModel)]="temp1Click"
+                (ngModelChange)="temp1()"
+              ></mat-checkbox>
+              <label class="align" style="font-size: 20px; margin-top: 10px"
+                >Vertical&nbsp;Template</label
+              >
+            </div>
+
+            <div class="custm2">
+              <img
+                class="img"
+                (click)="mouseEnter2('image')"
+                src="assets/images/hId.png"
+                alt="Template2"
+                width="324"
+                height="204"
+                style="border-radius: 4px"
+              />
+
+              <mat-checkbox
+                class="checkbox"
+                [(ngModel)]="temp2Click"
+                (ngModelChange)="temp2()"
+              ></mat-checkbox>
+              <label class="align" style="font-size: 20px; margin-top: 10px"
+                >Horizontal&nbsp;Template</label
+              >
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

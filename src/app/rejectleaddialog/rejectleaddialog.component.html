@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Reject Contact </h1>
+<div mat-dialog-content >
+  <p> Select reason for rejecting the contact</p>
+  <br>
+<section >
+  
+    <mat-form-field appearance="fill">
+        <mat-label>Reason for rejection</mat-label>
+        <mat-select (selectionChange)="changeValue($event.value)">
+          <mat-option  value="Incorrect Contact">
+            Incorrect contact details
+          </mat-option>
+          <mat-option  value="Not responding">
+            Customer not responding
+          </mat-option>
+          <mat-option  value="Not interested">
+            Customer not interested
+          </mat-option>
+          <mat-option  value="Requirement mismatch">
+            Requirement mismatch
+          </mat-option>
+          <mat-option  value="Low budget">
+            Low budget
+          </mat-option>
+          <mat-option  value="Lost to competition">
+            Lost to competition
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+    
+</div>
+<div mat-dialog-actions>
+  <button mat-button *ngIf = "rejectionReason" (click)="onSubmit()">Reject </button>
+  <button mat-button  (click)="onCancel()" cdkFocusInitial>Cancel</button>
+</div>

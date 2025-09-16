@@ -1,0 +1,11 @@
+<mat-dialog-content *ngIf="this.data.template=='template1'">
+<img src="assets/images/vId.png" alt="Template1" width="307.5px" height="480px"/>
+</mat-dialog-content>
+<mat-dialog-content *ngIf="this.data.template=='template2'">
+  <img src="assets/images/hId.png" alt="Template1" width="480px" height="308px"/>
+</mat-dialog-content>
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="accent" *ngIf="this.data.template=='template1'" [mat-dialog-close]="template1">Select</button>
+  <button mat-button color="accent" *ngIf="this.data.template=='template2'" [mat-dialog-close]="template2">Select</button>
+</div>

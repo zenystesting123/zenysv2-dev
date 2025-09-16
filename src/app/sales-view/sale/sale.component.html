@@ -1,0 +1,444 @@
+<!-- ---------------NEW start-------------------------------- -->
+
+<div class="no-v-scroll bg-soft-secondary">
+  <!-- New material Toolbar starts here -->
+  <mat-toolbar *ngIf="!disableSaleView && commonService.userPlan.saleAccess" class="border-bottom"
+    style="flex: 0 0 64px;z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+
+    <mat-icon mat-list-icon class="text-primary">work</mat-icon>
+    &nbsp;
+
+    <span>{{ fieldNameSale }}s</span>
+    <span class="bg-soft-secondary badge text-dark">{{noOfSaleinViewPipeline}}</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <mat-form-field appearance="outline" *ngIf="!disableSaleView && commonService.userPlan.saleAccess"
+      style="font-size: 14px; height:100%">
+      <mat-label>View</mat-label>
+      <mat-select placeholder="Select view" [(ngModel)]="viewSettingSelected" name="action">
+        <mat-option *ngFor="let view of viewSettingArray, let i = index" [value]="view" (click)="viewChanged(i)">
+          {{view.viewName}}
+        </mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option (click)="editView('Add')" [value]="0">
+          <mat-icon>add</mat-icon>Add view
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
+
+    <button mat-icon-button title="Edit view" (click)="editView('Edit')">
+      <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+    </button>
+    <!-- delete view -->
+    <button mat-icon-button title="Delete view" (click)="deleteView()" *ngIf="viewSettingArray.length > 1">
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+
+    <div>
+      <!-- Reassign starts here -->
+      <button mat-button color="primary" [matMenuTriggerFor]="reassign" [disabled]="disableReAssign"
+        *ngIf="selection.selected.length > 0">
+        Assign to
+      </button>&nbsp;
+      <mat-menu #reassign="matMenu">
+        <button mat-menu-item *ngFor="let s of subusersToDisplay" (click)="
+    onSubUserAssigned(
+      selection.selected,
+      s.userId,
+      s.firstname,
+      s.lastname,
+      s.branchId
+    )
+  ">
+          {{ s.firstname }} {{ s.lastname }}
+        </button>
+      </mat-menu>
+    </div>
+
+    <mat-form-field appearance="outline"
+      *ngIf="!disableSaleView && (salePipelines?.length > 1) && commonService.userPlan.saleAccess"
+      style="font-size: 14px; height: 100%;">
+      <mat-label>Selected {{fieldSettings.selectedSalePipeline.displayName}}</mat-label>
+      <mat-select placeholder="Select your option" [(ngModel)]="commonListDataService.selectedSalePipeline"
+        name="action" (selectionChange)="pipelineChangedEvent()">
+        <mat-option *ngFor="let option of salePipelines" [value]="option.pipelineId">
+          {{option.pipelineName}}
+        </mat-option>
+        <mat-option *ngIf="commonListDataService.saleView =='table'" value="All Pipelines">All
+          {{fieldSettings.selectedSalePipeline.displayName}}s</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Re-assign ends here -->
+    &nbsp;&nbsp;
+    <button mat-icon-button [matMenuTriggerFor]="sortMenu" aria-label="Sort view"
+      *ngIf="!disableSaleView && commonListDataService.saleView =='grid' && commonService.userPlan.saleAccess"
+      title="Sort data">
+      <mat-icon class="material-icons-outlined" color="accent">sort</mat-icon>
+    </button>
+    <mat-menu #sortMenu="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="sortOptions">Sort by</button>
+      <button mat-menu-item [matMenuTriggerFor]="sortOrder">Sort order</button>
+    </mat-menu>
+    <mat-menu #sortOptions="matMenu">
+      <button mat-menu-item *ngFor="let field of displayFields" (click)="sortCardField(field)">{{field.header}}</button>
+
+    </mat-menu>
+
+    <mat-menu #sortOrder="matMenu">
+      <button mat-menu-item (click)="setSortOrder('Asc')">Ascending</button>
+      <button mat-menu-item (click)="setSortOrder('Desc')">Descending</button>
+    </mat-menu>
+
+
+
+
+    <button [@fadeIn] *ngIf="filterViewtoolbar && commonListDataService.saleView =='table'" mat-raised-button
+      color="accent" [matMenuTriggerFor]="Statuses" style="margin: 10px; border-radius: 25px">
+      Status
+      <mat-icon class="material-icons-outlined" [ngStyle]="{ color: 'white' }">expand_more</mat-icon>
+    </button>
+    <mat-menu #Statuses="matMenu" style="padding-left: 6px">
+      <ul style="padding-left: 6px">
+        <li *ngFor="let stage of statusCheck">
+          <mat-checkbox style="color: black" [(ngModel)]="stage.isChecked" name="stage.name"
+            (ngModelChange)="checkStatus()">
+            {{ stage.name }}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </mat-menu>
+
+    <button [@fadeIn] *ngIf="filterViewtoolbar" mat-raised-button color="accent" [matMenuTriggerFor]="Prioritys"
+      style="margin: 10px; border-radius: 25px">
+      Priority
+      <mat-icon class="material-icons-outlined" [ngStyle]="{ color: 'white' }">expand_more</mat-icon>
+    </button>
+    <mat-menu #Prioritys="matMenu">
+      <button mat-menu-item>
+        <mat-checkbox class="example-margin" [(ngModel)]="checkedLow" (ngModelChange)="checkPriority()" name="low"
+          id="color-checkbox-1">Low</mat-checkbox>
+      </button>
+      <button mat-menu-item>
+        <mat-checkbox class="example-margin" [(ngModel)]="checkedMedium" (ngModelChange)="checkPriority()" name="medium"
+          id="color-checkbox-2">Medium</mat-checkbox>
+      </button>
+      <button mat-menu-item>
+        <mat-checkbox class="example-margin" [(ngModel)]="checkedHigh" (ngModelChange)="checkPriority()" name="high"
+          id="color-checkbox-3">High</mat-checkbox>
+      </button>
+    </mat-menu>
+    <!-- Datepicker button implementation starts-->
+    <mat-form-field class="invisible">
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date" [(ngModel)]="selectedDate1"
+          [ngModelOptions]="{ standalone: true }" />
+        <input matEndDate placeholder="End date" [(ngModel)]="selectedDate2" [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="onDate2()" />
+      </mat-date-range-input>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <!-- Datepicker button implementation ends-->
+
+    <!-- view filter starts here -->
+    <button mat-icon-button color="accent" class="material-icons-outlined" title="Filter" [matMenuTriggerFor]="view">
+      <mat-icon class="material-icons-outlined">filter_alt_outlined</mat-icon>
+    </button>
+    <mat-menu #view="matMenu">
+
+
+      <button mat-menu-item (click)="onShowDialog($event,'assignedTo')" *ngIf="dataAccessRuleCheck != 'Own'">
+        {{fieldNameSale}}s assigned to
+      </button>
+      <button mat-menu-item (click)="onShowDialog($event,'createdBy')">
+        {{fieldNameSale}}s created by
+      </button>
+
+      <button mat-menu-item *ngIf="actSaleAgeing" (click)="aged_secondaryFilter()">
+        Aged {{fieldNameSale}}s
+      </button>
+      <button mat-menu-item (click)="resetDate()" title="Clear filter">
+        <mat-icon class="material-icons-outlined" color="warn">clear</mat-icon>
+        Clear filter
+      </button>
+    </mat-menu>
+    <!-- view filter ends here -->
+
+    <button *ngIf="commonListDataService.saleView =='grid'" mat-icon-button [disabled]="!networkCheck.onNetworkCheck()"
+      (click)="customizeCardContent('sale')" title="Customize view">
+      <mat-icon class="material-icons-outlined" color="accent">settings</mat-icon>
+    </button>
+    <button mat-icon-button class="material-icons-outlined" (click)="onToggle()"
+      *ngIf="commonListDataService.saleView =='table' && commonService.userPlan.saleGridViewEnabled" title="Grid view">
+      <mat-icon class="material-icons-outlined" color="accent">table_chart</mat-icon> &nbsp;
+    </button>
+
+    <button mat-icon-button (click)="onToggleTab()"
+      *ngIf="commonListDataService.saleView =='grid' && commonService.userPlan.saleTableViewEnabled" title="Table view">
+      <mat-icon class="material-icons-outlined" color="accent">table_rows</mat-icon> &nbsp;
+    </button>
+
+
+  </mat-toolbar>
+  <!-- New material Toolbar ends here -->
+
+  <mat-progress-bar *ngIf="!progressBarStatus" [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate">
+  </mat-progress-bar>
+
+  <!-- ----------------new ends-------------------------------- -->
+
+  <div style="overflow-y: scroll;">
+    <!-- If Access is restricted -->
+    <div *ngIf="disableSaleView || !commonService.userPlan.saleAccess" class="container"
+      style="text-align: center; display: inline">
+      <br />
+      <h3>No Access</h3>
+    </div>
+
+    <div
+      *ngIf="!disableSaleView && commonListDataService.saleView =='table' && commonService.userPlan.saleAccess && commonService.userPlan.saleTableViewEnabled"
+      class="container-fluid" [style.display]="progressBarStatus ">
+
+      <br>
+      <app-custom-report-table *ngIf="progressBarStatus" [userId]="userId" [columns]="columns"
+        [dataList]="documentsArray.data" [displayName]="displayName" [tableName]="tableName"
+        [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray" [(selection)]="selection"
+        [actAgeing]="actSaleAgeing" [statusPipeline]="saleStatusPipeline" [statusAge]="saleStatusAge"
+        [customFields]="fieldListArray" [fieldCustomsettings]="fieldSettings" [tableDefaultData]="tableDefaultData"
+        [pipelineNames]="pipelineNames" [accountType]="accountType" [contactSettings]="contactSettings"
+        [disableDownload]="disableSaleDownload" [inputFieldNameFollowup]="fieldNameFollowup"
+        [inputFieldNameNotes]="fieldNameSaleNotes" [disableDocCreateEst]="disableDocCreateEst"
+        [disableDocCreateQuot]="disableDocCreateQuot" [disableDocCreateInv]="disableDocCreateInv"
+        [disableEditSale]="disableSaleEdit" [disableFoll]="disableFoll"></app-custom-report-table>
+
+      <br>
+      <br>
+
+    </div>
+
+    <!---------------Sale List View----------->
+
+    <div
+      *ngIf="!disableSaleView && commonListDataService.saleView =='grid' && commonService.userPlan.saleAccess && commonService.userPlan.saleGridViewEnabled"
+      style="  height:100%" [style.display]="progressBarStatus">
+
+      <div class="wrapper d-flex flex-row bd-highlight justify-content-start" *ngIf="saleLoaded" style="height:100%">
+        <div class="p-2 bd-highlight" *ngFor="let stage of saleStatus, let i = index" style="height:100%">
+          <div cdkDropList #stage="cdkDropList" id="{{ stage }}" [cdkDropListData]="getFilteredData(saleFilter, stage)"
+            style="height:100%" [cdkDropListConnectedTo]="getFilteredStatus(saleStatus, stage)"
+            class="example-list bg-white" [ngClass]="{'collapsed': stageCollapseArray[i]}"
+            (cdkDropListDropped)="drop($event)">
+
+
+            <!--Collapsed header-->
+            <div class="d-flex flex-column bd-highlight justify-content-left  border border-2 rounded "
+              *ngIf="stageCollapseArray[i]" [ngClass]="stageInPipeline(i).border + ' '+ stageInPipeline(i).background ">
+              <div class="p-2 bd-highlight align-items-center">
+                <button mat-icon-button (click)="hideStage(i)" color="accent" title="Expand Stage">
+                  <mat-icon>
+                    <span class="material-symbols-outlined">
+                      keyboard_double_arrow_right
+                    </span>
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="p-2 bd-highlight">
+                <h3 id="titleDesign" style="writing-mode: vertical-rl" [ngClass]="stageInPipeline(i).text ">
+                  {{ commonService.getStatusName('sales', this.commonListDataService.selectedSalePipeline,stage) }}
+                  <span class="badge " [ngClass]="stageInPipeline(i).badge + ' '+ stageInPipeline(i).text "
+                    title="Number of {{fieldNameSale}}s">{{getFilteredData(saleFilter, stage).length}}</span>
+                </h3>
+              </div>
+            </div>
+
+
+
+            <div *ngIf="stageCollapseArray[i]==false">
+              <div class="box">
+                <div class="row header">
+                  <!--Expanded header-->
+                  <div class="d-flex flex-row bd-highlight justify-content-between border border-2 rounded "
+                    [ngClass]="stageInPipeline(i).border + ' '+ stageInPipeline(i).background ">
+
+                    <div class=" bd-highlight">
+                      <h3 id="titleDesign" class="mat-h3 mat-subheading-2" [ngClass]="stageInPipeline(i).text ">
+                        {{ commonService.getStatusName('sales', this.commonListDataService.selectedSalePipeline,stage)
+                        }}
+                        <span class="badge " [ngClass]="stageInPipeline(i).badge + ' '+ stageInPipeline(i).text "
+                          title="Number of {{fieldNameSale}}s">{{getFilteredData(saleFilter, stage).length}}</span>
+                      </h3>
+                    </div>
+                    <div class=" bd-highlight ">
+                      <button mat-icon-button (click)="hideStage(i)" color="accent" title="Collapse Stage">
+                        <mat-icon>
+                          <span class="material-symbols-outlined">
+                            keyboard_double_arrow_left
+                          </span>
+                        </mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row content">
+                  <cdk-virtual-scroll-viewport itemSize="200" class="example-viewport">
+
+                    <div class="card" style="margin:10px" [cdkDragDisabled]="disableSaleEdit"
+                      [cdkDragData]="saleFiltered" cdkDrag *cdkVirtualFor="
+                    let saleFiltered of getFilteredData(saleFilter, stage);
+                    trackBy: trackbySaleList
+                  ">
+
+                      <div class="card-body">
+                        <div class="d-flex flex-column bd-highlight justify-content-between">
+                          <div class="bd-highlight">
+                            <h3 class="card-title truncate-cell">
+                              <a class="link-primary" [routerLink]="['/dash/sales/saleview/',saleFiltered.id]"> {{
+                                saleFiltered.saleTitle }} </a>
+                            </h3>
+
+                            <ul class="list-unstyled" style="margin-bottom: 5px;">
+                              <li *ngFor="let field of displayFields">{{field.header}}: {{getFieldValue(field,
+                                saleFiltered)}} </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div style="padding-bottom: 10px;">
+                          <mat-chip-list aria-label="Aged">
+                            <mat-chip class="truncate-cell2" *ngIf="saleFiltered.orgId"
+                              title="{{fieldNameOrganization}}" style="
+                                                  color:#2a6af6;
+                                                  background-color: #f1f2f4;
+                                                  height: 24px;
+                                                  top: calc(50% - 24px / 2);
+                                                  font-family: Roboto;
+                                                  font-style: normal;
+                                                  font-weight: 500;
+                                                  font-size: 12px;
+                                                  line-height: 24px;">{{ saleFiltered.companyName }}</mat-chip>
+                            <mat-chip title="{{fieldNameContact}} name" class="truncate-cell2" style="
+                                                  color: #2a6af6;
+                                                  background-color: #f1f2f4;
+                                                  height: 24px;
+                                                  top: calc(50% - 24px / 2);
+                                                  font-family: Roboto;
+                                                  font-style: normal;
+                                                  font-weight: 500;
+                                                  font-size: 12px;
+                                                  line-height: 24px;">
+                              <a class="link-primary"
+                                [routerLink]="['/dash/contact/customerdetails/',saleFiltered.customerId]"> {{
+                                saleFiltered.firstName }} <span
+                                  *ngIf="saleFiltered.secondName">&nbsp;{{saleFiltered.secondName}}</span> <span
+                                  *ngIf="saleFiltered.surname">&nbsp;{{saleFiltered.surname}}</span> </a>
+                            </mat-chip>
+
+                          </mat-chip-list>
+
+
+                        </div>
+
+                        <div class="d-flex flex-row bd-highlight justify-content-between">
+
+                          <div class="bd-highlight">
+
+                            <span class="badge bg-soft-danger text-danger" *ngIf="getAgedStatus(saleFiltered)"
+                              title="Max allowed days in stage crossed">Aged</span>
+
+                          </div>
+
+
+
+                          <div class="d-flex flex-row">
+                            <!-- vertical 3 dot button and its actions -->
+                            <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                              [matMenuTriggerFor]="menuAdd">
+                              <mat-icon color="accent">add</mat-icon>
+                            </button>
+
+                            <button mat-icon-button aria-label="edit button" (click)="editSale(saleFiltered.id)"
+                              [disabled]="disableSaleEdit">
+                              <mat-icon color="accent">edit</mat-icon>
+                            </button>
+
+                            <span style="margin-top: 5px;">
+                              <ngx-avatar
+                                name="{{commonService.getAssignedToName(saleFiltered.assignedTo).split(' ')[0] }}"
+                                textSizeRatio="2" size="30"
+                                title="Assigned to {{commonService.getAssignedToName(saleFiltered.assignedTo)}}">
+                              </ngx-avatar>
+                            </span>
+
+                            <mat-menu #menuAdd="matMenu">
+
+                              <!-- add task -->
+                              <button mat-menu-item
+                                (click)="addTask(saleFiltered.id, saleFiltered.customerId, saleFiltered.orgId, saleFiltered.companyName, saleFiltered.firstName, saleFiltered.secondName, saleFiltered.surname, saleFiltered.saleTitle)">
+                                <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+                              </button>
+
+                              <!-- add followUp -->
+                              <button mat-menu-item
+                                (click)="onCreateFollowUps(saleFiltered.id, saleFiltered.customerId, saleFiltered.companyName, saleFiltered.firstName, saleFiltered.secondName, saleFiltered.saleTitle, saleFiltered.assignedTo, saleFiltered.assignedToName,saleFiltered.orgId,saleFiltered.surname)"
+                                [ngClass]="{ isDisabled: disableFoll }">
+                                <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+                              </button>
+
+                              <!-- add sales doc -->
+                              <button mat-menu-item [matMenuTriggerFor]="beforeMenu">
+                                <mat-icon color="accent">article</mat-icon>
+                                Document
+                              </button>
+
+                              <mat-menu #beforeMenu="matMenu">
+                                <button mat-menu-item
+                                  (click)="createEstimate(saleFiltered.id, saleFiltered.customerId,saleFiltered.orgId)"
+                                  [disabled]="
+                            commonService.addDocLimitaion.addEstimateDisable ||
+                            disableDocCreateEst
+                          ">
+                                  {{ fieldNameEstimate }}
+                                </button>
+                                <button mat-menu-item
+                                  (click)="createQuote(saleFiltered.id, saleFiltered.customerId,saleFiltered.orgId)"
+                                  [disabled]="
+                            commonService.addDocLimitaion.addQuotationDisable ||
+                            disableDocCreateQuot
+                          ">
+                                  {{ fieldNameQuotation }}
+                                </button>
+                                <button mat-menu-item
+                                  (click)="createInvoice(saleFiltered.id, saleFiltered.customerId,saleFiltered.orgId)"
+                                  [disabled]="
+                            commonService.addDocLimitaion.addInvoiceDisable ||
+                            disableDocCreateInv
+                          ">
+                                  {{ fieldNameInvoice }}
+                                </button>
+                              </mat-menu>
+
+                            </mat-menu>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+                <div class="row footer">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>

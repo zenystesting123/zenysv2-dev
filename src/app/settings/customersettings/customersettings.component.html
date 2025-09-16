@@ -1,0 +1,1302 @@
+<!-- desktop view starts here -->
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <mat-toolbar class="border-bottom"
+    *ngIf="
+      !notEdit &&
+      commonService.userPlan.settingsAccess &&
+      commonService.userPlan.contactAccess
+    "
+    style="flex: 0 0 64px;"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="primary"> arrow_back </mat-icon>
+    </button>
+    <span>{{ fieldNameContact }} Settings</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+  <div
+    class="container-fluid"
+    style="overflow-y: auto; background-color: white"
+  >
+    <!-- disabling view for non super users -->
+    <div
+      *ngIf="
+        (notEdit && progressBarStatus) ||
+        !(
+          commonService.userPlan.settingsAccess &&
+          commonService.userPlan.contactAccess
+        )
+      "
+      class="container-xl"
+      style="background-color: white"
+    >
+      <mat-card>
+        Access Denied. Please contact your SuperUser to make changes to
+        {{ fieldNameContact }}
+        settings fields.
+      </mat-card>
+    </div>
+    <div
+      *ngIf="
+        !notEdit &&
+        progressBarStatus &&
+        commonService.userPlan.settingsAccess &&
+        commonService.userPlan.contactAccess
+      "
+      class="container-fluid"
+      style="min-height: 800px"
+    >
+      <mat-tab-group [color]="'primary'">
+
+        <!-- tab for pipeline settings starts here -->
+        <mat-tab *ngIf="commonService.userPlan.contactPipelineAccess">
+          <ng-template mat-tab-label>
+            <span style="text-transform: uppercase;">
+             {{contactSettings.selectedContactPipeline.displayName}} & {{contactSettings.status.displayName}}
+            </span>
+          </ng-template>
+            <app-pipeline-and-stages [module]="'Customer'" [superUserId]="superUserId" [superUserDetails]="superUserDetails"
+              [pipelines]="pipelines" [ageChecked]="ageChecked" [fieldName]="fieldNameContact"
+              [statusFieldName]="contactSettings.status.displayName" [multiPipelineAccess]="commonService.userPlan.multiPipelineAccess"
+              [pipelineFieldName]="contactSettings.selectedContactPipeline.displayName" [userId]="userId" [userName]="userName"
+              [rejectionReasonArr]="rejectionReasonArray" [mandatoryBoolean]="contactSettings.rejectionReasonVal.mandatory" [displayBoolean]="contactSettings.rejectionReasonVal.display">
+            </app-pipeline-and-stages>
+
+        </mat-tab>
+
+        <!--tab for customising fields in contact form start here-->
+        <mat-tab label="FIELD CUSTOMISATION">
+          <div class="container-lg">
+            <br />
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <h2 class="text-center">{{ fieldNameContact }} Field Names</h2>
+                <div class="row">
+                  <div class="col-4">
+                    <!-- CONTACT -->
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label
+                            >Display {{ fieldNameContact }} as</mat-label
+                          >
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameContact"
+                            name="fieldNameContact"
+                            required
+                            [disabled]="!editContact"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editContact"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editContactfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editContact"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearContact()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editContact"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Save"
+                            [disabled]="this.fieldNameContact?.length < 3"
+                            color="accent"
+                            (click)="saveContact()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12">
+                        <!-- CONTACTNOTES -->
+                        <mat-form-field appearance="fill">
+                          <mat-label
+                            >Display Notes under
+                            {{ fieldNameContact }} as</mat-label
+                          >
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameContactNotes"
+                            name="fieldNameContactNotes"
+                            required
+                            [disabled]="!editContactNotes"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editContactNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editContactNotesfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editContactNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearContactNotes()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editContactNotes"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameContactNotes?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveContactNotes()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-4"
+                    *ngIf="
+                      commonService.userPlan.activitiesAccess &&
+                      commonService.userPlan.calendarIntegration
+                    "
+                  >
+                    <div class="row">
+                      <div class="col-12 align-self-center">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Meeting as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameMeeting"
+                            name="fieldNameMeeting"
+                            required
+                            [disabled]="!editMeeting"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editMeeting"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editMeetingfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editMeeting"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearMeeting()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editMeeting"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameMeeting?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveMeeting()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4"></div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <div class="text-center mb-7">
+                  <h1 class="card-title">Customize fields</h1>
+                  <p class="card-text">
+                    Change field names and configure which fields are to be
+                    displayed and which are mandatory.
+                  </p>
+                </div>
+                <form [formGroup]="fieldCustomisationForm">
+                  <br />
+
+                  <div class="flex-container" formGroupName="salutation">
+                    <div class="flex-width text-center">
+                      <h3>Salutation</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="salutationDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableSalutation()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="firstName">
+                    <div class="flex-width text-center">
+                      <h3>First Name</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="fnameDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="secondName">
+                    <div class="flex-width text-center">
+                      <h3>Second Name</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="secondDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableSecondName()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="surname">
+                    <div class="flex-width text-center">
+                      <h3>Surname</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="surnameDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableSurname()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- Status -->
+                  <div
+                    class="flex-container"
+                    *ngIf="commonService.userPlan.contactStatusAccess"
+                    formGroupName="status"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Status</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="statusDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <!-- rejection reason field starts here -->
+                  <div
+                    class="flex-container"
+                    *ngIf="commonService.userPlan.contactStatusAccess"
+                    formGroupName="rejectionReasonVal"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Reason for Rejection</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="rejectionReasonValDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableReasonRejection()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- rejection reason field ends here -->
+                  <!--Reason for Rejection option starts here-->
+                  <div
+                    class="flex-container"
+                    *ngIf="commonService.userPlan.contactStatusAccess"
+                    formGroupName="rejectionReason"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Reason for Rejection</h3>
+                    </div>
+                    <br />
+                    <div class="custFields">
+                      <mat-form-field class="custom-width" appearance="fill">
+                        <mat-label
+                          >Provide options seperated by commas</mat-label
+                        >
+                        <textarea
+                          rows="4"
+                          matInput
+                          formControlName="rejectionReason"
+                        >
+                        </textarea>
+                      </mat-form-field>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                  </div>
+                  <br />
+                  <!--Reason for Rejection option ends here-->
+                  <!-- Priority -->
+                  <div class="flex-container" formGroupName="priority">
+                    <div class="flex-width text-center">
+                      <h3>Priority</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="priorityDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex-container"
+                    *ngIf="
+                      customFieldPipeline &&
+                      commonService.userPlan.contactPipelineAccess
+                    "
+                    formGroupName="selectedContactPipeline"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Pipeline</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="pipelineDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablePipeline()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="flex-container" formGroupName="contactNo">
+                    <div class="flex-width text-center">
+                      <h3>Contact Number</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="cNumberDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableContactNum()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div
+                    class="flex-container"
+                    formGroupName="alternateContactNumber"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Alternate Contact Number</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="altcNumDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablealtContactNum()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="email">
+                    <div class="flex-width text-center">
+                      <h3>Email</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="emailDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableEmail()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="companyName">
+                    <div class="flex-width text-center">
+                      <h3>Company Name</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="cNamedisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="custLeadValue">
+                    <div class="flex-width text-center">
+                      <h3>Lead Source</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="leadSourceDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableLeadSource()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!--Lead source option starts here-->
+                  <div class="flex-container" formGroupName="custLeadOpn">
+                    <div class="flex-width text-center">
+                      <h3>Lead Source Options</h3>
+                    </div>
+                    <br />
+                    <div class="custFields">
+                      <mat-form-field class="custom-width" appearance="fill">
+                        <mat-label
+                          >Provide options seperated by commas</mat-label
+                        >
+                        <textarea
+                          rows="4"
+                          matInput
+                          formControlName="custLeadOpn"
+                        >
+                        </textarea>
+                      </mat-form-field>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                  </div>
+                  <br />
+                  <!--Lead source option ends here-->
+                  <div class="flex-container" formGroupName="department">
+                    <div class="flex-width text-center">
+                      <h3>Department</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="departmentDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableDept()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="flex-container" formGroupName="billingaddress1">
+                    <div class="flex-width text-center">
+                      <h3>Billing Address Line One</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="addressOneDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablebilAdrs1()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="billingaddress2">
+                    <div class="flex-width text-center">
+                      <h3>Billing Address Line Two</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="addresstwoDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablebilAdrs2()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="district">
+                    <div class="flex-width text-center">
+                      <h3>District</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="districtDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableDistrict()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="state">
+                    <div class="flex-width text-center">
+                      <h3>State</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="stateDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableState()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="country">
+                    <div class="flex-width text-center">
+                      <h3>Country</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="countryDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableCountry()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="bpin">
+                    <div class="flex-width text-center">
+                      <h3>Pin / Zip</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="pinOrzipDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablepinOrzip()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="taxId">
+                    <div class="flex-width text-center">
+                      <h3>Tax Identification Number</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="taxIdNumDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disabletaxIdNum()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button
+                      mat-raised-button
+                      class="float-right mr-5"
+                      color="primary"
+                      type="submit"
+                      id="submitBTn"
+                      (click)="onSubmit()"
+                      (click)="
+                        fieldCustomisationForm.controls.custLeadOpn.touched
+                          ? onUpdatingLeadSource(this.fieldCustomisationForm)
+                          : ''
+                      "
+                      [disabled]="
+                        !this.fieldCustomisationForm.valid || !onCheckNetwork()
+                      "
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+                </form>
+              </div>
+            </div>
+            <br />
+          </div>
+        </mat-tab>
+        <!-- tab for adding additional fields starts here -->
+        <mat-tab label="ADDITIONAL FIELDS">
+          <div class="container">
+            <app-additionalfield-common
+              [superUserId]="superUserId"
+              [superUserDetails]="superUserDetails"
+              [usrProfileData]="usrProfileData"
+              [customFieldName]="fieldNameContact"
+              [customFieldUnique]="currentCustomField"
+              [customDeleteKey]="'deleteField'"
+              [additionalFieldArrName]="'customFieldsContact'"
+              [customFieldSettings]="contactSettings"
+            ></app-additionalfield-common>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="DOCUMENTS UPLOAD">
+          <div class="container-lg">
+            <div class="container-lg">
+              <br />
+              <button
+                (click)="addNewDoc()"
+                mat-button
+                color="primary"
+                type="submit"
+                style="float: right"
+              >
+                <i class="ft-check-square mr-1"></i> Add Document
+              </button>
+              <br /><br />
+            </div>
+            <br><br>
+            <mat-card *ngIf="addDoc" >
+              <mat-card-header>
+                <mat-card-title> Add new document </mat-card-title>
+              </mat-card-header>
+
+              <mat-card-content style="padding: 2%; margin: 0px">
+                <div class="row"  >
+                  <div class="col-8">
+                    <mat-form-field style="width: 100%;" appearance="fill">
+                      <mat-label>Document Name</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="documentName"
+                        name="documentName"
+                        maxlength="100"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4"></div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-fill">
+                    <mat-checkbox
+                      color="primary"
+                      [(ngModel)]="docValidationCheck"
+                      class="example-margin"
+                      >Enable verification for document</mat-checkbox
+                    >
+                  </div>
+                </div>
+                <div class="d-flex" style="margin-left: 8px;">
+                  <mat-label>Allowed document types </mat-label>
+                </div>
+                <div class="d-flex">
+                  <!-- <mat-label>Allowed Document Types </mat-label> -->
+                  <br />
+                  <div class="flex-fill">
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="pdf_type"
+                    >
+                      PDF
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="msWord_type"
+                    >
+                      MS WORD
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="csv_type"
+                    >
+                      CSV
+                    </mat-checkbox>
+                  <!-- </div>
+                </div>
+                <div class="d-flex">
+                  <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="png_type"
+                    >
+                      PNG
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="jpeg_type"
+                    >
+                      JPEG
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="example-margin"
+                      [(ngModel)]="jpg_type"
+                    >
+                      JPG
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <div class="container">
+                  <div class="row" class="float-right mr-5">
+                    <button
+                      mat-icon-button
+                      aria-label="close"
+                      (click)="closeAddDoc()"
+                      title="Cancel "
+                    >
+                      Cancel
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button
+                      mat-icon-button
+                      aria-label="Add"
+                      color="primary"
+                      (click)="customDocUpload()"
+                      title="Add "
+                      [disabled]="!documentName"
+                    >
+                      Add
+                    </button>
+                    &nbsp;&nbsp;
+                  </div>
+                </div>
+              </mat-card-actions>
+            </mat-card>
+            <br>
+            <!-- accordian for showing current fields and its edit option starts here -->
+            <mat-accordion class="example-headers-align">
+              <mat-expansion-panel
+                *ngFor="let fields of contactDocs; let i = index"
+              >
+                <mat-expansion-panel-header *ngIf="contactDocs"
+                  (click)="editDoc(i, container)"
+                  style="padding-left: 4%"
+                >
+                  <mat-panel-title style="margin-left: 8px;">{{ fields.documentName }}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div #container  style="padding: 2%">
+                  <div class="row" >
+                    <div class="col-8">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Document Name</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="edit_documentName"
+                          name="documentName"
+                          maxlength="100"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-4"></div>
+
+                    
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-fill">
+                      <mat-checkbox
+                        color="primary"
+                        [(ngModel)]="edit_docValidationCheck"
+                        class="example-margin"
+                        >Enable verification for document</mat-checkbox
+                      >
+                    </div>
+                  </div>
+                  <div class="d-flex" style="margin-left: 8px;">
+                    <mat-label> Document Type </mat-label>
+                  </div>
+                  <div class="d-flex">
+                    <br />
+                    <div class="flex-fill">
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_pdf_type"
+                      >
+                        PDF
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_msWord_type"
+                      >
+                        MS WORD
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_csv_type"
+                      >
+                        CSV
+                      </mat-checkbox>
+                    <!-- </div> -->
+                  <!-- </div> -->
+                  <!-- <div class="d-flex"> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_png_type"
+                      >
+                        PNG
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_jpeg_type"
+                      >
+                        JPEG
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="example-margin"
+                        [(ngModel)]="edit_jpg_type"
+                      >
+                        JPG
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row" style="float: right">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      aria-label="delete"
+                      title="Delete "
+                      [disabled]="!onCheckNetwork()"
+                      (click)="deleteDocument(i)"
+                    >
+                      Delete
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button
+                      mat-icon-button
+                      aria-label="Edit"
+                      [disabled]="!onCheckNetwork()"
+                      (click)="documentEdit()"
+                      color="primary"
+                      title="save "
+                      [disabled]="!edit_documentName"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <!-- accordian for showing current fields and its edit option ends here -->
+            <br />
+          </div>
+        </mat-tab>
+        <!-- tab for adding additional fields ends here -->
+
+      </mat-tab-group>
+
+      <br />
+    </div>
+  </div>
+</div>
+<!-- desktop view ends here -->

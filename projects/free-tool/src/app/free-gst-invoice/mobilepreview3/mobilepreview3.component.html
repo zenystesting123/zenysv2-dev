@@ -1,0 +1,22 @@
+<div id="printsection">
+
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>Labrador</mat-card-title>
+      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://cdn.shopify.com/s/files/1/0826/6259/files/labradorretriever_large.jpg?v=1563394836" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p>
+        he Labrador is one of the most popular dog breeds in a number of countries in the world,
+      </p>
+    </mat-card-content>
+  
+  </mat-card>
+</div>
+
+  <button #printButton style="display: none;"  type="button" class="btn btn-primary btn-print mt-2 mt-md-1" id="orange" [useExistingCss]="true"
+  printSectionId="printsection"  (click)="OnSave()" ngxPrint>Print
+</button>
+ 

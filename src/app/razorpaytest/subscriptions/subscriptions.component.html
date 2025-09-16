@@ -1,0 +1,130 @@
+
+<div *ngIf="!!datasource">
+<div class="full" *ngIf="datasource.length!=0">
+  <h3><b>Subscriptions</b></h3>
+  <br>
+  <div class="row" *ngFor="let data of datasource;index as i" >
+    <!-- <mat-card *ngIf="!data.cancelled_on" >{{i+1}}. Subscribed to Zenys App from {{(data.subscriptionStart)*1000 | date}} to {{(data.subscriptionEnd)*1000 | date}} as a {{data.plan?data.plan:'gold'}} user.The due date for remittance of payment is {{(data.charge_at)*1000 | date}}.  </mat-card> -->
+    <div  *ngIf="!!data.cancelled_on" class="col-4">
+      <mat-card >{{i+1}}. Subscribed to Zenys App from {{(data.subscriptionStart)*1000 | date}} to {{(data.subscriptionEnd)*1000 | date}} as a {{data.plan?data.plan:'gold'}} user. The subscription was cancelled on {{(data.cancelled_on)*1000 |date }}. You can use the app as a {{data.plan?data.plan:'gold'}} user till {{(data.charge_at)*1000 | date}}</mat-card>    
+    </div>
+    <div *ngIf="!data.cancelled_on" class="col-4">
+        <mat-card > 
+          <div class="row">
+          <div class="col-1" >
+          {{i+1}}.
+          </div>
+          <!-- <br> -->
+        <div class="col-10">
+      <div class="box row">
+        <div class="col-6">
+          Plan
+        </div>
+        <div class="col-6">
+          {{data.plan?data.plan:'gold'}}
+        </div>
+      </div>
+      <div class="box row">
+        <div class="col-6">
+          Plan Amount
+        </div>
+        <div class="col-6">
+          {{findAmount(data.packageDuration,data.plan?data.plan:'gold')}}
+        </div>
+      </div>
+      <div class="box row">
+        <div class="col-6">
+          Valid from
+        </div>
+        <div class="col-6">
+          {{(data.subscriptionStart)*1000 | date}}
+        </div>
+      </div>
+      <div class="box row">
+        <div class="col-6">
+          Valid To
+        </div>
+        <div class="col-6">
+          {{(data.subscriptionEnd)*1000 | date}}
+        </div>
+      </div>
+      <div class="box row">
+        <div class="col-6">
+          Next Payment date
+        </div>
+        <div class="col-6">
+          {{(data.charge_at)*1000 | date}}
+        </div>
+      </div>
+      <br>
+      <!-- <div> <button  mat-button (click)="cancelSubscription(data.subscription_id)">Click here</button> to cancel the subscription. -->
+      <!-- </div> -->
+    </div>
+  </div>
+     </mat-card>
+    </div>
+
+     
+    
+    
+    
+    <br>
+    <!-- <h4>Invoices</h4> -->
+    <!-- <app-invoicemodal [data]="{subscription_id:data.subscription_id,type:data.paymentMode}"></app-invoicemodal> -->
+   
+</div>
+
+
+    <!-- <table mat-table [dataSource]="datasource" class="mat-elevation-z8"> -->
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+    
+      <!-- Position Column -->
+      <!-- <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID. </th>
+        <td mat-cell *matCellDef="let element"> {{element.paymentMode=="manual"?element.payment_id:element.subscription_id}}  </td>
+      </ng-container> -->
+    
+      <!-- Name Column -->
+      <!-- <ng-container matColumnDef="validity_start">
+        <th mat-header-cell *matHeaderCellDef> Valid from </th>
+        <td mat-cell *matCellDef="let element"> {{(element.paymentMode=="manual"?element.currentCycleStartDate:element.subscriptionStart)*1000 | date }}  </td>
+      </ng-container> -->
+    
+      <!-- Weight Column -->
+      <!-- <ng-container matColumnDef="validity_end">
+        <th mat-header-cell *matHeaderCellDef> Valid To </th>
+        <td mat-cell *matCellDef="let element"> {{(element.paymentMode=="manual"?element.currentCycleEnd:element.subscriptionEnd)*1000 |date}} </td>
+      </ng-container> -->
+    
+    
+
+      <!-- Symbol Column -->
+      <!-- <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef> Payment Duration </th>
+        <td mat-cell *matCellDef="let element"> {{element.packageDuration}} </td>
+      </ng-container> -->
+
+       <!-- Symbol Column -->
+       <!-- <ng-container matColumnDef="charge_at">
+        <th mat-header-cell *matHeaderCellDef> Charge At </th>
+        <td mat-cell *matCellDef="let element"> {{element.paymentMode=="manual"?"Not Applicable":element.charge_at*1000 | date}}</td>
+      </ng-container>
+     -->
+
+       <!-- Symbol Column -->
+       <!-- <ng-container matColumnDef="view">
+        <th mat-header-cell *matHeaderCellDef> Invoice </th>
+        <td mat-cell *matCellDef="let element"> <a href="#" (click)="openDialog(element.paymentMode=='manual'?element.payment_id:element.subscription_id,element.paymentMode)" onClick="return false;">View Invoices</a></td>
+      </ng-container> -->
+
+<!-- 
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table> -->
+    
+
+
+  </div>
+</div>

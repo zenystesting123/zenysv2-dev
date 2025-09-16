@@ -1,0 +1,34 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.example-button-row {
+  display: table-cell;
+
+}
+
+.example-button-row .mat-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.example-full-width {
+
+  min-width: 600px;
+}
+.edit_hover_class button{
+  visibility:hidden;
+}
+.edit_hover_class:hover button {
+ visibility:visible;
+}
+
+.edit_hover_class:hover {
+  cursor: move;
+}
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow-x: hidden;
+}

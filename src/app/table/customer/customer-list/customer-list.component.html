@@ -1,0 +1,258 @@
+<div class="no-v-scroll bg-soft-secondary">
+    <!-- tool bar -->
+    <mat-toolbar *ngIf="!disableViewContact && commonService.userPlan.contactAccess" class="border-bottom"
+        style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+        <mat-icon class="text-primary" mat-list-icon>contacts </mat-icon>&nbsp;
+        <span class="text-primary-light">{{ fieldNameContact }}s</span>&nbsp;
+        &nbsp;
+        <!-- view selection -->
+        <button mat-button class="border" style="border-radius: 20px; margin: 4px"
+        (click)="onViewFilter($event)">{{tableService.viewSelected}}
+        &nbsp;
+        <mat-icon>expand_more</mat-icon></button>
+        
+      
+        <button mat-icon-button title="Edit view" (click)="editView('Edit')" *ngIf="customerGridService.isOldModeVisible 
+        && !customerGridService.customerViewSelected?.createdBy">
+            <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+        </button>
+        <button mat-icon-button title="Edit view" (click)="editView('Edit')" *ngIf="customerGridService.isOldModeVisible 
+        && customerGridService.customerViewSelected?.createdBy
+        && customerGridService.customerViewSelected?.createdBy == userId">
+            <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+        </button>
+
+        <button mat-icon-button title="Delete view" (click)="deletePublicView()"
+            *ngIf="customerGridService.isOldModeVisible && customerGridService.customerViewSelected?.createdBy 
+            && customerGridService.customerViewSelected?.createdBy == userId">
+            <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+        </button>
+        <button mat-icon-button title="Delete view" (click)="deleteMyView()"
+            *ngIf="customerGridService.isOldModeVisible && !customerGridService.customerViewSelected?.createdBy
+           ">
+            <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+        </button>
+        &nbsp;
+        <!-- pipeline selection -->
+        <mat-form-field appearance="outline" *ngIf="customerPipelines?.length > 1" style="width: max-content;">
+            <mat-label>Selected {{contactSettings.selectedContactPipeline.displayName}}</mat-label>
+            <mat-select placeholder="Select your option" [(ngModel)]="tableService.pipelineCustomerSelection"
+                name="action" (selectionChange)="viewPipelineChanged()">
+                <mat-option *ngFor="let option of customerPipelines" [value]="option.pipelineId">
+                    {{ option.pipelineName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span class="example-spacer"></span>
+
+        <div>
+            <!-- Action button section starts here -->
+            <button mat-button color="primary" [matMenuTriggerFor]="actions" *ngIf="selection.selected.length > 0">
+                Actions
+            </button>
+            &nbsp;
+            <mat-menu #actions="matMenu">
+                <button mat-menu-item [disabled]="disableEditContact"
+                    (click)="updatePipelineAndStatus(selection.selected)">
+                    Update {{contactSettings.selectedContactPipeline.displayName}} and
+                    {{contactSettings.status.displayName}}
+                </button>
+                <button mat-menu-item [matMenuTriggerFor]="reassign" [disabled]="disableEditContact || disableReAssign">
+                    Assign to
+                </button>
+                <button mat-menu-item [matMenuTriggerFor]="sendEmail" *ngIf="emailEnabled">
+                    Email
+                </button>
+                <button mat-menu-item [matMenuTriggerFor]="sendSMS" *ngIf="smsEnabled">
+                    SMS
+                </button>
+                <button mat-menu-item [matMenuTriggerFor]="sendWhatsapp" *ngIf="waEnabled">
+                    Whatsapp
+                </button>
+                <button mat-menu-item (click)="onDeleteContact(selection.selected)" [disabled]="disableDeleteContact">
+                    Delete
+                </button>
+            </mat-menu>
+
+            <!-- send sms sub options -->
+            <mat-menu #sendSMS="matMenu">
+                <button mat-menu-item *ngFor="let smsTempltate of smsTemplates"
+                    (click)="triggerSmsfn(smsTempltate, selection.selected)">
+                    {{ smsTempltate.templateName }}
+                </button>
+                <button mat-menu-item *ngIf="smsTemplates.length === 0">
+                    No templates added!
+                </button>
+            </mat-menu>
+
+            <!-- send email sub options -->
+            <mat-menu #sendEmail="matMenu">
+                <button mat-menu-item *ngFor="let emailTempltate of emailTemplates"
+                    (click)="triggerEmailfn(emailTempltate, selection.selected)">
+                    {{ emailTempltate.templateName }}
+                </button>
+                <button mat-menu-item *ngIf="emailTemplates.length === 0">
+                    No templates added!
+                </button>
+            </mat-menu>
+
+            <!-- send whatsapp sub options -->
+            <mat-menu #sendWhatsapp="matMenu">
+                <button mat-menu-item *ngFor="let waTempltates of whatsAppTemplates"
+                    (click)="triggerWhatsappfn(waTempltates, selection.selected)">
+                    {{ waTempltates.templateName }}
+                </button>
+                <button mat-menu-item *ngIf="whatsAppTemplates.length === 0">
+                    No templates added!
+                </button>
+            </mat-menu>
+            <!-- reassign -->
+            <mat-menu #reassign="matMenu">
+                <button mat-menu-item *ngFor="let s of allSubUsers" (click)="
+            onSubUserAssigned(
+              selection.selected,
+              s.userId,
+              s.firstname,
+              s.lastname,
+              s.branchId
+            )
+          ">
+                    {{ s.firstname }} {{ s.lastname }}
+                </button>
+            </mat-menu>
+        </div>
+        <!-- card field display settings -->
+        <button *ngIf="customerGridService.customerView =='grid'" mat-icon-button [disabled]="!onCheckNetwork()"
+            (click)="customizeCardContent()" title="Customize view">
+            <mat-icon class="material-icons-outlined" color="accent">settings</mat-icon>
+        </button>
+        <!-- change to grid view -->
+        <button mat-icon-button (click)="onToggle()"
+            *ngIf="customerGridService.customerView =='table' && commonService.userPlan.contactTableViewEnabled"
+            title="Grid view">
+            <mat-icon class="material-icons-outlined" color="accent">table_chart</mat-icon>
+        </button>
+        <!-- change to table view -->
+        <button mat-icon-button (click)="onToggleTab()"
+            *ngIf="customerGridService.customerView =='grid' && commonService.userPlan.contactGridViewEnabled"
+            title="Table view">
+            <mat-icon class="material-icons-outlined" color="accent">table_rows</mat-icon>
+            &nbsp;
+        </button>
+        <!-- file upload -->
+        <button mat-icon-button aria-label="Button to upload {{ fieldNameContact }} details" (click)="routeUpload()"
+            [ngClass]="{isDisabled:!onCheckNetwork()}">
+            <mat-icon class="material-icons-outlined" color="accent" title="Upload {{ fieldNameContact }}s from file">
+                upload_file</mat-icon>
+        </button>
+
+    </mat-toolbar>
+    <mat-progress-bar *ngIf="!progressBarDisplay" mode="indeterminate">
+    </mat-progress-bar>
+    <!-- If Access is restricted -->
+    <div *ngIf="(disableViewContact || !commonService.userPlan.contactAccess)" class="container"
+        style="text-align: center">
+        <br />
+        <h3>No Access</h3>
+    </div>
+    <!-- Toolbar ends here -->
+    <div style="overflow-y: scroll;"
+        *ngIf="!disableViewContact && progressBarDisplay && !customerGridService.isOldModeVisible">
+
+        <!-- Grid view -->
+        <div [style.display]=" customerGridService.customerView =='grid' &&  commonService.userPlan.contactAccess &&
+        commonService.userPlan.contactGridViewEnabled  ? 'block' : 'none'" style="height: 100%">
+            <div class="wrapper d-flex flex-row bd-highlight justify-content-start" style="height: 100%">
+                <div *ngFor="let stage of tableService.statusArray; let i = index">
+                </div>
+                <div class="p-2 bd-highlight" *ngFor="let stage of tableService.statusArray; let i = index">
+                    <div class="example-list bg-white" [ngClass]="{ collapsed: tableService.stageCollapseArray[i] }">
+                        <div cdkDropList #stage="cdkDropList" id="{{ stage?.stageId }}" style="height: 100%"
+                            [cdkDropListData]="getFilteredData(i)"
+                            [cdkDropListConnectedTo]="getFilteredStatus(stage?.stageId)" class="example-list bg-white"
+                            [ngClass]="{ collapsed: tableService.stageCollapseArray[i] }" cdkDropListSortingDisabled
+                            (cdkDropListDropped)="drop($event, i)">
+                            <app-customer-list-grid-view [reload]="reloadChildComponent" [stageId]="stage?.stageId"
+                                [index]="i" [contactSettings]="contactSettings" [userName]="userName"
+                                [fieldNameContact]="fieldNameContact" [disableEditContact]="disableEditContact"
+                                [displayFields]="displayFields" [userId]="userId" [superUserId]="superUserId"
+                                [fieldNameOrganization]="fieldNameOrganization" [fieldNameSale]="fieldNameSale"
+                                [fieldNameService]="fieldNameService" [fieldNameFollowup]="fieldNameFollowup"
+                                [fieldNameContactNotes]="fieldNameContactNotes" [fieldNameTask]="fieldNameTask"
+                                [actCustAgeing]="actCustAgeing" [customerPipelines]="customerPipelines"
+                                [enableOutboundCallsViaCallBridging]="enableOutboundCallsViaCallBridging"
+                                [smsEnabled]="smsEnabled" [waEnabled]="waEnabled"
+                                [whatsAppTemplates]="whatsAppTemplates" [smsTemplates]="smsTemplates"
+                                [emailTemplates]="emailTemplates" [emailEnabled]="emailEnabled"
+                                [disableSale]="disableSale" [disableService]="disableService"
+                                [disableFoll]="disableFoll" [disableCreateNote]="disableCreateNote"
+                               
+
+                                (callEvent)="onCall($event)" (triggerSmsEvent)="triggerSms($event)"
+                                (triggerEmailEvent)="triggerEmail($event)"
+                                (triggerWhatsappEvent)="triggerWhatsapp($event)" (onAddSaleEvent)="onAddSale($event)"
+                                (onAddServiceEvent)="onAddService($event)" (addTaskEvent)="addTask($event)"
+                                (addNotesEvent)="addNotes($event)" (onCreateFollowUpsEvent)="onCreateFollowUps($event)"
+                                (editCustomerEvent)="editCustomer($event)"
+                                ></app-customer-list-grid-view>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Table view -->
+        <div [style.display]="
+                customerGridService.customerView =='table' &&
+                commonService.userPlan.contactAccess  &&
+                commonService.userPlan.contactTableViewEnabled  ? 'block' : 'none'" class="container-fluid"
+            style="margin-bottom: 10px">
+            <br />
+            <app-customer-table-view [disableViewContact]="disableViewContact"
+                [disableDownloadContact]="disableDownloadContact" [disableSale]="disableSale"
+                [disableService]="disableService" [disableFoll]="disableFoll" [disableCreateNote]="disableCreateNote"
+                [disableEditContact]="disableEditContact" [emailEnabled]="emailEnabled" [smsEnabled]="smsEnabled"
+                [waEnabled]="waEnabled" [whatsAppTemplates]="whatsAppTemplates" [smsTemplates]="smsTemplates"
+                [emailTemplates]="emailTemplates"
+                [enableOutboundCallsViaCallBridging]="enableOutboundCallsViaCallBridging" [superUserId]="superUserId"
+                [userId]="userId" [actCustAgeing]="actCustAgeing" [customerPipelines]="customerPipelines"
+                [(selection)]="selection" [(columnsDispaly)]="columnsDispaly" [customFieldContacts]="customFieldContacts"
+                [userNamesArray]="userNamesArray" [userIdsArray]="userIdsArray" [fieldNameContact]="fieldNameContact"
+                [contactSettings]="contactSettings" [fieldNameFollowup]="fieldNameFollowup"
+                [fieldNameSale]="fieldNameSale" [fieldNameTask]="fieldNameTask" [fieldNameService]="fieldNameService"
+                [fieldNameContactNotes]="fieldNameContactNotes" [tableDefaultData]="tableDefaultData"
+                (callEvent)="onCall($event)" (triggerSmsEvent)="triggerSms($event)"
+                (triggerEmailEvent)="triggerEmail($event)" (triggerWhatsappEvent)="triggerWhatsapp($event)"
+                (onAddSaleEvent)="onAddSale($event)" (onAddServiceEvent)="onAddService($event)"
+                (addTaskEvent)="addTask($event)" (addNotesEvent)="addNotes($event)"
+                (onCreateFollowUpsEvent)="onCreateFollowUps($event)" (editCustomerEvent)="editCustomer($event)"
+                (openDialogEvent)="openDialog($event)"></app-customer-table-view>
+        </div>
+    </div>
+    <div style="overflow-y: scroll" *ngIf="!disableViewContact && progressBarDisplay && customerGridService.isOldModeVisible &&
+        commonService.userPlan.contactAccess">
+        <app-customer-grid [(selection)]="selection" [disableEditContact]="disableEditContact"
+            [disableDownloadContact]="disableDownloadContact" [disableSale]="disableSale" [disableService]="disableService"
+            [disableFoll]="disableFoll" [disableCreateNote]="disableCreateNote"
+            [contactDataAccessRule]="contactDataAccessRule" [userId]="userId" [superUserId]="superUserId"
+            [superUserDetails]="superUserDetails" [enableOutboundCallsViaCallBridging]="enableOutboundCallsViaCallBridging"
+            [smsEnabled]="smsEnabled" [waEnabled]="waEnabled" [whatsAppTemplates]="whatsAppTemplates"
+            [smsTemplates]="smsTemplates" [emailTemplates]="emailTemplates" [emailEnabled]="emailEnabled"
+            [emailCount]="emailCount" [fieldNameFollowup]="fieldNameFollowup" [fieldNameSale]="fieldNameSale"
+            [fieldNameTask]="fieldNameTask" [fieldNameService]="fieldNameService"
+            [fieldNameContactNotes]="fieldNameContactNotes" [fieldNameOrganization]="fieldNameOrganization"
+            [fieldNameContact]="fieldNameContact" [userName]="userName" [customFieldContacts]="customFieldContacts"
+            [accountType]="accountType" [fieldListArray]="customFieldContacts" [customerPipelines]="customerPipelines"
+            [actCustAgeing]="actCustAgeing" [contactSettings]="contactSettings" [(columnsDispaly)]="columnsDispaly"
+            [displayColumnsSaved]="displayColumnsSaved" [tableDefaultData]="tableDefaultData"  [cardFields]="cardFields"
+            [displayFields]="displayFields" [reload]="reloadOldTableChildComponent"
+            [myViews]="myViews" [publicViews]="publicViews"
+            
+            (onAddSaleEvent)="onAddSale($event)" (onTableSettingsEvent)="onTableSettings($event)"
+            (onAddServiceEvent)="onAddService($event)" (addTaskEvent)="addTask($event)" (addNotesEvent)="addNotes($event)"
+            (onCreateFollowUpsEvent)="onCreateFollowUps($event)" (editCustomerEvent)="editCustomer($event)"
+            (triggerSmsEvent)="triggerSms($event)" (callEvent)="onCall($event)" (triggerEmailEvent)="triggerEmail($event)"
+            (triggerWhatsappEvent)="triggerWhatsapp($event)"></app-customer-grid>
+    </div>
+   
+</div>

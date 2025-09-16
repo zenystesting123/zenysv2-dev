@@ -1,0 +1,40 @@
+
+<ul class="m-0 list-unstyled">
+    <li *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle != '' ">
+        {{ previewService.docData.docTitle }} No:
+        {{ previewService.docData.prefixAndDocNumber }}
+    </li>
+    <li *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle == '' ">
+        {{previewService.docType }} No:
+        {{ previewService.docData.prefixAndDocNumber }}
+    </li>
+    <li *ngIf="previewService.docData.docDate && previewService.docData.docTitle != ''">
+        {{ previewService.docData.docTitle }} Date:
+        {{ previewService.docData.docDate | date }}
+    </li>
+    <li *ngIf="previewService.docData.docDate && previewService.docData.docTitle == ''">
+        {{previewService.docType }} Date:
+        {{ previewService.docData.docDate | date }}
+    </li>
+
+    <li *ngIf="previewService.docData.dueDate">
+       Due Date:
+        {{ previewService.docData.dueDate | date }}
+    </li>
+    <li *ngIf="previewService.docData.estRef">
+        {{previewService.fieldNameEstimate}} Ref:
+        {{ previewService.docData.estRef }}
+    </li>
+    <li *ngIf="previewService.docData.quoteRef">
+        {{previewService.fieldNameQuotation}} Ref:
+        {{ previewService.docData.quoteRef }}
+    </li>
+    <li *ngIf="previewService.docData.poRef">
+        P.O Ref:
+        {{ previewService.docData.poRef }}
+    </li>
+    <li *ngIf="previewService.docData.paymentTerm">
+        Payment Terms:
+        {{ previewService.docData.paymentTerm }}
+    </li>
+</ul>

@@ -1,0 +1,37 @@
+<div class="container-lg">
+    <div class="container-fluid" style="padding:50px">
+
+        <div class="container" *ngIf="isMessageOpen">
+            <mat-card>
+                <img mat-card-image src="assets/images/Free Tool Large.png" alt="Zenys Free sign-up">
+                <mat-card-content>
+                    <h1>
+                        Sign up for our free CRM, Sales management, Invoicing and Collection tool!
+                    </h1>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button   (click)="onCloseCard()"
+                    title="Close">Close
+                </button>&nbsp;&nbsp;
+                <a href="https://zenys.org/" target="_blank">
+                    <button mat-raised-button (click)=onLogIn() color="accent">Try Now</button>
+                </a>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+     <br>
+        <!--Hero image and text-->
+        <div class="row d-flex align-items-center">
+            <div class="col-sm-12 col-md-6">
+                <img src="assets/images/QuotationTemplate.png" style="max-width: 100%;" class="img-thumbnail">
+            </div>
+            <div class="col-sm-12 col-md-6" style="padding: 50px;">
+                <h1 class="mat-h2 mat-display-2" style="color: #283593;font-weight: bold;">Quotation Format</h1>
+                <h2 class="mat-h2 mat-title"> Easy to use Quotation template with GST</h2>
+                <p>Download and open with excel or google sheet to create quotations in minutes </p>
+                <button  mat-raised-button color="accent"  (click)="downloadTemplate()" class = "btn_clk_freeQut_tmplt_dwnld">DOWNLOAD QUOTATION FORMAT IN
+                    EXCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

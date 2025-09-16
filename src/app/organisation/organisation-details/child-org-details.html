@@ -1,0 +1,10 @@
+<h2 *ngIf="this.data.scenario == 'deletetask'">Delete {{this.data.fieldNameTask}} </h2>
+<mat-dialog-content class="mat-typography" *ngIf="this.data.scenario == 'deletetask'">
+    <h3>Do you want to delete the {{this.data.status}} {{this.data.fieldNameTask}} {{this.data.title}}&nbsp;?</h3>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'deletetask'">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="warn" mat-button
+    [mat-dialog-close]="this.data"
+    >Delete</button>
+</mat-dialog-actions>

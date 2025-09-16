@@ -1,0 +1,167 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar class="border-bottom" *ngIf="!disableViewSale" class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }">
+    <mat-icon class="text-primary" mat-list-icon>article
+    </mat-icon>&nbsp;
+    <span class="text-primary-light">{{ fieldNameSale }}s with {{ fieldNameItems == "Products and Service" ? "Product" :
+      fieldNameItems}}</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <!-- VIEW SELECT -->
+    <mat-form-field appearance="outline" style="font-size: 14px; height:100%">
+      <mat-label>View</mat-label>
+      <mat-select placeholder="Select view" [(ngModel)]="viewSettingSelected" name="action">
+        <mat-option *ngFor="let view of viewSettingArray, let i = index" [value]="view" (click)="viewChanged(i)">
+          {{view.viewName}}
+        </mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option (click)="editView('Add')" [value]="0">
+          <mat-icon>add</mat-icon>Add view
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <button mat-icon-button title="Edit view" (click)="editView('Edit')">
+      <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+    </button>
+     <!-- delete view -->
+    <button mat-icon-button title="Delete view" (click)="deleteView()" *ngIf="viewSettingArray.length > 1">
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+
+    <button mat-button color="accent"
+      (click)="documentsArray.data.length>0 ? exporter.exportTable('csv',{fileName:fieldNameItems}): noDataMessage()"
+      title="Download Table" [ngClass]="{'isDisabled':disableSaleDownload}">
+      <mat-icon color="accent">download</mat-icon>
+    </button>
+
+  </mat-toolbar>
+  <!-- PROGRESSS BAR -->
+  <mat-progress-bar *ngIf="!isloaded" mode="indeterminate">
+  </mat-progress-bar>
+  <!-- CONTENT -->
+  <div [style.visibility]="!isloaded ? 'hidden' : 'visible'" style=" overflow-y: auto;  height: 100%;"
+    class="bg-soft-secondary">
+    <!-- IF NO ACCESS -->
+    <div *ngIf="disableViewSale" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <!--Table-->
+    <div class="container-fluid" style="margin-bottom: 30px" [style.display]="disableViewSale ? 'none' : 'block' ">
+      <br />
+      <div class="example-container mat-elevation-z8">
+        <!-- TABLE STARTS HERE -->
+        <table mat-table [dataSource]="documentsArray" matSort matSortActive="createdDate" matTableExporter class="mat-elevation-z1 demo-table"
+          #exporter="matTableExporter" matSortDirection="asc">
+          <ng-container matColumnDef="prodName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{productSettings.productName.displayName}}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.prodName}}</td>
+          </ng-container>
+          <ng-container matColumnDef="prodCategory">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{productSettings.category.displayName}}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.prodCategory}}</td>
+          </ng-container>
+          <ng-container matColumnDef="qty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.quantity}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{productSettings.unitPrice.displayName}}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.rate}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="discount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{productSettings.discount.displayName}}(%)</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.discount}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="amountAfterDiscount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount After {{productSettings.discount.displayName}}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.amountAfterDiscount}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="saleTitle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ saleSettings.saleTitle.displayName }}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.saleTitle}}</td>
+          </ng-container>
+          <!-- pipeline -->
+          <ng-container matColumnDef="selectedSalePipeline">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Pipeline</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{ row.selectedSalePipeline }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="salesStage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ saleSettings.salesStage.displayName }}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.salesStage}}</td>
+          </ng-container>
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{fieldNameContact}}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.customer}}</td>
+          </ng-container>
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.createdDate | date }}</td>
+          </ng-container>
+          <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ saleSettings.startDate.displayName }}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.startDate | date }}</td>
+          </ng-container>
+          <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{
+              saleSettings.expCompletionDate.displayName
+              }}</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.expCompletionDate | date }}</td>
+          </ng-container>
+          <ng-container matColumnDef="assignedTo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigned To</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.assignedToName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="inpipeline">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>In Pipeline</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.inPipeline ? 'Yes':'No'}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="won">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Won</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.won ? 'Yes':'No' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="lost">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Lost</th>
+            <td mat-cell *matCellDef="let row" class="truncate-cell">{{row.lost ? 'Yes':'No' }}</td>
+          </ng-container>
+
+          <div *ngFor="let key of customFieldsProductValue;let i=index">
+            <ng-container matColumnDef="{{key.fieldName}}" *ngIf="key.isActive" >
+              <th mat-header-cell *matHeaderCellDef >{{key.fieldName}}</th>
+              <td mat-cell *matCellDef="let row" class="truncate-cell" >
+                <div *ngIf="row.additionalFieldsArr
+                && row.additionalFieldsArr !='undefined'
+                && row.additionalFieldsArr.length !=0 && key.fieldType != 'date' && key.fieldType != 'date_time'">  {{ row.additionalFieldsArr[i]?.fieldValue }}</div>
+                <div *ngIf="row.additionalFieldsArr
+                && row.additionalFieldsArr !='undefined'  && row.additionalFieldsArr[i]?.fieldValue != ' '  && row.additionalFieldsArr[i]?.fieldValue && row.additionalFieldsArr[i]?.fieldValue != ''
+                && row.additionalFieldsArr.length !=0 && key.fieldType == 'date' ">  {{ row.additionalFieldsArr[i]?.fieldValue?.toDate() | date }}</div>
+                <div *ngIf="row.additionalFieldsArr
+                && row.additionalFieldsArr !='undefined'  && row.additionalFieldsArr[i]?.fieldValue != ' '  && row.additionalFieldsArr[i]?.fieldValue && row.additionalFieldsArr[i]?.fieldValue != ''
+                && row.additionalFieldsArr.length !=0 && key.fieldType == 'date_time' ">  {{ row.additionalFieldsArr[i]?.fieldValue?.toDate() | date: "MMM d, y hh:mm a" }}</div>
+              </td>
+            </ng-container>
+          </div>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <!-- SALE DETAIL PAGE ROUTING -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <!-- IF THERE IS NO DATA -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No {{ fieldNameItems == "Products and Service" ? "Product" :
+              fieldNameItems}} found</td>
+          </tr>
+        </table>
+        <!-- PAGINATION -->
+        <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

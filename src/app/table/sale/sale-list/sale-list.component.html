@@ -1,0 +1,170 @@
+<div class="no-v-scroll bg-soft-secondary">
+    <!-- tool bar -->
+    <mat-toolbar *ngIf="!disableSaleView && commonService.userPlan.saleAccess" class="border-bottom"
+        style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+        <mat-icon class="text-primary" mat-list-icon>work</mat-icon>&nbsp;
+        <span class="text-primary-light">{{ fieldNameSale }}s</span>&nbsp;
+        &nbsp;
+        <!-- view selection -->
+        <button mat-button class="border" style="border-radius: 20px; margin: 4px"
+            (click)="onViewFilter($event)">{{tableService.viewSelected}}
+            &nbsp;
+            <mat-icon>expand_more</mat-icon></button>
+            <button mat-icon-button title="Edit view" (click)="editView('Edit')" *ngIf="saleGridService.isOldModeVisible 
+                        && !saleGridService.saleViewSelected?.createdBy">
+                <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+            </button>
+            <button mat-icon-button title="Edit view" (click)="editView('Edit')" *ngIf="saleGridService.isOldModeVisible 
+                        && saleGridService.saleViewSelected?.createdBy
+                        && saleGridService.saleViewSelected?.createdBy == userId">
+                <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+            </button>
+            
+            <button mat-icon-button title="Delete view" (click)="deletePublicView()" *ngIf="saleGridService.isOldModeVisible && saleGridService.saleViewSelected?.createdBy 
+                            && saleGridService.saleViewSelected?.createdBy == userId">
+                <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+            </button>
+            <button mat-icon-button title="Delete view" (click)="deleteMyView()" *ngIf="saleGridService.isOldModeVisible && !saleGridService.saleViewSelected?.createdBy
+                           ">
+                <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+            </button>
+            &nbsp;
+        <!-- pipeline selection -->
+        <mat-form-field appearance="outline" *ngIf="salePipelines?.length > 1" style="width: max-content;">
+            <mat-label>Selected {{saleSettings.selectedSalePipeline.displayName}}</mat-label>
+            <mat-select placeholder="Select your option" [(ngModel)]="tableService.pipelineSaleSelection" name="action"
+                (selectionChange)="viewPipelineChanged()">
+                <mat-option *ngFor="let option of salePipelines" [value]="option.pipelineId">
+                    {{ option.pipelineName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span class="example-spacer"></span>
+
+        <div>
+            <!-- Reassign starts here -->
+            <button mat-button color="primary" [matMenuTriggerFor]="reassign"
+                [disabled]="disableReAssign || disableSaleEdit" *ngIf="selection.selected.length > 0">
+                Assign to
+            </button>&nbsp;
+            <mat-menu #reassign="matMenu">
+
+                <button mat-menu-item *ngFor="let s of allSubUsers" (click)="
+          onSubUserAssigned(
+            selection.selected,
+            s.userId,
+            s.firstname,
+            s.lastname,
+            s.branchId
+          )
+        ">
+                    {{ s.firstname }} {{ s.lastname }}
+                </button>
+            </mat-menu>
+        </div>
+        <!-- card field display settings -->
+        <button *ngIf="saleGridService.saleView =='grid'" mat-icon-button [disabled]="!onCheckNetwork()"
+            (click)="customizeCardContent()" title="Customize view">
+            <mat-icon class="material-icons-outlined" color="accent">settings</mat-icon>
+        </button>
+        <!-- change to grid view -->
+        <button mat-icon-button (click)="onToggle()"
+            *ngIf="saleGridService.saleView =='table' && commonService.userPlan.saleTableViewEnabled"
+            title="Grid view">
+            <mat-icon class="material-icons-outlined" color="accent">table_chart</mat-icon>
+        </button>
+        <!-- change to table view -->
+        <button mat-icon-button (click)="onToggleTab()"
+            *ngIf="saleGridService.saleView =='grid' && commonService.userPlan.saleGridViewEnabled"
+            title="Table view">
+            <mat-icon class="material-icons-outlined" color="accent">table_rows</mat-icon>
+            &nbsp;
+        </button>
+
+    </mat-toolbar>
+    <mat-progress-bar *ngIf="!progressBarDisplay" mode="indeterminate">
+    </mat-progress-bar>
+    <!-- If Access is restricted -->
+    <div *ngIf="(disableSaleView || !commonService.userPlan.saleAccess)" class="container" style="text-align: center">
+        <br />
+        <h3>No Access</h3>
+    </div>
+    <!-- Toolbar ends here -->
+    <div style="overflow-y: scroll" *ngIf="progressBarDisplay && !disableSaleView && !saleGridService.isOldModeVisible">
+
+
+        <!-- Grid view -->
+        <div [style.display]="saleGridService.saleView =='grid' && 
+         commonService.userPlan.saleAccess &&
+        commonService.userPlan.saleGridViewEnabled  ? 'block' : 'none'" style="height: 100%">
+
+            <div class="wrapper d-flex flex-row bd-highlight justify-content-start" style="height: 100%">
+                <div *ngFor="let stage of tableService.statusArray; let i = index">
+                </div>
+                <div class="p-2 bd-highlight" *ngFor="let stage of tableService.statusArray; let i = index">
+                    <div class="example-list bg-white" [ngClass]="{ collapsed: tableService.stageCollapseArray[i] }">
+                        <div cdkDropList #stage="cdkDropList" id="{{ stage?.stageId }}" style="height: 100%"
+                            [cdkDropListData]="getFilteredData(i)"
+                            [cdkDropListConnectedTo]="getFilteredStatus(stage?.stageId)" class="example-list bg-white"
+                            [ngClass]="{ collapsed: tableService.stageCollapseArray[i] }" cdkDropListSortingDisabled
+                            (cdkDropListDropped)="drop($event,i)">
+                            <app-sale-grid-view [reload]="reloadChildComponent" [userId]="userId"
+                                [superUserId]="superUserId" [stageId]="stage?.stageId"
+                                [disableDocCreateEst]="disableDocCreateEst"
+                                [disableDocCreateQuot]="disableDocCreateQuot"
+                                [disableDocCreateInv]="disableDocCreateInv" [disableSaleEdit]="disableSaleEdit"
+                                [fieldNameContact]="fieldNameContact" [fieldNameOrganization]="fieldNameOrganization"
+                                [fieldNameFollowup]="fieldNameFollowup" [fieldNameTask]="fieldNameTask"
+                                [fieldNameSale]="fieldNameSale" [fieldNameEstimate]="fieldNameEstimate"
+                                [fieldNameQuotation]="fieldNameQuotation" [fieldNameInvoice]="fieldNameInvoice"
+                                [index]="i" [displayFields]="displayFields" [salePipelines]="salePipelines"
+                                [actSaleAgeing]="actSaleAgeing" [disableSale]="disableSale" [disableFoll]="disableFoll"
+                                [userName]="userName" [saleSettings]="saleSettings" (addTaskEvent)="addTask($event)"
+                                (onCreateFollowUpsEvent)="onCreateFollowUps($event)"
+                                (editSaleEvent)="editSale($event)"></app-sale-grid-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Table view -->
+        <div [style.display]="saleGridService.saleView =='table' &&
+                commonService.userPlan.saleAccess  &&
+                commonService.userPlan.saleTableViewEnabled  ? 'block' : 'none'" class="container-fluid"
+            style="margin-bottom: 10px">
+            <br />
+            <app-sale-table-view [disableDocCreateEst]="disableDocCreateEst" [disableDocCreateQuot]="disableDocCreateQuot"
+            [disableDocCreateInv]="disableDocCreateInv" [disableSaleDownload]="disableSaleDownload" [disableFoll]="disableFoll"
+                [disableSaleEdit]="disableSaleEdit" [superUserId]="superUserId" [userId]="userId"
+                [actSaleAgeing]="actSaleAgeing" [salePipelines]="salePipelines" [(selection)]="selection"
+                [userNamesArray]="userNamesArray" [userIdsArray]="userIdsArray" [customFieldsSale]="customFieldsSale"
+                [columnsDispaly]="columnsDispaly" [tableDefaultData]="tableDefaultData"
+                [fieldNameSaleNotes]="fieldNameSaleNotes" [fieldNameFollowup]="fieldNameFollowup"
+                [fieldNameContact]="fieldNameContact" [fieldNameTask]="fieldNameTask" [fieldNameSale]="fieldNameSale"
+                [fieldNameEstimate]="fieldNameEstimate" [fieldNameQuotation]="fieldNameQuotation"
+                [fieldNameInvoice]="fieldNameInvoice" [accountType]="accountType" [saleSettings]="saleSettings"
+                [contactSettings]="contactSettings" (editSaleEvent)="editSale($event)" (addTaskEvent)="addTask($event)"
+                (onCreateFollowUpsEvent)="onCreateFollowUps($event)"
+                (openDialogEvent)="openDialog($event)"></app-sale-table-view>
+        </div>
+    </div>
+    <div style="overflow-y: scroll" *ngIf="!disableSaleView && progressBarDisplay && saleGridService.isOldModeVisible &&
+        commonService.userPlan.saleAccess">
+
+        <app-sale-grid [(selection)]="selection" [(columnsDispaly)]="columnsDispaly" [userId]="userId" [saleDataAccessRule]="saleDataAccessRule"
+            [superUserId]="superUserId" [disableSaleEdit]="disableSaleEdit" [actSaleAgeing]="actSaleAgeing"
+            [saleSettings]="saleSettings" [contactSettings]="contactSettings" [customFieldsSale]="customFieldsSale"
+            [tableDefaultData]="tableDefaultData" [accountType]="accountType" [orderWonCheck]="orderWonCheck"
+            [disableFoll]="disableFoll" [fieldNameFollowup]="fieldNameFollowup" [fieldNameContact]="fieldNameContact"
+            [fieldNameTask]="fieldNameTask" [fieldNameSale]="fieldNameSale" [fieldNameEstimate]="fieldNameEstimate"
+            [fieldNameQuotation]="fieldNameQuotation" [fieldNameInvoice]="fieldNameInvoice" 
+            [fieldNameOrganization]="fieldNameOrganization" [fieldNameSaleNotes]="fieldNameSaleNotes"
+            [fieldNameItems]="fieldNameItems" [cardFields]="cardFields" [displayFields]="displayFields"
+            [salePipelines]="salePipelines" [userName]="userName" [reload]="reloadOldTableChildComponent" [myViews]="myViews"
+            [publicViews]="publicViews" [branches]="branches" [disableSaleDownload]="disableSaleDownload"
+            [disableDocCreateEst]="disableDocCreateEst" [disableDocCreateQuot]="disableDocCreateQuot"
+            [disableDocCreateInv]="disableDocCreateInv" (editSaleEvent)="editSale($event)"
+            (onTableSettingsEvent)="onTableSettings($event)" (addTaskEvent)="addTask($event)"
+            (onCreateFollowUpsEvent)="onCreateFollowUps($event)" ></app-sale-grid>
+    </div>
+</div>

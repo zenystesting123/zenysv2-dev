@@ -1,0 +1,214 @@
+<div class="no-v-scroll bg-soft-secondary">
+  <!-- toolbar -->
+  <mat-toolbar
+    *ngIf="
+      !disableFollowUp &&
+      commonService.userPlan.activitiesAccess &&
+      commonService.userPlan.followupsAccess
+    "
+    class="border-bottom"
+    style="flex: 0 0 64px; z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <mat-icon class="text-primary" mat-list-icon>call </mat-icon>&nbsp;
+    <span class="text-primary-light">{{ fieldNameFollowup }}s</span>&nbsp;
+    &nbsp;
+    <!-- view selection -->
+    <button
+      mat-button
+      class="border"
+      style="border-radius: 20px; margin: 4px"
+      [matMenuTriggerFor]="assignedToMe"
+      [ngClass]="{ isDisabled: !networkCheck.onNetworkCheck() }"
+    >
+      {{ gridContainerService.viewSelected }}
+      &nbsp;
+      <mat-icon>expand_more</mat-icon>
+    </button>
+
+    <!-- assigned to option -->
+    <mat-menu #assignedToMe="matMenu">
+      <button
+        mat-menu-item
+        (click)="viewSelected('Todays call', 'Assigned to me')"
+      >
+        Today's {{ fieldNameFollowup }}
+      </button>
+      <button
+        mat-menu-item
+        (click)="viewSelected('This weeks call', 'Assigned to me')"
+      >
+        This weeks {{ fieldNameFollowup }}
+      </button>
+      <button
+        mat-menu-item
+        (click)="viewSelected('Overdue call', 'Assigned to me')"
+      >
+        Overdue {{ fieldNameFollowup }}
+      </button>
+    </mat-menu>
+
+    <span class="example-spacer"></span>
+    <div>
+      <!-- Reassign starts here -->
+      <button mat-button color="primary" [matMenuTriggerFor]="reassign"
+          [disabled]="disableReAssign || disableFollEdit" *ngIf="selection.selected.length > 0">
+          Assign to
+      </button>&nbsp;
+      <mat-menu #reassign="matMenu">
+
+          <button mat-menu-item *ngFor="let s of allSubUsers" (click)="
+    onSubUserAssigned(
+      selection.selected,
+      s.userId,
+      s.firstname,
+      s.lastname,
+      s.branchId
+    )
+  ">
+              {{ s.firstname }} {{ s.lastname }}
+          </button>
+      </mat-menu>
+  </div>
+    <button
+      *ngIf="commonService.followUpView == 'grid'"
+      mat-icon-button
+      [disabled]="!networkCheck.onNetworkCheck()"
+      (click)="customizeCardContent()"
+    >
+      <mat-icon color="accent">settings</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      class="material-icons-outlined"
+      (click)="onToggleGridView()"
+      *ngIf="commonService.followUpView == 'table'"
+      title="Grid view"
+    >
+      <mat-icon class="material-icons-outlined" color="accent"
+        >table_chart</mat-icon
+      >
+      &nbsp;
+    </button>
+
+    <button
+      mat-icon-button
+      (click)="onToggleToTable()"
+      *ngIf="commonService.followUpView == 'grid'"
+      title="Table view"
+    >
+      <mat-icon class="material-icons-outlined" color="accent"
+        >table_rows</mat-icon
+      >
+      &nbsp;
+    </button>
+  </mat-toolbar>
+
+  <!-- Progress bar -->
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"> </mat-progress-bar>
+
+  <!-- content -->
+  <div style="overflow-y: scroll" *ngIf="!isLoading">
+    <!-- no access -->
+    <div
+      *ngIf="
+        disableFollowUp ||
+        !(
+          commonService.userPlan.activitiesAccess &&
+          commonService.userPlan.followupsAccess
+        )
+      "
+      class="container"
+      style="text-align: center"
+    >
+      <br />
+      <h3 style="text-align: center">No Access</h3>
+    </div>
+
+    <!-- table -->
+    <div
+      [style.display]="
+        !disableFollowUp &&
+        commonService.userPlan.activitiesAccess &&
+        commonService.userPlan.followupsAccess &&
+        commonService.followUpView == 'table'
+          ? 'block'
+          : 'none'
+      "
+      class="container-fluid"
+      style="margin-bottom: 10px; padding-top: 10px"
+    >
+      <app-followup-table
+        (markAsCompletedEvent)="markasCompleted($event)"
+        (editEvent)="onEditFollowUps($event)"
+        [superUserId]="superUserId"
+        [userId]="userId"
+        [fieldNameFollowup]="fieldNameFollowup"
+        [disableFollEdit]="disableFollEdit"
+        [enableOutboundCallsViaCallBridging]="
+          enableOutboundCallsViaCallBridging
+        "
+        [userName]="userName"
+        [userNumber]="userNumber"
+        [outboundCallBridgingType]="outboundCallBridgingType"
+        [DIDNumber]="DIDNumber"
+        [autoCallToken]="autoCallToken"
+        [callBridgingExtension]="callBridgingExtension"
+        [subUsers]="subUsers"
+        [superUserFirstName]="superUserFirstName"
+        [superUserSecondName]="superUserSecondName"
+        [(selection)]="selection"
+      ></app-followup-table>
+    </div>
+
+    <!-- grid -->
+    <div
+      [style.display]="
+        !disableFollowUp &&
+        commonService.userPlan.activitiesAccess &&
+        commonService.userPlan.followupsAccess &&
+        commonService.followUpView == 'grid'
+          ? 'block'
+          : 'none'
+      "
+      style="height: 100%"
+      class="p-2"
+    >
+      <div class="wrapper">
+        <div
+          class="col-4"
+          *ngFor="let followupType of followupTypes; let i = index"
+        >
+          <app-followup-list
+            [reload]="reloadChildComponent"
+            (markAsCompletedEvent)="markasCompleted($event)"
+            (editEvent)="onEditFollowUps($event)"
+            [followupType]="followupType"
+            [index]="i"
+            [superUserId]="superUserId"
+            [userId]="userId"
+            [fieldNameFollowup]="fieldNameFollowup"
+            [fieldNameOrganization]="fieldNameOrganization"
+            [fieldNameCustomer]="fieldNameCustomer"
+            [fieldNameSale]="fieldNameSale"
+            [fieldNameService]="fieldNameService"
+            [displayFields]="displayFields"
+            [disableFollEdit]="disableFollEdit"
+            [enableOutboundCallsViaCallBridging]="
+              enableOutboundCallsViaCallBridging
+            "
+            [userName]="userName"
+            [userNumber]="userNumber"
+            [outboundCallBridgingType]="outboundCallBridgingType"
+            [DIDNumber]="DIDNumber"
+            [autoCallToken]="autoCallToken"
+            [callBridgingExtension]="callBridgingExtension"
+            [subUsers]="subUsers"
+            [superUserFirstName]="superUserFirstName"
+            [superUserSecondName]="superUserSecondName"
+          ></app-followup-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

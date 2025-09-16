@@ -1,0 +1,59 @@
+.example-full-width{
+  width: 100%;
+}
+.center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+// #wrapper{
+//   padding: 16px;
+//   min-height: 100%;
+//   height: 100%;
+//   box-sizing: border-box;/*new*/
+// }
+// #tab-group{
+//   height: 100%;
+// }
+// #tab-group mat-tab-body {
+//   flex-grow: 1;
+// }
+// .mat-tab-body-wrapper{
+//   flex-grow: 1;
+// }
+.add-width{
+  width: 100% !important;
+}
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 400px;
+}
+.danger{
+  color: #ff0000;
+}
+:host ::ng-deep .mat-tab-body.mat-tab-body-active {
+  height: 400px;
+}
+// mat-dialog-content{
+//   max-width: 700px !important;
+//   margin-right: 0;
+//   padding-right: 0 !important;
+//   padding-left: 24px !important;
+// }
+.warn-color{
+  color: #ff0000;
+}
+.warn-color{
+  color: #ff0000;
+}
+//Date_time addd'n field styling
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}
+

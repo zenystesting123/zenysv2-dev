@@ -1,0 +1,39 @@
+<h2 mat-dialog-title *ngIf="data.scenario == 'reAssign' && !spinner">Re-Assign {{data.fieldNameservice}}</h2>
+<mat-dialog-content *ngIf="data.scenario == 'reAssign' && !spinner" class="mat-typography" style="min-height: 50px;">
+  <h3>Do you want to Re-Assign selected {{data?.selected?.length}} {{data.fieldNameservice}}?</h3>
+  <mat-checkbox class="example-margin" [(ngModel)]="data.checked">
+    Re-Assign associated open {{data.fieldNameTask}}s and open {{data.fieldNameFollowup}}s to {{data.assignedToName}}
+  </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="data.scenario == 'reAssign' && !spinner" style="float: right">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button (click)="reAssignFn()">
+    Re-Assign
+  </button>
+</mat-dialog-actions>
+<mat-dialog-content *ngIf="data.scenario == 'reAssign' && spinner" class="center1">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span>&nbsp;Re-Assigning {{count}} {{data.fieldNameservice}} out of {{data?.selected?.length}}..</span>
+</mat-dialog-content>
+
+<!-- stage -->
+<h2 mat-dialog-title *ngIf="data.scenario == 'updateStage'">Update {{data.fieldNameService}} Stage</h2>
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'updateStage'">
+  <h3> Confirm updation of {{data.fieldNameService}} Stage to {{data.statusName}}</h3>
+  <!-- select field to enter reason for rejection if stage is changing lost -->
+  <mat-form-field class="full-width" appearance="fill" *ngIf="data.rejectionReasonDisplay===true">
+    <mat-label>Reason for rejection</mat-label>
+    <mat-select [(ngModel)]="data.rejectionReasonValue" id="rejectionReasonValue" name="rejectionReasonValue"
+      placeholder="Required">
+      <mat-option *ngFor="let s of rejectionReasonArr" value="{{ s }}" [disabled]="!rejectionReasonArrPresent">{{
+        s
+        }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario === 'updateStage'">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button color="primary"
+    [disabled]="!networkCheck.onNetworkCheck() || (!data.rejectionReasonValue && data.rejectionReasonMandatory)"
+    [mat-dialog-close]="this.data">Update </button>
+</mat-dialog-actions>

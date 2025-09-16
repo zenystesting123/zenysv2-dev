@@ -1,0 +1,119 @@
+<mat-toolbar *ngIf="isMobilesize" style="position: sticky; top: 0;"
+    [ngStyle]="{'background-color':'white'}" disablePagination=true>
+    <button mat-icon-button aria-label="back" title="back" (click)="onBack()">
+      <mat-icon [ngStyle]="{'color':'#2A6AF6'}"><span class="material-icons-outlined">
+          arrow_back
+        </span></mat-icon>
+    </button>
+    <span>
+      Chat
+    </span>
+    <span class="example-spacer"></span>
+    <mat-icon style="color: white" *ngIf="!onCheckNetwork()">wifi_off icon</mat-icon>
+    <!-- <button (click)="onAddCustomerMob()" mat-mini-fab aria-label="Add options" color="accent">
+        <mat-icon [ngStyle]="{'color':'white'}">add</mat-icon>
+      </button> -->
+
+  </mat-toolbar>
+
+
+  <div class="d-flex align-items-start flex-column bd-highlight " style="height: 75vh;overflow-y: hidden;max-height: inherit;">
+    <div class="p-2 bd-highlight" style="width: 100%;">
+
+        <div #myList1 class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:62vh !important; width: 100%; margin: 0%;padding: 0%;">
+            <div *ngFor="let message of List;let last=last">
+            <div *ngIf="message.From!=uid"class="media media-chat media-chat-reverse" style="padding: 0%;margin: 0%;">
+                <div class="media-body" style="padding-right:20px;">
+
+                    <pre class="bg-soft-primary text-black">{{message.message}}</pre>
+                    <p class="meta" style="color: #8b95a5;"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                </div>
+            </div>
+            <div *ngIf="message.From==uid" class="media media-chat" style="padding: 0%;margin: 0%;">
+
+                <div class="media-body" style="padding-left:20px;">
+                    <pre class="bg-soft-secondary text-black">{{message.message}}</pre>
+                    <p class="meta"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                </div>
+            </div>
+          </div>
+
+            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+            </div>
+            <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
+                <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="mt-auto p-2 bd-highlight bg-soft-primary" style="width: 100%;">
+      <form #form="ngForm" class="col-12 " >
+        <div class="input-group d-flex align-items-center ">
+          <textarea id = 'chatText' type="text" rows="2" placeholder="Type a message" name="message" (keydown)="keypressevent($event)" aria-describedby="button-addon2" class="form-control  inputform" [(ngModel)]="message">
+          </textarea>
+          <div class="input-group-append">
+            <button mat-icon-button type="submit" color="primary" class="btn btn-link" [disabled]="!message" (click)="sendMessage()" >
+                <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <!--
+    <div class="row "  style="width:100%; height: 94vh; margin: 0%;padding: 0%;background-color: rebeccapurple;">
+
+  <div class="chatlist" class="col-12" style="width:100%; max-height: 100%; margin: 0%;padding: 0%;background-color: blueviolet;">
+
+      <div class="row container d-flex " style="width: 100%;padding: 0%;margin: 0%;height:98%; background-color: green;">
+          <div style="width: 100%;padding: 0%;margin: 0%;background-color: antiquewhite;">
+
+                  <div #myList1 class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:78vh !important; width: 100%; margin: 0%;padding: 0%;background-color: #8b95a5;">
+                      <div *ngFor="let message of List;let last=last">
+                      <div *ngIf="message.From!=uid"class="media media-chat media-chat-reverse" style="padding: 0%;margin: 0%;">
+                          <div class="media-body" style="padding-right:20px;">
+
+                              <p class="bg-soft-primary text-black">{{message.message}}</p>
+                              <p class="meta" style="color: #8b95a5;"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                          </div>
+                      </div>
+                      <div *ngIf="message.From==uid" class="media media-chat" style="padding: 0%;margin: 0%;">
+
+                          <div class="media-body" style="padding-left:20px;">
+                              <p class="bg-soft-warning text-black">{{message.message}}</p>
+                              <p class="meta"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                          </div>
+                      </div>
+                    </div>
+
+                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                      </div>
+                      <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
+                          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
+                      </div>
+                  </div>
+
+
+          </div>
+      </div>
+  </div>
+  <form #form="ngForm" class="col-12 input-group ">
+    <div class="input-group d-flex align-items-center">
+      <input type="text" placeholder="Type a message" name="message" aria-describedby="button-addon2" class="form-control py-4 inputform" [(ngModel)]="message">
+      <div class="input-group-append">
+        <button mat-icon-button type="submit" color="primary" class="btn btn-link" [disabled]="!message" (click)="sendMessage()" (keyup)="keypressevent($event)">
+            <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+</div>
+    -->
+

@@ -1,0 +1,143 @@
+<div class="no-v-scroll">
+  <mat-toolbar *ngIf="!disableSettingsView && common.userPlan.settingsAccess && common.userPlan.automation"  class="border-bottom" style="flex: 0 0 64px;z-index: 10" [ngStyle]="{'background-color':'white'}">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon [ngStyle]="{'color':'#2A6AF6'}"> arrow_back </mat-icon>
+    </button>
+    <span style="color: rgba(0, 0, 0, 0.87);">Automations</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+    <button mat-button color="primary" [matMenuTriggerFor]="menu" aria-label="Add options for customer view" title="Add new automation"  [disabled]="!onCheckNetwork()" >
+  
+      Add Automation
+      </button>&nbsp;&nbsp;
+      <mat-menu #menu="matMenu">
+        <button (click)="addAutomation()" mat-menu-item>Custom Automations</button>
+        <button *ngIf="common.subscribedPlan != 'leadManagement'" (click)="addstageAutomation()" mat-menu-item>Stage Automations</button>
+      </mat-menu>
+      <button mat-raised-button color="accent" (click)="exportTojson()">Download </button>
+  </mat-toolbar>
+  <div *ngIf="loader" style="overflow-y:scroll;height:100%;">
+  <div *ngIf="(automationDatasource||stageAutomations) && !disableSettingsView && common.userPlan.settingsAccess && common.userPlan.automation" style=" min-width:100% ;overflow-y: auto; margin: 0px; ">
+    <br>
+  
+  
+  <div >
+    <mat-tab-group>
+  <mat-tab label="Custom automations">
+    <div class="bg-light" style="height:100%">
+      <br>
+      <div *ngIf="automationDatasource.length==0" class="alignmiddle container-xl" style="text-align: center;">
+        <button mat-button [disabled]="!onCheckNetwork()" (click)="addAutomation()">Click here</button> to add your first automation.
+      </div>
+      <div class="container-xl">
+    <table mat-table *ngIf="automationDatasource.length>0"
+           [dataSource]="dataSource" multiTemplateDataRows
+           class="mat-elevation-z8 container-xl" >
+      <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+        <th mat-header-cell *matHeaderCellDef style="text-transform: capitalize;"> {{column}} </th>
+        <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+      </ng-container>
+      <ng-container matColumnDef="active" >
+        <th mat-header-cell *matHeaderCellDef style="text-transform: capitalize;"> Activity Status</th>
+        <td mat-cell *matCellDef="let element"><mat-slide-toggle [checked]="element.active?element.active:false" (change)="toggleActive($event,element.Id)">Active</mat-slide-toggle> </td>
+      </ng-container>
+  
+  
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay2.length">
+          <div class="example-element-detail"
+               [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+               <div style="width: 100%;" class="alignmiddle">
+                <div>
+                  <br>When a
+                  <span class="formatting"> <b>{{element.form1.trigger.name}}</b> is <b>{{element.form1.operation.name}}</b>,<b>{{element.form1.action.name}}</b>
+                       <span *ngIf="!element.alwaysorCondition"> if <span *ngFor="let condition of element.form2.conditions;let i=index">
+                           <b> {{condition.field.name}} {{condition.condition.name}} {{showvalue(condition,element.form1.trigger.value)}} </b>
+                        <span> {{element.conditionAdder[i]?(element.conditionAdder[i]=='&&'?'AND':'OR'):''}} </span>
+                        </span></span></span>
+                    <div>
+  
+                    </div>
+                </div>
+                <div style="float:right" >
+                  <button mat-button color= "accent"(click)="editAutomation(element.Id)">EDIT</button>
+                  <button mat-button (click)="deleteAutomation(element.Id)">DELETE</button>
+                </div>
+              </div>
+                  </div>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay2"></tr>
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplay2;"
+          class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+    </div>
+    <br>
+    </div>
+  
+  </mat-tab>
+  <mat-tab *ngIf="common.subscribedPlan != 'leadManagement'" label="Stage transitions">
+    <br>
+    <div *ngIf="stageAutomations.length==0" class="alignmiddle" style="background-color: white;text-align: center;">
+      <button mat-button [disabled]="!onCheckNetwork()" (click)="addstageAutomation()">Click here</button> to add your first automation.
+    </div>
+    <div style="padding:10 10 10 10;min-height: 70%;" class="container-xl">
+      <div class="card" *ngFor="let stageAutomation of stageAutomations " style="margin-bottom: 10px;" >
+        <div class="card-body">
+          <h3 class="card-title">{{stageAutomation.name}}</h3>
+          <p class="card-text">Update {{stageAutomation.form1.action.value}} {{getStatusCardValue(stageAutomation)}} in {{showPipelineName(stageAutomation.data.pipeline,stageAutomation.form1.action.value)}} {{stageAutomation.form1.pipeline.name}}  pipeline from {{stageAutomation.form1.valueChangeFrom=='any'?'any value':showStatus(stageAutomation.form1.action.value,stageAutomation.form1.valueChangeFrom)}} to {{showStatus(stageAutomation.form1.action.value,stageAutomation.form1.valueChangeTo)}}, when {{stageAutomation.form1.trigger.name=="sale stage in"?'sale stage in '+ valueList["sale"][stageAutomation.conditionPipeline]["name"]+" is changed to":stageAutomation.form1.trigger.name}} {{stageAutomation.form1.condition=='true'?'':showStatus("sale",stageAutomation.form1.condition)}} </p>
+          <!-- <p class="card-text">Update {{stageAutomation.form1.action.value}} {{getStatusCardValue(stageAutomation)}} in {{valueList[stageAutomation.form1.action.value][stageAutomation.data.pipeline]["name"]}} {{stageAutomation.form1.pipeline.name}} pipeline from {{stageAutomation.form1.valueChangeFrom=='any'?'any value':stageAutomation.form1.valueChangeFrom}} to {{stageAutomation.form1.valueChangeTo}}, when {{stageAutomation.form1.trigger.name=="sale stage in"?'sale stage in '+ valueList["sale"][stageAutomation.conditionPipeline]["name"]+" is changed to":stageAutomation.form1.trigger.name}} {{stageAutomation.form1.condition=='true'?'':(stageAutomation.form1.condition)}} </p> -->
+          <!-- <p class="card-text">Update {{stageAutomation.form1.action.value}} {{getStatusCardValue(stageAutomation)}} in {{valueList[stageAutomation.form1.action.value]}}showPipelineName(stageAutomation.data.pipeline,stageAutomation.form1.action.value) {{stageAutomation.form1.pipeline.name}} pipeline from {{stageAutomation.form1.valueChangeFrom=='any'?'any value':stageAutomation.form1.valueChangeFrom}} to {{stageAutomation.form1.valueChangeTo}}, when {{stageAutomation.form1.trigger.name=="sale stage in"?'sale stage in '+ valueList["sale"][stageAutomation.conditionPipeline]["name"]+" is changed to":stageAutomation.form1.trigger.name}} {{stageAutomation.form1.condition=='true'?'':(stageAutomation.form1.condition)}} </p> -->
+
+          <div style="float:left">
+            <mat-slide-toggle [checked]="stageAutomation.active?stageAutomation.active:false" (change)="toggleActive($event,stageAutomation.Id)" color="primary">Active</mat-slide-toggle>
+           </div>
+  
+            <div style="float:right" >
+              <button mat-button color= "primary"(click)="editStageAutomations(stageAutomation.Id)">Edit</button>
+              <button mat-button (click)="deleteAutomation(stageAutomation.Id)" color="warn">Delete</button>
+            </div>
+        </div>
+      </div>
+     <!--
+      <mat-card  *ngFor="let stageAutomation of stageAutomations ">
+      <mat-expansion-panel  hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>{{stageAutomation.name}}</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>Update <b>{{stageAutomation.form1.action.value}}</b> in {{valueList[stageAutomation.form1.action.value][stageAutomation.data.pipeline]["name"]}} {{stageAutomation.form1.pipeline.name}} from <b>{{stageAutomation.form1.valueChangeFrom=='any'?'any value':stageAutomation.form1.valueChangeFrom}}</b> to <b>{{stageAutomation.form1.valueChangeTo}}</b>,when <b>{{stageAutomation.form1.trigger.name=="sale stage in"?'sale stage in '+ valueList["sale"][stageAutomation.conditionPipeline]["name"]+"is changed to":stageAutomation.form1.trigger.name}} {{stageAutomation.form1.condition=='true'?'':(stageAutomation.form1.condition)}}</b> </p>
+  
+       <div style="float:left">
+        <mat-slide-toggle [checked]="stageAutomation.active?stageAutomation.active:false" (change)="toggleActive($event,stageAutomation.Id)">Active</mat-slide-toggle>
+       </div>
+  
+        <div style="float:right" >
+          <button mat-button color= "accent"(click)="editStageAutomations(stageAutomation.Id)">EDIT</button>
+          <button mat-button (click)="deleteAutomation(stageAutomation.Id)">DELETE</button>
+        </div>
+      </mat-expansion-panel>
+    </mat-card>
+  -->
+  </div>
+  </mat-tab>
+  </mat-tab-group>
+  </div>
+  </div>
+  <div class="container-fluid" style="overflow-y: auto; background-color: white;margin-top: 15px;padding-bottom: 20px;"
+    *ngIf="(disableSettingsView || !common.userPlan.settingsAccess || !common.userPlan.automation) " class="centre">
+    <br>
+    <div class="container-xl" style="background-color: white">
+      <mat-card> Access Denied</mat-card>
+    </div>
+  </div>
+  </div>
+  <div *ngIf="!loader && common.subscribedPlan != 'invoicing'" class="centre">
+    <h3>Please upgrade to diamond plan to use this feature</h3>
+  </div>
+  </div>

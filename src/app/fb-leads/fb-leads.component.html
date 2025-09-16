@@ -1,0 +1,97 @@
+<!-- Main div -->
+<div class="no-v-scroll">
+  <!-- Toolbar -->
+  <mat-toolbar *ngIf="
+    commonService.userPlan.settingsAccess 
+  " class="border-bottom" style="flex: 0 0 64px;z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+    <!-- back button -->
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="primary"> arrow_back </mat-icon>
+    </button>
+    <!-- Page heading -->
+    <span>Facebook Lead Integration</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <!-- Container fluid -->
+  <div class="container-fluid" style="overflow-y: auto; background-color: white; min-height: 800px">
+    <!-- Tab starts here-->
+    <mat-tab-group (selectedTabChange)="formSelected = false">
+      <!-- New Integration--> 
+      <mat-tab label="New Integration">
+        <div class="container-xl">
+          <br>
+          <!-- Login button -->
+          <div class="container-fluid" *ngIf="!fbloginStat">
+            <h3> Link your facebook account to receive leads from Facebook </h3>
+            <button mat-raised-button color="primary" (click)="myFacebookLogin()">Login to Facebook</button>
+          </div>
+          
+          <div class="container-fluid" *ngIf="fbloginStat && forms">
+            <div class="row">
+              <!-- Pages are listed here -->
+              <div class="col-6">
+                <h4>Select a page to connect with Zenys CRM</h4>
+                <mat-action-list role="list">
+                  <button mat-list-item *ngFor="let page of pageData"
+                    (click)="subscribeApp(page.id, page.name, page.access_token)" role="listitem">{{page.name}}</button>
+                </mat-action-list>
+                <br>
+              </div>
+              <!-- Forms are listed here -->
+              <div class="col-6" *ngIf="pageSelected" style="display:block !important">
+                <h4>Select lead form associated page and map fields</h4>
+                <mat-action-list *ngIf="leadForms" role="list" class="matList">
+                  <mat-form-field appearance="fill">
+                    <!-- Search box-->
+                    <input matInput [(ngModel)]="searchTerm" name="searchTerm" class="searchInput"
+                      (keyup)="applyFilter($event.target.value)" placeholder="Search form" />
+                      <!-- Clear button -->
+                    <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchTerm()">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <!-- Search button -->
+                    <button *ngIf="!searchTerm" matSuffix mat-icon-button aria-label="Search">
+                      <mat-icon>search</mat-icon>
+                    </button>
+                  </mat-form-field>
+                  <!-- Display forms -->
+                  <mat-list-item *ngFor="let form of filteredOptions; let i=index">
+                    <div class="row" style="width:100%">
+                      <div class="col-1">
+                        <mat-icon *ngIf="formIds.includes(form.id)" color="primary">done</mat-icon>
+                      </div>
+                      <div class="col-11">
+                        <button (click)="getQuestions(form.id, form.name)">
+                          {{form.name}}
+                        </button>
+                      </div>
+                    </div>
+                  </mat-list-item>
+                </mat-action-list>
+                <br>
+                <!-- Message -->
+                <mat-error *ngIf="formSelected && formPresent">Form already configured. Go to Existing Lead Ad
+                  Integrations tab to make changes in the configuration</mat-error>
+              </div>
+            </div>
+            <br>
+            <!-- Form coniguration comes here-->
+            <div *ngIf="!formPresent">
+              <h3> Choose mappings to {{fieldNameContact}}:</h3>
+              <app-page-settings [mode]="'create'" [page_ID]="selectedPageID" [page_Name]="selectedPageName"
+                [form_ID]="selectedFormID" [form_Name]="selectedFormName"
+                [questions]="formQuestions"></app-page-settings>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Existing Lead Ad Integrations">
+        <!-- Page Settings component called with 'edit' mode-->
+        <div style="margin-top: -10px">
+          <app-page-settings [mode]="'edit'"></app-page-settings>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</div>

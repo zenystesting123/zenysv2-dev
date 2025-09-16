@@ -1,0 +1,240 @@
+.example-viewport {
+  min-width: 300px;
+ // height: 75vh;
+  width: auto;
+  overflow-y: visible;
+
+}
+.full-width{
+  width: 100%;
+}
+.card:hover {
+  box-shadow: -1px 5px 15px 0px rgba(0, 0, 0, 0.3);
+  cursor: move;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.truncate-cell {
+  max-width: 250px;
+  /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncate-cell2 {
+  max-width: 220px;
+  /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrapper {
+
+  overflow-x: auto;
+  height: 100%;
+  margin-bottom: 2px;
+  overflow-y: hidden;
+
+}
+
+.wrapper .item {
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+  height: 98%;
+  margin-bottom: 5px;
+}
+
+.example-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+#titleDesign {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+
+.example-list {
+  border-radius: 4px;
+  min-height: 100%;
+  display: block;
+}
+
+
+.collapsed {
+  width: 50px;
+}
+
+.mat-list .mat-list-item {
+  height: 50px
+}
+
+/** Can be used to center any element */
+.center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+}
+.center1 {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.example-box:hover {
+  box-shadow: -1px 5px 15px 0px rgba(0, 0, 0, 0.3);
+  cursor: move;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+p {
+  font-size: 15px;
+}
+
+mat-card:hover {
+  cursor: pointer;
+}
+
+.mat-column-select {
+  overflow: initial;
+}
+
+.container {
+  display: block;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  flex-grow: 1;
+  // flex-basis: 300px;
+  margin: 10px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+div.scroll {
+  margin: 4px, 4px;
+  padding: 4px;
+  background-color: white;
+  overflow-x: auto;
+  overflow-y: auto;
+  white-space: nowrap;
+  width: auto;
+  height: 72vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow-x: hidden;
+}
+
+.isDisabled {
+  color: blue;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  text-decoration: none;
+}
+
+::ng-deep.mat-checkbox-layout {
+  margin-bottom: 0;
+}
+
+
+.box {
+  display: flex;
+  flex-flow: column;
+
+  height:  calc(100vh - 50px - 90px  ) !important //100vh- main toolbar height - component toolbar height
+}
+
+.box .row {
+  border: 1px  grey;
+
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+  margin:0px;
+
+  /* The above is shorthand for:
+  flex-grow: 0,
+  flex-shrink: 1,
+  flex-basis: auto
+  */
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+  margin:0px;
+
+}
+
+.box .row.footer {
+  flex: 0 1 2px;
+  margin:0px;
+}
+.example-margin {
+  margin: 0 10px;
+}
+:host::ng-deep.mat-checkbox-layout{
+  white-space: normal !important;
+  }
+
+  :host::ng-deep.mat-checkbox-inner-container{
+      margin-top: 4px;
+  }

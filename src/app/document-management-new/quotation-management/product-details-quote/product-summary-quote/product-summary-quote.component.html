@@ -1,0 +1,196 @@
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Item Summary</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--Total Amount-->
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Total amount:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>{{ productSummaryUiData?.currency }} {{ productSummaryUiData?.total }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Discount totals-->
+
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <div class="row" *ngIf="productSummaryUiData?.showDiscountTotal">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Discount total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.totalAmountDiscounted }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="productSummaryUiData?.showDiscountTotal">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Total after discounts:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }}
+                        {{ productSummaryUiData?.totalAfterDiscount }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!--CGST Amount-->
+        <div class="row" *ngIf="
+          productSummaryUiData?.showCgstTotal
+        ">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">CGST total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.cgstTotal }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="
+      productSummaryUiData?.showSgstTotal
+    ">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--SGST Amount-->
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">SGST total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.sgstTotal }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="
+      productSummaryUiData?.showIgstTotal
+    ">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--IGST Amount-->
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">IGST total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.igstTotal }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--Cess Amount-->
+        <div class="row" *ngIf="
+          productSummaryUiData?.showCessTotal
+        ">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Cess total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.cessTotal }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--VAT Amount-->
+        <div class="row" *ngIf="
+          productSummaryUiData?.showVatTotal
+        ">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">VAT total:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>{{ productSummaryUiData?.currency }} {{ productSummaryUiData?.vatTotal }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-3 col-lg-3"></div>
+    <div class="col-sm-12 col-md-9 col-lg-9">
+        <!--Total including taxes-->
+        <div class="row" *ngIf="productSummaryUiData?.showTotalIncludingTax">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="conatiner float-right">
+                    <p class="card-title">Total including taxes:</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-9 col-lg-6">
+                <div class="conatiner float-left">
+                    <p>
+                        {{ productSummaryUiData?.currency }} {{ productSummaryUiData?.totalIncludingTax }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

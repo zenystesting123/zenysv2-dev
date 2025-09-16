@@ -1,0 +1,1195 @@
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <mat-toolbar class="border-bottom"  style="flex: 0 0 64px;" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>User Profile</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div class="container-fluid" style="overflow-y: auto;">
+    <mat-tab-group >
+      <mat-tab label="PROFILE DETAILS" *ngIf="!notEdit && commonService.userPlan.settingsAccess">
+        <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+        </mat-progress-bar>
+        <div *ngIf="progressBarStatus" style="
+            overflow-y: auto;
+            background-color: #f8f9fb;
+            padding-bottom: 30px;
+          "
+        >
+          <br />
+          <div
+            class="container-fluid"
+            *ngIf="!notEdit"
+            style="margin-bottom: 30px; min-height: 800px"
+          >
+            <!-- Card first displayed on loading profile settings page -->
+            <mat-card
+              *ngIf="notEditModeInfo && notEditModeAdd && !traccedit"
+              [ngStyle]="{ width: '691px', 'margin-left': '20px' }"
+            >
+              <br />
+              <div class="box1">
+                <div style="width: 180px">
+                  <img *ngIf="user?.photoURL" src="{{ user?.photoURL }}" alt="avatar" style="
+                      width: 120px;
+                      height: 120px;
+                      margin-left: 30px;
+                      border-radius: 50%;
+                      margin-top: 31px;
+                    "
+                  />
+                  <div
+                    *ngIf="!user?.photoURL"
+                    style="margin-top: 30px; margin-left: 15px"
+                  >
+                    <ngx-avatar
+                      name="{{ superUserData?.firstname.split(' ')[0] }}"
+                      size="140"
+                      textSizeRatio="1.75"
+                    >
+                    </ngx-avatar>
+                  </div>
+                </div>
+                <div>
+                  <div class="box">
+                    <div class="col-12">
+                      <button mat-icon-button (click)="onTogglenotEditModeInfo()" style="float: right; padding: 0">
+                        <mat-icon color="accent">edit</mat-icon>
+                      </button>
+
+                      <h2 class="mat-h2 mat-title">
+                        {{ superUserData?.firstname }}&nbsp;{{
+                          superUserData?.lastname
+                        }}
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Phone Number</div>
+                    <div class="col-6" *ngIf="superUserData.phone">
+                      ({{ superUserData?.countryCode }})&nbsp;{{
+                        superUserData?.phone
+                      }}
+                    </div>
+                    <div class="col-6" *ngIf="!superUserData.phone"></div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Email ID</div>
+                    <div class="col-6">
+                      {{ superUserData?.email }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Company Name</div>
+                    <div class="col-6">
+                      {{ superUserData?.company }}
+                    </div>
+                  </div>
+                  <div
+                    class="box"
+                    *ngIf="userPlan.branchEnabled && branches?.length > 0"
+                  >
+                    <div class="col-6">Branch</div>
+                    <div class="col-6">
+                      {{ assBranchName }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Category</div>
+                    <div *ngIf="categories != 'Others'" class="col-6">
+                      {{ categories }}
+                    </div>
+                    <div *ngIf="categories == 'Others'" class="col-6">
+                      {{ superUserData?.categoryOthers }}
+                    </div>
+                  </div>
+                  <div
+                  class="box"
+                >
+                  <div class="col-6">Timezone</div>
+                  <div class="col-6">
+                    {{ timeZone }}
+                  </div>
+                </div>
+                  <mat-divider style="left: 180px; width: 493px"></mat-divider>
+                  <br />
+                  <div class="box">
+                    <div class="col-12">
+                      <button (click)="onTogglenotEditModeAdd()" mat-icon-button style="float: right; padding: 0">
+                        <mat-icon color="accent">edit</mat-icon>
+                      </button>
+                      <h2 class="mat-h2 mat-title">Address</h2>
+                      <p class="mat-small mat-caption">
+                        Address provided here will be applied in esimates,
+                        quotations and invoices
+                      </p>
+                      <h3>{{ superUserData?.street1 }}</h3>
+                      <h3>{{ superUserData?.street2 }}</h3>
+                      <h3 *ngIf="superUserData?.city && superUserData?.state">
+                        {{ superUserData?.city }},&nbsp;{{
+                          superUserData?.state
+                        }}
+                      </h3>
+                      <h3 *ngIf="!superUserData?.city">
+                        {{ superUserData?.state }}
+                      </h3>
+                      <h3 *ngIf="!superUserData?.state">
+                        {{ superUserData?.city }}
+                      </h3>
+                      <h3
+                        *ngIf="superUserData?.country && superUserData?.pincode"
+                      >
+                        {{ superUserData?.country }},&nbsp;{{
+                          superUserData?.pincode
+                        }}
+                      </h3>
+                      <h3 *ngIf="!superUserData?.country">
+                        {{ superUserData?.pincode }}
+                      </h3>
+                      <h3 *ngIf="!superUserData?.pincode">
+                        {{ superUserData?.country }}
+                      </h3>
+                    </div>
+                  </div>
+                  <mat-divider style="left: 180px; width: 493px"></mat-divider>
+                  <br />
+                  <!-- razorpay transfer feature commented -->
+                  <!-- <div class="box">
+                    <div class="col-12">
+                      <button
+                        (click)="traccEdit()"
+                        mat-icon-button
+                        style="float: right; padding: 0"
+                      >
+                        <mat-icon color="accent">edit</mat-icon>
+                      </button>
+                      <h2 class="mat-h2 mat-title">Transfer Account Details</h2>
+
+                      <p
+                        *ngIf="trAccrequested && !superUserData?.rzrAccountId"
+                        class="mat-small mat-caption"
+                      >
+                        Your request for transfer account is under process.Details
+                        are given below:
+                      </p>
+
+                      <p
+                        *ngIf="!!superUserData?.rzrAccountId"
+                        class="mat-small mat-caption"
+                      >
+                        Your transfer to account feature is enabled. Details are
+                        given below:
+                      </p>
+
+                      <p
+                        *ngIf="!(!!superUserData?.rzrAccountId || trAccrequested)"
+                        class="mat-small mat-caption"
+                      >
+                        Request for transfer account
+                      </p>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Name as per Bank Account</div>
+                    <div class="col-6">
+                      {{ fbankname }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">IFSC Code</div>
+                    <div class="col-6">
+                      {{ fifsc }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Account Number</div>
+                    <div class="col-6">
+                      {{ faccnumber }}
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </mat-card>
+
+            <!-- General info edit -->
+            <form *ngIf="!notEditModeInfo" #userForm="ngForm" (ngSubmit)="onUpdate(userForm)" novalidate>
+              <mat-card [ngStyle]="{ width: '691px', 'margin-left': '20px' }">
+                <br />
+                <mat-card-content
+                  [ngStyle]="{
+                    'padding-right': '16px',
+                    'margin-bottom': '0px'
+                  }"
+                >
+                  <div class="box1">
+                    <div style="width: 180px">
+                      <br />
+
+                      <img *ngIf="user?.photoURL; else avatar" src="{{ user?.photoURL }}" alt="avatar" style="
+                          width: 120px;
+                          height: 120px;
+                          margin-left: 30px;
+                          border-radius: 50%;
+                        " />
+
+                      <ngx-avatar *ngIf="!user?.photoURL" name="{{ superUserData.firstname.split(' ')[0] }}" size="150"
+                        textSizeRatio="1.75"></ngx-avatar>
+                    </div>
+                    <div class="col-10">
+                      <div class="box">
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Contact first name</mat-label>
+                            <input [disabled]="notEditMode" matInput #firstname="ngModel"
+                              [ngModel]="superUserData?.firstname" (ngModelChange)="(superUserData.firstname)"
+                              name="firstname" type="text" required minlength="2" maxlength="25" />
+                            <mat-error *ngIf="
+                                !firstname.valid &&
+                                (firstname.dirty || firstname.touched)
+                              ">Required</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Second name</mat-label>
+                            <input [disabled]="notEditMode" matInput #lastname="ngModel"
+                              [ngModel]="superUserData?.lastname" (ngModelChange)="(superUserData.lastname)"
+                              name="lastname" type="tel" id="pin" minlength="1" maxlength="30" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Company Name</mat-label>
+                            <input [disabled]="notEditMode" matInput #company="ngModel"
+                              [ngModel]="superUserData?.company" (ngModelChange)="(superUserData.company)"
+                              name="company" type="tel" id="pin" minlength="1" maxlength="50" />
+                            <mat-error *ngIf="
+                                !company.valid &&
+                                (company.dirty || company.touched)
+                              ">valid data is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div
+                          class="col-6"
+                          *ngIf="commonService.userPlan.branchEnabled && branches?.length > 0"
+                        >
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Branch</mat-label>
+                            <mat-select
+                              #associatedBranch="ngModel"
+                              [ngModel]="superUserData?.associatedBranch"
+                              (ngModelChange)="(superUserData.associatedBranch)"
+                              name="associatedBranch"
+                              required
+                              [disabled]="notEditMode"
+                            >
+                              <mat-option
+                                value="{{ branch.id }}"
+                                *ngFor="let branch of branches"
+                                >{{ branch.name }}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                                !associatedBranch.valid &&
+                                (associatedBranch.dirty ||
+                                  associatedBranch.touched)
+                              "
+                              >valid data is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Country Code</mat-label>
+                            <mat-select [disabled]="notEditMode" (selectionChange)="(superUserData.countryCode)"
+                              #code="ngModel" [(ngModel)]="superUserData.countryCode" name="countryCode">
+                              <mat-option *ngFor="let countryCode of CountryCodes" [value]="countryCode.dial_code">
+                                {{ countryCode.code }}&nbsp;{{
+                                countryCode.dial_code
+                                }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Contact No</mat-label>
+                            <input
+                              [disabled]="notEditMode"
+                              matInput
+                              #phone="ngModel"
+                              [ngModel]="superUserData?.phone"
+                              (ngModelChange)="(superUserData.phone)"
+                              name="phone"
+                              type="number"
+                              maxlength="15"
+                            />
+                            <mat-error
+                              *ngIf="
+                                !phone.valid && (phone.dirty || phone.touched)
+                              ">valid data is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-12">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Email</mat-label>
+                            <input [disabled]="true" matInput #email="ngModel" [ngModel]="superUserData?.email"
+                              (ngModelChange)="(superUserData.email)" name="email" type="email" required minlength="4"
+                              maxlength="25" />
+                            <mat-error *ngIf="
+                                !email.valid && (email.dirty || email.touched)
+                              ">valid email is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Category</mat-label>
+                            <mat-select
+                              [(ngModel)]="categories"
+                              (ngModelChange)="(categories)"
+                              name="category"
+                              required
+                              #category="ngModel"
+                              [disabled]="notEditMode"
+                            >
+                              <mat-option
+                                value="{{ category }}"
+                                *ngFor="let category of categoryList"
+                                >{{ category }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6" *ngIf="categories == 'Others'">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Enter your category type</mat-label>
+                            <input [disabled]="notEditMode" matInput #categoryOthers="ngModel"
+                              [ngModel]="superUserData?.categoryOthers" (ngModelChange)="(superUserData.categoryOthers)"
+                              name="categoryOthers" type="text" required />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="box">
+                        <div class="col-6">
+                          <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>TimeZone</mat-label>
+                            <mat-select
+                              #timeZone="ngModel"
+                              [ngModel]="superUserData?.timeZone"
+                              (ngModelChange)="(superUserData.timeZone)"
+                              name="timeZone"
+                              [disabled]="notEditMode"
+                            >
+                              <mat-option
+                                value="{{ timeZones }}"
+                                *ngFor="let timeZones of timeZoneList"
+                                >{{ timeZones }}
+                              </mat-option>
+                            </mat-select>
+                            <!-- <mat-error
+                              *ngIf="
+                                !associatedBranch.valid &&
+                                (associatedBranch.dirty || associatedBranch.touched)
+                              "
+                              >valid data is required!
+                            </mat-error> -->
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions style="display: flex">
+                  <span class="example-spacer"></span>
+                  <button mat-button type="button" (click)="onCancel()">
+                    <i class="ft-check-square mr-1"></i> Cancel
+                  </button>
+                  <button
+                    [disabled]="!userForm.valid || !networkCheck.onNetworkCheck()"
+                    type="submit"
+                    mat-button
+                    color="accent"
+                  >
+                    <i class="ft-check-square mr-1"></i> Update
+                  </button>
+                </mat-card-actions>
+                <mat-divider style="left: 180px; width: 493px"></mat-divider>
+                <br />
+                <div class="box1">
+                  <div style="width: 180px"></div>
+                  <div>
+                    <div class="box">
+                      <div class="col-12">
+                        <button mat-button style="float: right; padding: 0">
+                          <mat-icon color="accent" (click)="onTogglenotEditModeAdd()">edit</mat-icon>
+                        </button>
+                        <h2 class="mat-h2 mat-title">Address</h2>
+                        <p class="mat-small mat-caption">
+                          Address provided here will be applied in esimates,
+                          quotations and invoices
+                        </p>
+                        <h3>{{ superUserData?.street1 }}</h3>
+                        <h3>{{ superUserData?.street2 }}</h3>
+                        <h3 *ngIf="superUserData.city && superUserData.state">
+                          {{ superUserData?.city }},&nbsp;{{
+                            superUserData?.state
+                          }}
+                        </h3>
+                        <h3 *ngIf="!superUserData.city">
+                          {{ superUserData?.state }}
+                        </h3>
+                        <h3 *ngIf="!superUserData.state">
+                          {{ superUserData?.city }}
+                        </h3>
+                        <h3
+                          *ngIf="superUserData.country && superUserData.pincode"
+                        >
+                          {{ superUserData?.country }},&nbsp;{{
+                            superUserData?.pincode
+                          }}
+                        </h3>
+                        <h3 *ngIf="!superUserData.country">
+                          {{ superUserData?.pincode }}
+                        </h3>
+                        <h3 *ngIf="!superUserData.pincode">
+                          {{ superUserData?.country }}
+                        </h3>
+                      </div>
+                    </div>
+                    <mat-divider
+                      style="left: 180px; width: 493px"
+                    ></mat-divider>
+                    <br />
+                    <!-- <div class="box">
+                      <div class="col-12">
+                        <button mat-button style="float: right; padding: 0">
+                          <mat-icon
+                            color="accent"
+                            *ngIf="!traccedit"
+                            (click)="traccEdit()"
+                            >edit</mat-icon
+                          >
+                        </button>
+                        <h2 class="mat-h2 mat-title">Transfer Account Details</h2>
+
+                        <p
+                          *ngIf="trAccrequested && !superUserData?.rzrAccountId"
+                          class="mat-small mat-caption"
+                        >
+                          Your request for transfer account is under
+                          process.Details are given below:
+                        </p>
+
+                        <p
+                          *ngIf="!!superUserData?.rzrAccountId"
+                          class="mat-small mat-caption"
+                        >
+                          Your transfer to account feature is enabled. Details are
+                          given below:
+                        </p>
+
+                        <p
+                          *ngIf="!(!!superUserData?.rzrAccountId || trAccrequested)"
+                          class="mat-small mat-caption"
+                        >
+                          Request for transfer account
+                        </p>
+                      </div>
+                    </div> -->
+                    <!-- <div class="box">
+                      <div class="col-6">Name as per Bank Account</div>
+                      <div class="col-6">
+                        {{ fbankname }}
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6">IFSC Code</div>
+                      <div class="col-6">
+                        {{ fifsc }}
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-6">Account Number</div>
+                      <div class="col-6">
+                        {{ faccnumber }}
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </mat-card>
+            </form>
+            <!-- Address Edit -->
+            <mat-card *ngIf="!notEditModeAdd" [ngStyle]="{ width: '691px', 'margin-left': '20px' }">
+              <br />
+              <div class="box1">
+                <div style="width: 180px">
+                  <img *ngIf="user?.photoURL; else avatar" src="{{ user?.photoURL }}" alt="avatar" style="
+                      width: 120px;
+                      height: 120px;
+                      margin-left: 30px;
+                      border-radius: 50%;
+                      margin-top: 31px;
+                    "
+                  />
+                  <div
+                    *ngIf="!user?.photoURL"
+                    style="margin-top: 30px; margin-left: 15px"
+                  >
+                    <ngx-avatar
+                      name="{{ superUserData.firstname.split(' ')[0] }}"
+                      size="140"
+                      textSizeRatio="1.75"
+                    >
+                    </ngx-avatar>
+                  </div>
+                </div>
+                <div style="width: 426px">
+                  <div class="box">
+                    <div class="col-12">
+                      <button mat-button style="float: right; padding: 0">
+                        <mat-icon color="accent" (click)="onTogglenotEditModeInfo()">edit</mat-icon>
+                      </button>
+
+                      <h2 class="mat-h2 mat-title">
+                        {{ superUserData?.firstname }}&nbsp;{{
+                          superUserData?.lastname
+                        }}
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Phone Number</div>
+                    <div class="col-6" *ngIf="superUserData.phone">
+                      ({{ superUserData?.countryCode }})&nbsp;{{
+                        superUserData?.phone
+                      }}
+                    </div>
+                    <div class="col-6" *ngIf="!superUserData.phone"></div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Email ID</div>
+                    <div class="col-6">
+                      {{ superUserData?.email }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Company Name</div>
+                    <div class="col-6">
+                      {{ superUserData?.company }}
+                    </div>
+                  </div>
+                  <div
+                    class="box"
+                    *ngIf="commonService.userPlan.branchEnabled && branches?.length > 0"
+                  >
+                    <div class="col-6">Branch</div>
+                    <div class="col-6">
+                      {{ assBranchName }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Category</div>
+                    <div *ngIf="categories != 'Others'" class="col-6">
+                      {{ categories }}
+                    </div>
+                    <div *ngIf="categories == 'Others'" class="col-6">
+                      {{ superUserData?.categoryOthers }}
+                    </div>
+                  </div>
+                  <div
+                  class="box"
+                >
+                  <div class="col-6">Timezone</div>
+                  <div class="col-6">
+                    {{ timeZone }}
+                  </div>
+                </div>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+              <br />
+              <form *ngIf="!notEditModeAdd" #userForm1="ngForm" (ngSubmit)="onUpdate1(userForm1)" novalidate>
+                <h2 class="mat-h2 mat-title">Address</h2>
+                <p class="mat-small mat-caption">
+                  Address provided here will be applied in esimates, quotations
+                  and invoices
+                </p>
+                <br />
+                <mat-card-content [ngStyle]="{ 'padding-right': '0px', 'margin-bottom': '0px' }">
+                  <div class="box">
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>Address Line 1</mat-label>
+                        <input matInput #street1="ngModel" [ngModel]="superUserData?.street1"
+                          (ngModelChange)="(superUserData.street1)" name="street1" type="text" placeholder="Line 1"
+                          required minlength="2" maxlength="50" />
+                      </mat-form-field>
+                      <mat-error *ngIf="
+                          street1.invalid && (street1.dirty || street1.touched)
+                        ">
+                        valid data is required!</mat-error>
+                    </div>
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>Address Line 2</mat-label>
+                        <input matInput #street2="ngModel" [ngModel]="superUserData?.street2"
+                          (ngModelChange)="(superUserData?.street2)" name="street2" type="text" placeholder="Line2"
+                          required minlength="2" maxlength="50" />
+                      </mat-form-field>
+                      <mat-error *ngIf="
+                          street2.invalid && (street2.dirty || street2.touched)
+                        ">
+                        valid data is required!</mat-error>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>City</mat-label>
+                        <input matInput #city="ngModel" [ngModel]="superUserData?.city"
+                          (ngModelChange)="(superUserData.city)" name="city" type="text" required minlength="2"
+                          maxlength="20" />
+                      </mat-form-field>
+                      <mat-error
+                        *ngIf="city.invalid && (city.dirty || city.touched)"
+                        >valid data is required!
+                      </mat-error>
+                    </div>
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>State</mat-label>
+                        <input matInput #state="ngModel" [ngModel]="superUserData?.state"
+                          (ngModelChange)="(superUserData.state)" name="state" type="text" required minlength="2"
+                          maxlength="20" />
+                      </mat-form-field>
+                      <mat-error
+                        *ngIf="state.invalid && (state.dirty || state.touched)"
+                        >valid data is required!
+                      </mat-error>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>Country</mat-label>
+                        <input matInput #country="ngModel" [ngModel]="superUserData?.country"
+                          (ngModelChange)="(superUserData.country)" name="country" type="text" required minlength="2"
+                          maxlength="20" />
+                      </mat-form-field>
+                      <mat-error *ngIf="
+                          country.invalid && (country.dirty || country.touched)
+                        ">valid data is required!</mat-error>
+                    </div>
+                    <div class="col-6">
+                      <mat-form-field [style.width.px]="304" appearance="fill">
+                        <mat-label>Pincode</mat-label>
+                        <input matInput #pincode="ngModel" [ngModel]="superUserData?.pincode"
+                          (ngModelChange)="(superUserData.pincode)" name="pincode" type="text" required minlength="2"
+                          maxlength="20" />
+                      </mat-form-field>
+                      <mat-error *ngIf="
+                          pincode.invalid && (pincode.dirty || pincode.touched)
+                        ">valid data is required!</mat-error>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions style="display: flex">
+                  <span class="example-spacer"></span>
+                  <button style="margin-left: 30px" mat-button type="button" (click)="onCancel()">
+                    <i class="ft-check-square mr-1"></i> Cancel
+                  </button>
+                  <button
+                    [disabled]="!userForm1.valid || !networkCheck.onNetworkCheck()"
+                    type="submit"
+                    mat-button
+                    color="primary"
+                  >
+                    <i class="ft-check-square mr-1"></i> Update
+                  </button>
+                </mat-card-actions>
+              </form>
+              <mat-divider></mat-divider>
+              <br />
+            </mat-card>
+
+            <!-- Account Details Edit -->
+            <mat-card *ngIf="traccedit" [ngStyle]="{ width: '691px', 'margin-left': '20px' }">
+              <br />
+              <div class="box1">
+                <div style="width: 180px">
+                  <img *ngIf="user?.photoURL; else avatar" src="{{ user?.photoURL }}" alt="avatar" style="
+                      width: 120px;
+                      height: 120px;
+                      margin-left: 30px;
+                      border-radius: 50%;
+                      margin-top: 31px;
+                    "
+                  />
+                  <div
+                    *ngIf="!user?.photoURL"
+                    style="margin-top: 30px; margin-left: 15px"
+                  >
+                    <ngx-avatar
+                      name="{{ superUserData.firstname.split(' ')[0] }}"
+                      size="140"
+                      textSizeRatio="1.75"
+                    >
+                    </ngx-avatar>
+                  </div>
+                </div>
+                <div>
+                  <div class="box">
+                    <div class="col-12">
+                      <button mat-button style="float: right; padding: 0">
+                        <mat-icon color="accent" (click)="onTogglenotEditModeInfo()">edit</mat-icon>
+                      </button>
+
+                      <h2 class="mat-h2 mat-title">
+                        {{ superUserData.firstname }}&nbsp;{{
+                          superUserData.lastname
+                        }}
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Phone Number</div>
+                    <div class="col-6" *ngIf="superUserData.phone">
+                      ({{ superUserData?.countryCode }})&nbsp;{{
+                        superUserData?.phone
+                      }}
+                    </div>
+                    <div class="col-6" *ngIf="!superUserData.phone"></div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Email ID</div>
+                    <div class="col-6">
+                      {{ superUserData.email }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Company Name</div>
+                    <div class="col-6">
+                      {{ superUserData.company }}
+                    </div>
+                  </div>
+                  <div
+                    class="box"
+                    *ngIf="commonService.userPlan.branchEnabled && branches?.length > 0"
+                  >
+                    <div class="col-6">Branch</div>
+                    <div class="col-6">
+                      {{ assBranchName }}
+                    </div>
+                  </div>
+                  <div class="box">
+                    <div class="col-6">Category</div>
+                    <div *ngIf="categories != 'Others'" class="col-6">
+                      {{ categories }}
+                    </div>
+                    <div *ngIf="categories == 'Others'" class="col-6">
+                      {{ superUserData.categoryOthers }}
+                    </div>
+                  </div>
+                  <mat-divider style="left: 180px; width: 493px"></mat-divider>
+                  <br />
+                  <div class="box">
+                    <div class="col-12">
+                      <button mat-button style="float: right; padding: 0">
+                        <mat-icon color="accent" (click)="onTogglenotEditModeAdd()">edit</mat-icon>
+                      </button>
+                      <h2 class="mat-h2 mat-title">Address</h2>
+                      <p class="mat-small mat-caption">
+                        Address provided here will be applied in esimates,
+                        quotations and invoices
+                      </p>
+                      <h3>{{ superUserData.street1 }}</h3>
+                      <h3>{{ superUserData.street2 }}</h3>
+                      <h3 *ngIf="superUserData.city && superUserData.state">
+                        {{ superUserData.city }},&nbsp;{{ superUserData.state }}
+                      </h3>
+                      <h3 *ngIf="!superUserData.city">
+                        {{ superUserData.state }}
+                      </h3>
+                      <h3 *ngIf="!superUserData.state">
+                        {{ superUserData.city }}
+                      </h3>
+                      <h3
+                        *ngIf="superUserData.country && superUserData.pincode"
+                      >
+                        {{ superUserData.country }},&nbsp;{{
+                          superUserData.pincode
+                        }}
+                      </h3>
+                      <h3 *ngIf="!superUserData.country">
+                        {{ superUserData.pincode }}
+                      </h3>
+                      <h3 *ngIf="!superUserData.pincode">
+                        {{ superUserData.country }}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+              <br />
+            </mat-card>
+
+            <!-- End -->
+
+            <br />
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="SUBSCRIPTION DETAILS" *ngIf="!notEdit && commonService.userPlan.settingsAccess">
+        <!-- Subscription Details Tab -->
+        <div style="
+            overflow-y: auto;
+            padding-bottom: 30px;
+            min-height: 800px;
+            overflow-x: hidden;
+            background-color: #f8f9fb;
+          ">
+          <div class="row">
+            <div class="col-lg-3">
+              <mat-card style="margin: 16px">
+                <div *ngIf="!!currentPlanDetails">
+                  <div>
+                    <div class="box">
+                      <div class="col-12 paddzero">
+                        <h2 class="mat-h2 mat-title">
+                          Current&nbsp;Plan&nbsp;Details
+                        </h2>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-8 paddzero">Current Plan</div>
+                      <div class="col-4 paddzero fullcap">
+                        {{
+                        !!currentPlanDetails.plan
+                        ? currentPlanDetails.plan == 'leadManagement' ? 'SILVER' : currentPlanDetails.plan
+                        : "gold"
+                        }}
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-8 paddzero">Amount</div>
+                      <div class="col-4 paddzero">
+                        {{
+                          findAmount(
+                            currentPlanDetails.packageDuration,
+                            currentPlanDetails.plan
+                              ? currentPlanDetails.plan
+                              : "gold"
+                          ) / 100
+                        }}
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-8 paddzero">No. of Users</div>
+                      <div class="col-4 paddzero">
+                        {{ noSubusers }}
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-8 paddzero">Valid From</div>
+                      <div class="col-4 paddzero">
+                        {{
+                          currentPlanDetails.paymentMode == "manual"
+                            ? (currentPlanDetails.currentCycleStartDate * 1000
+                              | date)
+                            : (currentPlanDetails.subscriptionStart * 1000
+                              | date)
+                        }}
+                      </div>
+                    </div>
+                    <div
+                      class="box"
+                      *ngIf="currentPlanDetails.paymentMode == 'manual'"
+                    >
+                      <div class="col-8 paddzero">Valid To</div>
+                      <div class="col-4 paddzero">
+                        {{
+                        currentPlanDetails.paymentMode == "manual"
+                        ? (currentPlanDetails.currentCycleEnd * 1000 | date)
+                        : (currentPlanDetails.subscriptionEnd * 1000 | date)
+                        }}
+                      </div>
+                    </div>
+
+                    <div *ngIf="
+                        currentPlanDetails.paymentMode == 'subscription' &&
+                        !!!currentPlanDetails.subscriptionCancelOn
+                      " class="box">
+                      <div class="col-8 paddzero">Next Payment Date</div>
+                      <div class="col-4 paddzero">
+                        {{ currentPlanDetails.charge_at * 1000 | date }}
+                      </div>
+                    </div>
+                    <div *ngIf="
+                        currentPlanDetails.paymentMode == 'subscription' &&
+                        !!currentPlanDetails.subscriptionCancelOn
+                      "
+                      class="box"
+                    >
+                      <div class="col-8 paddzero">
+                        Subscription Cancelled on
+                      </div>
+                      <div class="col-4 paddzero">
+                        {{
+                        currentPlanDetails.subscriptionCancelOn * 1000 | date
+                        }}
+                      </div>
+                    </div>
+                    <mat-card-actions *ngIf="
+                        currentPlanDetails.paymentMode == 'subscription' &&
+                        !!!currentPlanDetails.subscriptionCancelOn
+                      "
+                    >
+                      <button
+                        mat-button
+                        color="primary"
+                        (click)="
+                          cancelSubscription(currentPlanDetails.subscription_id)
+                        "
+                      >
+                        Cancel Subscription
+                      </button>
+                    </mat-card-actions>
+                    <mat-card-actions align="end">
+                      <button
+                        mat-button
+                        color="primary"
+                        (click)="upgradePlan(currentPlanDetails, noSubusers)" [disabled]="!networkCheck.onNetworkCheck()"
+                      >
+                        Upgrade Plan
+                      </button>
+                    </mat-card-actions>
+                  </div>
+                </div>
+                <div *ngIf="!currentPlanDetails">
+                  <div>
+                    <div class="box">
+                      <div class="col-12">
+                        <h2 class="mat-h2 mat-title">
+                          Current&nbsp;Plan&nbsp;Details
+                        </h2>
+                      </div>
+                    </div>
+                    <div class="box">
+                      <div class="col-7">Current Plan</div>
+                      <div class="col-5 fullcap">free</div>
+                    </div>
+                    <div class="box">
+                      <div class="col-7">No. of Users</div>
+                      <div class="col-5">
+                        {{ noSubusers }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+            <div class="col-lg-9">
+              <div class="container-fluid">
+                <app-allpayssubs></app-allpayssubs>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="PAYMENT OPTIONS" *ngIf="!notEdit && commonService.userPlan.settingsAccess">
+        <app-razorpaysubmerchant></app-razorpaysubmerchant>
+      </mat-tab>
+      <mat-tab label="PROFILE DETAILS" *ngIf="notEdit || !commonService.userPlan.settingsAccess">
+        <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+        </mat-progress-bar>
+        <div *ngIf="progressBarStatus" style="
+                  overflow-y: auto;
+                  background-color: #f8f9fb;
+                  padding-bottom: 30px;
+                ">
+          <br />
+          <div class="container-fluid" style="margin-bottom: 30px; min-height: 800px">
+            <!-- Card first displayed on loading profile settings page -->
+            <mat-card *ngIf="notEditModeInfo && notEditModeAdd && !traccedit"
+              [ngStyle]="{ width: '691px', 'margin-left': '20px' }">
+              <br />
+              <div class="box1">
+                <div style="width: 180px">
+                  <img *ngIf="user?.photoURL" src="{{ user?.photoURL }}" alt="avatar" style="
+                            width: 120px;
+                            height: 120px;
+                            margin-left: 30px;
+                            border-radius: 50%;
+                            margin-top: 31px;
+                          " />
+                  <div *ngIf="!user?.photoURL" style="margin-top: 30px; margin-left: 15px">
+                    <ngx-avatar name="{{ userData?.firstname.split(' ')[0] }}" size="140" textSizeRatio="1.75">
+                    </ngx-avatar>
+                  </div>
+                </div>
+                <div>
+                  <div class="row" id="box">
+                    <div class="col-12">
+                      <h2 class="mat-h2 mat-title">
+                        {{ userData?.firstname }}&nbsp;{{
+                          userData?.lastname
+                        }}
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="row" id="box">
+                    <div class="col-6">Phone Number</div>
+                    <div class="col-6" *ngIf="userData.phone">
+                      ({{ userData?.countryCode }})&nbsp;{{
+                        userData?.phone
+                      }}
+                    </div>
+                    <div class="col-6" *ngIf="!userData.phone"></div>
+                  </div>
+                  <div class="row" id="box">
+                    <div class="col-6">Email ID</div>
+                    <div class="col-6">
+                      {{ userData?.email }}
+                    </div>
+                  </div>
+                  <div class="row" id="box">
+                    <div class="col-6">Company Name</div>
+                    <div class="col-6">
+                      {{ userData?.company }}
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="userPlan.branchEnabled && branches?.length > 0" id="box">
+                    <div class="col-6">Branch</div>
+                    <div class="col-6">
+                      {{ userassBranchName }}
+                    </div>
+                  </div>
+                  <mat-divider style="left: 180px; width: 493px"></mat-divider>
+                  <br />
+                </div>
+              </div>
+            </mat-card>
+            <br />
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="PREFERENCES">
+        <br><br>
+        <div style="min-height: 900px">
+          <mat-card-header class="card-container-left">
+            <form #viewForm="ngForm" (ngSubmit)="onUpdateView(viewForm)" novalidate>
+              <br />
+              <div class="frame" style="background-color: white">
+                <mat-card-content>
+                  <div class="row" *ngIf="commonService.userPlan.contactAccess">
+                    <div class="col-6">
+                      <mat-form-field class="full-width" appearance="fill" >
+                        <mat-label>Default view for {{fieldNameContact}} </mat-label>
+                        <mat-select #contactDefaultView="ngModel" [(ngModel)]="userData.contactDefaultView" [disabled]="notEditModeView"
+                           name="contactDefaultView" required>
+                          <mat-option value="{{ view.view }}" *ngFor="let view of defaulViewList">{{ view.viewName }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!contactDefaultView.valid &&(contactDefaultView.dirty ||
+                                                 contactDefaultView.touched)">valid data is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row"  *ngIf="commonService.userPlan.saleAccess">
+                    <div class="col-6">
+                      <mat-form-field class="full-width" appearance="fill" >
+                        <mat-label>Default view for {{fieldNameSale}} </mat-label>
+                        <mat-select #saleDefaultView="ngModel" [(ngModel)]="userData.saleDefaultView" [disabled]="notEditModeView"
+                           name="saleDefaultView" required>
+                          <mat-option value="{{ view.view }}" *ngFor="let view of defaulViewList">{{ view.viewName }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!saleDefaultView.valid &&(saleDefaultView.dirty ||
+                        saleDefaultView.touched)">valid data is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="commonService.userPlan.serviceAccess">
+                    <div class="col-6">
+                      <mat-form-field class="full-width" appearance="fill" >
+                        <mat-label>Default view for {{fieldNameService}} </mat-label>
+                        <mat-select #serviceDefaultView="ngModel" [(ngModel)]="userData.serviceDefaultView" [disabled]="notEditModeView"
+                           name="serviceDefaultView" required>
+                          <mat-option value="{{ view.view }}" *ngFor="let view of defaulViewList">{{ view.viewName }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!serviceDefaultView.valid &&(serviceDefaultView.dirty ||
+                        serviceDefaultView.touched)">valid data is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="commonService.userPlan.activitiesAccess &&commonService.userPlan.tasksAccess">
+                    <div class="col-6">
+                      <mat-form-field class="full-width" appearance="fill" >
+                        <mat-label>Default view for {{fieldNameTask}} </mat-label>
+                        <mat-select #taskDefaultView="ngModel" [(ngModel)]="userData.taskDefaultView" [disabled]="notEditModeView"
+                           name="taskDefaultView" required>
+                          <mat-option value="{{ view.view }}" *ngFor="let view of defaulViewList">{{ view.viewName }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!taskDefaultView.valid &&(taskDefaultView.dirty ||
+                        taskDefaultView.touched)">valid data is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="commonService.userPlan.activitiesAccess &&commonService.userPlan.followupsAccess">
+                    <div class="col-6">
+                      <mat-form-field class="full-width" appearance="fill" >
+                        <mat-label>Default view for {{fieldNameFollowup}} </mat-label>
+                        <mat-select #followUpDefaultView="ngModel" [(ngModel)]="userData.followUpDefaultView" [disabled]="notEditModeView"
+                           name="followUpDefaultView" required>
+                          <mat-option value="{{ view.view }}" *ngFor="let view of defaulViewList">{{ view.viewName }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!followUpDefaultView.valid &&(followUpDefaultView.dirty ||
+                        followUpDefaultView.touched)">valid data is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <button *ngIf="notEditModeView" mat-button type="button" style="float: right"
+                    (click)="onTogglenotEditModeView()">
+                    <i class="ft-check-square mr-1"></i> Edit
+                  </button>
+                  <button *ngIf="!notEditModeView" type="button" style="float: right" mat-button
+                    (click)="onTogglenotEditModeView()">
+                    <i class="ft-check-square mr-1"></i> Cancel
+                  </button>
+                  <button type="submit" [disabled]="notEditModeView || viewForm.invalid
+                                                        " style="float: right" mat-button color="accent">
+                    <i class="ft-check-square mr-1"></i> Save
+                  </button>
+                </mat-card-content>
+              </div>
+            </form>
+          </mat-card-header>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+

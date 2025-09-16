@@ -1,0 +1,1707 @@
+<!-- MODIFICATION STARTS HERE
+<app-topnav></app-topnav>
+-->
+<!--Larg screen view-->
+<div *ngIf="!isMobilesize"  class="no-v-scroll">
+
+    <!--Toolbar-->
+    <mat-toolbar *ngIf='false'>
+      <mat-icon mat-list-icon color="accent" size="45">work</mat-icon>
+      &nbsp;&nbsp; &nbsp;
+      <h2 class="mat-h2 mat-title">Project : {{(sale | async)?.saleTitle | slice : 0:50}} </h2>
+
+
+
+      <!-- <button mat-raised-button *ngIf="invoices?.length>0" (click)="addPayment()"> Add Collection</button>
+          <button mat-icon-button class="example-icon favorite-icon" title="Add task" aria-label="Add task"
+            (click)="addTask()">
+            <mat-icon color="accent">add_task</mat-icon>
+          </button>
+          <button mat-icon-button class="example-icon favorite-icon" title="Add meeting" aria-label="Add meeting"
+            (click)="onMeetingAdd()">
+            <mat-icon color="accent">calendar_today</mat-icon>
+          </button> -->
+
+      <span class="example-spacer"></span>
+      <button color="accent" mat-raised-button [matMenuTriggerFor]="beforeMenu">Create Document</button>
+      &nbsp;&nbsp;
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="createEstimate()">Estimate</button>
+        <button mat-menu-item (click)="createQuote()">Quotation</button>
+        <button mat-menu-item (click)="createInvoice()">Invoice</button>
+      </mat-menu>
+      <button color="accent" mat-raised-button *ngIf="invoices?.length>0" (click)="addPayment()"> Add
+        Collection</button>&nbsp;&nbsp;
+      <button color="accent" mat-raised-button (click)="openL()"  [disabled]="!onCheckNetwork()"> Add Attachment</button>
+      <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)"
+        style="display: none" accept=".csv,.pdf,.doc,.xls">
+      <!-- <button mat-icon-button class="example-icon favorite-icon" title="Drop contact" (click)="openDialog()"
+            aria-label="Drop contact">
+            <mat-icon color="warn">person_off</mat-icon>
+          </button> -->
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menu">
+        <mat-icon color="accent">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onViewSale()">View</button>
+        <button mat-menu-item (click)="onEditSale()">Edit</button>
+      </mat-menu>
+    </mat-toolbar>
+    <!-- New material Toolbar starts here -->
+    <mat-toolbar class="mat-elevation-z2" style="flex: 0 0 64px; z-index: 10;" [ngStyle]="{'background-color':'white'}">
+      <button mat-icon-button title="back" (click)="onBack()">
+        <mat-icon [ngStyle]="{'color':'#2A6AF6'}"> arrow_back </mat-icon>
+      </button>
+      <span>Sale : {{(sale | async)?.saleTitle | slice : 0:50}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="example-spacer"></span>
+      <!-- <button mat-icon-button color="accent" class="example-icon favorite-icon"
+        aria-label="Example icon-button with heart icon" (click)="tasksRoute()" title="Open tasks">
+        <mat-icon color="accent" [matBadge]="taskss?.length" matBadgeColor="accent">task_alt</mat-icon>
+      </button> &nbsp;&nbsp; -->
+      <!-- <button mat-mini-fab color="accent" aria-label="Add options for Sale view" [matMenuTriggerFor]="addMenu"  [disabled]="!onCheckNetwork()">
+        <mat-icon [ngStyle]="{'color':'white'}">add</mat-icon>
+      </button>&nbsp;&nbsp; -->
+
+      <!--Menu options for add button-->
+
+      <!-- <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)"
+        style="display: none" accept=".csv,.pdf,.doc,.xls"> -->
+
+
+
+    </mat-toolbar>
+    <!-- New material Toolbar ends here -->
+    <!-- Commenting Toolbar starts here -->
+
+    <!-- <div class="container-fluid  " style="background-color: white; ">
+      <div class="d-flex flex-row bd-highlight mb-0 justify-content-between align-items-center" style="height: 70px">
+        <div class="p-2 bd-highlight">
+
+          <h2 mat-line class="mat-h2 mat-title" style="margin-bottom: 0px;">
+            <mat-icon mat-list-icon color="accent">work</mat-icon>
+            &nbsp;&nbsp; &nbsp; <span class="align-self-center">Sale : {{(sale | async)?.saleTitle | slice : 0:50}}</span>
+          </h2>
+        </div>
+
+
+        <div class="p-2 bd-highlight">
+          <button color="accent" mat-raised-button [matMenuTriggerFor]="beforeMenu">Create Document</button>
+          &nbsp;&nbsp;
+          <mat-menu #beforeMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="createEstimate()">Estimate</button>
+            <button mat-menu-item (click)="createQuote()">Quotation</button>
+            <button mat-menu-item (click)="createInvoice()">Invoice</button>
+          </mat-menu>
+          <button color="accent" mat-raised-button *ngIf="invoices?.length>0" (click)="addPayment()"> Update
+            Collection</button>&nbsp;&nbsp;
+          <button color="accent" mat-raised-button (click)="openL()"> Add Attachment</button>
+          <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)"
+            style="display: none" accept=".csv,.pdf,.doc,.xls"> -->
+    <!-- <button mat-icon-button class="example-icon favorite-icon" title="Drop contact" (click)="openDialog()"
+                aria-label="Drop contact">
+                <mat-icon color="warn">person_off</mat-icon>
+              </button> -->
+    <!-- <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+            [matMenuTriggerFor]="menu">
+            <mat-icon color="accent">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onViewSale()">View</button>
+            <button mat-menu-item (click)="onEditSale()">Edit</button>
+          </mat-menu>
+
+        </div>
+
+      </div>
+
+    </div>
+    <mat-divider></mat-divider> -->
+    <!--Toolbar ends-->
+    <!-- <div style="min-height: 900px;" style="background-color: ghostwhite;" *ngIf=" !isMobilesize"> -->
+    <!-- New Layout starts here -->
+    <div class="container-fluid" style="background-color: ghostwhite;margin-top: 5px; overflow-y: auto;">
+      <br>
+      <div class="row" style="margin-bottom: 30px;">
+        <div class="col-md-3">
+          <div class="container-fluid border"
+            style="  border-radius: 10px;  background-color: white;">
+
+            <div class="row">
+              <div class="d-flex flex-row bd-highlight justify-content-between" style="max-height: 46px;">
+                <div class="bd-highlight" style="padding-top: 16px; font-size: 16px; font-weight: 500; padding-left: 12px; color: #263238;">
+                   <h3 class=" mat-subheading-2" >Project Details </h3>
+                </div>
+
+              </div>
+            </div>
+            <!-- <p mat-line style="padding: 20px 0px 10px 12px; margin: 0px; font-size: 16px; font-weight: 500;">
+              Sales Details
+            </p> -->
+            <mat-selection-list [multiple]="false" class="zeropad isDisabled ">
+              <mat-list-option (click)="contactView()">
+                <mat-icon matListAvatar>
+                  <ngx-avatar name="{{(userDetails | async)?.firstname}}" textSizeRatio="2" size="35"></ngx-avatar>
+                </mat-icon>
+                <h3 mat-line class="mat-h2 mat-title" style="color: #263238;"> <span>{{(userDetails |
+                    async)?.firstname}}&nbsp;{{(userDetails | async)?.lastname}}</span> </h3>
+                <h4 mat-line>{{(userDetails | async)?.company}} </h4>
+              </mat-list-option>
+              <mat-divider></mat-divider>
+            </mat-selection-list>
+            <!-- Status and Priority test starts here -->
+
+            <!-- <div class="container" style="padding-top: 16px; padding-bottom: 16px;"> -->
+              <!-- <div class="row justify-content-md-center">
+        <div class="col col-lg-2">
+            1 of 3
+        </div>
+        <div class="col-12 col-md-auto">
+            Variable width content
+        </div>
+        <div class="col col-lg-2">
+            3 of 3
+        </div>
+    </div> -->
+
+            <!-- </div> -->
+
+            <!-- Status and Priority test ends here -->
+            <!-- Status and Priority -->
+            <!-- <div class="col-6 left">
+              <div mat-line style="opacity: 0.8; margin: 8px;"> Sale Status </div>
+              <button mat-raised-button [matMenuTriggerFor]="menu1" title="Sale status"
+                style="border-radius: 20px; background-color: #C7DBFC; padding:0px 6px 0px 14px; font-size: 14px; color: blue ; text-transform: uppercase;">{{(sale
+                | async)?.salesStage}}&nbsp;
+                <mat-icon [ngStyle]="{'color':'blue'}">expand_more</mat-icon>
+              </button>
+              <mat-menu #menu1="matMenu" title="Sale Status">
+                <button mat-menu-item *ngFor="let s of saleStatus" (click)="updateSaleStage(s)">{{s}}</button>
+              </mat-menu>
+            </div>
+            <div class="col-6 left">
+              <div mat-line style="opacity: 0.8;  margin: 8px;">
+                Sale Priority
+              </div>
+
+              <button mat-raised-button title="Sale priority" [matMenuTriggerFor]="menu2"
+                style="border-radius: 20px; background-color: #F5BE41; padding:0px 6px 0px 14px; font-size: 14px; color: white; text-transform: uppercase;">{{(sale
+                |
+                async)?.priority}}&nbsp;
+                <mat-icon [ngStyle]="{'color':'white'}" class="white-icon">expand_more</mat-icon>
+              </button>
+              <mat-menu #menu2="matMenu">
+                <button mat-menu-item (click)="updateSalePriority('Low')">LOW</button>
+                <button mat-menu-item (click)="updateSalePriority('Medium')">MEDIUM</button>
+                <button mat-menu-item (click)="updateSalePriority('High')">HIGH</button>
+              </mat-menu>
+            </div> -->
+
+            <!-- <mat-divider></mat-divider> -->
+            <!-- Sale description -->
+
+     <br>
+            <!-- <mat-divider></mat-divider>
+            <mat-list class="zeropad">
+              <mat-list-item style="max-height: 40px;">
+                <mat-icon mat-list-icon color="accent">today</mat-icon>
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">Start Date: </span>
+                  <span>{{(sale|async)?.startDate.toDate() |date}} </span>
+                </div>
+              </mat-list-item>
+              <mat-list-item style="max-height: 40p x;">
+                <mat-icon mat-list-icon color="accent">insert_invitation</mat-icon>
+                <div mat-line class="mat-h2 mat-title"><span style="opacity: 0.8;">End Date: </span>
+                  <span>{{(sale|async)?.expCompletionDate.toDate() |date}}</span>
+                </div>
+              </mat-list-item>
+              <mat-list-item style="max-height: 40px;">
+                <mat-icon mat-list-icon color="accent">payment</mat-icon>
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">Payment: </span><span>{{(sale | async)?.collectionMode}}</span> </div>
+              </mat-list-item>
+            </mat-list>
+            <br>
+            <mat-divider></mat-divider> -->
+
+            <h4 mat-line class="mat-h2 mat-title" style="opacity: 0.8; padding-top: 11px;">Invoicing and
+              Collection</h4>
+            <mat-list class="zeropad">
+
+
+
+                <mat-list-item style="max-height: 40px;">
+                  <mat-icon  mat-list-icon color="accent">article</mat-icon>
+                  <p mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">Invoiced: </span><span>{{invoicedAmount}}</span> </p>
+                </mat-list-item>
+
+
+                <mat-list-item style="max-height: 40px;">
+                  <mat-icon  mat-list-icon color="accent">money</mat-icon>
+                  <p mat-line class="mat-h2 mat-title" *ngIf = "collectedAmount"> <span style="opacity: 0.8;">Collected: </span><span>{{collectedAmount}}</span> </p>
+                  <p mat-line class="mat-h2 mat-title" *ngIf = "!collectedAmount"> <span style="opacity: 0.8;">Collected </span><span>0</span> </p>
+
+                </mat-list-item>
+
+
+            </mat-list>
+            <br>
+            <!-- <h4 mat-line>
+              <mat-icon mat-list-icon color="accent">monetization_on</mat-icon><span
+                class="align-top">&nbsp;&nbsp;Estimate:
+                {{estimateAmount}}</span>
+            </h4>
+            <h4 mat-line>
+              <mat-icon mat-list-icon color="accent">article</mat-icon><span class="align-top">&nbsp;&nbsp;Invoiced:
+                {{invoicedAmount}}</span>
+            </h4>
+            <h4 mat-line>
+              <mat-icon mat-list-icon color="accent">money</mat-icon><span class="align-top">&nbsp;&nbsp; Collected:
+                {{collectedAmount}}</span>
+            </h4> -->
+
+            <!--Custom Fields-->
+            <mat-divider></mat-divider>
+            <h4 style="margin-top: 13px;" mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">Additonal Details </span>
+            </h4>
+              <mat-list class="zeropad">
+              <mat-list-item style="max-height: 40px;" *ngIf="(sale | async)?.saleField1 !=null && saleField1Check  ">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleField1Name}} : </span><span>{{(sale | async)?.saleField1}}</span> </div>
+              </mat-list-item>
+              <mat-list-item style="max-height: 40px;" *ngIf="(sale | async)?.saleField2 !=null && saleField2Check">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleField2Name}} : </span><span>{{(sale |async)?.saleField2}}</span> </div>
+              </mat-list-item>
+
+              <mat-list-item style="max-height: 40px;"  *ngIf="(sale | async)?.saleField3 !=null && saleField3Check ">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleField3Name}} : </span><span>{{(sale | async)?.saleField3}}</span> </div>
+              </mat-list-item>
+
+              <mat-list-item style="max-height: 40px;" *ngIf="(sale | async)?.saleField4 !=null && saleField4Check ">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleField4Name}} : </span><span>{{(sale |async)?.saleField4}}</span> </div>
+              </mat-list-item>
+
+              <mat-list-item style="max-height: 40px;" *ngIf="(sale | async)?.saleCategory1!=null && saleCategory1Check  ">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleCategory1Name}} : </span>
+                  <span>
+                    <button mat-raised-button [matMenuTriggerFor]="menu3" style="border-radius: 20px; margin: 2px;  background-color: #C7DBFC; padding:0px 6px 0px 6px; font-size: 14px; color: blue ;">
+                      {{(sale | async)?.saleCategory1}} </button>
+                    <mat-menu #menu3="matMenu">
+                      <button *ngFor="let s of saleCategory1" mat-menu-item (click)="updateSaleCategory1(s)">{{s}}</button>
+                    </mat-menu>
+                  </span> </div>
+              </mat-list-item>
+
+              <mat-list-item style="max-height: 40px;" *ngIf="(sale | async)?.saleCategory2!=null && saleCategory2Check ">
+                <div mat-line class="mat-h2 mat-title"> <span style="opacity: 0.8;">{{(sale | async)?.saleCategory2Name}} : </span>
+                  <span>
+                    <button mat-raised-button [matMenuTriggerFor]="menu4"
+                    style="border-radius: 20px; margin: 2px;  background-color: #C7DBFC; padding:0px 6px 0px 6px; font-size: 14px; color: blue ;"> {{(sale | async)?.saleCategory2}} </button>
+                  <mat-menu #menu4="matMenu">
+                    <button *ngFor="let s of saleCategory2" mat-menu-item (click)="updateSaleCategory2(s)">{{s}}</button>
+                  </mat-menu>
+                  </span> </div>
+              </mat-list-item>
+            </mat-list>
+
+            <!--custom category fields-->
+  <br>
+            <mat-divider></mat-divider>
+
+            <p class="	mat-small mat-caption" style="padding: 11px 0px 4px 4px;">
+              <span> Created on :&nbsp;{{(sale|async)?.createdDate| date}}</span>
+            </p>
+
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="container-fluid border" style="background-color: white;border-radius:10px; padding-bottom: 20px;">
+            <mat-tab-group [color]="'accent'" style="min-height: 70vh;">
+              <mat-tab label="Documents" isActive="true">
+                <ng-template mat-tab-label>
+                  <!-- <mat-icon class="example-tab-icon" color=primary>article</mat-icon> -->
+                  &nbsp; DOCUMENTS
+                </ng-template>
+                <div class="container-fluid"
+                  style="background-color: white;border:10px;margin-top: 15px;">
+                  <br>
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="container-fluid border" style="background-color: white;border-radius: 5px">
+                        <br>
+                        <div class="d-flex">
+                          <h3 class="mat-h3 mat-subheading-2" style="padding-top: 5px;">Estimates</h3>
+                          <span class="example-spacer"></span>
+                          <!-- <button mat-stroked-button color="accent" style="width: 60px; height: 36px;" (click)="createEstimate()" [disabled]="!networkCheck.onNetworkCheck()">ADD</button> -->
+                        </div>
+                        <p *ngIf="estimates?.length == 0">No Estimate created yet</p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let estimate of estimates"
+                            [routerLink]="[
+                            '/dash/documentmanagement', estimate.docData.saleID, 'view', 'Estimate', estimate.customerData.custID, estimate.id ]">
+                            <mat-divider></mat-divider>
+                            <div mat-line> Estimate No: {{estimate.docData.docNumber}}</div>
+                            <div mat-line>
+                              Date: {{estimate.docData.docDate.toDate() | date}} </div>
+                            <div mat-line>
+                              Amount : {{estimate.docData.totalInclTax}}
+                            </div>
+                                 <!-- Document shared with customer -->
+
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="container-fluid border" style="background-color: white;border-radius: 5px">
+                        <br>
+                        <div class="d-flex">
+                          <h3 class="mat-h3 mat-subheading-2" style="padding-top: 5px;">Quotations</h3>
+                          <span class="example-spacer"></span>
+                          <!-- <button mat-stroked-button color="accent" (click)="createQuote()" style="width: 60px; height: 36px;" [disabled]="!networkCheck.onNetworkCheck()">ADD</button> -->
+                        </div>
+                        <p *ngIf="quotations?.length == 0">No Quotation created yet </p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let quote of quotations"
+                            [routerLink]="[
+                            '/dash/documentquotationmanagement',quote.docData.saleID,'view','Quotation',quote.customerData.custID,quote.id ]">
+                            <mat-divider></mat-divider>
+                            <div mat-line> Quote No: {{quote.docData.docNumber}}</div>
+                            <div mat-line>
+                              Date: {{quote.docData.docDate.toDate() | date}} </div>
+                            <div mat-line>
+                              Amount : {{quote.docData.totalInclTax}}
+                            </div>
+
+
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="container-fluid border" style="background-color: white;border-radius: 5px">
+                        <br>
+                        <div class="d-flex">
+                          <h3 class="mat-h3 mat-subheading-2" style="padding-top: 5px;">Invoices</h3>
+                          <span class="example-spacer"></span>
+                          <!-- <button mat-stroked-button color="accent" (click)="createInvoice()" style="width: 60px; height: 36px;" [disabled]="!networkCheck.onNetworkCheck()">ADD</button> -->
+                        </div>
+                        <p *ngIf="invoices?.length == 0">No Invoice created yet</p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let invoice of invoices"
+                            [routerLink]="[
+                            '/dash/documentinvoicemanagement',invoice.docData.saleID,'view','Invoice',invoice.customerData.custID,invoice.id ]">
+
+                            <mat-divider></mat-divider>
+                            <div mat-line> Invoice No: {{invoice.docData.docNumber}}</div>
+                            <div mat-line>
+                              Date: {{invoice.docData.docDate.toDate() | date}} </div>
+                            <div mat-line>
+                              Amount : {{invoice.docData.totalInclTax}}&nbsp;Collected :
+                              {{invoice.collectedAmount}}
+                            </div>
+                            <!-- <mat-icon class="sharedicon" *ngIf="invoice?.shareStatus">folder_shared</mat-icon>                           -->
+
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </mat-tab>
+  <mat-tab label="Collections" isActive="true">
+              <ng-template mat-tab-label>
+                <!-- <mat-icon class="example-tab-icon" color=primary>money</mat-icon> -->
+                &nbsp; COLLECTIONS
+              </ng-template>
+              <div style="padding: 15px">
+
+                <!-- <button mat-stroked-button (click)="addPayment()" class="rig"
+                  [disabled]="!networkCheck.onNetworkCheck()">Add</button> -->
+
+              </div>
+              <div class="container-fluid" style="background-color: white;border:10px; margin-top: 15px;">
+                <br>
+                <!-- <div *ngIf="dataSource?.length==0" class="row">
+                  !No collection recorded for this customer
+                </div> -->
+                <h3 class="mat-h3" *ngIf="dataSource?.length==0">No collection recorded for this sale!</h3>
+
+
+                <div *ngIf="dataSource?.length!=0">
+                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+
+                    <ng-container matColumnDef="Date">
+                      <th mat-header-cell *matHeaderCellDef>Payment Date</th>
+                      <td mat-cell *matCellDef="let element"> {{element.paymentDate.toDate() | date }} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Invoice No">
+                      <th mat-header-cell *matHeaderCellDef>Invoice No</th>
+                      <td mat-cell *matCellDef="let element"> {{element.invoiceprefixAndDocNumber}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Payment Mode">
+                      <th mat-header-cell *matHeaderCellDef> Payment Mode </th>
+                      <td mat-cell *matCellDef="let element"> {{element.paymentMode}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Amount">
+                      <th mat-header-cell *matHeaderCellDef>Collected Amount </th>
+                      <td mat-cell *matCellDef="let element">{{element.currency}}&nbsp;{{element.amountCollected}} </td>
+                      <!-- Cheque Details to enter -->
+                    </ng-container>
+
+                    <ng-container matColumnDef="edit">
+                      <th mat-header-cell *matHeaderCellDef> </th>
+                      <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                          [matMenuTriggerFor]="addMenu">
+                          <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #addMenu="matMenu">
+                          <button mat-menu-item (click)="editPayment(element.id)">
+                            <mat-icon color="accent">edit</mat-icon> Edit
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+                <!-- <div class="row">
+                  <div class="col-4" *ngFor="let payment of paymentReceipts">
+                    <mat-card class="example-card">
+                      <mat-card-content>
+                        <p class="mat-body-strong mat-body-2"> Collected Amount: {{payment.amountCollected}} </p>
+                        <p mat-line>
+                          Date: {{payment.paymentDate.toDate() | date}} </p>
+                        <p mat-line> Invoice No : {{payment.invoiceno}} </p>
+                        <p mat-line> Payment Mode : {{payment.paymentMode}} </p>
+                        <p mat-line *ngIf="payment.paymentMode=='cheque'">Cheque No: {{payment.chequeNo}} </p>
+                        <p mat-line *ngIf="payment.paymentMode=='cheque'">Cheque Bank: {{payment.chequeBank}} </p>
+                      </mat-card-content>
+                      <button mat-icon-button (click)="editPayment(payment.id)">
+                        <mat-icon color="accent">edit</mat-icon>
+                      </button>
+                    </mat-card>
+                    <br>
+                  </div>
+                </div> -->
+
+              </div>
+            </mat-tab>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <mat-tab label="Attachments">
+                <ng-template mat-tab-label>
+                  <!-- <mat-icon class="example-tab-icon" color=primary>attach_file</mat-icon> -->
+                  &nbsp; ATTACHMENTS
+                </ng-template>
+                <div class="container-fluid"
+                  style="background-color: white;border:10px;margin-top: 15px;">
+                  <br>
+
+                  <!-- Adding Section starts here -->
+
+                  <div class="dropzone" dropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+                  [class.hovering]="isHovering">
+
+                  <p style="padding-top: 10px;">Drag and Drop a File</p>&nbsp;&nbsp;
+                  <h3 style="padding-top: 13px;">or</h3>&nbsp;&nbsp;
+                  <button type="button" (click)="openL()" mat-raised-button color="accent"
+                    [disabled]="!onCheckNetwork()">Upload</button>
+                  <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)"
+                    style="display: none" accept=".csv,.pdf,.doc,.xls">
+
+                </div>
+
+                 <br>
+                  <table mat-table [dataSource]="dataSourceAtt" class="mat-elevation-z2">
+
+
+                    <ng-container matColumnDef="Date">
+                      <th mat-header-cell *matHeaderCellDef>Date</th>
+                      <td mat-cell *matCellDef="let element"> {{element.date | date }} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Filename">
+                      <th mat-header-cell *matHeaderCellDef>File name</th>
+                      <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Uploaded">
+                      <th mat-header-cell *matHeaderCellDef>Uploaded by</th>
+                      <td mat-cell *matCellDef="let element"> {{element.customername}} </td>
+                    </ng-container>
+
+                    <!-- Size Col to add -->
+
+                    <ng-container matColumnDef="edit">
+                      <th mat-header-cell *matHeaderCellDef> </th>
+                      <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                          <mat-icon color="accent" (click)="downloadAttachment(element.downloadURL)">download</mat-icon>
+                        </button>
+
+                          <!-- <button mat-menu-item (click)="sndMail(element.downloadURL)">Send Mail</button> -->
+
+
+                      </td>
+                    </ng-container>
+
+
+
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnAtt"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnAtt;"></tr>
+                  </table>
+                  <!-- Table ends -->
+                  <!-- <mat-list>
+                    <mat-list-item *ngFor="let item of attachments">
+                      <h3 matLine> {{item.fileName}} </h3>
+                      <p matLine>
+                        <span>Date: {{item.date | date}} </span> -->
+                  <!-- <span class="demo-2"> -- {{message.content}} </span> -->
+                  <!-- </p>
+                      <span class="example-spacer"></span>
+
+                      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                        [matMenuTriggerFor]="menu">
+                        <mat-icon color="accent">more_vert</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="downloadAttachment(item.downloadURL)">Download</button>
+                        <button mat-menu-item (click)="sndMail(item.downloadURL)">Send Mail</button>
+                        <button mat-menu-item
+                          (click)="deleteAttachment(item.id,item.path,item.downloadURL,item.fileName)">Delete</button>
+                      </mat-menu>
+                    </mat-list-item>
+                  </mat-list> -->
+                  <!-- <div *ngFor="let item of attachments">
+
+                          <mat-card class="example-card">
+
+                          <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                            <div class="p-2  flex-grow-1 bd-highlight">
+                              <mat-card-header>
+                                <mat-card-title>{{item.fileName}} </mat-card-title>
+                                <mat-card-subtitle>Date: {{item.date | date}}</mat-card-subtitle>
+                              </mat-card-header>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                              <button mat-icon-button (click)="deleteAttachment(item.id,item.path,item.downloadURL,item.fileName)" >
+                                <mat-icon color="warn">delete</mat-icon>
+                              </button>
+                              <button mat-icon-button (click)="downloadAttachment(item.downloadURL)" >
+                                <mat-icon color="primary">download</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+
+                        </mat-card>
+                        <br>
+                      </div> -->
+
+                </div>
+              </mat-tab>
+
+
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- New Layout ends here -->
+  </div>
+
+
+  <!-- Old Layout -->
+
+  <div class="container-fluid" style="background-color: white;min-height: 750px;" *ngIf="false">
+    <div class="row">
+      <div class="col-md-3">
+
+        <div style="  border-right: 1px solid lightgrey; height: 100%;">
+
+          <mat-selection-list [multiple]="false">
+            <mat-list-option>
+              <mat-icon matListAvatar>
+                <ngx-avatar name="{{(sale | async)?.firstName}}" textSizeRatio="2" size="35"></ngx-avatar>
+              </mat-icon>
+              <h3 mat-line class="mat-h2 mat-title"> <span>{{(sale |
+                  async)?.firstName}}</span> </h3>
+              <h4 mat-line>Company: {{(sale | async)?.companyName}} </h4>
+            </mat-list-option>
+            <mat-divider></mat-divider>
+          </mat-selection-list>
+          <br>
+          <div class="container-fluid">
+            <mat-card-content>
+              <div *ngIf="(sale | async)?.description!=''">
+                <h3 class="mat-h3 mat-subheading-2">Sale Description </h3>
+                <h4 mat-line>
+                  <!-- <mat-icon mat-list-icon color="accent">business</mat-icon> -->
+                  <span class="align-top">{{(sale | async)?.description}}</span>
+                </h4>
+                <br>
+              </div>
+              <h3 class="mat-h3 mat-subheading-2">Sale Details </h3>
+              <h4 mat-line>
+                <mat-icon mat-list-icon color="accent">calendar_today</mat-icon>
+                <!-- <mat-icon mat-list-icon color="accent">work</mat-icon> -->
+                <span class="align-top"> Timeline:&nbsp;{{(sale|async)?.startDate.toDate() |date}} &nbsp; to &nbsp;
+                  {{(sale|async)?.expCompletionDate.toDate() |date}}</span>
+              </h4>
+
+              <h4 mat-line>
+                <mat-icon mat-list-icon color="accent">monetization_on</mat-icon><span
+                  class="align-top">&nbsp;&nbsp;Estimate:
+                  {{estimateAmount}}</span>
+              </h4>
+              <h4 mat-line>
+                <mat-icon mat-list-icon color="accent">article</mat-icon><span class="align-top">&nbsp;&nbsp;Invoiced:
+                  {{invoicedAmount}}</span>
+              </h4>
+              <h4 mat-line>
+                <mat-icon mat-list-icon color="accent">money</mat-icon>
+                <span class="align-top">&nbsp;&nbsp; Collected:
+                  {{collectedAmount}}</span>
+              </h4>
+              <h4 mat-line>
+                <mat-icon mat-list-icon color="accent">payment</mat-icon>
+                <span class="align-top">&nbsp;&nbsp;Payment: {{(sale | async)?.collectionMode}}</span>
+              </h4>
+              <br>
+
+              <!--To add Custom Fields-->
+              <!--Custom Fields-->
+              <div *ngIf="(sale | async)?.saleField1 && saleField1Check">
+                <h4 mat-line>
+                  {{(sale | async)?.saleField1Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+                  async)?.saleField1}}</h4>
+              </div>
+              <!-- <div *ngIf="(sale | async)?.saleField1Name!='' && saleField1Check">
+                                  <h4 mat-line>
+                                    {{(sale | async)?.saleField1Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+                                    async)?.saleField1}}</h4>
+                                </div> -->
+              <div *ngIf="(sale | async)?.saleField2 && saleField2Check">
+                <h4 mat-line>
+                  {{(sale | async)?.saleField2Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+                  async)?.saleField2}}</h4>
+              </div>
+              <div *ngIf="(sale | async)?.saleField3 && saleField3Check">
+                <h4 mat-line>
+                  {{(sale | async)?.saleField3Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+                  async)?.saleField3}}</h4>
+              </div>
+              <div *ngIf="(sale | async)?.saleField4 && saleField4Check">
+                <h4 mat-line>
+                  {{(sale | async)?.saleField4Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+                  async)?.saleField4}}</h4>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <!--Customer Priority and Status-->
+              <div>
+                <button mat-raised-button [matMenuTriggerFor]="menu1" title="Customer status"
+                  style="border-radius: 20px; margin: 4px;">{{(sale | async)?.salesStage}} </button>
+                <mat-menu #menu1="matMenu" title="Sale Status">
+                  <button mat-menu-item *ngFor="let s of saleStatus" (click)="updateSaleStage(s)">{{s}}</button>
+                  <!-- <button mat-menu-item (click)="updateSaleStage('Inquiry')">Inquiry</button>
+                    <button mat-menu-item (click)="updateSaleStage('Opportunity')">Opportunity</button>
+                    <button mat-menu-item (click)="updateSaleStage('Confirmed')">Confirmed</button>
+                    <button mat-menu-item (click)="updateSaleStage('Completed')">Completed</button>
+                    <button mat-menu-item (click)="updateSaleStage('Dropped')">Dropped</button> -->
+                </mat-menu>
+                <!-- &nbsp; -->
+                <button mat-raised-button title="Customer priority" [matMenuTriggerFor]="menu2"
+                  style="border-radius: 20px; margin: 4px;"> {{(sale | async)?.priority}}&nbsp; Priority</button>
+                <mat-menu #menu2="matMenu">
+                  <button mat-menu-item (click)="updateSalePriority('Low')">Low</button>
+                  <button mat-menu-item (click)="updateSalePriority('Medium')">Medium</button>
+                  <button mat-menu-item (click)="updateSalePriority('High')">High</button>
+                </mat-menu>
+                <!-- &nbsp; -->
+
+              </div>
+              <br>
+              <!--custom category fields-->
+              <div>
+                <button *ngIf="(sale | async)?.saleCategory1 && saleCategory1Check" mat-raised-button title=""
+                  [matMenuTriggerFor]="menu3" style="border-radius: 20px; margin: 4px;">
+                  {{(sale | async)?.saleCategory1Name}}:&nbsp; {{(sale | async)?.saleCategory1}} </button>
+                <mat-menu #menu3="matMenu">
+                  <button *ngFor="let s of saleCategory1" mat-menu-item (click)="updateSaleCategory1(s)">{{s}}</button>
+                </mat-menu>
+                <!-- &nbsp; -->
+                <button *ngIf="(sale | async)?.saleCategory2 && saleCategory2Check" mat-raised-button title=""
+                  [matMenuTriggerFor]="menu4" style="border-radius: 20px; margin: 4px;">{{(sale |
+                  async)?.saleCategory2Name}}:&nbsp; {{(sale | async)?.saleCategory2}} </button>
+                <mat-menu #menu4="matMenu">
+                  <button *ngFor="let s of saleCategory2" mat-menu-item (click)="updatesaleCategory2(s)">{{s}}</button>
+                </mat-menu>
+              </div>
+            </mat-card-actions>
+            <br>
+            <p class="mat-small mat-caption">
+              <!-- <mat-icon mat-list-icon color="accent">work</mat-icon> -->
+              <span class="align-top"> Created on:&nbsp; {{(sale|async)?.createdDate| date}}</span>
+            </p>
+          </div>
+
+
+
+
+
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <div class="container-fluid " style="background-color: white;border-radius:10px; height:100%">
+          <mat-tab-group [color]="'accent'">
+            <mat-tab label="Documents" isActive="true">
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+                &nbsp; Documents
+              </ng-template>
+              <div class="container-fluid" style="background-color: ghostwhite;border:10px;margin-top: 15px; height:70vh">
+                <br>
+                <div class="row">
+                  <div class="col-4">
+                    <div class="container-fluid" style="background-color: white;border-radius: 5px">
+                      <br>
+                      <h3 class="mat-h3 mat-subheading-2">Estimates</h3>
+                      <p *ngIf="estimates?.length == 0">No Estimate created yet</p>
+                      <mat-selection-list [multiple]="false">
+                        <mat-list-option *ngFor="let estimate of estimates"
+                          [routerLink]="[
+                            '/dash/documentmanagement', estimate.docData.saleID, 'view', 'Estimate', estimate.customerData.custID, estimate.id ]">
+                          <mat-divider></mat-divider>
+                          <div mat-line> Estimate No: {{estimate.docData.docNumber}}</div>
+                          <div mat-line>
+                            Date: {{estimate.docData.docDate.toDate() | date}} </div>
+                          <div mat-line>
+                            Amount : {{estimate.docData.totalInclTax}}
+                          </div>
+                        </mat-list-option>
+                      </mat-selection-list>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="container-fluid" style="background-color: white;border-radius: 5px">
+                      <br>
+                      <h3 class="mat-h3 mat-subheading-2">Quotations</h3>
+                      <p *ngIf="quotations?.length == 0">No Quotation created yet </p>
+                      <mat-selection-list [multiple]="false">
+                        <mat-list-option *ngFor="let quote of quotations"
+                          [routerLink]="[
+                            '/dash/documentquotationmanagement',quote.docData.saleID,'view','Quotation',quote.customerData.custID,quote.id ]">
+                          <mat-divider></mat-divider>
+                          <div mat-line> Quote No: {{quote.docData.docNumber}}</div>
+                          <div mat-line>
+                            Date: {{quote.docData.docDate.toDate() | date}} </div>
+                          <div mat-line>
+                            Amount : {{quote.docData.totalInclTax}}
+                          </div>
+                        </mat-list-option>
+                      </mat-selection-list>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="container-fluid" style="background-color: white;border-radius: 5px">
+                      <br>
+                      <h3 class="mat-h3 mat-subheading-2">Invoices</h3>
+                      <p *ngIf="invoices?.length == 0">No Invoice created yet</p>
+                      <mat-selection-list [multiple]="false">
+                        <mat-list-option *ngFor="let invoice of invoices"
+                          [routerLink]="[
+                            '/dash/documentinvoicemanagement',invoice.docData.saleID,'view','Invoice',invoice.customerData.custID,invoice.id ]">
+                          <mat-divider></mat-divider>
+                          <div mat-line> Invoice No: {{invoice.docData.docNumber}}</div>
+                          <div mat-line>
+                            Date: {{invoice.docData.docDate.toDate() | date}} </div>
+                          <div mat-line>
+                            Amount : {{invoice.docData.totalInclTax}}&nbsp;Collected :
+                            {{invoice.collectedAmount}}
+                          </div>
+
+                        </mat-list-option>
+                      </mat-selection-list>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </mat-tab>
+            <!-- <mat-tab label="Collections" isActive="true" >
+                    <ng-template mat-tab-label>
+                      <mat-icon class="example-tab-icon" color=primary>money</mat-icon>
+                      &nbsp; Collection
+                    </ng-template>
+                    <div class="container" style="max-width:720px">
+                      <br>
+                      <div *ngFor="let payment of paymentReceipts">
+                        <mat-card class="example-card">
+
+                          <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                            <div class="p-2  flex-grow-1 bd-highlight">
+                              <mat-card-header>
+                                <mat-card-title>Amount: {{payment.amountCollected}} </mat-card-title>
+                                <mat-card-subtitle>Date: {{payment.paymentDate.toDate() | date}}</mat-card-subtitle>
+                              </mat-card-header>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                              <button mat-icon-button aria-label="Navigate button" (click)="editPayment(payment.id)">
+                                <mat-icon color="primary">mode</mat-icon>
+                              </button>
+                              <button mat-icon-button aria-label="Navigate button" (click)="viewPayment(payment.id,payment.saleId)">
+                                <mat-icon color="accent">visibility</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+
+                          <mat-card-content>
+                            <div class="row">
+                              <div class="col-sm-12 col-md-6">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <mat-list>
+                                      <mat-list-item>
+                                        <a>
+                                          <mat-icon mat-list-icon color="primary">article</mat-icon>
+                                          <div mat-line><span class="mat-h3 mat-subheading-2"
+                                              >{{payment.invoiceno}}</span>
+                                          </div>
+                                          <div mat-line><span class="mat-small mat-caption">Invoice No</span> </div>
+                                        </a>
+                                      </mat-list-item>
+
+                                    </mat-list>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-12 col-md-6">
+                                <mat-list>
+                                  <mat-list-item>
+                                    <a (click)="viewPayment(payment.id)">
+                                      <mat-icon mat-list-icon color="primary">payment</mat-icon>
+                                      <div mat-line><span class="mat-h3 mat-subheading-2"
+                                          >{{payment.paymentMode}}</span>
+                                      </div>
+                                      <div mat-line><span class="mat-small mat-caption">Payment Mode </span> </div>
+                                    </a>
+                                  </mat-list-item>
+                                </mat-list>
+                              </div>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                        <br>
+                      </div>
+
+                    </div>
+                  </mat-tab> -->
+
+            <mat-tab label="Collections" isActive="true">
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon" color=primary>money</mat-icon>
+                &nbsp; Collection
+              </ng-template>
+              <div class="container-fluid" style="background-color: ghostwhite;border:10px;margin-top: 15px;">
+                <br>
+                <div class="row">
+                  <div class="col-4" *ngFor="let payment of paymentReceipts">
+                    <mat-card class="example-card">
+                      <mat-card-content>
+                        <p class="mat-body-strong mat-body-2"> Collected Amount:{{payment.currency}}&nbsp;{{payment.amountCollected}} </p>
+                        <p mat-line>
+                          Date: {{payment.paymentDate.toDate() | date}} </p>
+                        <p mat-line> Invoice No : {{payment.invoiceprefixAndDocNumber}} </p>
+                        <p mat-line> Payment Mode : {{payment.paymentMode}} </p>
+                        <p mat-line *ngIf="payment.paymentMode=='cheque'">Cheque No: {{payment.chequeNo}} </p>
+                        <p mat-line *ngIf="payment.paymentMode=='cheque'">Cheque Bank: {{payment.chequeBank}} </p>
+                      </mat-card-content>
+                      <button mat-icon-button (click)="editPayment(payment.id)">
+                        <mat-icon color="accent">edit</mat-icon>
+                      </button>
+                    </mat-card>
+                    <br>
+                  </div>
+                </div>
+                <div>
+
+                  <br>
+                </div>
+
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Attachments">
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon" color=primary>attach_file</mat-icon>
+                &nbsp; Attachments
+              </ng-template>
+              <div class="container" style="max-width:720px">
+                <br>
+                <button mat-mini-fab color="accent" (click)="openL()" title="attach files"  [disabled]="!onCheckNetwork()">
+                  <mat-icon class="minibtn">add</mat-icon>
+                </button>
+                <br>
+                <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)"
+                  style="display: none" accept=".csv,.pdf,.doc,.xls">
+                <br>
+                <mat-list>
+                  <mat-list-item *ngFor="let item of attachments">
+                    <!-- <mat-icon matListIcon>folder</mat-icon> -->
+                    <h3 matLine> {{item.fileName}} </h3>
+                    <p matLine>
+                      <span>Date: {{item.date | date}} </span>
+                      <!-- <span class="demo-2"> -- {{message.content}} </span> -->
+                    </p>
+                    <span class="example-spacer"></span>
+
+                    <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                      [matMenuTriggerFor]="menu">
+                      <mat-icon color="accent">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="downloadAttachment(item.downloadURL)">Download</button>
+                      <button mat-menu-item
+                        (click)="deleteAttachment(item.id,item.path,item.downloadURL,item.fileName)">Delete</button>
+                    </mat-menu>
+                  </mat-list-item>
+                </mat-list>
+                <!-- <div *ngFor="let item of attachments">
+
+                          <mat-card class="example-card">
+
+                          <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                            <div class="p-2  flex-grow-1 bd-highlight">
+                              <mat-card-header>
+                                <mat-card-title>{{item.fileName}} </mat-card-title>
+                                <mat-card-subtitle>Date: {{item.date | date}}</mat-card-subtitle>
+                              </mat-card-header>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                              <button mat-icon-button (click)="deleteAttachment(item.id,item.path,item.downloadURL,item.fileName)" >
+                                <mat-icon color="warn">delete</mat-icon>
+                              </button>
+                              <button mat-icon-button (click)="downloadAttachment(item.downloadURL)" >
+                                <mat-icon color="primary">download</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+
+                        </mat-card>
+                        <br>
+                      </div> -->
+
+              </div>
+            </mat-tab>
+
+
+          </mat-tab-group>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- </div> -->
+  <!-- MODIFICATION ENDS HERE -->
+  <!-- <div *ngIf="spinner">
+      {{getValue((sale|async)?.EstimatedValue,(sale|async)?.invoicedAmount,(sale|async)?.collectedAmount)}}
+  </div> -->
+
+
+  <!-- Mobile view section -->
+  <div *ngIf=" isMobilesize">
+    <mat-toolbar  style="position: sticky; top: 0; z-index: 10;" [ngStyle]="{'background-color':'#2A6AF6', 'color':'white'}" disablePagination=true>
+      <button mat-icon-button aria-label="back" title="back" (click)="onBackMob()">
+        <mat-icon [ngStyle]="{'color':'white'}"><span class="material-icons-outlined">
+            arrow_back
+          </span></mat-icon>
+      </button>
+      <span>
+        Sale
+      </span>
+      <span class="example-spacer"></span>
+      <mat-icon style="color: white" *ngIf="!onCheckNetwork()">wifi_off icon</mat-icon>
+      <!-- <button mat-mini-fab aria-label="Add options" color="accent" (click)="onAddMob()">
+        <mat-icon [ngStyle]="{'color':'white'}">add</mat-icon>
+      </button> -->
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menu">
+        <mat-icon [ngStyle]="{'color':'white'}">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <!-- <button mat-menu-item (click)="onViewSale()">View</button> -->
+        <button mat-menu-item (click)="onEditSale()">Edit</button>
+      </mat-menu>
+
+    </mat-toolbar>
+    <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+    </mat-progress-bar>
+    <!-- Mat tabgroup starts here -->
+    <mat-tab-group *ngIf="progressBarStatus" mat-align-tabs="start" [color]="'accent'">
+      <mat-tab label="SALES DETAILS" isActive="true">
+        <ng-template mat-tab-label>
+          &nbsp; DETAILS
+        </ng-template>
+        <div class="container-fluid" style="  border-radius: 10px;  background-color: white; overflow-y: auto;">
+          <br>
+          <h3 class="mat-h3" style="font-weight: bold;"> {{(sale | async)?.saleTitle}}</h3>
+          <div>
+
+            <button mat-raised-button [matMenuTriggerFor]="menu1" title="Sale status"
+              style="border-radius: 20px; background-color: #C7DBFC; padding:0px 6px 0px 14px; font-size: 14px; color: blue ; text-transform: uppercase;">{{(sale
+              | async)?.salesStage}}&nbsp;
+              <mat-icon [ngStyle]="{'color':'blue'}">expand_more</mat-icon>
+            </button>&nbsp;&nbsp;
+            <button mat-raised-button title="Sale priority" [matMenuTriggerFor]="menu2"
+              style="border-radius: 20px; background-color: #F5BE41; padding:0px 6px 0px 14px; font-size: 14px; color: white; text-transform: uppercase;">{{(sale
+              |
+              async)?.priority}}&nbsp;
+              <mat-icon [ngStyle]="{'color':'white'}" class="white-icon">expand_more</mat-icon>
+            </button>
+
+            <mat-menu #menu1="matMenu" title="Sale Status">
+              <button mat-menu-item *ngFor="let s of saleStatus" (click)="updateSaleStage(s)">{{s}}</button>
+            </mat-menu>
+
+            <mat-menu #menu2="matMenu">
+              <button mat-menu-item (click)="updateSalePriority('Low')">LOW</button>
+              <button mat-menu-item (click)="updateSalePriority('Medium')">MEDIUM</button>
+              <button mat-menu-item (click)="updateSalePriority('High')">HIGH</button>
+            </mat-menu>
+
+          </div>
+          <br>
+          <div class = "border" style="border-radius: 5px;padding: 10px;background-color: ghostwhite;">
+            <h4 class="mat-h4 " >Sale Description </h4>
+            <p mat-line >
+              <!-- <mat-icon mat-list-icon color="accent">business</mat-icon> -->
+              <span class="align-top">{{(sale | async)?.description}}</span>
+            </p>
+          </div>
+
+          <!--Basic Info-->
+          <br>
+          <mat-divider></mat-divider>
+          <br>
+          <div>
+
+            <h3 class="mat-h3 " >Basic Info </h3>
+
+            <mat-list class="zeropad">
+              <mat-list-item (click)="contactViewMob()">
+                <mat-icon matListAvatar>
+                  <ngx-avatar name="{{(sale | async)?.firstName}}" textSizeRatio="2" size="35"></ngx-avatar>
+                </mat-icon>
+
+                <h3 mat-line class="mat-h2 mat-title"> <span>{{(userDetails |
+                    async)?.firstname}}&nbsp;{{(userDetails | async)?.lastname}}</span> </h3>
+                <h4 mat-line>{{(userDetails | async)?.company}} </h4>
+              </mat-list-item>
+              <mat-list-item style="padding: 0px;margin: 0px;">
+                <mat-icon mat-list-icon color="accent">calendar_today</mat-icon>
+                <h4 mat-line class="mat-h2 mat-title">
+                  <span>{{(sale|async)?.startDate.toDate() |date}} &nbsp; - &nbsp;
+                    {{(sale|async)?.expCompletionDate.toDate() |date}}</span>
+                </h4>
+                <h5 mat-line style="opacity: 0.8;">Sale Date</h5>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon color="accent">payment</mat-icon>
+                <h4 mat-line class="mat-h2 mat-title"> <span>{{(sale | async)?.collectionMode}}</span> </h4>
+                <h5 mat-line style="opacity: 0.8;">Payment Mode </h5>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon color="accent">monetization_on</mat-icon>
+                <h4 mat-line class="mat-h2 mat-title">
+                  <span>{{estimateAmount}}</span>
+                </h4>
+                <h5 mat-line style="opacity: 0.8; font-size: 12px;">Estimated Value</h5>
+              </mat-list-item>
+
+              <mat-list-item>
+                <mat-icon mat-list-icon color="accent">article</mat-icon>
+                <h4 mat-line class="mat-h2 mat-title"> <span>{{invoicedAmount}}</span> </h4>
+                <h5 mat-line style="opacity: 0.8; font-size: 12px;">Invoiced</h5>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon mat-list-icon color="accent">money</mat-icon>
+                <h4 mat-line class="mat-h2 mat-title"> <span>{{collectedAmount}}</span> </h4>
+                <h5 mat-line style="opacity: 0.8; font-size: 12px;">Collected</h5>
+              </mat-list-item>
+            </mat-list>
+
+          </div>
+          <!-- <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">monetization_on</mat-icon><span
+            class="align-top">&nbsp;&nbsp;Estimate:
+            {{estimateAmount}}</span>
+        </h4>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">article</mat-icon><span class="align-top">&nbsp;&nbsp;Invoiced:
+            {{invoicedAmount}}</span>
+        </h4>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">money</mat-icon><span class="align-top">&nbsp;&nbsp; Collected:
+            {{collectedAmount}}</span>
+        </h4> -->
+
+          <!--Custom Fields-->
+          <br>
+          <mat-divider></mat-divider>
+          <br>
+          <h3 class="mat-h3" >
+            Additional Details
+          </h3>
+          <!--
+            <span class="example-spacer"></span>
+            <button mat-icon-button aria-label="Expansion button for Additional Details">
+              <mat-icon *ngIf="addDetExp" (click)="AddDetToExpand()" color="accent">expand_less</mat-icon>
+              <mat-icon *ngIf="!addDetExp" (click)="AddDetToCollapse()" color="accent">expand_more</mat-icon>
+            </button>
+            -->
+          <div class = "mobile-list">
+            <mat-list class="zeropad">
+              <mat-list-item *ngIf="(sale | async)?.saleField1 && saleField1Check ">
+                <div mat-line>
+                  {{(sale | async)?.saleField1Name}}&nbsp;:&nbsp;{{(sale |async)?.saleField1}}</div>
+              </mat-list-item>
+              <mat-list-item *ngIf="(sale | async)?.saleField2 && saleField2Check">
+                <div mat-line>
+                  {{(sale | async)?.saleField2Name}} &nbsp;:&nbsp;{{(sale | async)?.saleField2}}</div>
+              </mat-list-item>
+              <mat-list-item *ngIf="(sale | async)?.saleField3 && saleField3Check">
+                <div mat-line>
+                  {{(sale | async)?.saleField3Name}}&nbsp;:&nbsp; {{(sale | async)?.saleField3}}</div>
+              </mat-list-item>
+              <mat-list-item *ngIf="(sale | async)?.saleField4 && saleField4Check">
+                <div mat-line>
+                  {{(sale | async)?.saleField4Name}}&nbsp;:&nbsp;{{(sale | async)?.saleField4}} </div>
+              </mat-list-item>
+              <mat-list-item *ngIf="(sale | async)?.saleCategory1 && saleCategory1Check ">
+                <div mat-line>
+                  {{(sale | async)?.saleCategory1Name}}&nbsp;:&nbsp;
+                  <button *ngIf="(sale | async)?.saleCategory1 && saleCategory1Check " mat-raised-button title=""
+                  [matMenuTriggerFor]="menu3" style="border-radius: 20px; background-color: #C7DBFC; padding:0px 6px 0px 6px; margin-bottom: 2px; font-size: 14px; color: blue ;"> {{(sale | async)?.saleCategory1}} </button> </div>
+              </mat-list-item>
+
+              <mat-list-item *ngIf="(sale | async)?.saleCategory2 && saleCategory2Check ">
+                <div mat-line>
+                  {{(sale | async)?.saleCategory2Name}}&nbsp;:&nbsp;
+                  <button *ngIf="(sale | async)?.saleCategory2 && saleCategory2Check " mat-raised-button title=""
+                  [matMenuTriggerFor]="menu4" style="border-radius: 20px; background-color: #C7DBFC; padding:0px 6px 0px 6px; margin-bottom: 2px; font-size: 14px; color: blue ;"> {{(sale | async)?.saleCategory2}} </button> </div>
+              </mat-list-item>
+
+            </mat-list>
+          </div>
+
+          <!--custom category fields-->
+
+          <mat-menu #menu3="matMenu">
+            <button *ngFor="let s of saleCategory1" mat-menu-item (click)="updateSaleCategory1(s)">{{s}}</button>
+          </mat-menu>
+          <!-- &nbsp; -->
+
+          <mat-menu #menu4="matMenu">
+            <button *ngFor="let s of saleCategory2" mat-menu-item (click)="updateSaleCategory2(s)">{{s}}</button>
+          </mat-menu>
+
+          <div mat-line class="mat-small mat-caption" style="padding: 0px 0px 16px 16px; ">
+            <!-- <mat-icon mat-list-icon color="accent">work</mat-icon> -->
+            <span class="align-top"> Created on:&nbsp; {{(sale|async)?.createdDate| date}}</span>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="SALES DOCUMENTS">
+        <ng-template mat-tab-label>
+          &nbsp; DOCUMENTS
+        </ng-template>
+        <div class="container">
+          <br>
+          <mat-selection-list [multiple]="false">
+            <div mat-subheader>Estimates
+              <span class="example-spacer"></span>
+              <button mat-raised-button color="accent" (click)="createEstimateMob()" [disabled]="!networkCheck.onNetworkCheck()">Add</button>
+            </div>
+            <p *ngIf="estimates?.length == 0">No estimates created yet </p>
+            <mat-list-option *ngFor="let estimate of estimates" [routerLink]="[
+              '/documentmanagement',
+              estimate.docData.saleID,
+              'view',
+              'Estimate',
+              estimate.customerData.custID,
+              estimate.id
+            ]">
+              <mat-icon mat-list-icon color="accent">article</mat-icon>
+              <div mat-line><span class="width_limit">Estimate No: {{estimate.docData.docNumber}}</span></div>
+              <div mat-line>
+                Date: {{estimate.docData.docDate.toDate() |date}}
+              </div>
+              <div mat-line>
+                Amount : {{estimate.docData.totalInclTax}}
+              </div>
+            </mat-list-option>
+
+            <div mat-subheader>Quotations
+              <span class="example-spacer"></span>
+              <button  mat-raised-button color="accent"  (click)="createQuoteMob()" [disabled]="!networkCheck.onNetworkCheck()">Add</button>
+            </div>
+            <p *ngIf="quotations?.length == 0">No Quotation created yet </p>
+
+            <mat-list-option *ngFor="let quote of quotations"
+            [routerLink]="[
+            '/documentquotationmanagement',quote.docData.saleID,'view','Quotation',quote.customerData.custID,quote.id ]">
+            <mat-icon mat-list-icon color="accent">article</mat-icon>
+            <div mat-line> Quote No: {{quote.docData.docNumber}}</div>
+            <div mat-line>
+              Date: {{quote.docData.docDate.toDate() | date}} </div>
+            <div mat-line>
+              Amount : {{quote.docData.totalInclTax}}
+            </div>
+          </mat-list-option>
+
+
+
+
+            <div mat-subheader>Invoices
+              <span class="example-spacer"></span>
+              <button mat-raised-button color="accent"  (click)="createInvoiceMob()" [disabled]="!networkCheck.onNetworkCheck()">Add</button>
+            </div>
+            <p *ngIf="invoices?.length == 0">No Invoice created yet </p>
+            <mat-list-option *ngFor="let invoice of invoices" [routerLink]="[
+              '/documentinvoicemanagement',
+              invoice.docData.saleID,
+              'view',
+              'Invoice',
+              invoice.customerData.custID,
+              invoice.id
+            ]">
+              <mat-icon mat-list-icon color="accent">receipt_long</mat-icon>
+              <div mat-line><span class="width_limit">Invoice No: {{invoice.docData.docNumber}}</span></div>
+              <div mat-line>
+                <span class="width_limit">Date: {{invoice.docData.docDate.toDate() |date}}
+                </span>
+              </div>
+              <div mat-line>
+                <span class="width_limit">Amount : {{invoice.docData.totalInclTax}} &nbsp;&nbsp; Collected :
+                  {{invoice.collectedAmount}}
+                </span>
+              </div>
+            </mat-list-option>
+
+          </mat-selection-list>
+        </div>
+      </mat-tab>
+
+
+      <mat-tab label="ATTACHMENTS">
+        <ng-template mat-tab-label>
+          &nbsp; ATTACHMENTS
+        </ng-template>
+        <div class="container-fluid" style="margin: 0; padding: 0; min-height: 600px;">
+          <br>
+          <mat-list>
+            <mat-list-item *ngFor="let item of attachments">
+              <mat-icon mat-list-icon color="primary" class="mob-icon">description</mat-icon>
+              <div class="d-flex justify-content-between" >
+
+                <div class="p-2 bd-highlight">
+                  <div matLine><span class="width_limit">{{item.fileName}}</span> </div>
+
+                  <div mat-line> Date: {{item.date | date}}</div>
+                </div>
+                <div class="p-2 bd-highlight" style="float: right;">
+                  <button mat-icon-button color="accent" aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon color="accent" class="mob-icon-button">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="downloadAttachment(item.downloadURL)">Download</button>
+                  </mat-menu>
+                </div>
+              </div>
+
+            </mat-list-item>
+
+          </mat-list>
+
+
+
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <!-- Mat tabgroup ends here -->
+    <!-- <div style=" height: 100%;"> -->
+
+
+    <!-- <mat-selection-list [multiple]="false">
+        <mat-list-option>
+          <mat-icon matListAvatar>
+            <ngx-avatar name="{{(sale | async)?.firstName}}" textSizeRatio="2" size="35"></ngx-avatar>
+          </mat-icon>
+          <h3 mat-line class="mat-h2 mat-title"> <span>{{(sale |
+              async)?.firstName}}</span> </h3>
+          <h4 mat-line>{{(sale | async)?.companyName}} </h4>
+        </mat-list-option>
+        <mat-divider></mat-divider>
+      </mat-selection-list> -->
+
+    <!-- <div class="container-fluid">
+
+        <div *ngIf="(sale | async)?.description!=''">
+          <h3 class=" mat-subheading-2">Sale Description </h3>
+          <h4 mat-line>
+            <span class="align-top">{{(sale | async)?.description}}</span>
+          </h4>
+          <br>
+
+        </div>
+        <mat-divider></mat-divider>
+        <br>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">calendar_today</mat-icon>
+          <span class="align-top"> Timeline:&nbsp;{{(sale|async)?.startDate.toDate() |date}} &nbsp; to &nbsp;
+            {{(sale|async)?.expCompletionDate.toDate() |date}}</span>
+        </h4>
+
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">monetization_on</mat-icon><span class="align-top">&nbsp;&nbsp;Estimate:
+            {{estimateAmount}}</span>
+        </h4>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">article</mat-icon><span class="align-top">&nbsp;&nbsp;Invoiced:
+            {{invoicedAmount}}</span>
+        </h4>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">money</mat-icon><span class="align-top">&nbsp;&nbsp; Collected:
+            {{collectedAmount}}</span>
+        </h4>
+        <h4 mat-line>
+          <mat-icon mat-list-icon color="accent">payment</mat-icon>
+          <span class="align-top">&nbsp;&nbsp;Payment: {{(sale | async)?.collectionMode}}</span>
+        </h4>
+        <br>
+        <mat-divider></mat-divider>
+        <br>
+
+        <h3 class="mat-subheading-2">Additonal Details </h3>
+        <div *ngIf="(sale | async)?.saleField1 && saleField1Check">
+          <h4 mat-line>
+            {{(sale | async)?.saleField1Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+            async)?.saleField1}}</h4>
+        </div>
+        <div *ngIf="(sale | async)?.saleField2 && saleField2Check">
+          <h4 mat-line>
+            {{(sale | async)?.saleField2Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+            async)?.saleField2Name}}</h4>
+        </div>
+        <div *ngIf="(sale | async)?.saleField3 && saleField3Check">
+          <h4 mat-line>
+            {{(sale | async)?.saleField3Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+            async)?.saleField3}}</h4>
+        </div>
+        <div *ngIf="(sale | async)?.saleField4 && saleField4Check">
+          <h4 mat-line>
+            {{(sale | async)?.saleField4Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(sale |
+            async)?.saleField4}}</h4>
+        </div>
+
+        <mat-card-actions>
+
+          <div>
+            <button mat-raised-button [matMenuTriggerFor]="menu1" title="Customer status"
+              style="border-radius: 20px; margin: 4px;">{{(sale | async)?.salesStage}} </button>
+            <mat-menu #menu1="matMenu" title="Sale Status">
+              <button mat-menu-item *ngFor="let s of saleStatus" (click)="updateSaleStage(s)">{{s}}</button>
+            </mat-menu>
+            <button mat-raised-button title="Customer priority" [matMenuTriggerFor]="menu2"
+              style="border-radius: 20px; margin: 4px;"> {{(sale | async)?.priority}}&nbsp; Priority</button>
+            <mat-menu #menu2="matMenu">
+              <button mat-menu-item (click)="updateSalePriority('Low')">Low</button>
+              <button mat-menu-item (click)="updateSalePriority('Medium')">Medium</button>
+              <button mat-menu-item (click)="updateSalePriority('High')">High</button>
+            </mat-menu>
+
+
+          </div>
+          <br>
+
+          <div>
+            <button *ngIf="(sale | async)?.saleCategory1 && saleCategory1Check" mat-raised-button title=""
+              [matMenuTriggerFor]="menu3" style="border-radius: 20px; margin: 4px;">
+              {{(sale | async)?.saleCategory1Name}}:&nbsp; {{(sale | async)?.saleCategory1}} </button>
+            <mat-menu #menu3="matMenu">
+              <button *ngFor="let s of saleCategory1" mat-menu-item (click)="updateSaleCategory1(s)">{{s}}</button>
+            </mat-menu>
+
+            <button *ngIf="(sale | async)?.saleCategory2 && saleCategory2Check" mat-raised-button title=""
+              [matMenuTriggerFor]="menu4" style="border-radius: 20px; margin: 4px;">{{(sale |
+              async)?.saleCategory2Name}}:&nbsp; {{(sale | async)?.saleCategory2}} </button>
+            <mat-menu #menu4="matMenu">
+              <button *ngFor="let s of saleCategory2" mat-menu-item (click)="updatesaleCategory2(s)">{{s}}</button>
+            </mat-menu>
+          </div>
+        </mat-card-actions>
+        <br>
+        <p class="mat-small mat-caption">
+          <span class="align-top"> Created on:&nbsp; {{(sale|async)?.createdDate| date}}</span>
+        </p>
+      </div> -->
+
+
+
+    <!-- </div> -->
+    <!-- <mat-accordion> -->
+    <!--Sales list-->
+    <!-- <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+            &nbsp; Estimates
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let estimate of estimates">
+          <mat-list-item>
+            <div mat-line><span class="width_limit">Estimate No: {{estimate.docData.docNumber}}</span></div>
+            <div mat-line>
+              <span class="width_limit">Date: {{estimate.docData.docDate.toDate() |date}}
+              </span><span class="mat-h3 mat-subheading-2"></span>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                [matMenuTriggerFor]="menu">
+                <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentmanagement',
+                  estimate.docData.saleID,
+                  'create',
+                  'Invoice',
+                  estimate.customerData.custID,
+                  'na'
+                ]">Invoice</a>
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentmanagement',
+                  estimate.docData.saleID,
+                  'view',
+                  'Estimate',
+                  estimate.customerData.custID,
+                  estimate.id
+                ]">View</a>
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentmanagement',
+                  estimate.docData.saleID,
+                  'edit',
+                  'Estimate',
+                  estimate.customerData.custID,
+                  estimate.id
+                ]">Edit</a>
+              </mat-menu>
+
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">date_range</mat-icon>
+            <div mat-line *ngIf="estimate.docData.docValidity != null "><span
+                class="mat-h3 mat-subheading-2">{{estimate.docData.docValidity.toDate()|date}}</span></div>
+            <div mat-line *ngIf="estimate.docData.docValidity == null "><span class="mat-h3 mat-subheading-2">N/A</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Valid tille</span> </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">article</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{estimate.docData.totalInclTax}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Amount</span> </div>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+            &nbsp; Quotations
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let quote of quotations">
+          <mat-list-item>
+            <div mat-line><span class="width_limit">Quotation No: {{quote.docData.docNumber}}</span></div>
+            <div mat-line>
+              <span class="width_limit">Date: {{quote.docData.docDate.toDate() |date}}
+              </span><span class="mat-h3 mat-subheading-2"></span>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                [matMenuTriggerFor]="menu">
+                <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentmanagement',
+                  quote.docData.saleID,
+                  'create',
+                  'Invoice',
+                  quote.customerData.custID,
+                  'na'
+                ]">Invoice</a>
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentquotationmanagement',
+                  quote.docData.saleID,
+                  'view',
+                  'Quotation',
+                  quote.customerData.custID,
+                  quote.id
+                ]">View</a>
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentquotationmanagement',
+                  quote.docData.saleID,
+                  'edit',
+                  'Quotation',
+                  quote.customerData.custID,
+                  quote.id
+                ]">Edit</a>
+              </mat-menu>
+
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">date_range</mat-icon>
+            <div mat-line *ngIf="quote.docData.docValidity != null "><span
+                class="mat-h3 mat-subheading-2">{{quote.docData.docValidity.toDate()|date}}</span></div>
+            <div mat-line *ngIf="quote.docData.docValidity == null "><span class="mat-h3 mat-subheading-2">N/A</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Valid tille</span> </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">article</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{quote.docData.totalInclTax}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Amount</span> </div>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+            &nbsp; Invoices
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let invoice of invoices">
+          <mat-list-item>
+            <div mat-line><span class="width_limit">Invoice No: {{invoice.docData.docNumber}}</span></div>
+            <div mat-line>
+              <span class="width_limit">Date: {{invoice.docData.docDate.toDate() |date}}
+              </span><span class="mat-h3 mat-subheading-2"></span>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                [matMenuTriggerFor]="menu">
+                <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentinvoicemanagement',
+                  invoice.docData.saleID,
+                  'view',
+                  'Invoice',
+                  invoice.customerData.custID,
+                  invoice.id
+                ]">View</a>
+                <a mat-menu-item [routerLink]="[
+                  '/dash/documentinvoicemanagement',
+                  invoice.docData.saleID,
+                  'edit',
+                  'Invoice',
+                  invoice.customerData.custID,
+                  invoice.id
+                ]">Edit</a>
+              </mat-menu>
+
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">article</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.docData.totalInclTax}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Invoice amount </span> </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">money</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.collectedAmount}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Collected</span> </div>
+          </mat-list-item>
+
+        </mat-list>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+            &nbsp; Collection
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let payment of paymentReceipts">
+          <mat-list-item>
+            <div mat-line><span class="width_limit">Amount: {{payment.amountCollected}}</span></div>
+            <div mat-line>
+              <span class="width_limit">Date: {{payment.paymentDate.toDate() | date}}
+              </span><span class="mat-h3 mat-subheading-2"></span>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button mat-icon-button aria-label="Navigate button" (click)="editPayment(payment.id)">
+                <mat-icon color="primary">mode</mat-icon>
+              </button>
+              <button mat-icon-button aria-label="Navigate button" (click)="viewPayment(payment.id,payment.saleId)">
+                <mat-icon color="accent">visibility</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">article</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.invoiceno}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Invoice No</span> </div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon color="primary">payment</mat-icon>
+            <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.paymentMode}}</span>
+            </div>
+            <div mat-line><span class="mat-small mat-caption">Payment Mode </span> </div>
+          </mat-list-item>
+
+        </mat-list>
+
+      </mat-expansion-panel> -->
+    <!-- </mat-accordion> -->
+  </div>

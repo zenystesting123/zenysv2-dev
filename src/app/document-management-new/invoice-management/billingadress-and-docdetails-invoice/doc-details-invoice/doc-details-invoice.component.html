@@ -1,0 +1,113 @@
+<form [formGroup]="form">
+    <h4 class="card-title">
+        <span>{{ form.get('docTitle').value }} Details</span>
+    </h4>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>{{ form.get('docTitle').value }} No:</mat-label>
+            <input matInput placeholder="{{ form.get('docTitle').value }} No:" name="prefixAndDocNumber"
+                formControlName="prefixAndDocNumber" />
+        </mat-form-field>
+    </div>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>{{ form.get('docTitle').value }} Date:</mat-label>
+            <input matInput [matDatepicker]="picker1" name="docDate" formControlName="docDate" />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker1">
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('docDate').invalid && 
+    (form.get('docDate').dirty || 
+    form.get('docDate').touched))
+    ">
+        Please enter a date!</mat-error>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Due Date:</mat-label>
+            <input matInput [matDatepicker]="picker2" name="dueDate" formControlName="dueDate" />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker2">
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="input-group mb-1" *ngIf="invoicesService.invoice.docData.estRef">
+        <mat-form-field class="example-full-width">
+            <mat-label>{{invoicesService.fieldNameEstimate}} Ref:</mat-label>
+            <input matInput placeholder="{{invoicesService.fieldNameEstimate}}" name="estRef"
+                formControlName="estRef" />
+        </mat-form-field>
+    </div>
+    <div class="input-group mb-1" *ngIf="invoicesService.invoice.docData.quoteRef">
+        <mat-form-field class="example-full-width">
+            <mat-label>{{invoicesService.fieldNameQuotation}} Ref:</mat-label>
+            <input matInput placeholder="{{invoicesService.fieldNameQuotation}}" name="quoteRef"
+                formControlName="quoteRef" />
+        </mat-form-field>
+    </div>
+
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>P.O Ref :</mat-label>
+            <input matInput placeholder="P.O Ref:" name="poRef" formControlName="poRef" />
+        </mat-form-field>
+    </div>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Payment Terms:</mat-label>
+            <input matInput placeholder="Payment Terms No:" name="paymentTerm" formControlName="paymentTerm" />
+        </mat-form-field>
+    </div>
+
+
+
+    <div class="row" *ngIf="invoicesService.document.billingAmountDetails.taxType == 'gst'">
+        <div class="col-10">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>State Code</mat-label>
+                    <mat-select formControlName="gstStateCode" name="gstStateCode">
+                        <mat-option *ngFor="let gstStateCode of StateCodes"
+                            [value]="getSateCodeValue(gstStateCode.state,gstStateCode.tin,gstStateCode.stateCode)">
+                            {{ gstStateCode.state }} ({{ gstStateCode.tin }})&nbsp;{{
+                            gstStateCode.stateCode
+                            }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-2">
+            <button mat-icon-button color="warn" matTooltip="clear" (click)="clearStateCode()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="invoicesService.document.billingAmountDetails.taxType == 'gst'">
+        <div class="col-10">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Place Of Supply Code</mat-label>
+                    <mat-select formControlName="gstPlaceOfSupplyCode" name="gstPlaceOfSupplyCode">
+                        <mat-option *ngFor="let gstPlaceOfSupplyCode of StateCodes"
+                            [value]="getSateCodeValue(gstPlaceOfSupplyCode.state,gstPlaceOfSupplyCode.tin,gstPlaceOfSupplyCode.stateCode)">
+                            {{ gstPlaceOfSupplyCode.state }} ({{ gstPlaceOfSupplyCode.tin }})&nbsp;{{
+                            gstPlaceOfSupplyCode.stateCode
+                            }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-2">
+            <button mat-icon-button color="warn" matTooltip="clear" (click)="clearPlaceOfSupplyCode()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </div>
+    </div>
+</form>

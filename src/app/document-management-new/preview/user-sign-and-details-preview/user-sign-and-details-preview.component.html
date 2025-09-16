@@ -1,0 +1,26 @@
+<div class="
+container-fluid
+align-items-center
+unbreak
+" *ngIf="previewService.signature">
+    <div class="row" *ngIf="previewService.signature">
+        <img src="{{ previewService.signature }}" class="img-fluid object-fit-cover" alt="Responsive image" style="
+    min-height: 100px;
+    min-width: 100px;
+    max-height: 100px;
+  " />
+    </div>
+    <div class="row text-right">
+        <p style="text-align: center">
+            {{ previewService.userData.signatoryName }}
+        </p>
+    </div>
+    <div class="row text-right">
+        <p style="text-align: center">
+            {{ previewService.userData.designation }}
+        </p>
+    </div>
+</div>
+<div class="container-fluid text-center">
+    <div class="container" *ngIf="previewService.signature"></div>
+</div>

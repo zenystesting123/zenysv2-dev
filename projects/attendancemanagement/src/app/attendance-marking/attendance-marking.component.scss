@@ -1,0 +1,40 @@
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  text-decoration: none;
+}
+.example-container{
+  margin: 0 5px 200px 5px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+// mat-cell {
+//   display: inline-block;
+// }
+.mat-column-index {
+  flex: 0 0 10%;
+}
+.mat-column-attStatus {
+  flex: 0 0 20%;
+}
+// .mat-column-checkIn {
+//   flex: 0 0 20%;
+// }
+// .mat-column-checkOut {
+//   flex: 0 0 20%;
+// }
+.mat-column-loginTime {
+  flex: 0 0 6%;
+}
+.mat-column-logoutTime {
+  flex: 0 0 6%;
+}
+.mat-column-autoLogouts {
+  flex: 0 0 6%;
+}
+.mat-column-activeTime {
+  flex: 0 0 13%;
+}

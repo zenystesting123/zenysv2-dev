@@ -1,0 +1,23 @@
+
+<div class="row ">
+    <div class="col-4 chatheads nomarg">
+        <app-chatshead [chatHeads]="chatHeads" (chatheadClickedevent)="chatHeadClicked($event)"></app-chatshead>
+    </div>
+    <div class="col-8 nomarg ">
+        <div class="chatlist" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <app-chatslist [List]="currentChatList" ></app-chatslist>
+        </div>
+        <form #form="ngForm" >
+            <div class="input-group">
+              <input type="text" placeholder="Type a message" name="message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" [(ngModel)]="message">
+              <div class="input-group-append">
+                <button mat-icon-button type="submit" class="btn btn-link" (click)="sendMessage()"> 
+                    <mat-icon>send</mat-icon>
+                </button>
+              </div>
+            </div>
+          </form>    
+    </div>
+    
+
+</div>

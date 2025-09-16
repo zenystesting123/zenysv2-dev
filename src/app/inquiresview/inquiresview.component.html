@@ -1,0 +1,16 @@
+<mat-icon color="primary"> comment</mat-icon><br>
+&nbsp;&nbsp;&nbsp;&nbsp;{{data.Message}}<br>
+<hr>
+<mat-icon color="primary">check_circle</mat-icon>
+&nbsp;&nbsp;&nbsp;&nbsp;{{data.Status}}<br><br>
+
+<mat-icon color="primary">record_voice_over</mat-icon>
+&nbsp;&nbsp;&nbsp;&nbsp;{{data.Name}}<br><br>
+<mat-icon color="primary"> call</mat-icon>
+&nbsp;&nbsp;&nbsp;&nbsp;{{data.Phone}}<br><br>
+<mat-icon color="primary"> email</mat-icon>
+&nbsp;&nbsp;&nbsp;&nbsp;{{data.Email}}
+<br><br>
+<!-- <button *ngIf="data.Status!='Opportunity Created'"  mat-raised-button color="primary" (click)="createOppotunity()">Create opportunity</button>
+&nbsp;&nbsp;&nbsp;&nbsp; -->
+<button mat-raised-button color="accent"(click)="close()">Close</button>

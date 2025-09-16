@@ -1,0 +1,1072 @@
+<h2 mat-dialog-title *ngIf="value.smode == 'errorMessage'">
+  User not added
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'errorMsg'">
+  {{value.head}}
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'NotAUser'">
+  {{value.head}}
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'personalMail'">
+  Bulk Mailing
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'suspendUser'">
+  User cannot be suspended!
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'taskdelete'">
+  Delete {{ fieldNameTask }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'taskcompleted'">
+  {{ fieldNameTask }} Completed?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'LeadCaptureFormDelete'">
+  Delete {{ value.formName }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDelete'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'servattachmentDelete'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDeleteTask'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDeleteCust'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'customContactDocDelete'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'customSaleDocDelete'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'customServiceDocDelete'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDeleteExp'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDeleteOrg'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'attachmentDeleteProfile'">
+  Delete {{ value.orginalPath }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'serviceDeleteProfile'">
+  Delete {{ value.title }}?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'delete_view'">
+  Delete {{ value.viewName }} view?
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'delete_report'">
+  Confirm deletion
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'delete_report_in_dashboard'">
+  Confirm deletion
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'delete_dashboardreport'">
+  Delete "{{ value.viewName }}" dashboard?
+</h2>
+<!-- uploaded csv templatemismatch -->
+<h2 mat-dialog-title *ngIf="value.smode == 'templatemismatch'">
+  Template mismatch
+</h2>
+<!-- uploaded file limit exceeded -->
+<h2 mat-dialog-title *ngIf="value.smode == 'filelimitExceeded'">
+  File Limit Exceeded
+</h2>
+<!-- produc code exist -->
+<h2 mat-dialog-title *ngIf="value.smode == 'codeexists'">Product Code Exist</h2>
+<!-- no of subusers limit -->
+<h2 mat-dialog-title *ngIf="value.smode == 'noOfSubsusers'">
+  Subusers limit exceeded
+</h2>
+<!-- employee email already exist -->
+<h2 mat-dialog-title *ngIf="value.smode == 'Emailalreadyexists'">
+  Email Exist
+</h2>
+<!-- employee photo uploading >512kb -->
+<h2 mat-dialog-title *ngIf="value.smode == 'employeePhotoSize'">
+  Photo size limit
+</h2>
+<!-- ATTACHMENT FREE SIZE LIMIT MESSAGE -->
+<h2 mat-dialog-title *ngIf="value.smode == 'free'">Free plan limit exceeded</h2>
+<!-- ATTACHMENT GOLD LIMIT MESSAGE -->
+<h2 mat-dialog-title *ngIf="value.smode == 'gold'">Gold plan limit exceeded</h2>
+<!-- ATTACHMENT DIAMOND LIMIT MESSAGE -->
+<h2 mat-dialog-title *ngIf="value.smode == 'diamond'">
+  Diamond plan limit exceeded
+</h2>
+<!-- IMAGE DELETE -->
+<h2 mat-dialog-title *ngIf="value.smode == 'imageDelete'">Delete image ?</h2>
+<!-- GALLERY MAX LIMIT -->
+<h2 mat-dialog-title *ngIf="value.smode == 'galleryMax'">
+  Gallery limit exceeded
+</h2>
+<!-- PROFILE MAX LIMIT -->
+<h2 mat-dialog-title *ngIf="value.smode == 'profileMax'">
+  Profile limit exceeded
+</h2>
+<!-- networkIssue -->
+<h2 mat-dialog-title *ngIf="value.smode == 'networkIssue'">
+  Unable to connect to server!!
+</h2>
+<!-- contact cannot be deleted msg -->
+<h2 mat-dialog-title *ngIf="value.smode == 'cannotDelete'">
+  Delete {{ value.fieldNameContact }} ?
+</h2>
+<!-- send sms/wa/email limit exceeded -->
+<h2 mat-dialog-title *ngIf="value.smode == 'countExceeded'">
+  Daily limit exceeded!!
+</h2>
+<!-- send sms/wa/email limit exceeded -->
+<h2 mat-dialog-title *ngIf="value.smode == 'countExceededUI'">
+  Sending in progress...Please wait...
+</h2>
+<!-- uploaded cat name dupliaction -->
+<h2 mat-dialog-title *ngIf="value.smode == 'duplicateCatName'">
+  Duplicate name
+</h2>
+<!-- uploaded att drag n drop -->
+<h2 mat-dialog-title *ngIf="value.smode == 'uploadinprogress'">Uploading</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'nodatafound'">Error!</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'typenotcsv'">Unsupported type</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'doctypeNotSupported'">Unsupported type</h2>
+<!--create note-->
+<h2 mat-dialog-title *ngIf="value.smode == 'createnote'">
+  Add {{ value.fieldNameContactNotes }} to {{ value.fieldNameContact }}
+  {{ value.customerName }}
+</h2>
+<mat-dialog-content class="mat-typography">
+  <h3 *ngIf="value.smode == 'errorMessage'">
+    {{value.message}}
+  </h3>
+  <h3 *ngIf="value.smode == 'errorMsg'">
+    {{value.message}}
+  </h3>
+  <h3 *ngIf="value.smode == 'personalMail'">
+    Please use any Bulk mail options to send bulk Emails
+  </h3>
+  <h3 *ngIf="value.smode == 'suspendUser'">
+    {{value.dat}} is assigned to this user, please re-assign before suspending user
+  </h3>
+  <h3 *ngIf="value.smode == 'taskdelete'">
+    Do you want to delete this {{ fieldNameTask }}
+  </h3>
+  <h3 *ngIf="value.smode == 'taskcompleted'">
+    Do you want to mark this {{ fieldNameTask }} as Completed&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'LeadCaptureFormDelete'">
+    Do you want to delete {{ value.formName }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDelete'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'servattachmentDelete'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDeleteTask'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDeleteCust'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'customContactDocDelete'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'customServiceDocDelete'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'customSaleDocDelete'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDeleteExp'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDeleteOrg'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'attachmentDeleteProfile'">
+    Do you want to delete {{ value.orginalPath }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'serviceDeleteProfile'">
+    Do you want to delete {{ value.title }}&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'delete_view'">
+    Do you want to delete {{ value.viewName }} view&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'delete_report'">
+    Do you want to delete "{{ value.viewName }}" report&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'delete_report_in_dashboard'">
+    Do you want to delete this report&nbsp;?
+  </h3>
+  <h3 *ngIf="value.smode == 'delete_dashboardreport'">
+    Do you want to delete "{{ value.viewName }}" dashboard&nbsp;?
+  </h3>
+  <!-- uploaded csv templatemismatch -->
+  <h3 *ngIf="value.smode == 'templatemismatch'">
+    Error! Please stick on template
+  </h3>
+  <!-- uploaded file limit exceeded -->
+  <h3 *ngIf="value.smode == 'filelimitExceeded'">File limit exceeded!!</h3>
+  <!-- produc code exist -->
+  <h3 *ngIf="value.smode == 'codeexists'">
+    {{
+    value.fieldNameItems == "Products and Service"
+    ? "Product"
+    : value.fieldNameItems
+    }}
+    cannot be added as another
+    {{
+    value.fieldNameItems == "Products and Service"
+    ? "Product"
+    : value.fieldNameItems
+    }}
+    with same code exists!
+  </h3>
+  <!-- no of subusers limit -->
+  <h3 *ngIf="value.smode == 'noOfSubsusers'">
+    Please upgrade in plan to provide CRM access for more users!
+  </h3>
+  <!-- employee email already exist -->
+  <h3 *ngIf="value.smode == 'Emailalreadyexists'">
+    Employee email already exists!
+  </h3>
+  <h3 *ngIf="value.smode == 'employeePhotoSize'">
+    Photo cannot be uploaded. Please use photographs of size below 512 Kb
+  </h3>
+  <!-- ATTACHMENT FREE SIZE LIMIT MESSAGE -->
+  <h3 *ngIf="value.smode == 'free'">
+    You have exceeded attachment limit of free plan storage
+  </h3>
+  <!-- ATTACHMENT GOLD LIMIT MESSAGE -->
+  <h3 *ngIf="value.smode == 'gold'">
+    You have exceeded attachment limit of Gold plan storage
+  </h3>
+  <!-- ATTACHMENT DIAMOND LIMIT MESSAGE -->
+  <h3 *ngIf="value.smode == 'diamond'">
+    You have exceeded attachment limit of Diamond plan storage
+  </h3>
+  <!-- IMAGE DELETE -->
+  <h3 *ngIf="value.smode == 'imageDelete'">
+    Do you want to delete this Image?
+  </h3>
+  <!-- GALLERY  MAX LIMIT  -->
+  <h3 *ngIf="value.smode == 'galleryMax'">
+    You can only add 20 Images in gallery
+  </h3>
+  <!-- PROFILE  MAX LIMIT  -->
+  <h3 *ngIf="value.smode == 'profileMax'">
+    You can only add 4 documents in profile
+  </h3>
+  <!--Contact delete-->
+  <h3 *ngIf="value.smode == 'cannotDelete'">
+    {{ value.fieldNameContact }} with {{ value.fieldNameSale }}/{{
+    value.fieldNameService
+    }}/Sales Documents/{{ value.fieldNameExpense }}/{{
+    value.fieldNameCollection
+    }}
+    cannot be deleted
+  </h3>
+  <!--Network issue-->
+  <h3 *ngIf="value.smode == 'networkIssue'">
+    This could be due to network issue. If you are a new user pls click Create
+    Account to complete the signup
+  </h3>
+    <!--NotAUser-->
+    <h3 *ngIf="value.smode == 'NotAUser'">
+      {{value.message}}
+      <br>
+      Are you a new user?&nbsp;<a href="javascript:void(0)" (click)="proceedToReset()">Sign
+        Up</a>
+    </h3>
+  <!-- uploaded file is not CSV -->
+  <h3 *ngIf="value.smode == 'typenotcsv'">Sorry! Only CSV files are allowed</h3>
+  <h3 *ngIf="value.smode == 'doctypeNotSupported'">Sorry! Only {{ joinedDocSupport }} type files are allowed</h3>
+  <!-- no data to upload -->
+  <h3 *ngIf="value.smode == 'nodatafound'">Error! No data found!</h3>
+  <!-- uploaded att drag n drop -->
+  <h3 *ngIf="value.smode == 'uploadinprogress'">
+    Please wait..Upload in Progress..
+  </h3>
+  <!-- uploaded cat name dupliaction -->
+  <h3 *ngIf="value.smode == 'duplicateCatName'">
+    Error! Category Name already exists
+  </h3>
+  <!-- send sms/wa/email limit exceeded -->
+  <h3 *ngIf="value.smode == 'countExceededUI'">
+    Remaining limit today: {{ value.remaining }}
+  </h3>
+  <h3 *ngIf="value.smode == 'countExceeded'">
+    Remaining limit today: {{ value.remaining }}
+  </h3>
+  <!-- send sms/wa/email limit exceeded -->
+  <mat-form-field *ngIf="value.smode == 'createnote'" appearance="fill" class="example-full-width">
+    <mat-label>Add a {{ value.fieldNameContactNotes }}</mat-label>
+    <textarea matInput name="notes" rows="4" [formControl]="notes" placeholder="{{ value.fieldNameContactNotes }}" required minlength="1" maxlength="500"></textarea>
+    <!-- <textarea matInput name="notes" rows="4" ngModel #notes="ngModel" placeholder="{{ value.fieldNameContactNotes }}"
+      required></textarea> -->
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close (click)="close()" *ngIf="
+      value.smode !== 'templatemismatch' &&
+      value.smode !== 'filelimitExceeded' &&
+      value.smode !== 'codeexists' &&
+      value.smode !== 'noOfSubsusers' &&
+      value.smode !== 'employeePhotoSize' &&
+      value.smode !== 'free' &&
+      value.smode !== 'gold' &&
+      value.smode !== 'diamond' &&
+      value.smode !== 'galleryMax' &&
+      value.smode !== 'profileMax' &&
+      value.smode !== 'cannotDelete' &&
+      value.smode !== 'countExceeded' &&
+      value.smode !== 'countExceededUI' &&
+      value.smode !== 'duplicateCatName' &&
+      value.smode !== 'uploadinprogress' &&
+      value.smode !== 'nodatafound' &&
+      value.smode !== 'typenotcsv' &&
+      value.smode !== 'doctypeNotSupported' &&
+      value.smode !== 'Emailalreadyexists' &&
+      value.smode !== 'networkIssue' &&
+      value.smode !== 'errorMessage' &&
+      value.smode !== 'errorMsg' &&
+      value.smode !== 'NotAUser'
+    ">
+    Cancel
+  </button>
+  <button *ngIf="value.smode == 'errorMsg' " (click)="Logout()" mat-button mat-dialog-close>
+    Cancel
+  </button>
+  <!--Network Issue-->
+<button color="warn" *ngIf="value.smode == 'networkIssue' " mat-button  cdkFocusInitial
+    (click)="proceedToReset()">
+    SignUp
+  </button>
+  <!--Network Issue ends-->
+  <!-- NotAUser -->
+  <button *ngIf="value.smode === 'NotAUser' || value.smode == 'networkIssue' " (click)="Logout()" mat-button mat-dialog-close>
+    Cancel
+  </button>
+  <button *ngIf="
+      value.smode ==
+      'templatemismatch' ||
+      value.smode == 'filelimitExceeded' ||
+      value.smode == 'codeexists' ||
+      value.smode == 'noOfSubsusers' ||
+      value.smode == 'employeePhotoSize' ||
+      value.smode == 'free' ||
+      value.smode == 'gold' ||
+      value.smode == 'diamond' ||
+      value.smode == 'galleryMax' ||
+      value.smode == 'profileMax' ||
+      value.smode == 'cannotDelete' ||
+      value.smode ==  'countExceeded' ||
+      value.smode == 'countExceededUI' ||
+      value.smode == 'duplicateCatName' ||
+      value.smode ==  'uploadinprogress' ||
+      value.smode ==  'nodatafound' ||
+      value.smode == 'typenotcsv' ||
+      value.smode == 'doctypeNotSupported' ||
+      value.smode == 'Emailalreadyexists' ||
+      value.smode == 'personalMail' ||
+      value.smode == 'suspendUser' ||
+      value.smode == 'errorMessage'
+    " (click)="close()" mat-button >
+    OK
+  </button>
+  <!-- TO DELETE TASK -->
+  <button *ngIf="value.smode == 'taskdelete'" color="warn" (click)="deleted(value.taskId, value.superId)" mat-button [disabled]="taskDeleteDisable"
+    cdkFocusInitial>
+    Delete
+  </button>
+  <!-- TASK COMPLETED -->
+  <button *ngIf="value.smode == 'taskcompleted'" (click)="
+      completed(
+        value.taskId,
+        value.superId,
+        value.changeLog,
+        value.constructorName,
+        value.currentStatus,
+        value.lastStatus
+      )
+    " mat-button  cdkFocusInitial>
+    Yes
+  </button>
+  <!-- TO DELETE LEAD CAPTURE FORM -->
+  <button *ngIf="value.smode == 'LeadCaptureFormDelete'" color="warn" (click)="deleteForm()" mat-button
+    cdkFocusInitial>
+    Delete
+  </button>
+  <!-- sales ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDelete'" [disabled]="btnClicked" (click)="
+      deletedAttachment(
+        value.userId,
+        value.saleId,
+        value.taskId,
+        value.path,
+        value.url,
+        value.size,
+        value.changeLog
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- customer ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDeleteCust'" (click)="
+      deletedAttachmentCust(
+        value.userId,
+        value.custId,
+        value.taskId,
+        value.path,
+        value.url,
+        value.size,
+        value.changeLog
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- customer customdocument ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'customContactDocDelete' || value.smode == 'customSaleDocDelete' ||  value.smode == 'customServiceDocDelete' " (click)="
+  deletedCustomDocuments(
+        value.userId,
+        value.custId,
+        value.taskId,
+        value.path,
+        value.url,
+        value.size,
+        value.changeLog,
+        value.smode
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- task ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDeleteTask'" (click)="deleteAttachTask(value)" mat-button
+     color="warn" cdkFocusInitial>
+    Delete
+  </button>
+  <!-- service -->
+  <button *ngIf="value.smode == 'servattachmentDelete'" [disabled]="btnClicked" (click)="
+      deletedAttachmentServe(
+        value.userId,
+        value.serviceId,
+        value.taskId,
+        value.path,
+        value.url,
+        value.size,
+        value.changeLog
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- expense ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDeleteExp'" (click)="deleteAttachExp(value)" mat-button
+     color="warn" cdkFocusInitial>
+    Delete
+  </button>
+  <!-- org ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDeleteOrg'" [disabled]="btnClicked" (click)="
+      deletedAttachmentOrg(
+        value.userId,
+        value.custId,
+        value.taskId,
+        value.path,
+        value.url,
+        value.size,
+        value.changeLog
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- public-profile ATTACHMENT DELETE -->
+  <button *ngIf="value.smode == 'attachmentDeleteProfile'" (click)="
+      deletedAttachmentProfile(
+        value.userId,
+        value.taskId,
+        value.path,
+        value.url
+      )
+    " mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!-- SERVICE UNDER PROFILE DELETE -->
+  <button *ngIf="value.smode == 'serviceDeleteProfile'"
+    (click)="deletedServiceProfile(value.userId, value.taskId, value.url)" color="warn" mat-button
+    cdkFocusInitial>
+    Delete
+  </button>
+  <!-- delete view -->
+  <button *ngIf="value.smode == 'delete_view'" [disabled]="btnClicked" color="warn" (click)="deleteView()" mat-button
+     cdkFocusInitial>
+    Delete
+  </button>
+
+  <button *ngIf="value.smode == 'delete_report'" color="warn" (click)="deleteReport()" [disabled]="btnClicked" mat-button
+     cdkFocusInitial>
+    Delete
+  </button>
+  <button *ngIf="value.smode == 'delete_report_in_dashboard'" color="warn" (click)="deleteReportDashboard()" [disabled]="btnClicked" mat-button
+     cdkFocusInitial>
+    Delete
+  </button>
+  <button *ngIf="value.smode == 'delete_dashboardreport'" (click)="deleteDashboardReport()" color="warn" [disabled]="btnClicked"
+    mat-button  cdkFocusInitial>
+    Delete
+  </button>
+  <button *ngIf="value.smode == 'imageDelete'" (click)="deletedImg(value.taskId, value.orginalPath, value.path)"
+    mat-button color="warn"  cdkFocusInitial>
+    Delete
+  </button>
+  <!--create notes-->
+  <button *ngIf="value.smode == 'createnote'" color="primary" type="submit" mat-button (click)="addNotes(notes.value)"
+    cdkFocusInitial [disabled]="btnClicked || !notes.value">
+    Add
+  </button>
+</mat-dialog-actions>
+<!-- TO DELETE TASK -->
+<!-- <div *ngIf="value.smode == 'taskdelete'">
+  <h3 style="font-size: 20px">
+    Do you want to delete this {{ fieldNameTask }}?
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="basic" (click)="close()">Cancel</button>
+    <button
+      mat-button
+      color="warn"
+      (click)="deleted(value.taskId, value.superId)"
+    >
+      Delete
+    </button>
+    &nbsp;&nbsp;
+  </div>
+</div> -->
+<!-- TASK COMPLETED -->
+<!-- <div *ngIf="value.smode == 'taskcompleted'">
+  <h3 style="font-size: 20px">
+    Do you want to mark this {{ fieldNameTask }} as Completed&nbsp;?
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="basic" (click)="close()">Cancel</button>
+    <button
+      mat-button
+      color="accent"
+      (click)="
+        completed(
+          value.taskId,
+          value.superId,
+          value.changeLog,
+          value.constructorName
+        )
+      "
+    >
+      Yes
+    </button>
+    &nbsp;&nbsp;
+  </div>
+</div> -->
+<!-- <div class="padding"> -->
+<!-- IMAGE DELETE -->
+<!-- <div *ngIf="value.smode == 'imageDelete'">
+  <h3 style="font-size: 20px">Do you want to delete this Image?</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="basic" (click)="close()">Cancel</button>
+    <button mat-button color="warn" (click)="deletedImg(value.taskId, value.orginalPath, value.path)">
+      Delete
+    </button>
+    &nbsp;&nbsp;
+  </div>
+</div> -->
+<!-- GALLERY MAX LIMIT -->
+<!-- <div *ngIf="value.smode == 'galleryMax'">
+  <h3 style="font-size: 20px">You can only add 20 Images in gallery</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- PROFILE MAX LIMIT -->
+<!-- <div *ngIf="value.smode == 'profileMax'">
+  <h3 style="font-size: 20px">You can only add 4 documents in profile</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+
+<!-- TO DELETE LEAD CAPTURE FORM -->
+<!-- <div *ngIf="value.smode == 'LeadCaptureFormDelete'">
+    <h3 style="font-size: 20px">Do you want to delete {{ value.formName }}?</h3>
+    <br />
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()">Cancel</button>
+      <button mat-button color="warn" (click)="deleteForm()">Delete</button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+
+<!-- sales ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDelete'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="basic"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="warn"
+        (click)="
+          deletedAttachment(
+            value.userId,
+            value.saleId,
+            value.taskId,
+            value.path,
+            value.url,
+            value.size,
+            value.changeLog
+          )
+        "
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- service -->
+<!-- <div *ngIf="value.smode == 'servattachmentDelete'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="basic"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="warn"
+        (click)="
+          deletedAttachmentServe(
+            value.userId,
+            value.serviceId,
+            value.taskId,
+            value.path,
+            value.url,
+            value.size,
+            value.changeLog
+          )
+        "
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- customer ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDeleteCust'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button
+        mat-button
+        color="basic"
+        [disabled]="btnClicked"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-button
+        color="warn"
+        [disabled]="btnClicked"
+        (click)="
+          deletedAttachmentCust(
+            value.userId,
+            value.custId,
+            value.taskId,
+            value.path,
+            value.url,
+            value.size,
+            value.changeLog
+          )
+        "
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- task ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDeleteTask'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()">Cancel</button>
+      <button mat-button color="warn" (click)="deleteAttachTask(value)">
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- expense ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDeleteExp'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()">Cancel</button>
+      <button mat-button color="warn" (click)="deleteAttachExp(value)">
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- org ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDeleteOrg'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="basic"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-button
+        [disabled]="btnClicked"
+        color="warn"
+        (click)="
+          deletedAttachmentOrg(
+            value.userId,
+            value.custId,
+            value.taskId,
+            value.path,
+            value.url,
+            value.size,
+            value.changeLog
+          )
+        "
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- public-profile ATTACHMENT DELETE -->
+<!-- <div *ngIf="value.smode == 'attachmentDeleteProfile'">
+    <h3 style="font-size: 20px">
+      Do you want to delete {{ value.orginalPath }}?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()">Cancel</button>
+      <button
+        mat-button
+        color="warn"
+        (click)="
+          deletedAttachmentProfile(
+            value.userId,
+            value.taskId,
+            value.path,
+            value.url
+          )
+        "
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- SERVICE UNDER PROFILE DELETE -->
+<!-- <div *ngIf="value.smode == 'serviceDeleteProfile'">
+    <h3 style="font-size: 20px">Do you want to Delete {{ value.title }} ?</h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()">Cancel</button>
+      <button
+        mat-button
+        color="warn"
+        (click)="deletedServiceProfile(value.userId, value.taskId, value.url)"
+      >
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- ATTACHMENT DIAMOND LIMIT MESSAGE -->
+<!-- <div *ngIf="value.smode == 'diamond'">
+  <h3 style="font-size: 20px">
+    You have exceeded attachment limit of Diamond plan
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- ATTACHMENT GOLD LIMIT MESSAGE -->
+<!-- <div *ngIf="value.smode == 'gold'">
+  <h3 style="font-size: 20px">
+    You have exceeded attachment limit of Gold plan
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- ATTACHMENT FREE SIZE LIMIT MESSAGE -->
+<!-- <div *ngIf="value.smode == 'free'">
+  <h3 style="font-size: 20px">
+    You have exceeded attachment limit of free plan storage
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+
+<!-- employee photo uploading >512kb -->
+<!-- <div *ngIf="value.smode == 'employeePhotoSize'">
+  <h3 style="font-size: 20px">
+    Photo cannot be uploaded. Please use photographs of size below 512 Kb
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- employee email already exist -->
+<!-- <div *ngIf="value.smode == 'Emailalreadyexists'">
+  <h3 style="font-size: 20px" color="warn">Employee email already exists!</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- no of subusers limit -->
+<!-- <div *ngIf="value.smode == 'noOfSubsusers'">
+  <h3 style="font-size: 20px" color="warn">
+    Please upgrade in plan to provide CRM access for more users!
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- produc code exist -->
+<!-- <div *ngIf="value.smode == 'codeexists'">
+  <h3 style="font-size: 20px" color="warn">
+    {{
+    value.fieldNameItems == "Products and Service"
+    ? "Product"
+    : value.fieldNameItems
+    }}
+    cannot be added as another
+    {{
+    value.fieldNameItems == "Products and Service"
+    ? "Product"
+    : value.fieldNameItems
+    }}
+    with same code exists!
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- uploaded file limit exceeded -->
+<!-- <div *ngIf="value.smode == 'filelimitExceeded'">
+  <h3 style="font-size: 20px" color="warn">File limit exceeded!!</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- uploaded csv templatemismatch -->
+<!-- <div *ngIf="value.smode == 'templatemismatch'">
+  <h3 style="font-size: 20px" color="warn">Error! Please stick on template</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- networkIssue -->
+<!-- <h2 mat-dialog-title *ngIf="value.smode == 'networkIssue'">
+  Unable to connect to server!!
+</h2> -->
+<!-- <mat-dialog-content *ngIf="value.smode == 'networkIssue'">This could be due to network issue. If you are a new user pls
+  click Create
+  Account to complete the signup</mat-dialog-content> -->
+<!-- <mat-dialog-actions align="end" *ngIf="value.smode == 'networkIssue'"><button mat-button color="accent"
+    (click)="Logout()">Cancel</button>
+  &nbsp;
+  <button mat-button color="warn" (click)="proceedToReset()">
+    Create Account
+  </button>
+</mat-dialog-actions> -->
+<!-- contact cannot be deleted msg -->
+<!-- <h2 mat-dialog-title *ngIf="value.smode == 'cannotDelete'">
+  Delete {{ value.fieldNameContact }}
+</h2> -->
+<!-- <mat-dialog-content *ngIf="value.smode == 'cannotDelete'">{{ value.fieldNameContact }} with {{ value.fieldNameSale }}/{{
+  value.fieldNameService
+  }}/Sales Documents/{{ value.fieldNameExpense }}/{{
+  value.fieldNameCollection
+  }}
+  cannot be deleted</mat-dialog-content> -->
+<!-- <mat-dialog-actions align="end" *ngIf="value.smode == 'cannotDelete'"><button mat-button color="accent"
+    (click)="close()">
+    OK
+  </button></mat-dialog-actions> -->
+<!-- send sms/wa/email limit exceeded -->
+<!-- <h2 mat-dialog-title *ngIf="value.smode == 'countExceeded'">
+  Daily limit exceeded!!
+</h2>
+<mat-dialog-content *ngIf="value.smode == 'countExceeded'">Remaining limit today: {{ value.remaining
+  }}</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="value.smode == 'countExceeded'"><button mat-button color="accent"
+    (click)="close()">
+    OK
+  </button></mat-dialog-actions> -->
+
+<!-- send sms/wa/email limit exceeded -->
+<!-- <h2 mat-dialog-title *ngIf="value.smode == 'countExceededUI'">
+  Sending in progress...Please wait...
+</h2>
+<mat-dialog-content *ngIf="value.smode == 'countExceededUI'">Remaining limit today: {{ value.remaining
+  }}</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="value.smode == 'countExceededUI'"><button mat-button color="accent"
+    (click)="close()">
+    OK
+  </button></mat-dialog-actions> -->
+
+<!-- uploaded cat name dupliaction -->
+<!-- <div *ngIf="value.smode == 'duplicateCatName'">
+  <h3 style="font-size: 20px" color="warn">
+    Error! Category Name already exists
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- uploaded att drag n drop -->
+<!-- <div *ngIf="value.smode == 'uploadinprogress'">
+  <h3 style="font-size: 20px" color="warn">
+    Please wait..Upload in Progress..
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- no data to upload -->
+<!-- <div *ngIf="value.smode == 'nodatafound'">
+  <h3 style="font-size: 20px" color="warn">Error! No data found!</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+<!-- uploaded file is not CSV -->
+<!-- <div *ngIf="value.smode == 'typenotcsv'">
+  <h3 style="font-size: 20px" color="warn">
+    Sorry! Only CSV files are allowed
+  </h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div> -->
+
+<!-- <div *ngIf="value.smode == 'createnote'"> -->
+<!-- <h1 mat-dialog-title>
+    Add {{ value.fieldNameContactNotes }} to {{ value.fieldNameContact }}
+    {{ value.customerName }}
+  </h1> -->
+<!-- <div mat-dialog-content>
+    <mat-form-field appearance="fill" class="example-full-width">
+      <mat-label>Add a {{ value.fieldNameContactNotes }}</mat-label>
+      <textarea
+        matInput
+        name="notes"
+        rows="4"
+        ngModel
+        #notes="ngModel"
+        placeholder="{{ value.fieldNameContactNotes }}"
+        required
+      ></textarea>
+    </mat-form-field>
+  </div> -->
+<!-- <div mat-dialog-actions class="rig">
+    <button mat-button (click)="close()" [disabled]="btnClicked">Cancel</button>
+    <button
+      color="primary"
+      type="submit"
+      mat-button
+      (click)="addNotes(notes.value)"
+      cdkFocusInitial
+      [disabled]="btnClicked || !notes.value"
+    >
+      Add
+    </button>
+  </div>
+</div> -->
+<!-- delete view -->
+<!-- <div *ngIf="value.smode == 'delete_view'">
+    <h3 style="font-size: 20px">
+      Do you want to delete "{{ value.viewName }}" view?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()" [disabled]="btnClicked">Cancel</button>
+      <button mat-button color="warn" (click)="deleteView()"  [disabled]="btnClicked">
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- <div *ngIf="value.smode == 'delete_report'">
+    <h3 style="font-size: 20px">
+      Do you want to delete "{{ value.viewName }}" report?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()" [disabled]="btnClicked">Cancel</button>
+      <button mat-button color="warn" (click)="deleteReport()"  [disabled]="btnClicked">
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->
+<!-- <div *ngIf="value.smode == 'delete_dashboardreport'">
+    <h3 style="font-size: 20px">
+      Do you want to delete "{{ value.viewName }}" dashboard?
+    </h3>
+    <div class="rig">
+      <button mat-button color="basic" (click)="close()" [disabled]="btnClicked">Cancel</button>
+      <button mat-button color="warn" (click)="deleteDashboardReport()"  [disabled]="btnClicked">
+        Delete
+      </button>
+      &nbsp;&nbsp;
+    </div>
+  </div> -->

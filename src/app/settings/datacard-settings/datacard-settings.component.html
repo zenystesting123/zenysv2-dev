@@ -1,0 +1,176 @@
+<mat-toolbar class="border-bottom" style="flex: 0 0 64px;" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back">
+        <mat-icon [ngStyle]="{ color: '#2A6AF6' }"> arrow_back </mat-icon>
+    </button>
+    <span style="color: rgba(0, 0, 0, 0.87)">Contact form template</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+</mat-toolbar>
+<br><br>
+<div class="col-12 row" style="margin-left: 2%;">
+    <div class="col-2" style="min-height: 500px; border: 1px solid rgb(232, 232, 232);">
+
+        <div *ngIf="this.contactFormsArray">
+            <div *ngFor="let forms of this.contactFormsArray let i = index">
+                <div class="col-12 list" (click)="selectFormFn(forms.id,i)"
+                    [ngStyle]="{'background-color':selectedForm=== forms.id ? 'rgb(232, 232, 232)' : 'white' }"
+                    style="border-bottom:1px solid rgb(232, 232, 232);margin-top: 15%;cursor: pointer;">
+                    <div style="width:100%;">
+                        <h4 class="center">
+                            {{forms.formName}} </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="center" mat-icon-button color="primary" (click)="addForm()">
+                Add
+            </button>
+        </div>
+    </div>
+    <div class="col-10" style="height: 100%;">
+        <div *ngIf="formValueFound">
+            <div class="display-list" *ngIf="!addNewForm">
+                <div *ngIf="!nameEdit" style="width:100%;">
+                    <h2 class="center">{{contactFormsArrayCurrent?.formName}} <button mat-icon-button aria-label="Edit"
+                            (click)="editFormName()" color="accent" title="Edit ">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </h2>
+                </div>
+                <div *ngIf="nameEdit" style="width:100%;">
+                    <div class="center">
+                        <mat-form-field>
+                            <mat-label>Form name</mat-label>
+                            <input matInput [(ngModel)]="this.formNewName" name="formName" maxlength="20" required>
+                        </mat-form-field>
+                        <button mat-button color="primary" (click)="saveFormName()">
+                            Save
+                        </button>
+                    </div>
+                </div>
+                <div style="float: right; margin-top: -20px;">
+                    <button mat-button color="accent" *ngIf="contactFormsArrayCurrent">
+                        Share
+                    </button>
+                    <button mat-button color="warn" *ngIf="contactFormsArrayCurrent"
+                        (click)="deleteForm(contactFormsArrayCurrent.id)">
+                        Delete
+                    </button>
+                </div>
+                <br><br>
+                <div class="card" style="padding: 3%; background-color: rgb(247, 247, 247);" *ngFor="
+            let line of lineItemForm.get('itemList')['controls'];
+            let i = index;
+            trackBy: identify
+          ">
+
+                    <div class="row">
+                        <div class="col-5">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Field Name</mat-label>
+                                <input matInput [formControl]="line.controls.fieldName"
+                                    [(ngModel)]="this.itemList[i].fieldName" name="fieldName" maxlength="20" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Field Type</mat-label>
+                                <mat-select [formControl]="line.controls.fieldType"
+                                    [(ngModel)]="this.itemList[i].fieldType" name="fieldType" required
+                                    [ngModelOptions]="{standalone: true}">
+                                    <mat-option value="textarea">Textarea</mat-option>
+                                    <mat-option value="inputField">Input Field</mat-option>
+                                    <mat-option value="category">Category</mat-option>
+                                    <mat-option value="number">Number</mat-option>
+                                    <mat-option value="date">Date</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" *ngIf="this.itemList[i].fieldType=='category'">
+                            <mat-form-field style="width: 100%;">
+
+                                <mat-label>Options seperated by commas</mat-label>
+                                <textarea matInput [formControl]="line.controls.categories"
+                                    [(ngModel)]="this.itemList[i].categories" name="categories"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field style="width: 100%;">
+
+                                <mat-label>Field Description</mat-label>
+                                <textarea matInput [formControl]="line.controls.description"
+                                    [(ngModel)]="this.itemList[i].description" name="description"></textarea>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div style="width: 100%;">
+                            <div style="float: right;">
+                                <mat-slide-toggle [formControl]="line.controls.mandatory"
+                                    [(ngModel)]="this.itemList[i].mandatory">Mandatory</mat-slide-toggle>
+
+                                <button mat-icon-button title="delete" color="danger"
+                                    (click)="deleteFieldValue(i)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button>
+                            </div>
+                            <!-- <mat-checkbox #Checkbox1 class="example-margin" [(ngModel)]="mandatory"
+                    (ngModelChange)="mandatory" name="mandatory">Mandatory</mat-checkbox>&nbsp; -->
+                        </div>
+                        <!-- <button style="width: 100px;" mat-button color="accent" type="submit" title="save"
+                (click)="submitField()">
+                Add
+            </button>
+            <button style="width: 100px;" mat-button title="cancel" (click)="cancelAddField()">
+                Cancel
+            </button> -->
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <button style="margin-bottom: 40px;" mat-button color="accent" type="submit" (click)="addFieldValue()">
+                    Add new Field
+                </button><br>
+                <button style="margin-bottom: 40px;" mat-button color="accent" type="submit" (click)="saveData()">
+                    Save fields
+                </button><br>
+            </div>
+        </div>
+        <div style="width: 100%;" *ngIf="addNewForm">
+            <div class="center">
+
+                <mat-form-field style="width: 50%;margin-top: 5%;">
+                    <mat-label>Form Name</mat-label>
+                    <input matInput type="text" [(ngModel)]="newFormName" name="newFormName">
+                </mat-form-field>
+
+            </div>
+            <div class="center">
+                <button mat-button color="accent" type="submit" (click)="saveNewFormName()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

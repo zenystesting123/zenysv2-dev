@@ -1,0 +1,26 @@
+<!-- 
+<div>
+{{text1}}
+</div>
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()" nonvalidate>
+    <div class="form-group">
+        <label>
+            name:
+            <input class="form-control" formControlName="name">
+        </label>
+        <br>
+        <label>
+            text:
+            <input class="form-control" formControlName="text">
+        </label>
+    </div>
+    <button type="submit" [disabled]="!contactForm.valid"> Save</button>
+</form> -->
+
+<mat-form-field id="with-errors">
+    <span class="custom-control">Custom control harness</span>
+    <input matInput [formControl]="requiredControl">
+  
+  </mat-form-field>
+  
+  

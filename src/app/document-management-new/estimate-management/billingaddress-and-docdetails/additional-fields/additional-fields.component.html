@@ -1,0 +1,68 @@
+<div class="form-row" [formGroup]="form">
+  <ng-container *ngFor="
+      let addFieldsGroup of form.get('additionalFields')?.controls;
+      let i = index
+    " [formGroup]="addFieldsGroup"
+    >
+    <div *ngIf="estimateService.additionalFields[i]?.isActive" [ngClass]="estimateService.additionalFields[i]?.fieldType == 'textarea' || estimateService.additionalFields[i]?.fieldType == 'date_time'? 'col-12': 'col-6'">
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'category'">
+        <mat-form-field style="width: 100%" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }}
+          </mat-label>
+          <mat-select formControlName="fieldValue" name="additionalField" placeholder="Required">
+            <mat-option *ngIf="estimateService.additionalFields[i]?.mandatory == false" value="">None
+            </mat-option>
+            <mat-option *ngFor="let s of estimateService.additionalFields[i]?.categories" value="{{ s }}">{{ s }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'inputField'">
+        <mat-form-field style="width: 100%" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }}
+          </mat-label>
+          <input matInput formControlName="fieldValue" name="additionalField" type="text" />
+        </mat-form-field>
+      </div>
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'number'">
+        <mat-form-field style="width: 100%" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }}
+          </mat-label>
+          <input matInput formControlName="fieldValue" name="additionalField" type="number" />
+        </mat-form-field>
+      </div>
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'textarea'">
+        <mat-form-field style="width: 100%" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }}
+          </mat-label>
+          <textarea matInput placeholder="Description" formControlName="fieldValue" name="additionalField"></textarea>
+        </mat-form-field>
+      </div>
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'date'">
+        <mat-form-field style="width: 100%" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }}
+          </mat-label>
+          <input matInput [matDatepicker]="addtfield_i" name="additionalField" formControlName="fieldValue" />
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="addtfield_i"></mat-datepicker-toggle>
+          <mat-datepicker #addtfield_i></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div *ngIf="estimateService.additionalFields[i]?.fieldType == 'date_time'">
+        <mat-form-field style="width: 48%;padding: 5px;" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }} Date
+          </mat-label>
+          <input matInput [matDatepicker]="addtfield_date_time" name="additionalField" formControlName="fieldValue" />
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+          <mat-datepicker #addtfield_date_time></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field style="width: 48%;padding: 5px;" appearance="fill">
+          <mat-label>{{ estimateService.additionalFields[i]?.fieldName }} Time </mat-label>
+          <input matInput type="time" formControlName="fieldValue2" name="defaultValue" />
+        </mat-form-field>
+      </div>
+    </div>
+  </ng-container>
+</div>

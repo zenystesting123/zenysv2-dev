@@ -1,0 +1,27 @@
+<ul class="m-0 list-unstyled">
+    <li *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle != '' ">
+        {{ previewService.docData.docTitle }} No:
+        {{ previewService.docData.prefixAndDocNumber }}
+    </li>
+    <li *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle == '' ">
+        {{previewService.docType }} No:
+        {{ previewService.docData.prefixAndDocNumber }}
+    </li>
+    <li *ngIf="previewService.docData.docDate && previewService.docData.docTitle != ''">
+        {{ previewService.docData.docTitle }} Date:
+        {{ previewService.docData.docDate | date }}
+    </li>
+    <li *ngIf="previewService.docData.docDate && previewService.docData.docTitle == ''">
+        {{previewService.docType }} Date:
+        {{ previewService.docData.docDate | date }}
+    </li>
+
+    <li *ngIf="previewService.docData.docValidity">
+        Valid Till:
+        {{ previewService.docData.docValidity | date }}
+    </li>
+    <li *ngIf="previewService.docData.estRef">
+        {{previewService.fieldNameEstimate}} Ref:
+        {{ previewService.docData.estRef }}
+    </li>
+</ul>

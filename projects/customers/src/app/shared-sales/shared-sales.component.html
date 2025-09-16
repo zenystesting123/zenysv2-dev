@@ -1,0 +1,20 @@
+<app-topnav></app-topnav>
+
+
+<div class="container">
+    <div class="row">
+      <div *ngFor="let sale of allsharedSalesbasic" class="col-md-4" [routerLink]="['/dash/saleview',sale.saleID]">
+        <div class="card card-1">
+    <mat-spinner *ngIf="!getSaletitle(sale.saleID)||!findproviderName(sale.userId)" color="primary"  [diameter]=24 ></mat-spinner>
+          <div 
+          *ngIf="!(!getSaletitle(sale.saleID)||!findproviderName(sale.userId))"
+          >
+            <h3>{{getSaletitle(sale.saleID)}}</h3>
+          <p>{{findCompanyname(sale.userId)?findCompanyname(sale.userId):"Individual  "}}</p>
+           <p>{{findproviderName(sale.userId)}}</p>
+          </div> 
+        </div>
+      </div>
+    
+    </div>
+  </div>

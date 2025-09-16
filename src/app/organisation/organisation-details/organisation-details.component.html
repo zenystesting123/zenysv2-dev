@@ -1,0 +1,2149 @@
+<!-- MAT-TOOLBAR -->
+<mat-toolbar *ngIf="viewCheck && commonService.userPlan.orgAccess" class="border-bottom" style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+  <mat-toolbar-row>
+    <button mat-icon-button title="back" (click)="onBack()" color="accent">
+      <mat-icon> arrow_back </mat-icon>
+    </button>
+    &nbsp;
+    <mat-icon class="text-primary">business</mat-icon> &nbsp;
+
+    <!--Show the client company name if customer is an organization-->
+    <span>{{ fieldNameOrganization }}</span>
+    <span class="example-spacer"></span>
+
+    <button mat-mini-fab color="accent" aria-label="Add options for customer view" [disabled]="!onCheckNetwork()"
+      [matMenuTriggerFor]="addMenu" *ngIf="viewCheck">
+      <mat-icon [ngStyle]="{ color: 'white' }">add</mat-icon></button>&nbsp;
+
+    <!--Menu options for add button-->
+    <mat-menu #addMenu="matMenu">
+      <button *ngIf="commonService.userPlan.contactAccess" mat-menu-item (click)="addcontactfn()"
+        [disabled]="commonService.addDocLimitaion.addContactDisable">
+        <mat-icon [ngClass]="{
+            isDisabled: disableAddContact
+          }" color="accent">person</mat-icon>{{ fieldNameContact }}
+      </button>
+      <button *ngIf="commonService.userPlan.saleAccess" mat-menu-item (click)="onAddSale()"
+        [disabled]="commonService.addDocLimitaion.addSaleDisable">
+        <mat-icon [ngClass]="{
+            isDisabled:
+              commonService.addDocLimitaion.addSaleDisable || disableSale
+          }" color="accent">work</mat-icon>{{ fieldNameSale }}
+      </button>
+      <button *ngIf="commonService.userPlan.serviceAccess" mat-menu-item (click)="onAddService()"
+        [disabled]="disableService">
+        <mat-icon color="accent" [ngClass]="{ isDisabled: disableService }">support_agent</mat-icon>{{ fieldNameService
+        }}
+      </button>
+      <button mat-menu-item *ngIf="commonService.userPlan.documentsAccess"
+        [matMenuTriggerFor]="beforeMenu">
+        <mat-icon color="accent">article</mat-icon>Document
+      </button>
+      <button mat-menu-item *ngIf="
+          commonService.userPlan.collectionsAccess && salesList?.length != 0
+        " (click)="addPayment()" [disabled]="disableColl">
+        <mat-icon color="accent" [ngClass]="{ isDisabled: disableColl }">money</mat-icon>{{ fieldNameCollection }}
+      </button>
+      <button *ngIf="
+          commonService.userPlan.activitiesAccess &&
+          commonService.userPlan.tasksAccess
+        " mat-menu-item (click)="addTask()">
+        <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+      </button>
+      <!-- <button mat-menu-item (click)="onMeetingAdd()">
+          <mat-icon color="accent">calendar_today</mat-icon> Meeting
+        </button> -->
+      <button *ngIf="
+          commonService.userPlan.uploadFilesAccess &&
+          commonService.userPlan.orgFileUploadAccess
+        " mat-menu-item (click)="inputAttachment()" [disabled]="disableAtt || this.commonService.getStatus()">
+        <mat-icon color="accent" [ngClass]="{ isDisabled: disableAtt }">attach_file</mat-icon>Attachment
+      </button>
+    </mat-menu>
+    <!--Menu options for documents-->
+    <mat-menu #beforeMenu="matMenu" xPosition="after">
+      <button *ngIf="
+          commonService.userPlan.documentsAccess &&
+          commonService.userPlan.estimatesAccess
+        " mat-menu-item (click)="createDoc('Estimate')" [disabled]="
+          commonService.addDocLimitaion.addEstimateDisable ||
+          disableDocCreateEst
+        ">
+        {{ fieldNameEstimate }}
+      </button>
+      <button *ngIf="
+          commonService.userPlan.documentsAccess &&
+          commonService.userPlan.quotationsAccess
+        " mat-menu-item (click)="createDoc('Quotation')" [disabled]="
+          commonService.addDocLimitaion.addQuotationDisable ||
+          disableDocCreateQuot
+        ">
+        {{ fieldNameQuotation }}
+      </button>
+      <button *ngIf="
+          commonService.userPlan.documentsAccess &&
+          commonService.userPlan.invoicesAccess
+        " mat-menu-item (click)="createDoc('Invoice')" [disabled]="
+          commonService.addDocLimitaion.addInvoiceDisable || disableDocCreateInv
+        ">
+        {{ fieldNameInvoice }}
+      </button>
+    </mat-menu>
+
+    <input type="file" #file name="attachmentOrg" class="custom-file-input attachment-selector"
+      (change)="uploadAttachment($event, 'button')" style="display: none"
+      accept=".csv,.pdf,.doc,.xls,.png,.jpg,.jpeg" />
+
+    <button *ngIf="!disableEdit && viewCheck" mat-icon-button
+      aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menu">
+      <mat-icon color="accent">more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [disabled]="!onCheckNetwork()" (click)="onEditOrg()">Edit</button>
+      <!-- <button mat-menu-item (click)="onDelete()" *ngIf="accountType == 'SuperUser'">
+        Delete
+      </button> -->
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div style="overflow-y: auto">
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar *ngIf="!progressBarStatus" [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate">
+  </mat-progress-bar>
+  <!-- If Access is restricted -->
+  <div *ngIf="(!viewCheck && progressBarStatus) || !commonService.userPlan.orgAccess" class="container" style="text-align: center">
+    <br />
+    <h3>No Access</h3>
+  </div>
+
+  <div *ngIf="viewCheck && progressBarStatus && commonService.userPlan.orgAccess">
+    <!--main content area-->
+    <div class="container-fluid" style="padding-top: 20px; padding-bottom: 20px">
+      <div class="row" style="margin-bottom: 20px">
+        <br />
+        <!-- LEFT SIDE COLUMN -->
+        <div class="col-md-3">
+          <!--card-->
+          <div class="card">
+            <div class="card-body">
+              <div class="list_view" (click)="contactView()">
+                <img class="avatar avatar-md svg-icon text-primary" src="../assets/vendor/duotone-icons/fin/fin001.svg"
+                  alt="Logo">
+                <div>
+                  <h2 style="margin-bottom: 0;">{{
+                    companyName
+                    }}</h2>
+                </div>
+              </div>
+              <br />
+              <mat-divider></mat-divider>
+              <!-- phone, mail and address -->
+              <mat-list class="height40">
+                <mat-list-item class="col-12 left" *ngIf="orgSettings.contactNo.display">
+                  <mat-icon style="margin: 0px; padding: 0px" class="sizes" mat-list-icon color="accent">
+                    call
+                  </mat-icon>
+
+                  <p mat-line class="mat-h2 mat-title">
+                    <span *ngIf="contactNumber; else no_contact">{{ selectedCode }} {{ contactNumber }}</span>
+                    <ng-template #no_contact><span style="color: grey">&nbsp;Not provided</span></ng-template>
+                  </p>
+                  <!-- <button
+                    mat-icon-button
+                    color="primary"
+                    *ngIf="
+                      contactNumber &&
+                      enableOutboundCallsViaCallBridging &&
+                      callBridgingServiceProvider == 'Bonvoice'
+                    "
+                  >
+                    <mat-icon
+                      style="
+                        margin: 0px;
+                        padding: 0px;
+                        cursor: pointer;
+                        float: right;
+                      "
+                      class="sizes"
+                      mat-list-icon
+                      (click)="onCall()"
+                    >
+                      phone_forwarded
+                    </mat-icon>
+                  </button> -->
+                  <button mat-icon-button title="Chat with Whatsapp">
+                    <mat-icon style="margin: 0px; padding: 0px; cursor: pointer"
+                      class="sizes text-success material-icons-outlined" mat-list-icon (click)="onWhatsAppContact()">
+                      forum
+                    </mat-icon>
+                    <!--
+                  <i class="bi bi-whatsapp" class="font-success" (click)="onWhatsAppContact()"></i>
+-->
+                  </button>
+                </mat-list-item>
+
+                <mat-list-item class="col-12 left" *ngIf="orgSettings.website.display">
+                  <mat-icon style="margin: 0px; padding: 0px" class="sizes" mat-list-icon color="accent">public
+                  </mat-icon>
+                  <p mat-line class="mat-h2 mat-title">
+                    <span *ngIf="website; else no_website">{{ website }}</span>
+                    <ng-template #no_website><span style="color: grey">&nbsp;Not provided</span></ng-template>
+                  </p>
+                </mat-list-item>
+
+                <mat-list-item class="col-12 left" *ngIf="orgSettings.email.display">
+                  <mat-icon style="margin: 0px; padding: 0px" class="sizes" mat-list-icon color="accent">email
+                  </mat-icon>
+                  <p mat-line class="mat-h2 mat-title">
+                    <span *ngIf="this.orgData?.email; else no_email">{{
+                      this.orgData?.email
+                      }}</span>
+                    <ng-template #no_email><span style="color: grey">&nbsp;Not provided</span></ng-template>
+                  </p>
+                </mat-list-item>
+              </mat-list>
+              <br />
+              <div class="row">
+                <div class="col-12 col-md-auto" style="padding-left: 0px">
+                  <app-common-user-search [allSubUsers]="allSubUsers" [assignedToName]="this.assignedToName"
+                    [assignedTo]="assignedTo" (assignedToEvent)="assignedToEventHander($event)"
+                    [disableReAssign]="disableReAssign || disableEdit"
+                    (assignedToNameEvent)="assignedToNameEventHander($event)"></app-common-user-search>
+                  <app-common-branch *ngIf="branches?.length > 0 && commonService.userPlan.branchEnabled"
+                    [associatedBranch]="associatedBranch" [branches]="branches" [allSubUsers]="allSubUsers"
+                    (branchEvent)="branchIdEventHandler($event)" [disableEdit]="disableReAssign || disableEdit">
+                  </app-common-branch>
+                </div>
+              </div>
+              <br />
+
+              <span class="mat-small mat-caption" style="padding-top: 11px">
+                Created on&nbsp;{{ dateCreated | date }}
+              </span>
+            </div>
+          </div>
+          <!--Card Ends-->
+
+          <br />
+          <!--Navigation-->
+          <!-- LEFT SIDE DETAILS COLUMN -->
+          <div class="bg-soft-primary-light" style="padding-bottom: 30px">
+            <mat-selection-list [multiple]="false" class="bg-white zeropad">
+              <mat-list-option style="height: auto; padding: 8px;" (click)="setNavOption('Info')" [ngClass]="
+                  navSelected == 'Info'
+                    ? 'border-left   border-primary border-5 bg-soft-primary text-primary'
+                    : 'border-0'
+                ">
+                <mat-icon mat-list-icon class="material-icons-outlined" color="accent">
+                  info</mat-icon>
+                <div mat-line>Info</div>
+                <div mat-line>Basic details{{ commonService.userPlan.saleAccess ?
+                    (!commonService.userPlan.serviceAccess && !commonService.userPlan.activitiesAccess ? ' and '+fieldNameSale+'s' : ', '+fieldNameSale+'s' ) :
+                    ''}}{{ commonService.userPlan.serviceAccess? (!commonService.userPlan.activitiesAccess ? ' and '+fieldNameService+'s' : ', '+fieldNameService+'s') :
+                    ''}}{{commonService.userPlan.activitiesAccess ? ' and Activities' : ''}}
+                </div>
+              </mat-list-option>
+              <mat-list-option style="height: auto; padding: 8px;" (click)="setNavOption('Attachments')" *ngIf="
+                    !disableAttView &&
+                    commonService.userPlan.uploadFilesAccess &&
+                    commonService.userPlan.orgFileUploadAccess
+                  " [ngClass]="
+                  navSelected == 'Attachments'
+                    ? 'border-left   border-primary border-5 bg-soft-primary text-primary'
+                    : 'border-0'
+                ">
+                <mat-icon mat-list-icon class="material-icons-outlined" color="accent">folder_open</mat-icon>
+                <div mat-line>Attachments</div>
+                <div mat-line>Uploaded files</div>
+              </mat-list-option>
+                <mat-list-option style="height: auto; padding: 8px;" *ngIf="
+                    commonService.userPlan.documentsAccess &&
+                    (commonService.userPlan.estimatesAccess ||
+                      commonService.userPlan.quotationsAccess ||
+                      commonService.userPlan.invoicesAccess) &&
+                    (!disableDocEst || !disableDocQuot || !disableDocEst)
+                  " (click)="setNavOption('Sales docs')" [ngClass]="
+                  navSelected == 'Sales docs'
+                    ? 'border-left text-primary  border-primary border-5 bg-soft-primary'
+                    : 'border-0'
+                ">
+                <mat-icon mat-list-icon class="material-icons-outlined" color="accent">article</mat-icon>
+                <div mat-line>Sales documents</div>
+                <div mat-line>{{commonService.userPlan.estimatesAccess ? fieldNameEstimate+'s' : ''}}{{commonService.userPlan.quotationsAccess ?
+                    (commonService.userPlan.invoicesAccess ?  (commonService.userPlan.estimatesAccess ? ', '+fieldNameQuotation+'s' : fieldNameQuotation+'s') :
+                                                              (commonService.userPlan.estimatesAccess ? ' and '+fieldNameQuotation+'s' : fieldNameQuotation+'s')) :
+                    ''}}{{commonService.userPlan.invoicesAccess ? (commonService.userPlan.estimatesAccess || commonService.userPlan.quotationsAccess ? ' and '+fieldNameInvoice+'s' : fieldNameInvoice+'s')
+                            : ''}}
+                </div>
+              </mat-list-option>
+                <mat-list-option style="height: auto; padding: 8px;" *ngIf="
+                    commonService.userPlan.collectionsAccess && !disableCollView
+                  " (click)="setNavOption('Payments')" [ngClass]="
+                  navSelected == 'Payments'
+                    ? 'border-left text-primary  border-primary border-5 bg-soft-primary'
+                    : 'border-0'
+                ">
+                <mat-icon mat-list-icon class="material-icons-outlined" color="accent">receipt</mat-icon>
+                <div mat-line>Payments</div>
+                <div mat-line>Payments received</div>
+              </mat-list-option>
+              <mat-list-option style="height: auto; padding: 8px;" (click)="setNavOption('Logs')" [ngClass]="
+                  navSelected == 'Logs'
+                    ? 'border-left   border-primary border-5 bg-soft-primary text-primary '
+                    : 'border-0'
+                ">
+                <mat-icon mat-list-icon class="material-icons-outlined" color="accent">track_changes</mat-icon>
+                <div mat-line>Change log</div>
+                <div mat-line>Change history for this {{ fieldNameOrganization }}
+                </div>
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+        </div>
+        <!-- RIGHT SIDE MAT-TAB-GROUP -->
+        <div class="col-md-9">
+          <div class="card">
+            <div class="card-body">
+              <div class="row col-sm-divider">
+                <!-- Lifetime Values-->
+                <div class="col-sm-12 col-md-4 col-xxl-3 text-start"
+                *ngIf="
+                commonService.userPlan.collectionsAccess ||
+                (commonService.userPlan.documentsAccess &&
+                  commonService.userPlan.invoicesAccess)">
+                  <h4 class="card-subtitle mb-3 h4 text-muted">
+                    Lifetime Value
+                  </h4>
+                  <div class="row col-sm-divider">
+                    <div class="col-sm text-end" *ngIf="commonService.userPlan.collectionsAccess">
+                      <span class="d-block h4 mb-0 text-success">{{
+                        orgData?.collected
+                        }}</span>
+                      <span class="d-block">{{
+                        orgSettings.collected.displayName
+                        }}</span>
+                    </div>
+                    <div [class]="
+                      !commonService.userPlan.collectionsAccess
+                        ? 'col-sm text-end'
+                        : 'col-sm text-start'
+                    " *ngIf="
+                      commonService.userPlan.documentsAccess &&
+                      commonService.userPlan.invoicesAccess
+                    ">
+                      <span class="d-block h4 mb-0 text-primary">{{
+                        orgData.invoiced
+                        }}</span>
+                      <span class="d-block">{{
+                        orgSettings.invoiced.displayName
+                        }}</span>
+                    </div>
+
+                    <!-- End Col -->
+                  </div>
+                </div>
+                <!-- Sales -->
+                <div class="col-sm-12 col-md-4 col-xxl-3 text-start" *ngIf="commonService.userPlan.saleAccess">
+                  <div class="flex-grow-1">
+                    <h4 class="card-subtitle mb-3 h4 text-muted">
+                      {{ fieldNameSale }}s
+                    </h4>
+                    <h3 class="badge bg-soft-primary text-primary" style="font-weight: bold">
+                      {{ salesInProgress }} in progress
+                    </h3>
+                    <div class="d-flex align-items-center">
+                      <span class="d-block fs-6 badge bg-soft-success text-success">{{ salesWon }}
+                        Completed</span>&nbsp;
+                      <span class="d-block fs-6 badge bg-soft-danger text-danger">{{ salesLost }} Lost</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Support -->
+                <div class="col-sm-12 col-md-4 col-xxl-3 text-start" *ngIf="commonService.userPlan.serviceAccess">
+                  <div class="flex-grow-1">
+                    <h4 class="card-subtitle mb-3 h4 text-muted">
+                      Support tickets
+                    </h4>
+                    <h3 class="badge bg-soft-secondary text-secondary" style="font-weight: bold">
+                      {{ serviceInProgress }} open
+                    </h3>
+                    <div class="d-flex align-items-center">
+                      <span class="d-block fs-6 badge bg-soft-success text-success">{{ serviceWon }}
+                        Resolved</span>&nbsp;
+                      <span class="d-block fs-6 badge bg-soft-warning text-warning">{{ serviceLost }} Rejected</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+          <br />
+          <!-- start of Info section -->
+          <span *ngIf="navSelected == 'Info'">
+            <h3 class="text-primary">
+              {{ fieldNameOrganization }}&nbsp;\&nbsp;Info
+            </h3>
+            <div class="card">
+              <div class="card-body">
+                <div style="background-color: white; height: auto">
+                  <!-- start of mat tabs -->
+
+                  <mat-tab-group [color]="accent" (selectedTabChange)="tabClickWeb($event)"
+                    style="min-height: 70vh; padding-bottom: 15px">
+                    <!-- INFO TAB -->
+                    <mat-tab label="Info">
+                      <ng-template mat-tab-label> &nbsp; INFO </ng-template>
+                      <ng-template matTabContent>
+                        <div class="container-fluid" style="background-color: white">
+                          <div class="row" style="padding-top: 20px; padding-bottom: 20px">
+                            <!-- 1st Column with lifetime value, open followup task and last note -->
+                              <div class="col-4" *ngIf="
+                                  commonService.userPlan.serviceAccess ||
+                                  commonService.userPlan.saleAccess
+                                ">
+                                <div *ngIf="
+                                    !disableSaleView &&
+                                    commonService.userPlan.saleAccess
+                                  " label="Sales">
+                                <div class="centre" *ngIf="!salesList">
+                                  <mat-spinner [diameter]="24"></mat-spinner>
+                                </div>
+                                <div *ngIf="salesList">
+                                  <div class="d-flex justify-content-center" *ngIf="salesList.length == 0" style="
+                                      background-color: ghostwhite;
+                                      height: 95%;
+                                      padding-top: 20px;
+                                      padding-bottom: 20px;
+                                      padding-left: auto;
+                                      padding-right: auto;
+                                      text-align: center;
+                                      border-radius: 10px;
+                                    ">
+                                    <div class="d-flex flex-column">
+                                      <div class="p-2">
+                                        <mat-icon class="icon-display">work</mat-icon>
+                                      </div>
+
+                                      <div class="p-2">
+                                        <div *ngIf="salesList">
+                                          <button mat-stroked-button color="primary" (click)="onAddSale()
+                                            " title="Add {{ fieldNameSale }}" [ngClass]="{
+                                              isDisabled:
+                                                commonService.addDocLimitaion
+                                                  .addSaleDisable || disableSale || !onCheckNetwork()
+                                            }">
+                                            Add
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                      <div class="p-2">
+                                        <span *ngIf="salesList?.length == 0" class="caption" style="color: gray">
+                                          Add {{ fieldNameSale }}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <br />
+                                  </div>
+                                </div>
+                              </div>
+                                <mat-action-list role="list" class="border rounded zeropad" *ngIf="
+                                    salesList.length != 0 &&
+                                    commonService.userPlan.saleAccess
+                                  ">
+                                <div mat-subheader>{{ fieldNameSale }}s</div>
+                                <mat-list-item style="height: auto; padding: 8px;" role="listitem" *ngFor="let sale of salesList" [routerLink]="[
+                                    '/dash/sales/saleview',
+                                    sale.id
+                                  ]">
+                                  <mat-icon mat-list-icon [ngStyle]="{ color: '#4CAF50' }">work</mat-icon>
+                                  <div mat-line>{{
+                                    sale.saleTitle?.length > 54
+                                    ? (sale?.saleTitle | slice : 0 : 51) +
+                                    ".."
+                                    : sale?.saleTitle
+                                    }}
+                                  </div>
+                                  <div mat-line>{{saleSettings.salesStage.displayName}}: {{ this.commonService.getStatusName('sales',sale.selectedSalePipeline, sale.salesStage) }}
+                                  </div>
+                                  <!-- start date is displayed using date pipoe only if startdate is present -->
+                                  <div mat-line>{{
+                                    (sale.startDate && sale?.startDate !== null && sale?.startDate != '')
+                                    ? (sale.startDate?.toDate() | date)
+                                    : "Date not provided"
+                                    }}
+                                    to
+                                    {{ sale.expCompletionDate.toDate() | date }}
+                                  </div>
+                                </mat-list-item>
+                              </mat-action-list>
+                              <br />
+                              <!--Support tickets-->
+                                <div *ngIf="
+                                    !disableServiceView &&
+                                    commonService.userPlan.serviceAccess
+                                  " label="Support">
+                                <div class="centre" *ngIf="!servicesList">
+                                  <mat-spinner [diameter]="24"></mat-spinner>
+                                </div>
+
+                                <div *ngIf="servicesList">
+                                  <div class="d-flex justify-content-center" *ngIf="servicesList.length == 0" style="
+                                      background-color: ghostwhite;
+                                      height: 95%;
+                                      padding-top: 20px;
+                                      padding-bottom: 20px;
+                                      padding-left: auto;
+                                      padding-right: auto;
+                                      text-align: center;
+                                      border-radius: 10px;
+                                    ">
+                                    <div class="d-flex flex-column">
+                                      <div class="p-2">
+                                        <mat-icon class="icon-display">support_agent</mat-icon>
+                                      </div>
+
+                                      <div class="p-2">
+                                        <div *ngIf="servicesList">
+                                          <button mat-stroked-button color="primary" (click)="onAddService()
+                                            " title="Add support ticket" [ngClass]="{
+                                              isDisabled:
+                                                commonService.addDocLimitaion
+                                                  .addServiceDisable ||
+                                                disableService || !onCheckNetwork()
+                                            }">
+                                            Add
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                      <div class="p-2">
+                                        <span *ngIf="servicesList?.length == 0" class="caption" style="color: gray">
+                                          Add support ticket
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <mat-action-list role="list" class="border rounded zeropad" *ngIf="servicesList.length != 0">
+                                    <div mat-subheader>Support</div>
+                                    <mat-list-item style="height: auto; padding: 8px;" role="listitem" *ngFor="let service of servicesList" [routerLink]="[
+                                        '/dash/service/service-details',
+                                        service.id
+                                      ]">
+                                      <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }">support_agent</mat-icon>
+                                      <div mat-line>{{
+                                        service.serviceTitle?.length > 54
+                                        ? (service?.serviceTitle
+                                        | slice : 0 : 51) + ".."
+                                        : service?.serviceTitle
+                                        }}
+                                      </div>
+                                      <div mat-line>{{serviceSettings.servicesStage.displayName}}: {{ this.commonService.getStatusName('services',service.selectedServPipeline,service.servicesStage) }}
+                                      </div>
+                                      <!-- start date is displayed using date pipoe only if startdate is present -->
+                                      <div mat-line>{{
+                                        (service.startDate && service?.startDate !== null && service?.startDate != '')
+                                        ? (service.startDate?.toDate()
+                                        | date)
+                                        : "Date not provided"
+                                        }}
+                                        to
+                                        {{
+                                        service.expCompletionDate.toDate()
+                                        | date
+                                        }}
+                                      </div>
+                                    </mat-list-item>
+                                  </mat-action-list>
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- 2nd column with iopen activities -->
+                              <div class="col-4" *ngIf="
+                                  commonService.userPlan.activitiesAccess &&
+                                  (commonService.userPlan.tasksAccess ||
+                                    commonService.userPlan.followupsAccess)
+                                ">
+                              <!-- Open activities -->
+                              <mat-selection-list [multiple]="false" class="border rounded zeropad">
+                                  <div mat-subheader *ngIf="commonService.userPlan.tasksAccess">
+                                    Open activities
+                                  </div>
+                                  <div *ngIf="commonService.userPlan.tasksAccess">
+                                    <mat-list-item class="leftPad" *ngIf="
+                                        tasks?.length == 0 &&
+                                        commonService.userPlan.tasksAccess
+                                      ">
+                                  No open {{ fieldNameTask }}
+                                </mat-list-item>
+                                <mat-list-option style="height: auto; padding: 8px;" *ngFor="let task of tasks" (click)="taskUpdate(task)">
+                                  <mat-icon mat-list-icon color="accent">task</mat-icon>
+                                  <div mat-line>{{ task.title }}
+                                  </div>
+                                  <div mat-line>Due Date :
+                                    {{ task.dueDate.toDate() | date }}
+                                  </div>
+                                </mat-list-option>
+                                  </div>
+                                  <mat-divider *ngIf="
+                                      commonService.userPlan.tasksAccess &&
+                                      commonService.userPlan.followupsAccess
+                                    "></mat-divider>
+                                  <div *ngIf="
+                                      commonService.userPlan.followupsAccess &&
+                                    nextFollowUp ;
+                                    else loading
+                                  ">
+                                  <mat-list-item class="leftPad" *ngIf="nextFollowUp?.length == 0">
+                                    No {{ fieldNameFollowup }} scheduled
+                                  </mat-list-item>
+                                  <mat-list-option *ngFor="let call of nextFollowUp" (click)="onEditFollowUps(call.id, call)">
+                                    <mat-icon mat-list-icon color="accent">call</mat-icon>
+                                    <div mat-line>
+                                      {{ call.notes }}
+                                    </div>
+                                    <div mat-line>
+                                      Date :
+                                      {{ call.callStartDate?.toDate() | date }}
+                                    </div>
+                                    <div mat-line>
+                                      <span *ngIf="call.callStartTime">
+                                        {{
+                                          call.callStartTime
+                                        | convertFrom24To12Format
+                                        }}
+                                      </span>
+
+                                    </div>
+                                  </mat-list-option>
+                                </div>
+                              </mat-selection-list>
+                            </div>
+
+                            <!-- 3rd column with additional details -->
+                            <div class="col-4">
+                              <!--Expansion panel for address, additional details and lifetime value-->
+                              <mat-accordion class="example-headers-align" multi>
+                                <!--Address-->
+                                <mat-expansion-panel [expanded]="true">
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title> Address </mat-panel-title>
+                                  </mat-expansion-panel-header>
+                                  <h4 mat-line *ngIf="
+                                      orgData.billingaddress1 &&
+                                      orgSettings.billingaddress1.display
+                                    ">
+                                    {{ orgData.billingaddress1 }}
+                                  </h4>
+                                  <h4 mat-line *ngIf="
+                                      orgData.billingaddress2 &&
+                                      orgSettings.billingaddress2.display
+                                    ">
+                                    {{ orgData.billingaddress2 }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.district &&
+                                      orgData.state &&
+                                      orgSettings.district.display &&
+                                      orgSettings.state.display
+                                    " mat-line>
+                                    {{ orgData.district }},&nbsp;{{
+                                    orgData.state
+                                    }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.district &&
+                                      orgData.state &&
+                                      !orgSettings.district.display &&
+                                      orgSettings.state.display
+                                    " mat-line>
+                                    &nbsp;{{ orgData.state }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.district &&
+                                      orgData.state &&
+                                      orgSettings.district.display &&
+                                      !orgSettings.state.display
+                                    " mat-line>
+                                    &nbsp;{{ orgData.district }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      !orgData.district &&
+                                      orgSettings.state.display
+                                    " mat-line>
+                                    {{ orgData.state }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      !orgData.state &&
+                                      orgSettings.district.display
+                                    " mat-line>
+                                    {{ orgData.district }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.country &&
+                                      orgData.bpin &&
+                                      orgSettings.country.display &&
+                                      orgSettings.bpin.display
+                                    " mat-line>
+                                    {{ orgData.country }},&nbsp;{{
+                                    orgData.bpin
+                                    }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.country &&
+                                      orgData.bpin &&
+                                      !orgSettings.country.display &&
+                                      orgSettings.bpin.display
+                                    " mat-line>
+                                    {{ orgData.bpin }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      orgData.country &&
+                                      orgData.bpin &&
+                                      orgSettings.country.display &&
+                                      !orgSettings.bpin.display
+                                    " mat-line>
+                                    {{ orgData.country }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      !orgData.country &&
+                                      orgSettings.bpin.display
+                                    " mat-line>
+                                    {{ orgData.bpin }}
+                                  </h4>
+                                  <h4 *ngIf="
+                                      !orgData.bpin &&
+                                      orgSettings.country.display
+                                    " mat-line>
+                                    {{ orgData.country }}
+                                  </h4>
+                                </mat-expansion-panel>
+                                <!-- additional details -->
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Additional details
+                                    </mat-panel-title>
+                                  </mat-expansion-panel-header>
+                                  <mat-list *ngIf="orgData.taxId">
+                                    <mat-list-item>
+                                      <div mat-line class="mat-h2 mat-title">
+                                        <span style="opacity: 0.8">TAX Identification Number:
+                                        </span>
+                                        <span>
+                                          {{orgData.taxId}}
+                                        </span>
+                                      </div>
+                                    </mat-list-item>
+                                  </mat-list>
+                                  <mat-list class="height40" *ngFor="
+                                      let field of filteredAdditionalField
+                                    ">
+                                    <mat-list-item *ngIf="field.isActive">
+                                      <div mat-line class="mat-h2 mat-title">
+                                        <span style="opacity: 0.8">{{ field.fieldName }}:
+                                        </span>
+                                        <span *ngIf="field.fieldType == 'date'">
+                                          <span *ngIf="field.datavalue != ' '">
+                                            {{
+                                            field?.datavalue
+                                            ? (field?.datavalue.toDate()
+                                            | date : "dd-MM-yyyy")
+                                            : ""
+                                            }}
+                                          </span>
+                                        </span>
+                                        <span *ngIf="field.fieldType == 'date_time'">
+                                          <span *ngIf="field.datavalue != ' '">
+                                            {{
+                                            field?.datavalue
+                                            ? (field?.datavalue.toDate()
+                                            | date : "dd-MM-yyyy hh:mm a")
+                                            : ""
+                                            }}
+                                          </span>
+                                        </span>
+                                        <span *ngIf="
+                                            field.fieldType != 'date' &&
+                                            field.fieldType != 'textarea' &&
+                                            field.fieldType != 'date_time'
+                                          ">{{ field.datavalue }}</span>
+                                        <div mat-line *ngIf="field.fieldType == 'textarea'">
+                                          {{ field.datavalue }}
+                                        </div>
+                                      </div>
+                                    </mat-list-item>
+                                  </mat-list>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+
+                        <ng-template #loading> </ng-template>
+
+                        <br />
+                      </ng-template>
+                    </mat-tab>
+                    <!-- Notes -->
+                    <mat-tab label="Notes" *ngIf="!disableNotesView">
+                      <ng-template mat-tab-label>
+                        <span style="text-transform: uppercase">
+                          &nbsp; NOTES
+                        </span>
+                      </ng-template>
+                      <ng-template matTabContent>
+                        <div class="centre" *ngIf="!orgNotes">
+                          <mat-spinner [diameter]="50"></mat-spinner>
+                        </div>
+                        <div *ngIf="orgNotes" class="container-fluid" style="background-color: white">
+                          <br />
+                          <!--Form to add notes-->
+                          <form #f="ngForm" *ngIf="!disableNotes">
+                            <div class="form-row">
+                              <div class="col-sm-12 col-md-12">
+                                <div style="max-width: 625px; padding: 20px" class="border rounded">
+                                  <mat-form-field class="example-full-width" appearance="fill">
+                                    <mat-label>Add Notes</mat-label>
+                                    <textarea matInput placeholder="Notes" rows="4" name="notes"
+                                      [(ngModel)]="this.orgNote" #notes="ngModel" [ngClass]="{
+                                        'is-invalid':
+                                          notes.touched && notes.invalid
+                                      }" required minlength="1" maxlength="500">
+                                    </textarea>
+                                  </mat-form-field>
+
+                                  <h4 mat-line>
+                                    <button mat-button color="primary" type="submit"
+                                      [disabled]="!f.valid || !onCheckNetwork()" (click)="
+                                        onSubmitNote(f, 'btn_create_note_web')
+                                      ">
+                                      Add Note
+                                    </button>
+                                    <button mat-button color="accent" type="submit" [disabled]="!f.valid"
+                                      (click)="clearNote(f)">
+                                      Clear
+                                    </button>
+                                  </h4>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                          <br />
+                          <h4 class="caption">Previous Notes</h4>
+
+                          <div *ngFor="let note of orgNotes; let i = index">
+                            <div class="d-flex flex-row bd-highlight mb-2">
+                              <div class="p-2 bd-highlight">
+                                <div class="d-flex flex-column bd-highlight mb-1 justify-content-center">
+                                  <div class="p-1 bd-highlight">
+                                    {{ note.createdDate | date : "mediumDate" }}
+                                  </div>
+                                  <div class="p-1 bd-highlight">
+                                    {{
+                                    note.createdDate
+                                    | date : "HH:mm:ss"
+                                    | convertFrom24To12Format
+                                    }}
+                                  </div>
+                                </div>
+                              </div>
+                              <div *ngIf="!note.isEditable" class="p-2 bd-highlight followup">
+                                <div mat-line>
+                                  <p style="word-wrap: break-word">
+                                    {{ note.notes }}
+                                  </p>
+                                </div>
+                                <div>
+                                  <div class="d-flex flex-row justify-content-between bd-highlight">
+                                    <div class="bd-highlight">
+                                      <mat-chip-list>
+                                        <mat-chip class="whitechip1b" [ngStyle]="{
+                                            'white-space': 'nowrap'
+                                          }">
+                                          <mat-icon mat-list-icon class="grey">
+                                            account_circle</mat-icon>
+                                          {{ note.cratedByName }}
+                                        </mat-chip>
+                                      </mat-chip-list>
+                                    </div>
+                                    <div class="p-1 bd-highlight">
+                                      <button title="Edit Note" mat-button color="accent" style="padding: 0"
+                                        (click)="onEditNote(note)" *ngIf="!disableNotesEdit">
+                                        Edit
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div></div>
+                              </div>
+                              <div *ngIf="note.isEditable" class="p-2 bd-highlight" style="width: 100%">
+                                <form #formNote="ngForm">
+                                  <mat-card>
+                                    <mat-card-content>
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Update Note</mat-label>
+                                        <textarea matInput placeholder="Notes"
+                                          rows="6" name="notes" [(ngModel)]="note.notes" #notes="ngModel"
+                                          [ngClass]="{
+                                            'is-invalid':
+                                              notes.touched && notes.invalid
+                                          }" required minlength="1" maxlength="500">
+                                        </textarea>
+                                      </mat-form-field>
+                                      <mat-error class="form-text text-muted danger" *ngIf="
+                                          !notes.valid &&
+                                          (notes.dirty || notes.touched)
+                                        ">
+                                        Required!</mat-error>
+                                      <h4 mat-line>
+                                        <button mat-button color="accent" type="submit" style="padding: 0" [disabled]="
+                                            !formNote.valid || !onCheckNetwork()
+                                          " (click)="onUpdateNote(note)">
+                                          Update
+                                        </button>
+                                      </h4>
+                                    </mat-card-content>
+                                  </mat-card>
+                                </form>
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </mat-tab>
+
+                    <!-- contacts -->
+                    <mat-tab *ngIf="!disableViewContact" label="Contacts">
+                      <ng-template mat-tab-label>
+                        &nbsp;
+                        <span style="text-transform: uppercase">{{ fieldNameContact }}s</span>
+                      </ng-template>
+                      <ng-template matTabContent>
+                        <div class="centre" *ngIf="!contactsList">
+                          <mat-spinner [diameter]="24"></mat-spinner>
+                        </div>
+
+                        <div *ngIf="contactsList" style="padding: 15px">
+                          <button mat-stroked-button class="rig" color="accent" (click)="addcontactfn()
+                            " title="Add {{ fieldNameContact }}" [ngClass]="{
+                              isDisabled: disableAddContact
+                            }" [disabled]="
+                              commonService.addDocLimitaion.addContactDisable || !onCheckNetwork()
+                            ">
+                            Add
+                          </button>
+                        </div>
+                        <div *ngIf="contactsList" class="container-fluid" style="
+                            background-color: white;
+                            border: 10px;
+                            margin-top: 15px;
+                            margin-bottom: 30px;
+                          ">
+                          <br />
+                          <table mat-table [dataSource]="dataSourceContact" class="mat-elevation-z1 demo-table cont">
+                            <!-- firstName Column -->
+                            <ng-container matColumnDef="firstName">
+                              <th mat-header-cell *matHeaderCellDef>
+                               {{contactSettings.firstName.displayName}}
+                              </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.firstName }}
+                              </td>
+                            </ng-container>
+
+                            <!-- secondName Column -->
+                            <ng-container matColumnDef="secondName">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{contactSettings.secondName.displayName}}
+                              </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.secondName }}
+                              </td>
+                            </ng-container>
+
+                            <!-- contactNo Column -->
+                            <ng-container  matColumnDef="contactNo">
+                              <th mat-header-cell *matHeaderCellDef>
+                                {{contactSettings.contactNo.displayName}}
+                              </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.contactNo }}
+                              </td>
+                            </ng-container>
+
+                            <!-- email Column -->
+                            <ng-container matColumnDef="email">
+                              <th mat-header-cell *matHeaderCellDef>{{contactSettings.email.displayName}}</th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.email }}
+                              </td>
+                            </ng-container>
+
+                            <!-- assignedToName Column -->
+                            <ng-container matColumnDef="assignedToName">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Assigned To
+                              </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{commonService.getAssignedToName(element.assignedTo)}}
+                              </td>
+                            </ng-container>
+
+                            <!-- actions Column -->
+                            <!-- <ng-container matColumnDef="actions">
+                              <th mat-header-cell *matHeaderCellDef>Actions</th>
+                              <td mat-cell *matCellDef="let element">
+                                <button mat-icon-button title="Edit">
+                                  <mat-icon>
+                                    <span class="material-icons-outlined">
+                                      edit
+                                    </span>
+                                  </mat-icon>
+                                </button>
+                              </td>
+                            </ng-container> -->
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsCont"></tr>
+                            <tr mat-row *matRowDef="
+                                let row;
+                                columns: displayedColumnsCont
+                              " [routerLink]="[
+                                '/dash/contact/customerdetails/',
+                                row.id
+                              ]"></tr>
+
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                              <td class="mat-cell" colspan="4">
+                                No {{ fieldNameContact }} found
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </ng-template>
+                    </mat-tab>
+
+                    <!-- sales -->
+                    <mat-tab *ngIf="!disableSaleView && commonService.userPlan.saleAccess" label="Sales">
+                      <ng-template mat-tab-label>
+                        &nbsp;
+                        <span style="text-transform: uppercase">{{ fieldNameSale }}s</span>
+                      </ng-template>
+                      <ng-template matTabContent>
+                        <div class="centre" *ngIf="!salesList">
+                          <mat-spinner [diameter]="24"></mat-spinner>
+                        </div>
+
+                        <div *ngIf="salesList" style="padding: 15px">
+                          <button mat-stroked-button class="rig" color="accent" (click)="onAddSale()
+                            " title="Add {{ fieldNameSale }}" [ngClass]="{
+                              isDisabled:
+                                commonService.addDocLimitaion.addSaleDisable ||
+                                disableSale || !onCheckNetwork()
+                            }">
+                            Add
+                          </button>
+                        </div>
+                        <div *ngIf="salesList" class="container-fluid" style="
+                            background-color: white;
+                            border: 10px;
+                            margin-top: 15px;
+                          ">
+                          <br />
+                          <h3 *ngIf="salesList?.length == 0">
+                            Add your first {{ fieldNameSale }}
+                          </h3>
+                            <!-- if sale present, display in table -->
+                            <table *ngIf="salesList?.length > 0" mat-table [dataSource]="dataSourceSales" class="mat-elevation-z1 demo-table-1">
+                              <!-- saleTitle Column -->
+                              <ng-container matColumnDef="saleTitle">
+                                <th style="max-width: 220px" mat-header-cell *matHeaderCellDef>{{saleSettings.saleTitle.displayName}}</th>
+                                <td style="max-width: 220px" mat-cell *matCellDef="let element">
+                                  {{ element.saleTitle }}
+                                </td>
+                              </ng-container>
+
+                              <!-- salesStage Column -->
+                              <ng-container matColumnDef="salesStage">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  {{saleSettings.salesStage.displayName}}
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{ this.commonService.getStatusName('sales', element.selectedSalePipeline,element.salesStage )}}
+                                </td>
+                              </ng-container>
+
+                              <!-- Pipeline Column -->
+                              <ng-container matColumnDef="selectedSalePipeline">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  {{saleSettings.selectedSalePipeline.displayName}}
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{  this.commonService.getPipelineNames('sales', element.selectedSalePipeline) }}
+                                </td>
+                              </ng-container>
+
+                              <!-- assignedTo Column -->
+                              <ng-container matColumnDef="assignedToName">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  Assigned To
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{commonService.getAssignedToName(element.assignedTo)}}
+                                </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnSale"></tr>
+                              <tr mat-row [routerLink]="['/dash/sales/saleview', row.id]" *matRowDef="
+                                  let row;
+                                  columns: displayedColumnSale
+                                "></tr>
+
+                            </table>
+                          <br />
+                        </div>
+                      </ng-template>
+                    </mat-tab>
+
+                    <!-- services -->
+                      <mat-tab label="Services" *ngIf="!disableServiceView && commonService.userPlan.serviceAccess">
+                      <ng-template mat-tab-label>
+                        &nbsp;
+                        <span style="text-transform: uppercase">{{ fieldNameService }}s</span>
+                      </ng-template>
+                      <ng-template matTabContent>
+                        <div class="centre" *ngIf="!servicesList">
+                          <mat-spinner [diameter]="50"></mat-spinner>
+                        </div>
+
+                        <div *ngIf="servicesList" style="padding: 15px">
+                          <button mat-stroked-button class="rig" [disabled]="!onCheckNetwork()" color="accent" (click)="onAddService()
+                            " title="Add {{ fieldNameService }}">
+                            Add
+                          </button>
+                        </div>
+                        <div *ngIf="servicesList" class="container-fluid" style="
+                            background-color: white;
+                            border: 10px;
+                            margin-top: 15px;
+                          ">
+                          <br />
+                          <h3 *ngIf="servicesList?.length == 0">
+                            Add your first {{ fieldNameService }}
+                          </h3>
+                            <!-- if service present, display in table -->
+                            <table *ngIf="servicesList?.length > 0" mat-table [dataSource]="dataSourceService" class="mat-elevation-z1 demo-table-1">
+                              <!-- serviceTitle Column -->
+                              <ng-container matColumnDef="serviceTitle">
+                                <th mat-header-cell *matHeaderCellDef>{{serviceSettings.serviceTitle.displayName}}</th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{ element.serviceTitle }}
+                                </td>
+                              </ng-container>
+
+                              <!-- servicesStage Column -->
+                              <ng-container matColumnDef="servicesStage">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  {{serviceSettings.servicesStage.displayName}}
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{ this.commonService.getStatusName('services', element.selectedServPipeline,element.servicesStage) }}
+                                </td>
+                              </ng-container>
+
+                              <!-- Pipeline Column -->
+                              <ng-container matColumnDef="selectedServPipeline">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  {{serviceSettings.selectedServPipeline.displayName}}
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{ commonService.getPipelineNames('services', element.selectedServPipeline) }}
+                                </td>
+                              </ng-container>
+
+                              <!-- assignedTo Column -->
+                              <ng-container matColumnDef="assignedToName">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  Assigned To
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  {{commonService.getAssignedToName(element.assignedTo)}}
+                                </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnService"></tr>
+                              <tr mat-row  [routerLink]="[
+                              '/dash/service/service-details',
+                              row.id
+                            ]"  *matRowDef="
+                                  let row;
+                                  columns: displayedColumnService
+                                "></tr>
+
+                            </table>
+                          <br />
+                        </div>
+                      </ng-template>
+                    </mat-tab>
+
+                    <!-- Tasks -->
+                      <mat-tab label="TASKS" *ngIf="
+                      commonService.userPlan.activitiesAccess &&
+                      commonService.userPlan.tasksAccess">
+                      <ng-template mat-tab-label>
+                        <span style="text-transform: uppercase">&nbsp; {{ fieldNameTask }}S &nbsp;</span>
+                        <span *ngIf="tasks?.length != 0" [matBadge]="tasks?.length" matBadgeOverlap="false"
+                          matBadgeColor="warn"></span>
+                      </ng-template>
+
+                      <div class="centre" *ngIf="!dataSourceTask">
+                        <mat-spinner [diameter]="50"></mat-spinner>
+                      </div>
+
+                      <div *ngIf="dataSourceTask" style="padding: 15px">
+                        <button mat-stroked-button color="accent" class="rig" (click)="addTask()"
+                          [disabled]="!networkCheck.onNetworkCheck()">
+                          Add
+                        </button>
+                      </div>
+
+                      <div *ngIf="dataSourceTask" class="container-fluid" style="
+                          background-color: white;
+                          border: 10px;
+                          margin-top: 15px;
+                          margin-bottom: 30px;
+                        ">
+                        <br />
+                        <table mat-table [dataSource]="dataSourceTask" class="mat-elevation-z1 demo-table">
+                          <!-- title Column -->
+                          <ng-container matColumnDef="title">
+                            <th style="max-width: 220px" mat-header-cell *matHeaderCellDef>{{taskSettings.title.displayName}}</th>
+                            <td style="max-width: 220px" mat-cell (click)="taskUpdate(element)" *matCellDef="let element" class="tasktitle">
+                              {{ element.title }}
+                            </td>
+                          </ng-container>
+
+                          <!-- dueDate Column -->
+                          <ng-container matColumnDef="dueDate">
+                            <th mat-header-cell *matHeaderCellDef>{{taskSettings.dueDate.displayName}}</th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.dueDate.toDate() | date }}
+                            </td>
+                          </ng-container>
+
+                          <!-- priority Column -->
+                          <ng-container matColumnDef="priority">
+                            <th mat-header-cell *matHeaderCellDef>{{taskSettings.priority.displayName}}</th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.priority }}
+                            </td>
+                          </ng-container>
+
+                          <!-- assignedTo Column -->
+                          <ng-container matColumnDef="assignedTo">
+                            <th mat-header-cell *matHeaderCellDef>
+                              Assigned To
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                              {{commonService.getAssignedToName(element.assignedTo)}}
+                            </td>
+                          </ng-container>
+
+                          <!-- title Column -->
+                          <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef>{{taskSettings.status.displayName}}</th>
+                            <td mat-cell *matCellDef="let element">
+                              {{ element.status }}
+                            </td>
+                          </ng-container>
+
+                          <!-- actions Column -->
+                          <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                            <td mat-cell *matCellDef="let element">
+                              <button mat-icon-button *ngIf="element.status == lastStatusOption" title="Task Completed">
+                                <mat-icon>
+                                  <span class="material-icons-outlined">
+                                    check_circle
+                                  </span>
+                                </mat-icon>
+                              </button>
+                              <button mat-icon-button *ngIf="element.status != lastStatusOption"
+                                (click)="taskCompleted(element.id, element.status, element.changeLog)" title="Mark as Completed ">
+                                <mat-icon style="color: #448aff">
+                                  <span class="material-icons-outlined">
+                                    check_circle
+                                  </span>
+                                </mat-icon>
+                              </button>
+                              <!-- delete button -->
+                              <button mat-icon-button (click)="
+                                  deleteTask(
+                                    element.id,
+                                    element.status,
+                                    element.title
+                                  )
+                                " title="Delete {{ fieldNameTask }}">
+                                <mat-icon style="color: #f70f26">delete</mat-icon>
+                              </button>
+                            </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsTask"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumnsTask"></tr>
+
+                          <!-- Row shown when there is no matching data. -->
+                          <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">
+                              No tasks found!
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+
+                    <!-- FollowUps Tab -->
+                      <mat-tab label="Lead Followups" *ngIf="!disableFollView && commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess">
+                      <ng-template mat-tab-label>
+                        <span style="text-transform: uppercase">&nbsp;{{ fieldNameFollowup }}S&nbsp;</span>
+                        <span *ngIf="(nextFollowUp )?.length != 0" [matBadge]="(nextFollowUp )?.length"
+                          matBadgeOverlap="false" matBadgeColor="warn"></span>
+                      </ng-template>
+
+                      <ng-template matTabContent>
+                        <br />
+
+                        <!--Upcoming Follow Ups-->
+                        <div *ngIf="
+                            nextFollowUp ;
+                            else loader
+                          ">
+                          <div style="padding: 15px">
+                            <button mat-stroked-button color="accent" class="rig" (click)="onCreateFollowUps()"
+                              [disabled]="!networkCheck.onNetworkCheck()" [ngClass]="{ isDisabled: disableFoll }">
+                              Add
+                            </button>
+                            <br />
+                            <div *ngIf="(nextFollowUp )?.length == 0">
+                              <h3>No Pending {{ fieldNameFollowup }}s found</h3>
+                            </div>
+                            <span *ngIf="(nextFollowUp )?.length > 0">
+                              <h2>Upcoming {{ fieldNameFollowup }}s</h2>
+
+                              <div *ngFor="
+                                  let task of nextFollowUp;
+                                  trackBy: trackbyFwp
+                                ">
+                                <div class="d-flex flex-row bd-highlight mb-2" *ngIf="task.completedStatus == false">
+                                  <div class="p-2 bd-highlight">
+                                    <div class="d-flex flex-column bd-highlight mb-1 justify-content-center">
+                                      <div class="p-1 bd-highlight">
+                                        {{
+                                        task.callStartDate?.toDate()
+                                        | date : "mediumDate"
+                                        }}
+                                      </div>
+                                      <div class="p-1 bd-highlight">
+                                        <span *ngIf="task.callStartTime">
+                                          {{
+                                          task.callStartTime
+                                          | convertFrom24To12Format
+                                          }}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="p-2 bd-highlight followup">
+                                    <div mat-line>
+                                      <p style="word-wrap: break-word">
+                                        {{ task.notes }}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <div class="d-flex flex-column justify-content-between bd-highlight">
+                                        <div class="bd-highlight">
+                                          <mat-chip-list>
+                                            <mat-chip class="whitechip1b" [ngStyle]="{
+                                                'white-space': 'nowrap'
+                                              }">
+                                              <mat-icon mat-list-icon class="grey">
+                                                account_circle</mat-icon>
+                                                {{commonService.getAssignedToName(task.assignedTo)}}
+                                            </mat-chip>
+                                          </mat-chip-list>
+                                        </div>
+
+                                        <div class="p-1 bd-highlight">
+                                          <button *ngIf="
+                                              task.completedStatus == false
+                                            " [disabled]="disableFollEdit" mat-icon-button style="padding-top: 5px"
+                                            color="accent" (click)="markasCompleted(task.id, task.changeLog)">
+                                            Done
+                                          </button>
+                                          &nbsp;&nbsp;<button mat-icon-button color="accent"
+                                            [disabled]="disableFollEdit" (click)="
+                                              onEditFollowUps(task.id, task)
+                                            ">
+                                            Edit
+                                          </button>
+                                          <!-- <button
+                                            mat-icon-button
+                                            color="accent"
+                                            (click)="onCallFollowUp(task.id)"
+                                            *ngIf="
+                                              enableOutboundCallsViaCallBridging &&
+                                              callBridgingServiceProvider ==
+                                                'Bonvoice'
+                                            "
+                                          >
+                                            Call
+                                          </button> -->
+                                          <button mat-icon-button color="accent" *ngIf="task.resourceURL" (click)="
+                                              onPlayAudio(task.callDuration != 0)
+                                            ">
+                                            Play
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </span>
+                          </div>
+
+                          <!--Completed Follow Ups-->
+                          <div  style="padding: 15px">
+                            <h2 *ngIf="allFollowUp?.length != 0">
+                              Past {{ fieldNameFollowup }}s
+                            </h2>
+
+                            <div *ngFor="
+                                let task of allFollowUp;
+                                trackBy: trackbyFwp
+                              ">
+                              <div class="d-flex flex-row bd-highlight mb-2" *ngIf="task.completedStatus == true">
+                                <div class="p-2 bd-highlight">
+                                  <div class="d-flex flex-column bd-highlight mb-1 justify-content-center">
+                                    <div class="p-1 bd-highlight">
+                                      {{
+                                      task.callStartDate?.toDate()
+                                      | date : "mediumDate"
+                                      }}
+                                    </div>
+                                    <div class="p-1 bd-highlight">
+                                      <span *ngIf="task.callStartTime">
+                                        {{
+                                        task.callStartTime
+                                        | convertFrom24To12Format
+                                        }}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="p-2 bd-highlight followup">
+                                  <div mat-line>
+                                    <p style="word-wrap: break-word">
+                                      {{ task.notes }}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <div class="d-flex flex-column justify-content-between bd-highlight">
+                                      <div class="bd-highlight">
+                                        <mat-chip-list>
+                                          <mat-chip class="whitechip1b" [ngStyle]="{
+                                              'white-space': 'nowrap'
+                                            }">
+                                            <mat-icon mat-list-icon class="grey">
+                                              account_circle</mat-icon>
+                                              {{commonService.getAssignedToName(task.assignedTo)}}
+                                          </mat-chip>
+                                          <mat-chip class="whitechip1b" [ngStyle]="{
+                                              'white-space': 'nowrap'
+                                            }" *ngIf="task.direction">{{ task.direction }}</mat-chip>
+                                        </mat-chip-list>
+                                      </div>
+
+                                      <div class="p-1 bd-highlight">
+                                        <button *ngIf="task.completedStatus == false" [disabled]="disableFollEdit"
+                                          mat-icon-button style="padding-top: 5px" [ngStyle]="{ color: '#3F51B5' }"
+                                          (click)="markasCompleted(task.id, task.changeLog)">
+                                          Done
+                                        </button>
+                                        &nbsp;&nbsp;<button mat-icon-button color="accent" [disabled]="disableFollEdit"
+                                          (click)="
+                                            onEditFollowUps(task.id, task)
+                                          ">
+                                          Edit
+                                        </button>
+                                        <button mat-icon-button [ngStyle]="{ color: '#2A6AF6' }"
+                                          *ngIf="task.resourceURL" (click)="
+                                            onPlayAudio(task.callDuration != 0)
+                                          ">
+                                          Play
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <ng-template #loader>
+                          <!--Show loader until the data is received-->
+                          <div class="centre" *ngIf="!followUps">
+                            <mat-spinner [diameter]="50"></mat-spinner>
+                          </div>
+                        </ng-template>
+                      </ng-template>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+              </div>
+            </div>
+          </span>
+
+          <!-- start of Attchments section -->
+          <span *ngIf="navSelected == 'Attachments'">
+            <h3 class="text-primary">
+              {{ fieldNameOrganization }}&nbsp;\&nbsp;Attachments
+            </h3>
+            <div class="card">
+              <div class="card-body">
+                <div class="centre" *ngIf="!attachments">
+                  <mat-spinner [diameter]="50"></mat-spinner>
+                </div>
+
+                <!--Add attachments-->
+                <div *ngIf="attachments" class="container-fluid" style="
+                    background-color: white;
+                    border: 10px;
+                    margin-top: 15px;
+                  ">
+                  <br />
+                  <div style="width: 100%; float: left">
+                    <div style="width: 30%; float: right">
+                      <h4 style="opacity: 70%">
+                        {{ this.uploadPercentage }}% of total storage used
+                      </h4>
+                      <mat-progress-bar mode="determinate" value="{{ this.uploadPercentage }}"></mat-progress-bar>
+                      <br />
+                    </div>
+                  </div>
+                  <br />&nbsp;<br />
+                  <div *ngIf="!disableAtt" draggable="true" ngClass="{{ dragAreaClass }}">
+                    <span style="padding-top: 40px">Drag and Drop a File or
+                      <button type="button" (click)="inputAttachment()" mat-raised-button color="primary" [disabled]="
+                          !onCheckNetwork() ||
+                          this.fileBeingUploaded ||
+                          this.commonService.getStatus()
+                        ">
+                        Upload
+                      </button></span>
+                    <input type="file" #file [multiple]="false" (change)="onDrop($event)" style="display: none" />
+                  </div>
+
+                  <br />
+                  <input type="file" #file name="attachmentOrg" class="custom-file-input attachment-selector"
+                    (change)="uploadAttachment($event, '')" style="display: none" accept=".csv,.pdf,.doc,.xls" />
+                  <br />
+
+                  <div class="progress" *ngIf="uploadProgress$ | async as progress">
+                    <div class="progress-bar progress-bar-animated" *ngIf="progress != '100'"
+                      [ngStyle]="{ width: progress + '%' }">
+                      Uploading {{ progress | number : "1.0-0" }} %
+                    </div>
+                    <div class="progress-bar progress-bar-animated" *ngIf="progress == '100'"
+                      [ngStyle]="{ width: progress + '%' }">
+                      Completed {{ resetBar() }}
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row" *ngIf="dataSourceAttachments?.length != 0">
+                    <table mat-table [dataSource]="dataSourceAttachments" class="mat-elevation-z2">
+                      <ng-container matColumnDef="Date">
+                        <th mat-header-cell *matHeaderCellDef>Date</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.date | date }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Filename">
+                        <th mat-header-cell *matHeaderCellDef>File name</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.fileName }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Uploaded">
+                        <th mat-header-cell *matHeaderCellDef>Uploaded by</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.uploaded }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                            [matMenuTriggerFor]="menu">
+                            <mat-icon color="accent">more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="downloadAttachment(element.downloadURL)">
+                              Download
+                            </button>
+                            <button mat-menu-item [disabled]="disableAttRemove" (click)="
+                                deleteAttachment(
+                                  element.id,
+                                  element.path,
+                                  element.downloadURL,
+                                  element.fileName,
+                                  element.size
+                                )
+                              ">
+                              Delete
+                            </button>
+                          </mat-menu>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumn"></tr>
+
+                      <!-- Row shown when there is no matching data. -->
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No files found</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="row" *ngIf="dataSourceAttachments?.length == 0">
+                    <h4>&nbsp;&nbsp;No attachments added !</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </span>
+
+          <!-- start of Sales docs section -->
+          <span *ngIf="navSelected == 'Sales docs'">
+            <h3 class="text-primary">
+              {{ fieldNameOrganization }}&nbsp;\&nbsp;{{ fieldNameSale }}s
+              documents
+            </h3>
+            <div class="card">
+              <div class="card-body">
+                <div class="centre" *ngIf="!estimate && !quotations && !invoices">
+                  <mat-spinner [diameter]="50"></mat-spinner>
+                </div>
+
+                <div *ngIf="estimate && quotations && invoices" class="container-fluid"
+                  style="background-color: white; margin-top: 15px">
+                  <br />
+                  <div class="row">
+                    <!--Estimates-->
+                    <div class="col-4" *ngIf="!disableDocEst">
+                      <div class="container-fluid border pda" style="background-color: white; border-radius: 5px">
+                        <div class="d-flex flex-row bd-highlight justify-content-between" style="max-height: 36px">
+                          <div class="bd-highlight">
+                            <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold; padding-top: 5px">
+                              {{ fieldNameEstimate }}s
+                            </h3>
+                          </div>
+                          <div class="bd-highlight">
+                            <button mat-stroked-button color="accent" (click)="createDoc('Estimate')"
+                              [ngClass]="{ isDisabled: disableDocCreateEst }" [disabled]="
+                                !networkCheck.onNetworkCheck() ||
+                                commonService.addDocLimitaion.addEstimateDisable
+                              ">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+
+                        <p *ngIf="estimate?.length == 0">
+                          No {{ fieldNameEstimate }} created yet
+                        </p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let est of estimate"
+                            [routerLink]="['/dash/document/Estimate', est.id]">
+                            <mat-divider></mat-divider>
+                            <div mat-line>
+                              {{ fieldNameEstimate }} No:
+                              {{ est.docData.prefixAndDocNumber }}
+                            </div>
+                            <div mat-line>
+                              Date: {{ est.docData.docDate.toDate() | date }}
+                            </div>
+                            <div mat-line>
+                              Amount : {{ est.docData.totalInclTax }}
+                            </div>
+                            <mat-icon class="sharedicon" *ngIf="est?.shareStatus">folder_shared</mat-icon>
+                          </mat-list-option>
+                        </mat-selection-list>
+                        <br />
+                      </div>
+                    </div>
+                    <div class="col-4" *ngIf="!disableDocQuot">
+                      <div class="container-fluid border pda" style="background-color: white; border-radius: 5px">
+                        <div class="d-flex flex-row bd-highlight justify-content-between" style="max-height: 36px">
+                          <div class="bd-highlight">
+                            <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold; padding-top: 5px">
+                              {{ fieldNameQuotation }}s
+                            </h3>
+                          </div>
+                          <div class="bd-highlight">
+                            <button (click)="createDoc('Quotation')" mat-stroked-button color="accent"
+                              [ngClass]="{ isDisabled: disableDocCreateQuot }" [disabled]="
+                                !networkCheck.onNetworkCheck() ||
+                                commonService.addDocLimitaion
+                                  .addQuotationDisable
+                              ">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+
+                        <p *ngIf="quotations?.length == 0">
+                          No {{ fieldNameQuotation }} created yet
+                        </p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let quote of quotations" [routerLink]="[
+                              '/dash/document/Quotation',
+                              quote.id
+                            ]">
+                            <mat-divider></mat-divider>
+                            <div mat-line>
+                              {{ fieldNameQuotation }} No:
+                              {{ quote.docData.prefixAndDocNumber }}
+                            </div>
+                            <div mat-line>
+                              Date:
+                              {{ quote.docData.docDate.toDate() | date }}
+                            </div>
+                            <div mat-line>
+                              Amount : {{ quote.docData.totalInclTax }}
+                            </div>
+                            <mat-icon class="sharedicon" *ngIf="quote?.shareStatus">folder_shared</mat-icon>
+                          </mat-list-option>
+                        </mat-selection-list>
+                        <br />
+                      </div>
+                    </div>
+                    <div class="col-4" *ngIf="!disableDocInv">
+                      <div class="container-fluid border pda" style="background-color: white; border-radius: 5px">
+                        <div class="d-flex flex-row bd-highlight justify-content-between" style="max-height: 36px">
+                          <div class="bd-highlight">
+                            <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold; padding-top: 5px">
+                              {{ fieldNameInvoice }}s
+                            </h3>
+                          </div>
+                          <div class="bd-highlight">
+                            <button (click)="createDoc('Invoice')" mat-stroked-button color="accent"
+                              [ngClass]="{ isDisabled: disableDocCreateInv }" [disabled]="
+                                !networkCheck.onNetworkCheck() ||
+                                commonService.addDocLimitaion.addInvoiceDisable
+                              ">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+
+                        <p *ngIf="invoices?.length == 0">
+                          No {{ fieldNameInvoice }} created yet
+                        </p>
+                        <mat-selection-list [multiple]="false" class="zeropad">
+                          <mat-list-option *ngFor="let invoice of invoices" [routerLink]="[
+                              '/dash/document/Invoice',
+                              invoice.id
+                            ]">
+                            <mat-divider></mat-divider>
+                            <div mat-line>
+                              {{ fieldNameInvoice }} No:
+                              {{ invoice.docData.prefixAndDocNumber }}
+                            </div>
+                            <div mat-line>
+                              Date:
+                              {{ invoice.docData.docDate.toDate() | date }}
+                            </div>
+                            <div mat-line>
+                              Amount :
+                              {{ invoice.docData.totalInclTax }}&nbsp;
+                              {{commonService.userPlan.collectionsAccess ? 'Collected : '+ invoice.collectedAmount : ''}}
+                            </div>
+                            <mat-icon class="sharedicon" *ngIf="invoice?.shareStatus">folder_shared</mat-icon>
+                          </mat-list-option>
+                        </mat-selection-list>
+                        <br />
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </div>
+            </div>
+          </span>
+
+          <!-- start of Payments section -->
+          <span *ngIf="navSelected == 'Payments'">
+            <h3 class="text-primary">
+              {{ fieldNameOrganization }}&nbsp;\&nbsp;Payments
+            </h3>
+            <div class="card">
+              <div class="card-body">
+                <div class="centre" *ngIf="!paymentReceipts">
+                  <mat-spinner [diameter]="50"></mat-spinner>
+                </div>
+
+                <div *ngIf="paymentReceipts" style="padding: 15px">
+                  <button mat-stroked-button color="accent" (click)="addPayment()" class="rig"
+                    [disabled]="!networkCheck.onNetworkCheck()" [ngClass]="{ isDisabled: disableColl }">
+                    Add
+                  </button>
+                </div>
+
+                <div *ngIf="paymentReceipts" class="container-fluid" style="
+                    background-color: white;
+                    border: 10px;
+                    margin-top: 15px;
+                  ">
+                  <br />
+
+                  <div *ngIf="paymentReceipts?.length != 0">
+                    <table  mat-table [dataSource]="dataSourceCollection"
+                      class="mat-elevation-z2">
+                      <ng-container matColumnDef="Date">
+                        <th mat-header-cell *matHeaderCellDef>Payment Date</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.paymentDate.toDate() | date }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Invoice No">
+                        <th mat-header-cell *matHeaderCellDef>
+                          {{ fieldNameInvoice }} No
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.invoiceprefixAndDocNumber }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Payment Mode">
+                        <th mat-header-cell *matHeaderCellDef>Payment Mode</th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.paymentMode }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Amount">
+                        <th mat-header-cell *matHeaderCellDef>
+                          Collected Amount
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{ element.currency }}&nbsp;{{
+                          element.amountCollected
+                          }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-icon-button [matMenuTriggerFor]="addMenu">
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #addMenu="matMenu">
+                            <button mat-menu-item (click)="editPayment(element)" [disabled]="disableCollEdit">
+                              <mat-icon color="accent" [ngClass]="{ isDisabled: disableCollEdit }">edit</mat-icon>
+                              Edit
+                            </button>
+                          </mat-menu>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+                      <!-- Row shown when there is no matching data. -->
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">
+                          No {{ fieldNameCollection }}s found for this
+                          {{ fieldNameOrganization }}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div *ngIf="
+                      paymentReceipts?.length == 0
+                    ">
+                    <h3>
+                      No {{ fieldNameCollection }}s found for this
+                      {{ fieldNameOrganization }}
+                    </h3>
+                  </div>
+
+                  <div>
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </span>
+
+          <!-- start of Logs section -->
+          <span *ngIf="navSelected == 'Logs'">
+            <h3 class="text-primary">
+              {{ fieldNameOrganization }}&nbsp;\&nbsp;Change log
+            </h3>
+            <div class="card">
+              <div class="card-body">
+                <!-- Display change log according to last modified date-->
+                <div class="mb-3 border-bottom" *ngFor="
+                    let item of changeLog | keyvalue : customsort;
+                    let i = index
+                  ">
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                      <img class="avatar avatar-sm avatar-circle" src="../assets/img/160x160/img1.jpg"
+                        alt="Image Description" />
+                    </div>
+
+                    <div class="flex-grow-1 ms-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">{{ item.value.changedByName }}</h4>
+                        <span class="d-block small text-muted">
+                          {{
+                          item.value.dateModified | date : "medium"
+                          }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div matLine *ngIf="
+                      item.value.currentValues == '' &&
+                      item.value.previousValues == ''
+                    ">
+                    <p>
+                      {{ fieldNameOrganization }} created by
+                      {{ item.value.changedByName }}
+                    </p>
+                  </div>
+
+                  <div *ngFor="
+                      let celem of item.value.currentValues
+                        | keyvalue : onCompare
+                    ">
+                    <div *ngIf="celem.key == 'addedNotes'">
+                      <p>Added note "{{ celem.value.notes }}"</p>
+                    </div>
+                    <div *ngIf="celem.key == 'addedAttachment'">
+                      <p>Added attachment "{{ celem.value }}"</p>
+                    </div>
+
+                    <div *ngIf="celem.key == 'deletedAttachment'">
+                      <p>Deleted attachment "{{ celem.value }}"</p>
+                    </div>
+
+                    <!-- New payments -->
+                    <div *ngIf="celem.key == 'addedPayment'">
+                      <p>Added payment of  "{{ celem.value.currency }}.{{ celem.value.amount }}"</p>
+                    </div>
+                    <!-- New expense -->
+                    <div *ngIf="celem.key == 'addedExpense'">
+                      <p>Added expense of  "{{ celem.value.currency }}.{{ celem.value.amount }}"</p>
+                    </div>
+                  </div>
+
+                  <div matLine *ngFor="
+                      let pelem of item.value.previousValues
+                        | keyvalue : onCompare
+                    ">
+                    <div *ngFor="
+                        let celem of item.value.currentValues
+                          | keyvalue : onCompare
+                      ">
+                      <div *ngIf="pelem.key == celem.key">
+                        <!-- Payment changes-->
+                        <div *ngIf="
+                            pelem.key == 'editedPayment' &&
+                            celem.key == 'editedPayment'
+                          ">
+                            <p>Edited payment of  "{{ pelem.value.currency }}.{{ pelem.value.amount }}"</p>
+                            <p>Changed values: </p>
+                            <div *ngFor="let elem1 of pelem.value.changedValues | keyvalue : onCompare">
+                              <div *ngFor="let elem2 of celem.value.changedValues | keyvalue : onCompare">
+                                <div *ngIf="elem1.key == elem2.key">
+                                  <div *ngIf="elem1.key == 'additionalFields' && elem2.key == 'additionalFields'">
+                                    <div *ngFor="let j of elem1.value | keyvalue : onCompare">
+                                      <div *ngFor="let k of elem2.value | keyvalue : onCompare">
+                                        <div *ngIf="j.key == k.key">
+                                          <p>
+                                            Modified {{ j.value['fieldName'] }} from
+                                            {{
+                                            j.value['fieldValue']
+                                            ? j.value['fieldValue']
+                                            : "None"
+                                            }}
+                                            to
+                                            {{
+                                            k.value['fieldValue']
+                                            ? k.value['fieldValue']
+                                            : "None"
+                                            }}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div *ngIf="elem1.key != 'additionalFields' && elem2.key != 'additionalFields' && elem1.key != 'orgId' &&
+                                  elem2.key != 'orgId'">
+                                    <p>{{this.paymentSettings[elem1.key]?.displayName}} from {{elem1.value ? elem1.value : "None"}} to {{elem2.value ? elem2.value : "None"}}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        <!-- Expense changes-->
+                        <div *ngIf="
+                        pelem.key == 'editedExpense' &&
+                        celem.key == 'editedExpense'
+                      ">
+                        <p>Edited expense of  "{{ pelem.value.currency }}.{{ pelem.value.amount }}"</p>
+                        <p>Changed values: </p>
+
+                        <div *ngFor="let elem of celem.value.changedValues | keyvalue : onCompare">
+
+                          <div *ngIf="elem.key == 'addedAttachments'">
+                            <div *ngFor="let elem1 of elem.value | keyvalue : onCompare">
+                              <p>Added attachment "{{ elem1.value.addedAttachment}}"</p>
+                            </div>
+                          </div>
+
+                          <div *ngIf="elem.key == 'deletedAttachments'">
+                            <div *ngFor="let elem1 of elem.value | keyvalue : onCompare">
+                              <p>Deleted attachment "{{ elem1.value.deletedAttachment }}"</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngFor="let elem1 of pelem.value.changedValues | keyvalue : onCompare">
+                          <div *ngFor="let elem2 of celem.value.changedValues | keyvalue : onCompare">
+
+                            <div *ngIf="elem1.key == elem2.key">
+                              <div *ngIf="elem1.key == 'additionalFields' && elem2.key == 'additionalFields'">
+                                <div *ngFor="let j of elem1.value | keyvalue: onCompare">
+                                  <div *ngFor="let k of elem2.value | keyvalue: onCompare">
+                                    <div *ngIf="j.key == k.key">
+                                      <p>
+                                        Modified {{ j.value.fieldName }} from
+                                        {{
+                                        j.value.fieldValue
+                                        ? j.value.fieldValue
+                                        : "None"
+                                        }}
+                                        to
+                                        {{
+                                        k.value.fieldValue
+                                        ? k.value.fieldValue
+                                        : "None"
+                                        }}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div *ngIf="elem1.key != 'additionalFields' && elem2.key != 'additionalFields' && elem1.key != 'orgId' &&
+                              elem2.key != 'orgId'">
+                                <p>{{this.expenseSettings[elem1.key]?.displayName}} from {{elem1.value ? elem1.value : "None"}} to {{elem2.value ? elem2.value : "None"}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                        <div *ngIf="
+                            pelem.key == 'additionalFields' &&
+                            celem.key == 'additionalFields'
+                          ">
+                          <div *ngFor="let j of pelem.value | keyvalue : onCompare">
+                            <div *ngFor="
+                                let k of celem.value | keyvalue : onCompare
+                              ">
+                              <div *ngIf="j.key == k.key">
+                                <p>
+                                  Modified {{ j.value.fieldName }} from
+                                  {{
+                                  j.value.fieldValue
+                                  ? j.value.fieldValue
+                                  : "None"
+                                  }}
+                                  to
+                                  {{
+                                  k.value.fieldValue
+                                  ? k.value.fieldValue
+                                  : "None"
+                                  }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngIf="
+                            pelem.key != 'additionalFields' &&
+                            celem.key != 'additionalFields' &&
+                            pelem.key != 'editedPayment' &&
+                            celem.key != 'editedPayment' &&
+                            pelem.key != 'editedExpense' &&
+                            celem.key != 'editedExpense'
+                          ">
+                          <div *ngIf="
+                              pelem.key != 'assignedTo' &&
+                              celem.key != 'assignedTo'
+                            ">
+                            <p>
+                              Modified
+                              {{
+                                this.orgSettings[pelem.key]?.displayName
+                                ? this.orgSettings[pelem.key]
+                                ?.displayName
+                                : pelem.key
+                              }}
+                              from
+                              {{ pelem.value ? pelem.value : "None" }}
+                              to {{ celem.value ? celem.value : "None" }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>

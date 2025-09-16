@@ -1,0 +1,52 @@
+<div class="container-fluid row justify-content-center"
+  style="background-color:ghostwhite;height: auto;text-align: center;padding-top: 20px;margin:0px; color: black">
+  <br>
+
+  <h2 class="title" style="color: black;">LG Onam Lucky Draw Contest</h2>
+  <div class="col-sm-12 col-md-4 border"
+    style="border-radius: 5px;background-color: white;padding-bottom: 10px;margin-bottom: 10px;">
+    <br>
+    <form #form="ngForm">
+      <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="FirstName" name="firstName" [(ngModel)]="firstName" minlength="3"
+              maxlength="50" required>
+          <mat-icon matSuffix color="accent">person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Contact Number</mat-label>
+          <input matInput placeholder="Contact Number" name="contactNo" [(ngModel)]="contactNo" minlength="10"
+              maxlength="12" required>
+          <mat-icon matSuffix color="accent">phone</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Invoice Number</mat-label>
+          <input matInput placeholder="Invoice Number" name="invoiceNo" [(ngModel)]="invoiceNumber">
+          <mat-icon matSuffix color="accent" required>receipt</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>District</mat-label>
+          <mat-select matNativeControl id="mySelectId" [(ngModel)]="district" name="district" required>
+              <mat-option *ngFor="let dist of districtArray" value={{dist}}>{{dist}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+  </form>
+
+
+    <!-- upload att start -->
+
+    <button mat-raised-button color="accent" (click)="uploadDocument()" *ngIf="!docUploaded">Upload attachment</button>
+
+    <input type="file" (change)="upload($event)" id="inputFile1" class="attachment-selector" style="display: none"
+      name="myimage" accept=".pdf,.png,.jpg,.jpeg" />
+
+    <!-- upload att end -->
+
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid" *ngIf="docUploaded">Submit</button>
+    <br>
+  </div>
+  <br>
+</div>

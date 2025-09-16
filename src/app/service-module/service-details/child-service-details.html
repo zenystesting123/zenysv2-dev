@@ -1,0 +1,60 @@
+<!-- priority -->
+<h2 mat-dialog-title *ngIf="data.scenario == 'updatePriority'">Update {{data.fieldNameService}} Priority</h2>
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'updatePriority'">
+  <h3> Confirm updation of {{data.fieldNameService}} Priority to {{data.priority}}</h3>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" *ngIf="data.scenario == 'updatePriority'">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button color="primary" [mat-dialog-close]="proceed">Update </button>
+</mat-dialog-actions>
+
+<!-- stage -->
+<h2 mat-dialog-title *ngIf="data.scenario == 'updateStage'">Update {{data.fieldNameService}} Stage</h2>
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'updateStage' ">
+  <h3> Confirm updation of {{data.fieldNameService}} Stage to {{data.statusName}}</h3>
+  <!-- select field to enter reason for rejection if stage is changing lost -->
+  <mat-form-field class="example-full-width" appearance="fill"
+    *ngIf="data.rejected === true && data.rejectionReasonDisplay===true">
+    <mat-label>Reason for rejection</mat-label>
+    <mat-select [(ngModel)]="data.rejectionReasonValue" id="rejectionReasonValue" name="rejectionReasonValue"
+      placeholder="Required">
+      <mat-option *ngFor="let s of rejectionReasonArr" value="{{ s }}" [disabled]="!rejectionReasonArrPresent">{{
+        s
+        }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" *ngIf="this.data.scenario === 'updateStage'">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button color="primary"
+    [disabled]="!networkCheck.onNetworkCheck() || (!data.rejectionReasonValue && data.rejectionReasonMandatory && data.rejected === true)"
+    [mat-dialog-close]="this.data">Update </button>
+</mat-dialog-actions>
+
+
+
+<!-- assigned to -->
+<h2 mat-dialog-title *ngIf="this.data.scenario == 'assigned'">Re-Assign {{this.data.fieldNameService}}</h2>
+<mat-dialog-content class="mat-typography" *ngIf="this.data.scenario == 'assigned'">
+  <h3>Do you want to re-assign this {{this.data.fieldNameService}} under {{this.data.prevAssigned}} to
+    {{this.data.currAssigned}}?</h3>
+  <mat-checkbox class="example-margin" [(ngModel)]="data.checked">
+    Re-Assign associated open {{data.fieldNameTask}}s and open {{data.fieldNameFollowup}}s
+  </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'assigned'">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button [mat-dialog-close]="this.data">Re-Assign</button>
+</mat-dialog-actions>
+
+<!-- delete task -->
+<h2 mat-dialog-title *ngIf="this.data.scenario == 'deletetask'">Delete {{this.data.fieldNameTask}} </h2>
+<mat-dialog-content class="mat-typography" *ngIf="this.data.scenario == 'deletetask'">
+  <h3>Do you want to delete the {{this.data.status}} {{this.data.fieldNameTask}} {{this.data.title}}&nbsp;?</h3>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'deletetask'">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="warn" mat-button [mat-dialog-close]="this.data">Delete</button>
+</mat-dialog-actions>

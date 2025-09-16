@@ -1,0 +1,20 @@
+<h2 mat-dialog-title *ngIf="!spinner">Re-Assign {{data.fieldNameContact}}</h2>
+
+<mat-dialog-content *ngIf="!spinner">
+  <h3>Do yo want to Re-Assign selected {{custLength}} {{data.fieldNameContact}}?</h3>
+  <mat-checkbox class="example-margin" [(ngModel)]="checked">
+    Re-Assign associated {{data.fieldNameSale}}s, {{data.fieldNameService}}, {{data.fieldNameEstimate}},
+    {{data.fieldNameQuotation}}, {{data.fieldNameInvoice}},  {{data.fieldNameTask}}s that are not completed and open
+    {{data.fieldNameFollowup}}s to {{data.assignedToName}}
+  </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="!spinner">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="onReassign()" color="primary">
+    Re-Assign
+  </button>
+</mat-dialog-actions>
+<mat-dialog-content *ngIf="spinner" class="center">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span>&nbsp;Re-Assigning {{count}} {{data.fieldNameContact}} out of {{customerLength}}..</span>
+</mat-dialog-content>

@@ -1,0 +1,214 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar class="border-bottom" *ngIf="commonService.userPlan.settingsAccess" style="flex: 0 0 64px;"
+      [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>General Settings</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div class="container-fluid" style="padding: 0%; margin: 0%; overflow-y: auto">
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+  <div
+    *ngIf="(progressBarStatus && notEdit) || !commonService.userPlan.settingsAccess"
+    class="container-xl"
+    style="text-align: center"
+  >
+    Access denied!
+  </div>
+  <!-- CONTENT STARTS HERE -->
+  <div
+    *ngIf="progressBarStatus && !notEdit && commonService.userPlan.settingsAccess"
+    style="min-height: 900px"
+  >
+    <br />
+    <mat-card-header class="card-container-left">
+      <form>
+        <div class="frame" style="background-color: white">
+          <mat-card-content>
+            <h2>Auto Logout Settings</h2>
+            <div>
+              <mat-checkbox (change)="logoutEnableFunction($event)" [(ngModel)]="autoLogoutActive" [ngModelOptions]="{standalone: true}" class="example-margin">Enable Auto Logout</mat-checkbox>
+            </div>
+            <div class="box">
+              <div class="col-6 custom">Choose a time</div>
+              <div
+                class="col-6 custom"
+                style="height: auto; word-wrap: break-word"
+              >
+                <mat-form-field class="full-width">
+                  <mat-label>Choose a time</mat-label>
+                  <mat-select
+                    #emailTemp
+                    [(ngModel)]="selectedTime"
+                    id="temp"
+                    name="selectedTime"
+                    placeholder="Required"
+                    required
+                  >
+                    <mat-option [value]="900000">15 Minutes</mat-option>
+                    <mat-option [value]="1800000">30 Minutes</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <button
+              style="float: right"
+              mat-button
+              color="accent"
+              (click)="saveTime()"
+              [disabled]="!autoLogoutActive || !networkCheck.onNetworkCheck()"
+            >
+              Save
+            </button>
+            <br />
+          </mat-card-content>
+        </div>
+      </form>
+    </mat-card-header>
+
+    <!-- lock logout starts here -->
+    <br />
+    <div class="frame" style="background-color: white">
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          id="checkreq"
+          name="checkreq"
+          [(ngModel)]="lockLogout"
+          >Disable user login on crosssing maximum number of auto logouts in a
+          day
+        </mat-checkbox>
+      </section>
+      <div class="box">
+        <div class="col-6 custom">
+          Maximum number of auto logouts permitted in a day
+        </div>
+        <div class="col-6 custom">
+          <mat-form-field class="full-width">
+            <mat-label>Threshold Value</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="this.maxLogout"
+              name="maxLogout"
+              #maxAutoLogout="ngModel"
+              required
+            />
+            <mat-error
+              color="warn"
+              *ngIf="
+                !maxAutoLogout.valid &&
+                (maxAutoLogout.dirty || maxAutoLogout.touched)
+              "
+            >
+              Required!</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <button
+        style="float: right"
+        mat-button
+        color="accent"
+        (click)="saveLockEnable()"
+        [disabled]="!lockLogout || !this.maxLogout || !networkCheck.onNetworkCheck()"
+      >
+        Save
+      </button>
+      <br>
+    </div>
+    <!-- lock logout ends here -->
+
+    <!-- Duplicate email/contact number setting -->
+    <br />
+    <div class="frame" style="background-color: white">
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          id="checkemail"
+          name="checkemail"
+          [(ngModel)]="duplicateEmailDisable"
+          >Disable duplicate email in {{fieldNameContact}}
+        </mat-checkbox>
+      </section>
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          id="checknum"
+          name="checknum"
+          [(ngModel)]="duplicateContactNumberDisable"
+          >Disable duplicate contact number in {{fieldNameContact}}
+        </mat-checkbox>
+      </section>
+
+
+      <button
+        style="float: right"
+        mat-button
+        color="accent"
+        (click)="onSaveDupliacteDisable()" [disabled]="!networkCheck.onNetworkCheck()"
+      >
+        Save
+      </button>
+      <br>
+    </div>
+
+    <!-- Product check settings starts here -->
+    <br />
+    <div class="frame" style="background-color: white" *ngIf="commonService.userPlan.saleAccess">
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          id="checkproducts"
+          name="checkproducts"
+          [(ngModel)]="isProdCheckMandatory"
+          >Enable product check in {{fieldNameSale}}
+        </mat-checkbox>
+      </section>
+
+      <button
+        style="float: right"
+        mat-button
+        color="accent"
+        (click)="onSaveDisableProductCheck()" [disabled]="!networkCheck.onNetworkCheck()"
+      >
+        Save
+      </button>
+      <br>
+    </div>
+    <!-- Product check settings ends here -->
+
+    <!--default customer type(individual/organistion) setting-->
+    <!-- <div class="frame" style="background-color: white">
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          id="customertype"
+          name="customertype"
+          [(ngModel)]="isCustomerIndividual"
+          >Set default customer type as individual in {{fieldNameContact}}
+        </mat-checkbox>
+      </section>
+
+      <button
+        style="float: right"
+        mat-button
+        color="accent"
+        (click)="onSaveCustomerType()"
+      >
+        Save
+      </button>
+      <br>
+    </div> -->
+
+
+  </div>
+  </div>
+</div>

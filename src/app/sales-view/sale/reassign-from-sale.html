@@ -1,0 +1,19 @@
+<h2 mat-dialog-title *ngIf="!spinner">Re-Assign {{data.fieldNameSale}}</h2>
+<mat-dialog-content *ngIf="!spinner" class="mat-typography">
+  <h3>Do you want to re-assign selected {{data?.selected?.length}} {{this.data.fieldNameSale}}s to
+    {{data.assignedToName}}?</h3>
+  <mat-checkbox class="example-margin" [(ngModel)]="data.checked">
+    Re-Assign associated {{data.fieldNameEstimate}}, {{data.fieldNameQuotation}}, {{data.fieldNameInvoice}}, open
+    {{data.fieldNameTask}}s and open {{data.fieldNameFollowup}}s
+  </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="!spinner" align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button (click)="reAssignFn()">
+    Re-Assign
+  </button>
+</mat-dialog-actions>
+<mat-dialog-content *ngIf="spinner" class="center1">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span>&nbsp;Re-Assigning {{count}} {{data.fieldNameSale}} out of {{data?.selected?.length}}..</span>
+</mat-dialog-content>

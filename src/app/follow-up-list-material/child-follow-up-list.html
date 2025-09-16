@@ -1,0 +1,27 @@
+<h2 mat-dialog-title *ngIf="!spinner && scenario === 'reAssign' ">
+  Re-Assign {{data.fieldNameFollowup}}
+</h2>
+
+<mat-dialog-content *ngIf="!spinner" class="mat-typography">
+  <h3 *ngIf="data.selected.length === 1">
+    Do you want to re-assign selected
+    {{this.data.fieldNameFollowup}} to {{data.assignedToName}}?
+  </h3>
+  <h3 *ngIf="data.selected.length > 1">
+    Do you want to re-assign selected {{data?.selected?.length}}
+    {{this.data.fieldNameFollowup}}s to {{data.assignedToName}}?
+  </h3>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="!spinner" align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button (click)="reAssignFn()">Re-Assign</button>
+</mat-dialog-actions>
+
+<mat-dialog-content *ngIf="spinner" class="center1">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span
+    >&nbsp;Re-Assigning {{count}} {{data.fieldNameFollowup}} out of
+    {{data?.selected?.length}}..</span
+  >
+</mat-dialog-content>

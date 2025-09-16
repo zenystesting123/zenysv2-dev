@@ -1,0 +1,66 @@
+
+<div *ngIf="!!datasource">
+
+<div class="full" *ngIf="datasource.length!=0">
+  <h3><b>Payments</b></h3>
+  <br>
+
+    <table mat-table [dataSource]="datasource" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+    
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID. </th>
+        <td mat-cell *matCellDef="let element"> {{element.payment_id}}  </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="plan">
+        <th mat-header-cell *matHeaderCellDef> Plan . </th>
+        <td mat-cell *matCellDef="let element"> {{element.plan?element.plan:'gold'}}  </td>
+      </ng-container>
+
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="validity_start">
+        <th mat-header-cell *matHeaderCellDef> Valid from </th>
+        <td mat-cell *matCellDef="let element"> {{(element.paymentMode=="manual"?element.currentCycleStartDate:element.subscriptionStart)*1000 | date }}  </td>
+      </ng-container>
+    
+      <!-- Weight Column -->
+      <ng-container matColumnDef="validity_end">
+        <th mat-header-cell *matHeaderCellDef> Valid To </th>
+        <td mat-cell *matCellDef="let element"> {{(element.paymentMode=="manual"?element.currentCycleEnd:element.subscriptionEnd)*1000 |date}} </td>
+      </ng-container>
+    
+      
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef> Payment Duration </th>
+        <td mat-cell *matCellDef="let element"> {{element.packageDuration}} </td>
+      </ng-container>
+
+       <!-- Symbol Column -->
+       <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef> Amount </th>
+        <td mat-cell *matCellDef="let element"> {{findAmount(element.packageDuration,element.plan)}}</td>
+      </ng-container>
+    
+
+       <!-- Symbol Column -->
+       <!-- <ng-container matColumnDef="view">
+        <th mat-header-cell *matHeaderCellDef> Invoice </th>
+        <td mat-cell *matCellDef="let element"> <a href="#" (click)="openDialog(element.paymentMode=='manual'?element.payment_id:element.subscription_id,element.paymentMode)" onClick="return false;">View Invoices</a></td>
+      </ng-container> -->
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    
+
+
+  </div>
+</div>

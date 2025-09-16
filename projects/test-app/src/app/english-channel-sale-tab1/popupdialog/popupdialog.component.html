@@ -1,0 +1,60 @@
+<h1 *ngIf="data.scenario != 'delete'" mat-dialog-title>
+  {{ data.scenario == "create" ? "Add" : "Edit" }} Payments
+</h1>
+<div mat-dialog-content>
+  <form
+    *ngIf="data.scenario == 'create' || data.scenario == 'edit'"
+    [formGroup]="form"
+
+  >
+    <mat-form-field class="col-4" appearance="outline">
+      <mat-label>Installment</mat-label>
+      <input
+        formControlName="installmentName"
+        matInput
+        placeholder="eg: 1"
+      />
+    </mat-form-field>
+    <mat-form-field class="col-4" appearance="outline">
+      <mat-label>Amount</mat-label>
+      <input formControlName="amount" type="number" matInput />
+      <mat-hint>Amount paid</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="col-4" appearance="outline">
+      <mat-label>Payment Date</mat-label>
+      <input formControlName="paymentDate" matInput [matDatepicker]="picker1" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="col-12" appearance="fill">
+      <mat-label>Comments</mat-label>
+      <textarea formControlName="comments" matInput></textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div
+  *ngIf="data.scenario == 'create' || data.scenario == 'edit'"
+  mat-dialog-actions
+  class="padd"
+>
+  <button (click)="dialogRef.close()" mat-button>Close</button>
+  <button
+    [disabled]="form?.invalid"
+    (click)="dialogRef.close(this.form)"
+    color="primary"
+    mat-button
+  >
+    Save
+  </button>
+</div>
+<h1 *ngIf="data.scenario == 'delete'" mat-dialog-title>
+  Delete Payment
+</h1>
+<mat-dialog-content *ngIf="data.scenario == 'delete'" class="mat-typography">
+  Are you sure to delete this payment?
+</mat-dialog-content>
+<div *ngIf="data.scenario == 'delete'" mat-dialog-actions align="end">
+  <button (click)="dialogRef.close()" mat-button>Cancel</button>
+  <button (click)="dialogRef.close('yes')" color="warn" mat-button>Delete</button>
+</div>

@@ -1,0 +1,19 @@
+<div>
+  <h3 style="text-align: center;">Uploading In Progress</h3>
+</div>
+<div class="progress progress-bar-animated" *ngIf="value as progress">
+  <div
+    class="progress-bar progress-bar-animated"
+    *ngIf="progress != 100"
+    [ngStyle]="{ width: progress + '%' }"
+  >
+    Uploading document... {{ progress | number: "1.0-0" }} %
+  </div>
+  <br>
+  <div
+    class="progress-bar progress-bar-animated"
+    *ngIf="progress == 100"
+    [ngStyle]="{ width: progress + '%' }"
+    [mat-dialog-close]="closeDialog()"
+  ></div>
+</div>

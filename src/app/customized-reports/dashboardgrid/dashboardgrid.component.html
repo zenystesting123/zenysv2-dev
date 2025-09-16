@@ -1,0 +1,56 @@
+<div class="no-v-scroll">
+  <mat-toolbar class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    *ngIf="!homeScreenMode && common.userPlan.dashboardAccess" [ngStyle]="{ 'background-color': 'white' }">
+    <mat-icon mat-list-icon class="material-symbols-outlined text-primary">dashboard
+    </mat-icon>&nbsp;
+    <span>Dashboards</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field style="font-size: 14px; height:100%" appearance="outline">
+      <mat-select aria-label="Select Dashboard" [(ngModel)]="db.currentDashboardId" placeholder="select Dashboard"
+        (ngModelChange)="dashboardChange()">
+        <mat-option *ngFor="let dashboard of allDashboards"
+          [value]="dashboard.id">{{dashboard.dashboardName}}</mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option [value]="''" (click)="openDialog('addDashboard',allReports)"><mat-icon>add</mat-icon>Add
+          new</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- delete a report -->
+    <button mat-icon-button title="Delete Report" (click)="deleteReport()" id="pointer"
+      *ngIf="allDashboards.length > 1">
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+    <div class="example-button-row">
+      <button mat-button color="primary" (click)="openDialog('addReport',allReports)" [disabled]="!onCheckNetwork()">Add
+        Report</button>
+      <button mat-button color="primary" style="float:right;margin-right: 10px" (click)="saveReport()"
+        [disabled]="!onCheckNetwork()">Save</button>
+    </div>
+  </mat-toolbar>
+  <div style=" overflow-y:scroll;height:100%;background-color: whitesmoke; " class="bg-soft-secondary p-2">
+    <div *ngIf="!common.userPlan.dashboardAccess" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <gridster [options]="options" style="background-color: whitesmoke; " *ngIf="common.userPlan.dashboardAccess">
+      <gridster-item [item]="item" *ngFor="let item of dashboard?.reportsArray;let i = index"
+        style="padding-bottom: 5px;margin-bottom: 5px; border-bottom:5px">
+
+        <div class="edit_hover_class">
+          <app-report-view [reportIdWhenChild]="dashboard?.reportsArray[i].reportId"
+            style="z-index: 1; position:relative;"></app-report-view>
+          <div class="d-flex justify-content-end bd-highlight">
+            <div class="bd-highlight">
+              <button mat-icon-button color="warn" (click)="removeReport(i)"><mat-icon>delete</mat-icon></button>
+            </div>
+            <div class="bd-highlight">
+              <button mat-icon-button color="primary"
+                [routerLink]="['/dash/custom-report/report',dashboard?.reportsArray[i].reportId]"><mat-icon>bar_chart</mat-icon></button>
+            </div>
+          </div>
+        </div>
+      </gridster-item>
+    </gridster>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="centre">
+    <mat-spinner [diameter]="24" *ngIf="searchPopupService.isLoading" id="spinner"></mat-spinner>
+</div>
+<div *ngIf="!searchPopupService.isLoading">
+    <mat-chip-list #chipList aria-label="Tags" *ngIf="!onlyCustomerSearch">
+        <!-- Organisation -->
+        <mat-chip *ngIf="orgSelected" class="chipStyling">
+            <mat-icon matChipAvatar >business
+            </mat-icon>
+            <span class="truncate-cell"> {{selctedOrg?.companyName}}</span>
+            <mat-icon matChipRemove (click)="onClearOrg()">cancel</mat-icon>
+        </mat-chip>
+        <!-- Contact -->
+        <mat-chip *ngIf="contactSelected" class="chipStyling">
+            <mat-icon matChipAvatar >person
+            </mat-icon>
+            <span class="truncate-cell"> {{selctedCustomer?.firstName}}</span>
+            <mat-icon matChipRemove (click)="onClearCustomer()">cancel</mat-icon>
+        </mat-chip>
+        <!-- Sale -->
+        <mat-chip *ngIf="saleSelected && commonService.userPlan.saleAccess" class="chipStyling">
+            <mat-icon matChipAvatar>work</mat-icon>
+            <span class="truncate-cell"> {{selctedSale?.saleTitle}}</span>
+            <mat-icon matChipRemove (click)="onClearSale()">cancel</mat-icon>
+        </mat-chip>
+
+    </mat-chip-list>
+    <br>
+    <form class="example-form">
+        <div class="row" *ngIf="!onlyCustomerSearch">
+            <mat-form-field class="example-full-width" appearance="fill" *ngIf="!orgID">
+                <mat-label>Search {{fieldNameOrganization}}</mat-label>
+                <input type="text" placeholder="{{fieldNameOrganization}}" aria-label="Item" matInput
+                    [formControl]="orgControl" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                    (optionSelected)="onOrgSelection($event)">
+                    <mat-option *ngFor="let option of filteredOrg | async" [value]="option">
+                        {{option.companyName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="row" *ngIf="!onlyCustomerSearch">
+            <mat-form-field class="example-full-width" appearance="fill" *ngIf="!custID">
+                <mat-label>Search {{fieldNameContact}}</mat-label>
+                <input type="text" aria-label="Item" matInput [formControl]="customerControl" [matAutocomplete]="auto"
+                    placeholder="Type at least 3 characters">
+                <mat-spinner matSuffix [diameter]="18" *ngIf="isContactLoading" id="spinnerwo"></mat-spinner>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnCust">
+                    <div *ngIf="!isContactLoading">
+                        <mat-option *ngFor="let option of customerList" [value]="option"
+                            (click)="onCustomerSelection(customerControl.value)">
+                            {{ option.firstName }}&nbsp;{{ option.secondName }}&nbsp;{{ option.surname }}
+                        </mat-option>
+                    </div>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="row" *ngIf="!onlyCustomerSearch">
+            <mat-form-field class="example-full-width" appearance="fill" *ngIf="!saleID && custID && commonService.userPlan.saleAccess">
+                <mat-label>Search {{fieldNameSale}}</mat-label>
+                <input type="text" placeholder="{{fieldNameSale}}" aria-label="Item" matInput
+                    [formControl]="saleControl" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                    (optionSelected)="onSaleSelection($event)">
+                    <mat-option *ngFor="let option of filteredSale | async" [value]="option">
+                        {{option.saleTitle}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="row" *ngIf="onlyCustomerSearch">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Search {{fieldNameContact}}</mat-label>
+                <input type="text" aria-label="Item" matInput [formControl]="customerControl" [matAutocomplete]="auto"
+                    placeholder="Type at least 3 characters">
+                <mat-spinner matSuffix [diameter]="18" *ngIf="isContactLoading" id="spinnerwo"></mat-spinner>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnCust">
+                    <div *ngIf="!isContactLoading">
+                        <mat-option *ngFor="let option of customerList" [value]="option"
+                            (click)="onCustomerOnlySelection(customerControl.value)">
+                            <ngx-avatar class="avatar" name="{{ option.firstName.split(' ')[0] }}" size="30"
+                                textSizeRatio="1.50"></ngx-avatar>
+                                <span><span style="font-weight: bold;"> {{ option.salutation }} {{ option.firstName }}&nbsp;{{option.secondName}} {{
+                                        option.surname }}</span> {{ option.email }}</span>
+                        </mat-option>
+                    </div>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+    </form>
+</div>

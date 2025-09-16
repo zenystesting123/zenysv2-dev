@@ -1,0 +1,49 @@
+<!----If user has calendar access----->
+<div *ngIf="commonService.userPlan.calendarIntegration && commonService.userPlan.activitiesAccess" style="overflow-x: hidden;">
+    <!----tool bar starts----->
+  <mat-toolbar class="border-bottom" style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBackMob()">
+      <!----Back button----->
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Calendar</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div *ngIf="connectGMailCalendarDisplay && connectOutlookCalendarDisplay">
+    <div class="row">
+        <div class="col-md-12" class="btn btn-lg btn-google btn-block text-uppercase btn-outline" style="cursor:default">
+            Connect to 
+        </div>
+    </div>
+    <div class="row" style="display: flex; flex-direction: row !important;">
+        <!--------if user not signed in show the login button------------>
+        <div class="col-6" *ngIf="connectGMailCalendarDisplay" style="padding-left: 40%;">
+          <a (click)="onGMailLogIn()" class="btn btn-lg btn-google btn-block text-uppercase btn-outline" href="#" 
+              onClick="return false;" title="Connect your gmail calendar"><img src="https://img.icons8.com/color/72/000000/google-logo.png" />
+          </a>
+          <!-- <div>Google Calendar</div> -->
+        </div>
+
+        <div class="col-6"  *ngIf="connectOutlookCalendarDisplay" style="flex: 0 0 0">
+          <a (click)="onOutlookLogIn()" class="btn btn-lg btn-google btn-block text-uppercase btn-outline" href="#" 
+              onClick="return false;" title="Connect your outlook calendar"><img src="https://img.icons8.com/color/72/null/ms-outlook.png" />
+          </a>
+          <!-- <div>Outlook Calendar</div> -->
+        </div>
+    </div>
+  </div>
+  <mat-progress-bar
+    [style.visibility]="connectGMailCalendarDisplay && connectOutlookCalendarDisplay ? 'hidden' : 'visible' "
+    mode="indeterminate">
+  </mat-progress-bar>
+  <!----Message to show if plan is invoicing, if user doesnt have calendar access----->
+  <div class="container" *ngIf="(!commonService.userPlan.calendarIntegration || !commonService.userPlan.activitiesAccess) && (commonService.subscribedPlan == 'invoicing')"
+    style="text-align: center">
+    <h3>No Access</h3>
+  </div>
+  <!----Message to show if plan is not invoicing, if user doesnt have calendar access----->
+  <div class="container" *ngIf="(!commonService.userPlan.calendarIntegration || !commonService.userPlan.activitiesAccess) && (commonService.subscribedPlan != 'invoicing')"
+    style="text-align: center">
+    <h3>Upgrade To Diamond Plan To Access Calendar</h3>
+  </div>
+  

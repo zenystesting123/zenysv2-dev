@@ -1,0 +1,19 @@
+.right{
+    float: right;
+}
+.cursor{
+    cursor: pointer;
+}
+
+:host,
+.mainclass  {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mainclass,
+mat-list {
+  flex: auto;
+  overflow-y: auto;
+}

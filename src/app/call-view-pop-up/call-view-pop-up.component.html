@@ -1,0 +1,14 @@
+<h1 mat-dialog-title style="position:sticky">Incoming Call</h1>
+<div mat-dialog-content style="overflow: auto;max-height: 300px;">
+  <mat-nav-list style="overflow: auto;">
+    <mat-list-item *ngFor="let ele of data">
+      <mat-icon mat-list-icon *ngIf="ele?.customerId!='N/A'" class="cursor">person</mat-icon>
+     <div mat-line (click)="onCustomerDetails(ele?.customerId)" class="cursor" *ngIf="ele?.customerId!='N/A'">
+      {{ele?.customerName}} , {{ele?.companyName}} </div>
+      <div mat-line>Number : {{ele?.sourceNumber}}</div>
+    </mat-list-item>
+  </mat-nav-list>
+</div>
+<div mat-dialog-actions class="right">
+  <button mat-button (click)="onNoClick()">Close</button>
+</div>

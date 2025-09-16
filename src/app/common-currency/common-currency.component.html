@@ -1,0 +1,16 @@
+<form class="example-form">
+  <mat-form-field style="width: 96%;" appearance="fill">
+    <mat-label>{{dispName}}</mat-label>
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+    <!-- <mat-icon matSuffix color="warn" (click)="onClear()">close</mat-icon> -->
+    <button mat-icon-button matSuffix aria-label="Clear" (click)="onClear()">
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+        (click)="currSelected(myControl.value)">
+        {{option.currencyName}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

@@ -1,0 +1,370 @@
+<!-- used while adding a new status/expense starts here-->
+<div *ngIf="value.type=='add'">
+  <h3 *ngIf="value.mode == 'expense'">
+    Add {{fieldNameExpense}}
+  </h3>
+  <h3 *ngIf="value.mode != 'expense'">
+    Add Status
+  </h3>
+  <mat-form-field style="width: 300px;">
+    <mat-label>Value</mat-label>
+    <input matInput #values="ngModel" [(ngModel)]="addedStatus" maxlength="25" minlength="1">
+  </mat-form-field>
+  <h3 *ngIf="value.mode != 'expense'&&(!!value.ageChecked)">
+    Enter Age
+  </h3>
+  <mat-form-field style="width: 300px;" *ngIf="value.mode != 'expense'&&(!!value.ageChecked)">
+    <mat-label>Age</mat-label>
+    <input matInput #values="ngModel" [(ngModel)]="addedStatusAge" type="number">
+  </mat-form-field>
+  <br>
+  <div style="float: right;margin-right: 2px;">
+    <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+    <button mat-button color="accent" [disabled]="!this.addedStatus" (click)="save()">Add</button>
+
+  </div>
+</div>
+<!-- used while adding a new status/expense ends here-->
+<!-- used while editing a new status/expense starts here-->
+<div *ngIf="value.type=='edit'">
+  <div *ngIf="!updatingDb">
+    <div *ngIf="value.mode=='sale'">
+      <h2>Edit stage name</h2>
+      <mat-form-field>
+        <mat-label>New stage name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameSale}}s with this stage wll be automatically updated with the new stage name.
+      </span>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit stage age</h2>
+        <mat-form-field>
+          <mat-label> New stage age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateSaleStatHistory()">Save</button>
+
+      </div>
+    </div>
+    <div *ngIf="value.mode=='customer'">
+      <h2>Edit status name</h2>
+      <mat-form-field>
+        <mat-label> New status name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit status age</h2>
+        <mat-form-field>
+          <mat-label> New status age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameContact}}s with this status will be automatically updated with the new status
+        name.
+      </span>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateContStatHistory()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="value.mode=='expense'">
+      <h2>Edit category name</h2>
+      <mat-form-field>
+        <mat-label>New category name</mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameExpense}}s with this category will be automatically updated with the new category
+        name.
+      </span>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus" (click)=" updateExpRecords()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="value.mode=='servicePipeline'">
+      <h2>Edit stage name</h2>
+      <mat-form-field>
+        <mat-label> New stage name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit stage age</h2>
+        <mat-form-field>
+          <mat-label> New stage age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameService}}s in this stage will be automatically updated with new stage name
+      </span>
+      <br>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateServicePipelineStage()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="value.mode=='salePipeline'">
+      <h2>Edit stage name</h2>
+      <mat-form-field>
+        <mat-label> New stage name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit stage age</h2>
+        <mat-form-field>
+          <mat-label> New stage age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameSale}}s in this stage will be automatically updated with new stage name
+      </span>
+      <br>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateSalePipelineStage()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="value.mode=='contactPipeline'">
+      <h2>Edit status name</h2>
+      <mat-form-field>
+        <mat-label> New status name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit status age</h2>
+        <mat-form-field>
+          <mat-label> New status age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameContact}}s in this status will be automatically updated with new status name
+      </span>
+      <br>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateContactPipelineStage()">Save</button>
+      </div>
+    </div>
+    <div *ngIf="value.mode=='service'">
+      <h2>Edit stage name</h2>
+      <mat-form-field>
+        <mat-label> New stage name </mat-label>
+        <input matInput [(ngModel)]="editedStatus" maxlength="25" minlength="1">
+      </mat-form-field>
+      <br>
+      <div *ngIf="!!inputData.ageChecked">
+        <h2>Edit stage age</h2>
+        <mat-form-field>
+          <mat-label> New stage age </mat-label>
+          <input matInput [(ngModel)]="editedStatusAge" type="number">
+        </mat-form-field>
+      </div>
+      <br>
+      <span class="caption">
+        Note: All existing {{fieldNameService}}s in this stage will be automatically updated with new stage name
+      </span>
+      <br>
+      <div style="float: right;margin-right: 2px;">
+        <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button mat-button color="accent" [disabled]="!this.editedStatus||!this.editedStatusAge"
+          (click)="updateServiceStageHistory()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="updatingDb" class="center" style="width: 280px;height: 100px;">
+  <div style="width:150px;float: left;">
+    <mat-spinner [diameter]="70"> </mat-spinner>
+  </div>
+  <div style=" float: left;">
+    <h4>Updating Details in all {{value.mode}}s</h4>
+    <p
+      *ngIf="value.mode=='service' || value.mode=='servicePipeline' || value.mode=='salePipeline' || value.mode=='contactPipeline'">
+      Progress: {{ uploadProgress | number: "1.0-0" }}% Complete
+    </p>
+  </div>
+</div>
+
+<!-- used while editing a new status/expense ends here-->
+<!-- used while deleting status/expense starts here-->
+<div *ngIf="value.type=='delete'">
+  <h3 *ngIf=" value.mode=='sale' || value.mode=='salePipeline' "> Do you want to delete {{value.currentData}} from
+    {{fieldNameSale}} stages?</h3>
+  <h3 *ngIf="value.mode=='customer'"> Do you want to delete {{value.currentData}} from {{fieldNameContact}} status?
+  </h3>
+  <h3 *ngIf="value.mode=='contactPipeline'"> Do you want to delete {{value.currentData}} from {{fieldNameContact}}
+    status?
+  </h3>
+  <h3 *ngIf=" value.mode=='service' || value.mode=='servicePipeline' "> Do you want to delete {{value.currentData}} from
+    {{fieldNameService}} stages?
+  </h3>
+  <h3 *ngIf="value.mode=='expense'"> Do you want to delete {{value.currentData}} from {{fieldNameExpense}} category?
+  </h3>
+
+  <div style="float: right;margin-right: 2px;">
+    <button mat-button color="basic" (click)="close()">Cancel</button>&nbsp;&nbsp;
+    <button mat-button color="warn" (click)="deleted()">Delete</button>
+
+  </div>
+</div>
+<!-- used while deleting status/expense starts here-->
+<!-- used while deleting an additional field from customer starts here-->
+
+<mat-dialog-content *ngIf="value.type=='deleteField'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteField'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsContact')" cdkFocusInitial>Delete</button>
+</mat-dialog-actions>
+
+<!-- used while deleting an additional field from customer ends here-->
+<!-- used while deleting an additional field from sale starts here-->
+
+<mat-dialog-content *ngIf="value.type=='deleteFieldSale'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions  *ngIf="value.type=='deleteFieldSale'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsSale')" cdkFocusInitial>Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from service starts here-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldService'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldService'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsService')" [disabled]="disableDeleteBtn">Delete</button>
+</mat-dialog-actions>
+<!--task-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldTask'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldTask'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsTask')" [disabled]="disableDeleteBtn">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from products starts here-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldProduct'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldProduct'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsProduct')" [disabled]="disableDeleteBtn">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from followup starts here-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldFollowup'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldFollowup'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsFollowUp')" [disabled]="disableDeleteBtn">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from expense starts here-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldExpense'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldExpense'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsExpense')" >Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from payment starts here-->
+<mat-dialog-content *ngIf="value.type=='deleteFieldPayment'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldPayment'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsPayment')" >Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from estimate starts here-->
+
+<mat-dialog-content *ngIf="value.type=='deleteFieldEstimate'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldEstimate'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsEstimate')" >Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from estimate ends here-->
+<!-- used while deleting an additional field from invoice starts here-->
+
+<!-- <h2 mat-dialog-title *ngIf="value.type=='deleteFieldInvoice'">Delete field ?</h2> -->
+<mat-dialog-content *ngIf="value.type=='deleteFieldInvoice'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldInvoice'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsInvoices')">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from invoice ends here-->
+<!-- used while deleting an additional field from quotation starts here-->
+<!-- <h2 mat-dialog-title *ngIf="value.type=='deleteFieldQuotation'">Delete field ?</h2> -->
+<mat-dialog-content *ngIf="value.type=='deleteFieldQuotation'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteFieldQuotation'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsQuotation')">Delete</button>
+</mat-dialog-actions>
+<!--contact document-->
+<mat-dialog-content *ngIf="value.type=='contactCustomDoc' || value.type == 'serviceCustomDoc' || value.type == 'saleCustomDoc'" class="mat-typography">
+  <h3>Do you want to delete this document?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='contactCustomDoc' || value.type == 'serviceCustomDoc' || value.type == 'saleCustomDoc'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteContactDocument(value.type)">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from quotation ends here-->
+<!-- used while deleting an additional field from org starts here-->
+
+<mat-dialog-content *ngIf="value.type=='deleteOrgField'" class="mat-typography">
+  <h3>Do you want to delete this field?</h3>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="value.type=='deleteOrgField'" align="end">
+  <button mat-button color="basic" (click)="close()">Cancel</button>
+  <button mat-button color="warn" (click)="deleteAdditionalField('customFieldsOrganisation')">Delete</button>
+</mat-dialog-actions>
+<!-- used while deleting an additional field from org ends here-->
+<!-- SERVICES UNDER PROFILE MAX LIMIT -->
+<div *ngIf="value.type == 'profileServiceMax'">
+  <h3 style="font-size: 20px">You can only add 5 service in profile</h3>
+  <br />
+  <div class="rig">
+    <button mat-button color="accent" (click)="close()">OK</button>
+  </div>
+</div>
+<div *ngIf="value.type=='Addtional_field_custom_view'">
+  <h3>The additional field used for defining this view has been removed.<br> Please edit and correct this view.</h3>
+  <div style="float: right;margin-right: 2px;">
+    <button mat-button color="basic" (click)="close()">Cancel</button>
+  </div>
+</div>

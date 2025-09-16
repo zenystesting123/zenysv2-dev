@@ -1,0 +1,212 @@
+<div class="container-fluid" style="background-color: #3a9efd">
+    <div class="row mt-3 mb-3 align-items-center" style="height: 40px; color: white">
+      <div class="col-md-3">Item Name</div>
+      <div class="col-md-1">Qty</div>
+      <div class="col-md-1" *ngIf="form.value.showUnit">
+        Unit
+      </div>
+      <div class="col-md-2">Rate</div>
+  
+      <div class="col-md-1" *ngIf="form.value.showDiscount">
+        Discount%
+      </div>
+  
+      <div class="col-md-1" *ngIf="form.value.showVat">
+        VAT%
+      </div>
+      <div class="col-md-1" *ngIf="form.value.showcgst">
+        CGST%
+      </div>
+      <div class="col-md-1" *ngIf="form.value.showSgst">
+        SGST%
+      </div>
+      <div class="col-md-1" *ngIf="form.value.showIgst">
+        IGST%
+      </div>
+      <div class="col-md-1" *ngIf="form.value.showCess">
+        CESS%
+      </div>
+      <div class="col-md-1">Amount</div>
+      <div class="col-md-1"></div>
+    </div>
+  </div>
+  
+  <form [formGroup]='form' novalidate >
+  
+    <div class="container-fluid" formArrayName="itemList" *ngFor="let line of itemList?.controls; let i = index">
+  
+      <div class="row" id="padding" [formGroupName]="i">
+        <div class="col-md-3">
+          <div class="row" id="padding">
+            <div class="col-10">
+              <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Item Name</mat-label>
+                  <input matInput placeholder="Item Name" formControlName='item' id="{{'item'+i}}"
+                    (keyup)="changeItemValue()" />
+  
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-2">
+              <button mat-button mat-icon-button (click)="onSearchItem(i)">
+                <mat-icon color="primary">search</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf="itemList?.controls[i].get('item').touched">
+            {{itemList?.controls[i].value.itemErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Qty</mat-label>
+              <input matInput placeholder="Qty" type="number" id="padding" 
+                formControlName='qty' id="{{'qty'+i}}" (keyup)="changeQtyValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf="itemList?.controls[i].get('qty').touched">
+            {{itemList?.controls[i].value.qtyErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showUnit">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Unit</mat-label>
+              <input matInput placeholder="Unit" type="text" id="padding" formControlName='unit' id="{{'unit'+i}}"
+                (keyup)="changeUnitValue()" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Rate</mat-label>
+              <input matInput placeholder="Rate" type="number" id="padding" 
+                formControlName='rate' id="{{'rate'+i}}" (keyup)="changeRateValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf=" itemList?.controls[i].get('rate').touched">
+            {{itemList?.controls[i].value.rateErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showDiscount">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Discount(%)</mat-label>
+              <input matInput placeholder="Discount(%)" type="number" id="padding" 
+                formControlName='discountPercentage' id="{{'discountPercentage'+i}}"
+                (keyup)="changeDiscountValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf=" itemList?.controls[i].get('discountPercentage').touched">
+            {{itemList?.controls[i].value.discountPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showcgst">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>CGST(%)</mat-label>
+              <input matInput placeholder="CGST(%)" type="number" id="padding" 
+                formControlName='cgstPercentage' id="{{'cgstPercentage'+i}}"
+                (keyup)="changeCGSTValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf=" itemList?.controls[i].get('cgstPercentage').touched">
+            {{itemList?.controls[i].value.cgstPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showSgst">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>SGST(%)</mat-label>
+              <input matInput placeholder="SGST(%)" type="number" id="padding" 
+                formControlName='sgstPercentage' id="{{'sgstPercentage'+i}}"
+                (keyup)="changeSGSTValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf=" itemList?.controls[i].get('sgstPercentage').touched">
+            {{itemList?.controls[i].value.sgstPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showVat">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>VAT(%)</mat-label>
+              <input matInput placeholder="VAT(%)" type="number" id="padding" 
+                formControlName='vatPercentage' id="{{'vatPercentage'+i}}"
+                (keyup)="changeVATValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf="itemList?.controls[i].get('vatPercentage').touched">
+            {{itemList?.controls[i].value.vatPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showIgst">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>IGST(%)</mat-label>
+              <input matInput placeholder="IGST(%)" type="number" id="padding" 
+                formControlName='igstPercentage' id="{{'igstPercentage'+i}}"
+                (keyup)="changeIGSTValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf="itemList?.controls[i].get('igstPercentage').touched">
+            {{itemList?.controls[i].value.igstPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1" *ngIf="form.value.showCess">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>CESS(%)</mat-label>
+              <input matInput placeholder="CESS(%)" type="number" id="padding" 
+                formControlName='cessPercentage' id="{{'cessPercentage'+i}}"
+                (keyup)="changeCESSValue($event)" />
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger"
+            *ngIf="itemList?.controls[i].get('cessPercentage').touched">
+            {{itemList?.controls[i].value.cessPercentageErrorMessage}}</mat-error>
+        </div>
+        <div class="col-md-1">
+          <div class="input-group mb-1">
+            <p id="paddingamount">
+              {{form.controls['itemList'].controls[i].controls.amountInclTax.value}}
+            </p>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <button mat-raised-button color="warn" (click)="removeItem(i)" *ngIf="itemList?.controls[i].get('showDeleteButton').value">
+            Delete
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput id="exampleFormControlTextarea1" rows="2" placeholder="Description" id="padding"
+                  formControlName='description' id="{{'description'+i}}"
+                  (keyup)="changeDescriptionValue()"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-3" *ngIf="invoicesService.hsnCodeDisplay">
+            <div class="form-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>HSN/SAC Code</mat-label>
+                <input matInput id="exampleFormControlTextarea1" rows="2" placeholder="HSN/SAC Code" id="padding"
+                  formControlName='hsnCode' id="{{'hsnCode'+i}}"
+                  (keyup)="changeHsnValue()"/>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="hr-highlight" />
+    </div>
+    <button mat-raised-button color="primary" (click)="addItem()">
+      Add New
+    </button>
+  </form>

@@ -1,0 +1,80 @@
+<form [formGroup]="form">
+    <div class="row align-items-start">
+        <div class="col-md-3 col-lg-3 col-sm-12">
+            <div class="input-group">
+                <mat-form-field>
+                    <mat-label>Currency</mat-label>
+                    <mat-select name="currency" formControlName="currency">
+                        <mat-option value="{{ currency.isoCode }}" *ngFor="let currency of currencyList"
+                            (click)="onCurrencyChange()">{{
+                            currency.currencyName }}</mat-option>
+                    </mat-select>
+
+                </mat-form-field>
+
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('currency').invalid && 
+                (form.get('currency').dirty || 
+                form.get('currency').touched))
+                ">
+                Required</mat-error>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+            <div class="checkbox">
+                <mat-checkbox class="example-margin" name="includeUnit" id="checkbox6" formControlName="includeUnit"
+                    (change)="onUnitChange()">
+                    Include Unit
+                </mat-checkbox>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+            <div class="checkbox">
+                <mat-checkbox class="example-margin" id="checkbox1" name="includetax" formControlName="includeTax"
+                    (change)="onTaxChange()">
+                    Include Tax
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-lg-3 col-sm-12">
+            <div class="checkbox">
+                <mat-checkbox class="example-margin" id="checkboxDiscount" name="includeDiscount"
+                    formControlName="includeDiscount" (change)="onDiscountChange()">Include
+                    Discount
+                </mat-checkbox>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-start">
+        <div class="col-md-3 col-lg-3 col-sm-12" *ngIf="form.get('showTaxtype').value">
+            <mat-form-field>
+                <mat-label>Tax Type</mat-label>
+                <mat-select name="taxType" formControlName="taxType">
+                    <mat-option value="gst" (click)="onTaxTypeChange()">GST</mat-option>
+                    <mat-option value="vat" (click)="onTaxTypeChange()">VAT</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('taxType').invalid && 
+            (form.get('taxType').dirty || 
+            form.get('taxType').touched))
+            ">
+                Required</mat-error>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12" *ngIf="form.get('showIgst').value 
+        ">
+            <div class="checkbox">
+                <mat-checkbox class="example-margin" id="checkbox3" name="interstate" formControlName="interState"
+                    (change)="onIgstChange()">Apply
+                    IGST (Interstate Sale)</mat-checkbox>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12" *ngIf="form.get('showCess').value ">
+            <div class="checkbox">
+                <mat-checkbox class="example-margin" id="checkbox2" name="includecess" formControlName="includeCess"
+                    (change)="onCessChange()">
+                    Include Cess
+                </mat-checkbox>
+            </div>
+        </div>
+    </div>
+</form>

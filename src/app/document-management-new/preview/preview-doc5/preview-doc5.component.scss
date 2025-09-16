@@ -1,0 +1,140 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  .hr-highlight {
+    border-top: solid 1px;
+  }
+  
+  pre {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: black;
+    border: none;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    margin-bottom: 2px;
+  }
+  .doc-title{
+    margin-bottom: 10px;
+  }
+  #thead {
+    background-color: white;
+  }
+  
+  #sketch {
+    height: 100pt;
+    width: 100pt;
+  }
+  
+  #j {
+    justify-content: left;
+    color: black;
+  }
+  
+  #h {
+    font-size: x-large;
+    font-weight: 500;
+    color: black;
+  }
+  #k {
+    color: black;
+  }
+  td {
+    border: none;
+    color: black;
+  }
+  .printsection {
+    color: black;
+    font-size: 20;
+  }
+  body {
+    font-size: 20;
+  }
+  #fontsizereduce {
+    font-size: 10pt;
+  }
+  #orange {
+    background-color: orange;
+    color: white;
+  }
+  #tabheader {
+    // background-color:#3a9efd ;
+    color: white;
+    margin-bottom: 1pt;
+    height: 40px;
+  }
+  #tabrow {
+    margin-bottom: 0pt;
+    margin-top: 0pt;
+    //padding-bottom: 0pt;
+    padding:5px;
+  }
+  
+  #index {
+    margin-left: 0%;
+    margin-right: 0%;
+  
+    margin-bottom: 1pt;
+    margin-top: 1pt;
+    padding-top: 1pt;
+    padding-bottom: 1pt;
+  }
+  .navbar-brand {
+    color: white;
+    margin-left: 10px;
+  }
+  .nav_link {
+    color: white;
+    padding: 10px;
+  }
+  .mat-list .mat-list-item {
+    height: 30px;
+  }
+  
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  img {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  li {
+    color: black;
+  }
+  
+  .unbreak {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  ::ng-deep.zeropad .mat-list-item-content {
+    padding: 0 !important;
+  }
+  .field-name {
+    width: 180px;
+    opacity: 0.7;
+  }
+  .field-name-top {
+    width: 140px;
+    opacity: 0.7;
+  }
+  .isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+  #center {
+    align-items: center;
+    padding-bottom: 0%;
+    text-align: center;
+    padding-bottom: 20px;
+  }

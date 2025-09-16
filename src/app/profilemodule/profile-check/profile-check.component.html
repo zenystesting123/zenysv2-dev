@@ -1,0 +1,15 @@
+<div *ngIf="loading">
+    <mat-spinner  color="primary"></mat-spinner>
+</div>
+
+<div *ngIf="newUser">
+    <!-- <div class="center"><mat-icon class="mat">account_circle</mat-icon></div> -->
+    <h2> Your Profile is not created Yet!</h2>
+    <br>
+    <button mat-raised-button color="accent" (click)="editProfile()">
+        Create now
+    </button>&nbsp;
+    <button mat-raised-button  (click)="close()">
+       Not now!
+    </button>
+</div>

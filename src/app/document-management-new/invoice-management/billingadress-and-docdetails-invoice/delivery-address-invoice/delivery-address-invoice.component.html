@@ -1,0 +1,186 @@
+<form [formGroup]="form">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="card-title">Delivered To</h4>
+            <div class="row">
+                <div class="col-6">
+                    <mat-checkbox class="example-margin" name="isDeliveryAddressPresent"
+                        (change)="clearDeliveryAddress()" formControlName="isDeliveryAddressPresent"
+                        id="isDeliveryAddressPresent">Show
+                        Delivery Address
+                    </mat-checkbox>
+                </div>
+                <div class="col-6" *ngIf="form.get('isDeliveryAddressPresent').value" color="primary">
+                    <button mat-button (click)="onCopyBillToAddress()">Copy Bill to Address</button>
+                </div>
+            </div>
+
+        </div>
+        <div *ngIf="form.get('isDeliveryAddressPresent').value">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>{{form.get('fieldNameOrg').value}} Name</mat-label>
+                            <input matInput placeholder="{{form.get('fieldNameOrg').value}} Name" name="deliveryCompanyName"
+                                formControlName="deliveryCompanyName" />
+                        </mat-form-field>
+                        <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryCompanyName').invalid && 
+                        (form.get('deliveryCompanyName').dirty || 
+                        form.get('deliveryCompanyName').touched))
+                        ">
+                            Please enter a valid name!</mat-error>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>{{form.get('fieldNameContact').value}} Name</mat-label>
+                            <input matInput placeholder="{{form.get('fieldNameContact').value}} Name" name="deliveryContactName"
+                                formControlName="deliveryContactName" />
+                        </mat-form-field>
+                        <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryContactName').invalid && 
+                        (form.get('deliveryContactName').dirty || 
+                        form.get('deliveryContactName').touched))
+                        ">
+                            Please enter a valid name!</mat-error>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Address Line1</mat-label>
+                    <input matInput placeholder="Address Line1" name="deliveryAddressline1"
+                        formControlName="deliveryAddressline1" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryAddressline1').invalid && 
+            (form.get('deliveryAddressline1').dirty || 
+            form.get('deliveryAddressline1').touched))
+            ">
+                Please enter a valid address!</mat-error>
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Address Line2</mat-label>
+                    <input matInput placeholder="Address Line2" name="deliveryAddressline2"
+                        formControlName="deliveryAddressline2" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryAddressline2').invalid && 
+            (form.get('deliveryAddressline2').dirty || 
+            form.get('deliveryAddressline2').touched))
+            ">
+                Please enter a valid address!</mat-error>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>District</mat-label>
+                            <input matInput placeholder="District" name="deliveryDistrict"
+                                formControlName="deliveryDistrict" />
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryDistrict').invalid && 
+                    (form.get('deliveryDistrict').dirty || 
+                    form.get('deliveryDistrict').touched))
+                    ">
+                        Please enter a valid district!</mat-error>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>PIN/ ZIP</mat-label>
+                            <input matInput placeholder="PIN/ ZIP" name="deliveryPinCode"
+                                formControlName="deliveryPinCode" />
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryPinCode').invalid && 
+                    (form.get('deliveryPinCode').dirty || 
+                    form.get('deliveryPinCode').touched))
+                    ">
+                        Please enter a valid pincode!</mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>State</mat-label>
+                            <input matInput placeholder="State" name="deliveryState" formControlName="deliveryState" />
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryState').invalid && 
+                    (form.get('deliveryState').dirty || 
+                    form.get('deliveryState').touched))
+                    ">
+                        Please enter a valid state!</mat-error>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Country</mat-label>
+                            <input matInput placeholder="Country" name="deliveryCountry"
+                                formControlName="deliveryCountry" />
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryCountry').invalid && 
+                    (form.get('deliveryCountry').dirty || 
+                    form.get('deliveryCountry').touched))
+                    ">
+                        Please enter a valid country!</mat-error>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Country Code</mat-label>
+                            <mat-select name="deliverycountryCode" formControlName="deliverycountryCode">
+                                <mat-option *ngFor="let countryCode of CountryCodes" [value]="countryCode.dial_code">
+                                    {{ countryCode.code }}&nbsp;{{
+                                    countryCode.dial_code
+                                    }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliverycountryCode').invalid && 
+                        (form.get('deliverycountryCode').dirty || 
+                        form.get('deliverycountryCode').touched))
+                        ">
+                        Please enter Country code</mat-error>
+                </div>
+                <div class="col-md-8">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Contact Number</mat-label>
+                            <input type="number" matInput placeholder="Contact Number" name="deliveryContactNumber"
+                                formControlName="deliveryContactNumber" />
+                        </mat-form-field>
+                    </div>
+                    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryContactNumber').invalid && 
+                    (form.get('deliveryContactNumber').dirty || 
+                    form.get('deliveryContactNumber').touched))
+                    ">
+                        Please enter valid contact number</mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group mb-1">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput placeholder="Email" name="deliveryEmail" formControlName="deliveryEmail" />
+                    </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf=" (form.get('deliveryEmail').invalid && 
+                (form.get('deliveryEmail').dirty || 
+                form.get('deliveryEmail').touched))
+                ">
+                    Please enter valid email</mat-error>
+            </div>
+        </div>
+    </div>
+</form>

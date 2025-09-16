@@ -1,0 +1,58 @@
+<ul class="m-0 list-unstyled" id="j">
+   
+    <li><span *ngIf="previewService.userData.addressline1"> {{ previewService.userData.addressline1}},&nbsp;</span> {{
+        previewService.userData.addressline2}}</li>
+    <li><span *ngIf="previewService.userData.city"> {{ previewService.userData.city }},&nbsp;</span> 
+      {{ previewService.userData.state }}</li>
+</ul>
+<ul class="
+              list-group
+              list-group-horizontal
+              list-unstyled
+            ">
+    <li *ngIf="
+                !(
+                  previewService.userData.country === null ||
+                  previewService.userData.country === ''
+                ) &&
+                !(
+                  previewService.userData.pinCode === null ||
+                  previewService.userData.pinCode === ''
+                )
+              ">
+        {{ previewService.userData.country }},&nbsp;
+    </li>
+    <li *ngIf="
+                !(
+                  previewService.userData.country === null ||
+                  previewService.userData.country === ''
+                ) &&
+                (previewService.userData.pinCode === null ||
+                  previewService.userData.pinCode === '')
+              ">
+        {{ previewService.userData.country }}
+    </li>
+    <li *ngIf="
+                !(
+                  previewService.userData.pinCode === null ||
+                  previewService.userData.pinCode === ''
+                )
+              ">
+        PIN/ZIP:{{ previewService.userData.pinCode }}
+    </li>
+</ul>
+<span *ngIf="previewService.userData.contactno">Contact: {{previewService.userData.contactno}} &nbsp;
+  <br>
+</span>
+
+<span *ngIf="previewService.userData.email">Email: {{previewService.userData.email}}</span>
+<p *ngIf="
+              previewService.userData.gst && previewService.docData.taxType == 'gst'
+            ">
+    GST No: {{ previewService.userData.gst }}
+</p>
+<p *ngIf="
+              previewService.userData.gst && previewService.docData.taxType != 'gst'
+            ">
+    VAT No: {{ previewService.userData.gst }}
+</p>

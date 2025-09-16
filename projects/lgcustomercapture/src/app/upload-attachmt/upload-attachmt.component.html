@@ -1,0 +1,12 @@
+<p>upload-attachmt works!</p>
+<button (click)="uploadDocument()">Upload attachment</button>
+
+<input
+type="file"
+(change)="upload($event)"
+id="inputFile1"
+class="attachment-selector"
+style="display: none"
+name="myimage"
+accept=".csv,.pdf,.doc,.xls,.png,.jpg,.jpeg"
+/>

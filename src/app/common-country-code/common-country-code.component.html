@@ -1,0 +1,27 @@
+
+  <mat-form-field appearance="fill">
+    <mat-label>Country Code</mat-label>
+    <input
+      type="text"
+      placeholder="Choose country code"
+      aria-label="Country Code"
+      matInput
+      [formControl]=myControl
+      (ngModelChange)="select(myControl.value)"
+      [matAutocomplete]="auto"
+    />
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="onClear()">
+          <mat-icon>close</mat-icon>
+      </button>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayData" >
+      <mat-option
+        *ngFor="let countryCode of filteredOptions | async"
+        [value]="countryCode"
+      >
+     <!--      {{ countryCode?.dial_code }}&nbsp;{{ countryCode?.name }}-->
+      {{ countryCode?.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+

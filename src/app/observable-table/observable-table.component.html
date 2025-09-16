@@ -1,0 +1,27 @@
+
+  <p>No of open follow ups: {{(openFollowUps | async)?.length}}</p>
+
+<div *ngFor = 'let followUp of openFollowUps | async; index as i; ' class="container-fluid" style="color: antiquewhite;">
+  <mat-card >
+    <h3 matLine>Follow up id: {{followUp.id}}</h3 >
+    <h3 matLine>{{followUp.companyName}}</h3 >
+    <h3 matLine>{{followUp.callStartDate?.toDate() | date}}</h3 >
+    <h3 matLine>Closed? {{followUp.completedStatus}}</h3 >
+    <h3 matLine>{{followUp.notes}}</h3 >
+      <h3 matLine>Index: {{i}}</h3 >
+
+      <mat-card-actions>
+        <button
+        mat-button
+        title="Mark as Completed"
+        color="accent"
+        [disabled]="disableFollEdit"
+        (click)="markasCompleted(followUp.id, followUp.customerId, i)"
+      >
+        DONE
+      </button>
+      </mat-card-actions>
+  </mat-card>
+  <br>
+</div>
+

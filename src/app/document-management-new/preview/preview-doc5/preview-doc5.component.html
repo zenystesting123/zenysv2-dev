@@ -1,0 +1,249 @@
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="border" style="background-color: white;">
+                <section class="invoice-template">
+                    <div class="container-fluid border" id="printsection" #printsection>
+                        <div id="invoice-template" class="card-body pb-0">
+
+                            <div style="align-items: center;justify-content: center;text-align: center;">
+                                <app-logo-preview *ngIf="previewService.logo "></app-logo-preview>
+                                <br><br>
+                                <app-bill-from-name></app-bill-from-name>
+
+
+
+                                <ul class="
+                                list-group
+                                list-group-horizontal
+                                list-unstyled
+                              " style="align-items: center;justify-content: center;text-align: center;">
+                                    <li>{{ previewService.userData.addressline1 }}</li>
+                                    <li
+                                        *ngIf="previewService.userData.addressline1 && previewService.userData.addressline2">
+                                        ,{{
+                                        previewService.userData.addressline2 }}</li>
+                                    <li *ngIf=" !previewService.userData.addressline1 ">{{
+                                        previewService.userData.addressline2 }}</li>
+
+                                    <li
+                                        *ngIf="(previewService.userData.addressline2 || previewService.userData.addressline1) && previewService.userData.city">
+                                        ,
+                                        {{ previewService.userData.city
+                                        }} </li>
+                                    <li
+                                        *ngIf=" !previewService.userData.addressline2 && !previewService.userData.addressline1">
+                                        {{ previewService.userData.city
+                                        }} </li>
+
+                                    <li
+                                        *ngIf="(previewService.userData.addressline2 || previewService.userData.addressline1 || previewService.userData.city) && previewService.userData.state">
+                                        , {{ previewService.userData.state }}</li>
+                                    <li
+                                        *ngIf="!previewService.userData.addressline2 && !previewService.userData.addressline1 && !previewService.userData.city ">
+                                        {{
+                                        previewService.userData.state }}</li>
+
+
+                                    <li
+                                        *ngIf="(previewService.userData.addressline2 || previewService.userData.addressline1 || previewService.userData.city || previewService.userData.state) && previewService.userData.country">
+                                        , {{ previewService.userData.country }}
+                                    </li>
+                                    <li
+                                        *ngIf="!previewService.userData.addressline2 && !previewService.userData.addressline1 && !previewService.userData.city && !previewService.userData.state ">
+                                        {{ previewService.userData.country }}
+                                    </li>
+
+                                    <li
+                                        *ngIf="(previewService.userData.addressline2 || previewService.userData.addressline1 || previewService.userData.city || previewService.userData.state || previewService.userData.country) && previewService.userData.pinCode ">
+                                        , PIN/ZIP:{{ previewService.userData.pinCode }}
+                                    </li>
+                                    <li
+                                        *ngIf="!previewService.userData.addressline2 && !previewService.userData.addressline1 && !previewService.userData.city && !previewService.userData.state && !previewService.userData.country ">
+                                        PIN/ZIP:{{ previewService.userData.pinCode }}
+                                    </li>
+
+                                </ul>
+                                <p *ngIf="
+                                previewService.userData.gst && previewService.docData.taxType == 'gst'
+                              ">
+                                    GST No: {{ previewService.userData.gst }}
+                                </p>
+                                <p *ngIf="
+                                previewService.userData.gst && previewService.docData.taxType != 'gst'
+                              ">
+                                    VAT No: {{ previewService.userData.gst }}
+                                </p>
+                                <app-doc-titile></app-doc-titile>
+
+                            </div>
+                            <div class="row" style="padding-left: 20px;">
+                                <ul class="m-0 list-unstyled" id="j">
+                                    <li class="text-bold-800">{{previewService.fieldNameContact}} Name: {{
+                                        previewService.customerData.fname1 }}
+                                        {{
+                                        previewService.customerData.sname }} {{ previewService.customerData.surname }}
+                                    </li>
+                                    <li class="text-bold-800" *ngIf="
+                              !(
+                                previewService.customerData.companyName === 'N/A' ||
+                                previewService.customerData.companyName ===
+                                  'Individual'
+                              )
+                            ">{{previewService.fieldNameOrganization}}: {{ previewService.customerData.companyName }}</li>
+
+                                </ul>
+                                <ul class="
+                              list-group
+                              list-group-horizontal
+                              list-unstyled
+                                ">
+                                    <li class="text-bold-800">Address : </li>
+                                    <li>{{ previewService.customerData.addressline1 }}</li>
+                                    <li
+                                        *ngIf="previewService.customerData.addressline1 && previewService.customerData.addressline2">
+                                        ,{{
+                                        previewService.customerData.addressline2
+                                        }}</li>
+                                    <li *ngIf=" !previewService.customerData.addressline1 ">{{
+                                        previewService.customerData.addressline2 }}</li>
+
+                                    <li
+                                        *ngIf="(previewService.customerData.addressline2 || previewService.customerData.addressline1) && previewService.customerData.district">
+                                        ,
+                                        {{ previewService.customerData.district }} </li>
+                                    <li
+                                        *ngIf=" !previewService.customerData.addressline2 && !previewService.customerData.addressline1">
+                                        {{
+                                        previewService.customerData.district
+                                        }} </li>
+
+                                    <li
+                                        *ngIf="(previewService.customerData.addressline2 || previewService.customerData.addressline1 || previewService.customerData.district) && previewService.customerData.state">
+                                        , {{ previewService.customerData.state }}</li>
+                                    <li
+                                        *ngIf="!previewService.customerData.addressline2 && !previewService.customerData.addressline1 && !previewService.customerData.district ">
+                                        {{ previewService.customerData.state }}</li>
+
+
+                                    <li
+                                        *ngIf="(previewService.customerData.addressline2 || previewService.customerData.addressline1 || previewService.customerData.district || previewService.customerData.state) && previewService.customerData.country">
+                                        , {{ previewService.customerData.country }}
+                                    </li>
+                                    <li
+                                        *ngIf="!previewService.customerData.addressline2 && !previewService.customerData.addressline1 && !previewService.customerData.district && !previewService.customerData.state ">
+                                        {{ previewService.customerData.country }}
+                                    </li>
+
+                                    <li
+                                        *ngIf="(previewService.customerData.addressline2 || previewService.customerData.addressline1 || previewService.customerData.district || previewService.customerData.state || previewService.customerData.country) && previewService.customerData.pinCode ">
+                                        , PIN/ZIP:{{ previewService.customerData.pinCode }}
+                                    </li>
+                                    <li
+                                        *ngIf="!previewService.customerData.addressline2 && !previewService.customerData.addressline1 && !previewService.customerData.district && !previewService.customerData.state && !previewService.customerData.country && previewService.customerData.pinCode">
+                                        PIN/ZIP:{{ previewService.customerData.pinCode}}
+                                    </li>
+                                   
+                                </ul>
+                                <ul class="m-0 list-unstyled" id="j">
+                                    <li>
+                                        <span>Contact:</span>
+                                        <span *ngIf=" previewService.customerData.countryCode">
+                                            {{previewService.customerData.countryCode}}</span>
+                                        <span *ngIf=" previewService.customerData.countryCode">
+                                            {{previewService.customerData.contactNumber}}</span>
+                                    </li>
+                                </ul>
+                                <ul class="m-0 list-unstyled" id="j">
+                                    <li class="text-bold-800" *ngIf="
+                                previewService.customerData.gst && previewService.docData.taxType == 'gst'
+                              ">
+                                        GST No: {{ previewService.customerData.gst }} </li>
+                                    <li class="text-bold-800" *ngIf="
+                              previewService.customerData.gst && previewService.docData.taxType != 'gst'
+                            ">
+                                        VAT No: {{ previewService.customerData.gst }} </li>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <li class="text-bold-800" *ngIf="
+                                    previewService.docData.saleTitle
+                                   ">
+                                                {{previewService.fieldNameSale}} Title: {{
+                                                previewService.docData.saleTitle }} </li>
+                                        </div>
+                                        <div class="col-4">
+                                            <li class="text-bold-800" *ngIf="
+                                    previewService.docData.docDate
+                                   ">
+                                                DATE: {{ previewService.docData.createdDate | date:'d/M/yyyy'}} </li>
+                                        </div>
+                                    </div>
+
+                                </ul>
+                                <br />
+                            </div>
+                            <br /> <br />
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <app-doc-detail-preview-estimate *ngIf="previewService.docType =='Estimate'">
+                                    </app-doc-detail-preview-estimate>
+
+                                    <app-doc-details-preview-quotation *ngIf="previewService.docType =='Quotation'">
+                                    </app-doc-details-preview-quotation>
+
+                                    <app-doc-details-preview-invoice *ngIf="previewService.docType =='Invoice'">
+                                    </app-doc-details-preview-invoice>
+
+                                    <app-additional-field-preview></app-additional-field-preview>
+                                    <app-statename-placeofsupply></app-statename-placeofsupply>
+                                </div>
+
+                                <div class="col-4">
+                                    <app-delivered-to-preview></app-delivered-to-preview>
+                                </div>
+                            </div>
+                            <br />
+                            <div id="invoice-items-details">
+                                <br />
+                                <app-table-preview></app-table-preview>
+                            </div>
+                            <div class="row">
+                                <hr class="hr-highlight" [style.border-color]="previewService.docColor" />
+                            </div>
+                            <div class="row unbreak">
+                                <!--Bank Account details-->
+                                <div class="col-6 text-left">
+                                    <app-bank-details></app-bank-details>
+                                </div>
+                                <div class="col-6">
+                                    <app-item-summary-preview></app-item-summary-preview>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <hr class="hr-highlight" [style.border-color]="previewService.docColor"
+                                    *ngIf=" previewService.docData.notes || previewService.signature" />
+                            </div>
+                            <div class="row unbreak">
+                                <div class="col-8 align-items-center">
+                                    <div class="terms-conditions mb-2">
+                                        <app-additional-notes *ngIf="previewService.docData.notes">
+                                        </app-additional-notes>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <app-user-sign-and-details-preview></app-user-sign-and-details-preview>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <hr class="hr-highlight" [style.border-color]="previewService.docColor" />
+                            </div>
+                            <app-footer-preview></app-footer-preview>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

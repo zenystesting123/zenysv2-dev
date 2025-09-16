@@ -1,0 +1,30 @@
+<app-nav-bar></app-nav-bar>
+<mat-drawer-container class="example-container" style="height: 100%;">
+    <mat-drawer mode="side" opened style="width: 15%;">
+        <br>
+        <h2>&nbsp;&nbsp;&nbsp;REPORTS</h2>
+        <mat-selection-list  [multiple]="false" style="padding-top: 0;" class="zeropad">
+            <mat-list-option>
+                <a mat-list-item routerLink="user-info">USERS REPORT</a>
+            </mat-list-option>
+            <mat-list-option>
+                <a mat-list-item (click)="gotoCustomerReport()">CONTACTS REPORT</a>
+            </mat-list-option>
+            <mat-list-option>
+                <a mat-list-item routerLink="public-profile-info">PUBLIC PROFILE REPORT</a>
+            </mat-list-option>
+            <mat-list-option>
+                <a mat-list-item routerLink="account-transfer">TRANSFER A/C REQUESTS</a>
+            </mat-list-option>
+            <mat-list-option>
+                <a mat-list-item routerLink="inquiries-report">INQUIRIES REPORT</a>
+            </mat-list-option>
+            <mat-list-option>
+              <a mat-list-item routerLink="scripts">Scripts</a>
+          </mat-list-option>
+        </mat-selection-list>
+    </mat-drawer>
+    <mat-drawer-content>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

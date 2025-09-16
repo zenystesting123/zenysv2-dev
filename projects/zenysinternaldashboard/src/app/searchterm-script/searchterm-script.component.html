@@ -1,0 +1,150 @@
+<!--
+
+<button mat-button color="primary" (click)="getAllContacts()">Get All Contacts</button>
+<button mat-button color="primary" (click)="CheckContacts()">Check All Contacts</button><br>
+
+<button mat-button color="primary" (click)="getAllSales()">Get All Sales</button>
+<button mat-button color="primary" (click)="CheckSales()">Check All Sales</button><br>
+
+<button mat-button color="primary" (click)="getAllEstimates()">Get All Estimates</button>
+<button mat-button color="primary" (click)="CheckEstimates()">Check All Estimates</button><br>
+
+<button mat-button color="primary" (click)="getAllQuotations()">Get All Quotations</button>
+<button mat-button color="primary" (click)="CheckQuotations()">Check All Quotations</button><br>
+
+<button mat-button color="primary" (click)="getAllInvoices()">Get All Invoices</button>
+<button mat-button color="primary" (click)="CheckInvoices()">Check All Invoices</button>
+
+<br>
+<button mat-button color="primary" (click)="getAllEstimatesPrefix()">Set All Estimates Prefix</button>
+<button mat-button color="primary" (click)="CheckEstimatesPrefix()">Check All Estimates Prefix</button><br>
+<button mat-button color="primary" (click)="getAllQuotationsPrefix()">Set All Quotation Prefix</button>
+<button mat-button color="primary" (click)="CheckQuotationPrefix()">Check All Quotation Prefix</button><br>
+<button mat-button color="primary" (click)="getAllInvoicesPrefix()">Set All invoice Prefix</button>
+<button mat-button color="primary" (click)="CheckInvoicesPrefix()">Check All invoice Prefix</button><br>
+
+
+
+<button mat-button color="primary" (click)="getInvoiceAndUpdateSaleAssignedToOwner()">Invoice Assigned To</button>
+<button mat-button color="primary" (click)="getQuotationAndUpdateSaleAssignedToOwner()">Quotation Assigned To</button>
+<button mat-button color="primary" (click)="getEstimateAndUpdateSaleAssignedToOwner()">Estimate Assigned To</button>
+<br>
+<button mat-button color="primary" (click)="customerNumberUpdate()">Customer Number Update</button>
+<button mat-button color="primary" (click)="saleNumberUpdate()">Sales Number Update</button>
+
+<br>
+
+<button mat-button color="primary" (click)="followupFieldUpdate()">Followup field update</button>
+
+<br>
+
+
+
+<mat-divider></mat-divider>
+<br>
+<h3>Load data from one usper user account to another super user account</h3>
+<p>Source: {{sourceUser}}</p>
+<p>Source: {{targetUser}}</p>
+<button mat-button color="primary" (click)="copyCustomerfromDB()">Copy Customers</button>
+<p>Cust Records loaded {{this.customers.length}}</p>
+<button mat-button color="primary" (click)="pasteCustomertoDB()">Paste Customers</button>
+<p> Cust Records created {{customerCreated}}</p>
+<br>
+<button mat-button color="primary" (click)="copySalesfromDB()">Copy Sales</button>
+<p>Sales Records loaded {{this.sales.length}}</p>
+<button mat-button color="primary" (click)="pasteSalestoDB()">Paste Sales</button>
+<p> Sales Records created {{saleCreated}}</p>
+<br>
+<p>Copy products from sales</p>
+<button mat-button color="primary" (click)="readSaleItems()">Copy products from sales</button>
+<br>
+<button mat-button color="primary" (click)="copyQuotesfromDB()">Copy Quotes</button>
+<p>Quote Records loaded {{this.Quotes.length}}</p>
+<p> Quote Records created {{quoteCreated}}</p>
+
+<button mat-button color="primary" (click)="copyTasksfromDB()">Copy Tasks</button>
+<p>Quote Records loaded {{this.tasks.length}}</p>
+<p> Quote Records created {{taskCreated}}</p>
+
+
+<button mat-button color="primary" (click)="userProfileUpdate()">user Profile Update</button>
+<br>
+<button mat-button color="primary" (click)="copySubusers()">Add Sub users</button>
+<p>Subuser Records loaded {{this.users.length}}</p>
+<p> Subuser Records created {{this.subUserCreated}}</p>
+
+<br>
+<button mat-button color="primary" (click)="copyProducts()">Add Products</button>
+<p>Products Records loaded {{this.products.length}}</p>
+<p> Product Records created {{this.prodCreated}}</p>
+
+-->
+<!--
+<p>Scripts for June 11 Release</p>
+
+<p>Enter userId: </p>
+<input matInput type="text" name="userId3" ngModel #userId3="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="customFieldUpdate(userId3.value)">custom field update in user</button>
+<br>
+<br>
+
+<br>
+<p>Enter userId: </p>
+<input matInput type="text" name="userId1" ngModel #userId1="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="customFieldsContactUpdate(userId1.value)">Update customFieldsContact</button>
+&nbsp;&nbsp;&nbsp;
+<button mat-button color="primary" (click)="transformContactArray(userId1.value)">Transform customer</button>
+<br>
+<br>
+<p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="customFieldsSaleUpdate(userId2.value)">Update customFieldsSale</button>
+&nbsp;&nbsp;&nbsp;
+<button mat-button color="primary" (click)="transformSaleArray(userId2.value)">Transform sale</button>
+-->
+<!-- <br>
+<br>
+<br>
+<p> Scripts for adding contactOwner field in Sales and Services</p>
+<p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="addContactOwner(userId2.value)">Update contactOwner</button> -->
+<!-- <p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="mergeDateAndTime(userId2.value)">Merge followup Date and Time</button> -->
+<!-- 
+<p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="addReportAndDashboard(userId2.value)">Add Default report and dashboard</button> -->
+<!-- <p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="taskStatusChange(userId2.value)">Modify Task status</button> -->
+<!-- <button mat-button color="primary" (click)="taskStatusArray()">StatusArray</button> -->
+
+<!-- Pipeline transformation in leadcapture settings-->
+<p> Leadcapture settings pipeline transformation </p>
+<p>Enter userId: </p>
+<input matInput type="text" name="userId1" ngModel #userId1="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="leadcapturePipeline(userId1.value)">transform</button> 
+<br/><br/>
+<!-- Pipeline transformation in fb settings-->
+<p> FB Integration settings pipeline transformation </p>
+<p>Enter userId: </p>
+<input matInput type="text" name="userId2" ngModel #userId2="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="fbPipeline(userId2.value)">transform</button> 
+
+<!-- <button mat-button color="primary" (click)="taskStatusChange(userId2.value)">Modify Task status</button> -->
+
+<p>Enter userId For contact number update in sales: </p>
+<input matInput type="text" name="userId3" ngModel #userId3="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="addContactNumberInSales(userId3.value)">Add contact number in sales {{userId3.value}}</button>
+<!-- <button mat-button color="primary" (click)="taskStatusArray()">StatusArray</button> -->
+
+<!-- Add customer contact number in service module -->
+<p>Enter userId to add contact number in service: </p>
+<input matInput type="text" name="userId4" ngModel #userId4="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="addContactNumberInService(userId4.value)">Add contact number in service {{userId4.value}}</button>
+
+<p>Enter userId to change contact number type to string: </p>
+<input matInput type="text" name="userId5" ngModel #userId5="ngModel" style="width: 200px" />
+<button mat-button color="primary" (click)="changeContactNumberType(userId5.value)">Change contact number type to string {{userId5.value}}</button>

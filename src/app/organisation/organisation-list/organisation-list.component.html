@@ -1,0 +1,121 @@
+<div class="no-v-scroll">
+  <!-- toolbar -->
+  <mat-toolbar *ngIf="!disableView && commonService.userPlan.orgAccess" class="border-bottom" style="flex: 0 0 64px;z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+
+    <mat-icon class="text-primary" mat-list-icon>business
+    </mat-icon>&nbsp;
+    <span class="text-primary-light">{{fieldNameOrganization}}s</span>&nbsp;
+    <span class="bg-soft-secondary badge text-dark">{{noOrganisations}}</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field appearance="outline" style="font-size: 14px; height:100%">
+      <mat-label>View</mat-label>
+      <mat-select placeholder="Select view" [(ngModel)]="viewSettingSelected" name="action">
+        <mat-option *ngFor="let view of viewSettingArray, let i = index" [value]="view" (click)="viewChanged(i)">
+          {{view.viewName}}
+        </mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option (click)="editView('Add')" [value]="0">
+          <mat-icon>add</mat-icon>Add view
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+    &nbsp;
+
+    <button mat-icon-button title="Edit view" (click)="editView('Edit')">
+      <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+    </button>
+     <!-- delete view -->
+    <button mat-icon-button title="Delete view" (click)="deleteView()" *ngIf="viewSettingArray.length > 1">
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+
+    <!-- ReAssigning section starts here -->
+    <button mat-button color="primary" [matMenuTriggerFor]="actions" *ngIf="selection.selected.length > 0">
+      Actions
+    </button>
+    <mat-menu #actions="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="reassign" [disabled]="(disableReAssign)">
+        Assign to
+      </button>
+      <!-- <button mat-menu-item (click)="onDeleteOrg(selection.selected)" *ngIf="accountType === 'SuperUser' " [disabled]="disableDelete">
+        Delete
+      </button> -->
+    </mat-menu>
+    <mat-menu #reassign="matMenu">
+      <button mat-menu-item *ngFor="let s of subusersToDisplay" (click)="
+              onSubUserAssigned(
+                selection.selected,
+                s.userId,
+                s.firstname,
+                s.lastname,
+                s.branchId
+              )
+            ">
+        {{ s.firstname }} {{ s.lastname }}
+      </button>
+    </mat-menu>
+
+    &nbsp;
+
+    <button mat-icon-button color="accent" title="Filter" [matMenuTriggerFor]="view">
+      <mat-icon class="material-icons-outlined">filter_alt_outlined</mat-icon>
+    </button>
+
+
+
+    <mat-menu #view="matMenu">
+
+      <!-- <button mat-menu-item [matMenuTriggerFor]="assignedTo" *ngIf="dataAccessRule =='All' || dataAccessRule =='Team'">
+        {{fieldNameOrganization}}s assigned to
+      </button>
+
+      <mat-menu #assignedTo="matMenu">
+        <button mat-menu-item *ngFor="let s of userList"  (click)="secondaryFilter('assignedTo',s.userId)">
+          {{ s.firstname }} {{ s.lastname }}
+        </button>
+      </mat-menu> -->
+
+      <button mat-menu-item (click)="onShowDialog($event,'assignedTo')" *ngIf="dataAccessRule != 'Own'">
+        {{fieldNameOrganization}}s assigned to
+      </button>
+      <button mat-menu-item (click)="onShowDialog($event,'createdBy')">
+        {{fieldNameOrganization}}s created by
+      </button>
+
+      <!-- <mat-menu #createdBy="matMenu">
+        <button mat-menu-item *ngFor="let s of userDetailsAll" (click)="secondaryFilter('createdBy',s.userId)">
+          {{ s.firstname }} {{ s.lastname }}
+        </button>
+      </mat-menu> -->
+
+      <button mat-menu-item (click)="resetDate()" title="Clear filter">
+        <mat-icon class="material-icons-outlined" color="warn">clear</mat-icon>
+        Clear filter
+      </button>
+    </mat-menu>
+
+
+
+  </mat-toolbar>
+
+  <mat-progress-bar *ngIf="!progressBarStatus" [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate">
+  </mat-progress-bar>
+  <!-- If Access is restricted -->
+  <div class="bg-soft-secondary" style="overflow-y: scroll; height: 100%;">
+    <div *ngIf="disableView || !commonService.userPlan.orgAccess" class="container" style="padding-left: 40%">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <div class="container-fluid" *ngIf="!disableView && commonService.userPlan.orgAccess" style="margin-bottom: 10px">
+      <br>
+      <app-custom-report-table *ngIf="progressBarStatus" [userId]="userId" [columns]="columnsDispaly"
+        [dataList]="OrgTableDataArray.data" [displayName]="displayName" [tableName]="tableName"
+        [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray" [(selection)]="selection"
+        [accountType]="accountType" [tableDefaultData]="tableDefaultData" [fieldCustomsettings]="orgSettings"
+        [customFields]="customFieldOrg" [disableDownload]="disableDownload"></app-custom-report-table>
+    </div>
+  </div>
+</div>

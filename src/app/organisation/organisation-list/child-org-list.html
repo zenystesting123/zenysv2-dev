@@ -1,0 +1,21 @@
+<h2 mat-dialog-title *ngIf="data.scenario === 're-assign' ">Re-Assign {{data.fieldNames.fieldNameOrganization?data.fieldNames.fieldNameOrganization:'Organization'}}s</h2>
+<h2 mat-dialog-title *ngIf="data.scenario === 'delete' ">Delete selected {{data.fieldNames.fieldNameOrganization?data.fieldNames.fieldNameOrganization:'Organization'}}s</h2>
+
+<mat-dialog-content class="mat-typography">
+  <h3 *ngIf="data.scenario === 're-assign' ">
+    Do yo want to Re-assign selected {{data.fieldNames.fieldNameOrganization?data.fieldNames.fieldNameOrganization:'Organization'}}s to {{data.assignedToName}}?
+  </h3>
+  <h3 *ngIf="data.scenario === 'delete' ">{{data.fieldNames.fieldNameOrganization?data.fieldNames.fieldNameOrganization:'Organization'}} will be removed from {{data.fieldNames.fieldNameContact}}, {{data.fieldNames.fieldNameSale}},
+    {{data.fieldNames.fieldNameService}}, {{data.fieldNames.fieldNameTask}} and {{data.fieldNames.fieldNameFollowup}}
+    records, if it is tagged</h3>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()" *ngIf="data.scenario === 're-assign' || data.scenario === 'delete'">Cancel</button>
+  <button color="accent" mat-button [mat-dialog-close]="reAssign" *ngIf="data.scenario === 're-assign' ">
+    Re-Assign
+  </button>
+  <button color="warn" mat-button [mat-dialog-close]="delete" *ngIf="data.scenario === 'delete' ">
+    Delete
+  </button>
+</mat-dialog-actions>
+

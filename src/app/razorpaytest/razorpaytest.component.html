@@ -1,0 +1,252 @@
+<div class="no-v-scroll bg-soft-secondary">
+  <mat-toolbar class="border-bottom" style="flex: 0 0 64px;z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()" *ngIf="router.url=='/dash/razorpay/razorpay'">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>&nbsp;
+    Choose subscription
+  </mat-toolbar>
+  <div class="container-fluid " style="overflow-y: scroll; text-align: center">
+
+
+    <!-- FOR DEMO PURPOSE -->
+    <header class="text-center mb-5 text-white">
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <ng-container *ngIf="typeOf(userData?.paymentHistory)!='undefined'">
+            <h3 *ngIf="userData?.paymentHistory[0].paymentMode=='subscription'&&userData?.plan=='paid'">Your
+              subscription ends on {{((userData?.paymentHistory[0].subscriptionEnd)*1000) | date}}</h3>
+            <h3 *ngIf="userData?.paymentHistory[0].paymentMode=='manual'&&userData?.plan=='paid'">Your plan ends on
+              {{(userData?.paymentHistory[0].currentCycleEnd)*1000 | date}}</h3>
+          </ng-container>
+        </div>
+      </div>
+    </header>
+    <!-- END -->
+
+
+    <div class="container-fluid mb-5">
+
+      <div class="row text-center ">
+
+
+        <!-- Pricing Table - FREE PLAN-->
+        <div class="col-lg-3 mb-5 mb-lg-0" *ngIf="userData?.plan!='paid'">
+          <div class="bg-white p-5 rounded-lg shadow">
+            <h1 class="h6 text-uppercase font-weight-bold mb-4">Free</h1>
+            <!-- <h2 class="h1 font-weight-bold">Rs.500<span class="text-small font-weight-normal ml-2">/ 30 days</span></h2> -->
+
+            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+            <ul class="list-unstyled my-5 text-small text-left">
+              <!--
+        <li class="mb-3">
+           <i class="fa fa-check mr-2 text-primary"></i> Free Listing and Task Management</li>
+         -->
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 1 month of free unrestricted usage
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Add 10 Contacts and 10 Sales/Projects per month
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 5 Quotes/Estimates and 2 Invoices per month
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 0.5 GB storage
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Create tasks and schedule calls
+              </li>
+
+            </ul>
+            <a href="#" onClick="return false;" (click)="homepage()"
+              class="btn btn-primary btn-block p-2 shadow rounded-pill">Select</a>
+            <!-- <a  href="#" onClick="return false;" (click)="monthlyPAYG()" class="btn btn-primary btn-block p-2 shadow rounded-pill">Pay as you go</a> -->
+
+          </div>
+        </div>
+        <!-- END -->
+
+        <!-- Pricing Table - SILVER PLAN(Lead Management)-->
+        <div class="col-lg-3 mb-5 mb-lg-0">
+          <div class="bg-white p-5 rounded-lg shadow">
+            <h1 class="h6 text-uppercase font-weight-bold mb-4">SILVER</h1>
+            <!-- <h2 class="h1 font-weight-bold">Rs.800<span class="text-small font-weight-normal ml-2">/ 30 days</span></h2> -->
+            <h2 class="h1 font-weight-bold">Rs.3500<span class="text-small font-weight-normal ml-2">/ year<br>
+              <!-- <span style="color: red;">16% Discount</span> -->
+                </span></h2>
+
+            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+            <ul class="list-unstyled my-5 text-small text-left font-weight-normal">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Connect Gmail and send emails
+              </li>
+              <li class="mb-3">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Link with Google Calendar
+              </li>
+              <li class="mb-3">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Contacts
+              </li>
+
+              <!-- <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 1 GB Storage
+              </li> -->
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Automate Tasks, Follow ups, Emails and more
+              </li>
+              <!-- <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Integration with payment platform to collect payments from
+                customers
+              </li> -->
+              <!-- <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Record expenses and customer payments
+              </li> -->
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Multiple pipelines with customizable stages for Contacts
+              </li>
+
+
+            </ul>
+            <p style="font-style: italic;">* Taxes & data limits applicable</p>
+            <!-- <button href="#" onClick="return false;" [matMenuTriggerFor]="menu3"
+              class="btn btn-primary btn-block p-2 shadow rounded-pill">Subscribe
+              <span><mat-icon>arrow_right</mat-icon></span></button> -->
+
+            <button (click)="openpopup('leadManagement')" class="btn btn-primary btn-block p-2 shadow rounded-pill">Select
+            </button>
+
+          </div>
+        </div>
+        <!-- END -->
+
+        <!-- Pricing Table - GOLD PLAN-->
+        <div class="col-lg-3 mb-5 mb-lg-0">
+          <div class="bg-white p-5 rounded-lg shadow">
+            <h1 class="h6 text-uppercase font-weight-bold mb-4">Gold</h1>
+            <h2 class="h1 font-weight-bold">Rs.500<span class="text-small font-weight-normal ml-2">/ month</span></h2>
+            <h2 class="h1 font-weight-bold">Rs.5000<span class="text-small font-weight-normal ml-2">/ year<br><span
+                  style="color: red;">16% Discount</span></span></h2>
+            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+            <ul class="list-unstyled my-5 text-small text-left">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Contacts
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Sales
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Invoices, Quotations and Estimates
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 1 GB Storage
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Multi user accounts
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Create tasks and schedule calls
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Record expenses and customer payments
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Single pipeline with customizable stages for Contacts,
+                Sales and Support
+              </li>
+
+            </ul>
+            <p style="font-style: italic;">* Taxes & data limits applicable</p>
+            <button (click)="openpopup('gold')" class="btn btn-primary btn-block p-2 shadow rounded-pill">Select
+            </button>
+          </div>
+        </div>
+        <!-- END -->
+
+        <!-- Pricing Table - DIAMOND PLAN-->
+        <div class="col-lg-3 mb-5 mb-lg-0">
+          <div class="bg-white p-5 rounded-lg shadow">
+            <h1 class="h6 text-uppercase font-weight-bold mb-4">Diamond</h1>
+            <h2 class="h1 font-weight-bold">Rs.800<span class="text-small font-weight-normal ml-2">/ month</span></h2>
+            <h2 class="h1 font-weight-bold">Rs.8000<span class="text-small font-weight-normal ml-2">/ year<br><span
+                  style="color: red;">16% Discount</span></span></h2>
+
+            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+            <ul class="list-unstyled my-5 text-small text-left font-weight-normal">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Connect Gmail and send emails
+              </li>
+              <li class="mb-3">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Link with Google Calendar
+              </li>
+              <li class="mb-3">
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Contacts
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Sales
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Support tickets
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Unlimited Invoices, Quotations and Estimates
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> 2 GB Storage
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Automate Tasks, Follow ups, Emails and more
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Integration with payment platform to collect payments from
+                customers
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Record expenses and customer payments
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Add multiple pipelines each for Contacts, Sales and Support
+                with customizale stages
+              </li>
+              <li class="mb-3">
+                <i class="fa fa-check mr-2 text-primary"></i> Define organization structure with teams, branches and
+                user profiles
+              </li>
+
+              <!--
+           <li class="mb-3">
+             <i class="fa fa-check mr-2 text-primary"></i> Public Profile and Inquiry Generation - Free for ever</li>
+               -->
+
+
+
+            </ul>
+            <p style="font-style: italic;">* Taxes & data limits applicable</p>
+            <!-- <button href="#" onClick="return false;"   [matMenuTriggerFor]="menu3" class="btn btn-primary btn-block p-2 shadow rounded-pill">Subscribe <span><mat-icon>arrow_right</mat-icon></span></button> -->
+
+            <button (click)="openpopup('diamond')" class="btn btn-primary btn-block p-2 shadow rounded-pill">Select
+            </button>
+
+          </div>
+        </div>
+        <!-- END -->
+
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- End Pricing Section -->

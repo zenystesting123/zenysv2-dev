@@ -1,0 +1,457 @@
+//Old blue color: #3f51b5
+//New theme color: #455A64
+.example-container {
+  flex: 1 0 auto;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.changeCursor{
+  cursor: pointer;
+}
+.truncate-cell {
+  max-width: 67; /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+// .box .row {
+
+// }
+
+.box .row.header {
+  flex: 0 1 auto;
+  /* The above is shorthand for:
+  flex-grow: 0,
+  flex-shrink: 1,
+  flex-basis: auto
+  */
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  flex: 0 1 1px;
+}
+
+// .content-area {
+//   // height: 100vh; // Component content fills entire verticle space
+//   // overflow: auto; // Keeps header from scrolling away
+//   //padding: 10px; // Component conent padding around edges
+//   // margin-bottom: 5px; // Matches height of footer so can see all content when scrolling to bottom
+// }
+.inputField {
+  margin: auto;
+  margin-top: 20px;
+}
+$mat-card-header-size: 40px !default;
+.mat-card-avatar {
+  height: $mat-card-header-size;
+  width: $mat-card-header-size;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  // Makes `<img>` tags behave like `background-size: cover`. Not supported
+  // in IE, but we're using it as a progressive enhancement.
+  object-fit: cover;
+}
+
+.mat-list-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+h4,
+h3,
+p,
+mat-card-header mat-card-content mat-list-item {
+  color: rgb(80, 79, 79);
+}
+// mat-toolbar {
+//   z-index: 2;
+//   position: relative;
+// }
+
+.mat-sidenav-container {
+  position: relative;
+  top: 0px;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.mat-sidenav-content {
+  position: relative;
+  top: 0px;
+  height: 100%;
+  overflow-y: hidden;
+}
+mat-sidenav {
+  z-index: 2;
+}
+progress::-webkit-progress-value {
+  transition: width 0.1s ease;
+}
+.mat-list-item {
+  color: rgb(68, 67, 67);
+}
+.center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  width: 400px;
+  height: auto;
+  z-index: 1000;
+  padding: 16px;
+  border-radius: 2%;
+  border: 0.5px solid rgb(225, 225, 225);
+  background-color: white;
+}
+.uploadNotif{
+  width: 300px;
+  height: 80px;
+  background-color: #f3f3f3;
+  position: absolute;
+  z-index: 1000;
+  bottom:2%;
+  right:2%;
+  padding: 0.5%;
+  border-radius: 2%;
+  border: 0.5px solid rgb(225, 225, 225);
+}
+.failedNotif{
+  width: 300px;
+  height: 100px;
+  background-color: #f3f3f3;
+  position: absolute;
+  z-index: 1000;
+  bottom:2%;
+  right:2%;
+  padding: 0.5%;
+  border-radius: 2%;
+  border: 0.5px solid rgb(225, 225, 225);
+}
+.section-heading {
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase
+}
+.navbar-brand2 {
+  //padding: 11px 15px 11px 15px;
+  padding:auto;
+  margin:auto;
+  text-decoration: none;
+  background-color: white;
+  color: #455A64;
+  font-size: 24px;
+  font-weight: 700;
+  border-radius: 8px;
+  //margin: 5px 14px 5px 13px;
+}
+.center2 {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 36px;
+}
+.center1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+mat-sidenav {
+  //background: #455A64;
+  background: white;
+}
+
+.mat-nav-list .mat-icon{
+  color: #B0BEC5;
+}
+
+// .mleft:hover {
+//   background-color: #e6edf6;
+//   border-radius: 0px;
+// }
+
+::ng-deep .mat-list .mat-list-item .mat-line{
+  word-wrap: break-word;
+ white-space: pre-wrap;
+}
+.btnhover:hover mat-icon {
+  background-color: #3f51b5;
+  padding: 4px;
+  border-radius: 8px;
+}
+// .btnhover:hover mat-icon{
+//   background-color: #3F51B5;
+//   display: inline-block;
+//   width: 30px;
+//   height: 30px;
+//   padding-left: 10px;
+//   padding-top: 10px;
+//   Left :0;
+//   border-radius: 8px;
+
+// }
+::ng-deep.drawer .mat-drawer-inner-container::-webkit-scrollbar {
+  display: none !important;
+}
+.btnhoverX {
+  display: inline-block;
+  width: 191px !important;
+  height: 56px !important;
+  left: 12px !important;
+  right: 7px !important;
+  // margin-right:15px ;
+  // padding-left: 10px;
+  // padding-top: 10px;
+  border-radius: 8px;
+}
+.btnhoverX:hover {
+  background-color: #e6edf6;
+  border-radius: 8px;
+}
+.expanded {
+  border-radius: 8px 8px 0px 0px;
+  background-color: #e6edf6;
+  display: inline-block;
+  width: 191px !important;
+  height: 40px;
+  left: 12px !important;
+  right: 7px !important;
+}
+.expanded:hover {
+  background-color: #e6edf6;
+
+  height: 40px;
+}
+.icon-display {
+  transform: scale(1.5);
+}
+
+.dropdwn {
+  padding-left: 40px;
+  margin-left: 10px;
+  width: 205px;
+  font-size: 14px;
+  color: #B0BEC5;
+  background-color: #455A64;
+}
+
+// for bottomsidenav
+
+// mat-sidenav-container, mat-sidenav-content, mat-sidenav {
+//   height: 100vh; // Component content fills entire verticle space
+// }
+
+mat-sidenav {
+  width: 40vw; // Width sidenav takes up when open
+}
+
+// .header {
+//   width: 100%;
+//   margin-bottom: 8px; // Leave space at bottom of toolbar so elevation shadow effect will show
+//   position: fixed;
+//   z-index: 400;
+// }
+
+// Component content area
+.container {
+  z-index: 1 !important;
+  overflow-x: hidden;
+  padding-top: 0%;
+  margin-top: 56px;
+  width: 100vw;
+  height: 86.5vh; // Component content fills entire verticle space
+
+  //overflow-y: auto; // Keeps header from scrolling away
+  // padding: 10px; // Component conent padding around edges
+  margin-bottom: 50px; // Matches height of footer so can see all content when scrolling to bottom
+  .mat-tab-group {
+    z-index: 0;
+  }
+}
+
+.testtofront {
+  z-index: 1000;
+}
+// for bottomsidenav end
+
+.inmobile {
+  padding: 0%;
+}
+
+app-footermobile {
+  z-index: 10000;
+}
+
+::-webkit-scrollbar {
+  width: .5em;
+  background: transparent; //make scrollbar transparent
+}
+mat-nav-list::-webkit-scrollbar {
+  width: 5px;
+  background: transparent; //make scrollbar transparent
+}
+.content-area::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; //make scrollbar transparent
+}
+.content-area{
+  height:  calc(100vh - 50px) !important
+}
+/*
+::ng-deep h1  {
+  color: #1565C0;
+}
+::ng-deep h2  {
+  color: #1565C0;
+}*/
+::ng-deep .h3-dialog  {
+  color: #1565C0;
+}
+
+.mat-toolbar {
+  position: relative;
+  z-index: 15;
+  min-height: 50px !important;
+  height: 50px !important;
+
+  // height: auto;
+}
+
+.mat-toolbar-row {
+  min-height: 50px !important;
+  height: 50px !important;
+}
+
+.mat-accordion{
+  min-height: 40px !important;
+  height: 40px !important;
+}
+
+
+
+#hubspot-conversations-inline-iframe {
+  display: none !important;
+  width: 300px;
+  height: 500px;
+  border: none;
+}
+.mleft {
+  padding-left: auto;
+  padding-right:auto;
+  height: 60px;
+  width:100%
+}
+button:disabled {
+  opacity: 0.5;
+}
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  text-decoration: none;
+  // color: white;
+}
+mat-spinner {
+  width: 100px;
+  height: 100px;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+}
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  text-decoration: none;
+}
+.helpSnippet {
+  height: auto;
+}
+.helpSnippet:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+}
+#readMore {
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-bottom: 50px;
+}
+pre {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: black;
+  border: none;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.centre {
+  text-align: center;
+}
+.showMore:hover {
+  text-decoration: underline !important;
+}
+.pad16 {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+}
+.h2Help {
+  margin-bottom: 0;
+  padding-top: 8px !important;
+}
+.butHelp {
+  padding-top: 2px;
+}
+.example-chip-list {
+  width: 100%;
+}
+
+.example-button-container > button {
+  margin: 0 12px;
+}
+
+mat-accordion{
+
+  position: absolute;
+  top: 10px;
+}
+.toolbar-icon {
+  line-height: 0; // Set to zero or will affect spacing between icon and text
+}
+
+.toolbar-icon-text {
+  line-height: 1.8; // Proper spacing between icon and text
+  font-size: 80%; // Smaller text size for proper display under icon
+}
+mat-slide-toggle{
+  font-size: small;
+}

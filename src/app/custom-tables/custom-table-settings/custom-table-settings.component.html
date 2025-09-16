@@ -1,0 +1,18 @@
+
+
+<h1 mat-dialog-title>Customize table display</h1>
+<div mat-dialog-content>
+  <p class ="caption">Choose the fields you require in the report table. Drag and reposition fields to change the display order.</p>
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let elem of columnsObj; let i = index" cdkDrag>
+      <mat-checkbox class="example-margin"   color="primary" [(ngModel)]="elem.display" >{{elem.header}}</mat-checkbox>
+      </div>
+  </div>
+  <br>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button  [disabled]="disableSaveButton"  (click)="savetoDB()" color="accent">Save</button>
+</div>
+

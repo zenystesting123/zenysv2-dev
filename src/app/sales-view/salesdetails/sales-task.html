@@ -1,0 +1,133 @@
+<div class="row" style="height: 500px; overflow-y: hidden; overflow-x: hidden;">
+    
+    <div class="col-6">
+        <h1>Update Task</h1>
+        <h3>
+            Customer : {{data.customerName}}
+            <br>
+            Sale: {{data.saleTitle}}
+        </h3>
+
+        <!-- title -->
+        <mat-form-field style="width: 100%;">
+            <mat-label class="required">Title </mat-label>
+            <input type="text" matInput [(ngModel)]="data.title" required>
+        </mat-form-field>
+        <!-- description -->
+        <mat-form-field style="width: 100%;">
+            <mat-label class="required">Description </mat-label>
+            <textarea matInput [(ngModel)]="data.description">{{data.description}}</textarea>
+        </mat-form-field>
+        <!-- Priority -->
+        <mat-form-field style="width: 48%;">
+            <mat-label class="required">Priority </mat-label>
+            <mat-select [(ngModel)]="data.priority" name="priority" required>
+                <mat-option value="HIGH">HIGH</mat-option>
+                <mat-option value="MEDIUM">MEDIUM</mat-option>
+                <mat-option value="LOW">LOW</mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <!-- status -->
+        <mat-form-field style="width: 48%; margin-left: 4%;">
+            <mat-label class="required">Status </mat-label>
+            <mat-select [(ngModel)]="data.status" name="status" required>
+                <mat-option value="OPEN">OPEN</mat-option>
+                <mat-option value="COMPLETED">COMPLETED</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <!-- due date -->
+        <mat-form-field style="width: 48%; margin-right: 4%;">
+            <mat-label class="required">Due Date </mat-label>
+            <input matInput [matDatepicker]="pickers"  #expCompletionDate="ngModel" [ngModel]="this.dueDate" name="dueDate" required 
+            (dateChange)="addEvent( $event)"/>
+          <mat-datepicker-toggle matSuffix [for]="pickers"></mat-datepicker-toggle>
+          <mat-datepicker #pickers></mat-datepicker>
+        </mat-form-field>
+        <!-- assignedTo -->
+        <mat-form-field style="width: 48%;">
+          <mat-label class="required">Assigned To </mat-label>
+          <mat-select [(ngModel)]="this.assignedToId" name="assignedTo" required>
+            <mat-option *ngFor="let option of assignedToNameArray" [value]="option.userId" (click)="modelChanged(option)">{{option.name}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-6">   
+            <h2>Comments</h2>
+            <!-- comments section starts here -->
+  
+            <mat-form-field class="example-full-width" appearance="fill" >
+              <mat-label>Enter comments...</mat-label>
+              <textarea matInput [(ngModel)]="commentTask" name="commentTask"></textarea>
+            </mat-form-field>
+            <div style="margin-bottom: 25px;">
+              <button mat-button (click)="saveTaskComment()" style="float: right;" color="accent">Submit</button>
+            </div>
+            <h3>Previous Comments</h3>
+            <mat-dialog-content style="margin: 0; padding:0 ; border: 0.5px solid rgba(0, 0, 0, 0.253); border-radius: 5px; height: 290px; overflow-x: hidden;">
+              <div *ngIf='commentsTask?.length == 0' style="text-align: center;">
+                <br>
+                No comments present!
+              </div> 
+              <div *ngIf='commentsTask?.length != 0' >
+                    <div *ngIf="!edittaskComment">
+                        <div *ngFor="let comment of commentsTask" style=" margin: 10px 10px 10px 10px;">
+                            <div mat-line class="new">
+                                <pre>{{comment.body}}</pre>
+                              </div>
+                              <div mat-line style="font-size: 12px; opacity: 0.7;">By {{comment.userName}} on {{comment.postedTime.toDate() | date:'yyyy/MM/dd h:mm:ss a' }}</div>
+                              <div mat-line>
+                                <button mat-button color="accent" (click)="editTaskComment(comment.id)">Edit</button>
+                                <button mat-button style="margin-left: 10px;" (click)="deleteTaskComment(comment.id)">Delete</button>
+                              </div>
+                        </div>
+    
+                    </div>
+                <div *ngIf="edittaskComment">
+                    <div *ngFor="let comment of commentsTask1" style=" margin: 10px 10px 10px 10px;">
+                        <div mat-line class="new">
+                        <pre>{{comment.body}}</pre>
+                        </div>
+                        <div mat-line style="font-size: 12px; opacity: 0.7;">By {{comment.userName}} on {{comment.postedTime.toDate() | date:'yyyy/MM/dd h:mm:ss a' }}</div>
+                        <div mat-line>
+                          <button color="accent" mat-button (click)="editTaskComment(comment.id)">Edit</button>
+                          <button style="margin-left: 10px;" mat-button (click)="deleteTaskComment(comment.id)">Delete</button>
+                        </div>
+                    </div>
+                      <mat-form-field appearance="fill" style="margin: 10px 10px 10px 10px; width: 95%;">
+                        <textarea matInput [(ngModel)]="singleCommentTask.body" name="SinglecommentTask">{{singleCommentTask.body ? singleCommentTask.body : "" }}</textarea>
+                      </mat-form-field>
+                      <div style="margin-bottom: 25px;">
+                        <button mat-button (click)="updateTaskComment(singleCommentTask)" style="float: right;" color="accent">Save</button>
+                      </div>
+                      <div *ngFor="let comment of commentsTask2" style=" margin: 10px 10px 10px 10px;">
+                        <div mat-line class="new">
+                            <pre>{{comment.body}}</pre>
+                        </div>
+                        <div mat-line style="font-size: 12px; opacity: 0.7;">By {{comment.userName}} on {{comment.postedTime.toDate() | date:'yyyy/MM/dd h:mm:ss a' }}</div>
+                        <div mat-line>
+                          <button color="accent" mat-button (click)="editTaskComment(comment.id)">Edit</button>
+                          <button style="margin-left: 10px;" mat-button (click)="deleteTaskComment(comment.id)">Delete</button>
+                        </div>
+                      </div>
+
+                </div>
+                </div>
+            </mat-dialog-content>
+  
+            <!-- comments section ends here -->
+        
+
+    </div>
+
+</div>
+
+<div mat-dialog-actions style="float: right;">
+    <button mat-button (click)="onNoClick1()">Cancel</button>
+    
+    <button color="accent" mat-button [disabled]="!data.title"
+    [mat-dialog-close]="[data,this.dueDate,this.assignedTo,this.assignedToId]"  
+    >Update</button>
+</div>
+ 

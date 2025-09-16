@@ -1,0 +1,335 @@
+<mat-toolbar class="border-bottom" style="flex: 0 0 64px;" [ngStyle]="{ 'background-color': 'white' }">
+  <button mat-icon-button title="back" (click)="onBack()">
+    <mat-icon color="accent"> arrow_back </mat-icon>
+  </button>
+  <span>Search results for {{routes}}</span>
+</mat-toolbar>
+<div class="container-fluid">
+  <br>
+  <div class="row" >
+    <div class="col-3" *ngIf="!disableViewOrg && commonService.userPlan.orgAccess && (searchSelected == 'Contact Number' || searchSelected == 'Email' || searchSelected == 'Company Name')">
+      <mat-nav-list>
+        <div *ngIf="searchSelected == 'Company Name'">
+          <div mat-subheader>{{fieldNameOrganization}} with company name {{routes}}</div>
+          <div *ngIf="orgLoaded">
+            <a mat-list-item *ngFor="let result of orgCompanyName"
+            [routerLink]="'/dash/organisation/orgdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">business</mat-icon>
+            <div mat-line> <span style="color: #3F51B5;">{{result.companyName}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+
+
+          </a>
+          <div style="padding-left: 30px;" *ngIf="orgCompanyNameLength  ==0 ">
+            No results found
+          </div>
+          </div>
+          
+        </div>
+
+        <div *ngIf="searchSelected == 'Contact Number'">
+          <div mat-subheader>{{fieldNameOrganization}} with number {{routes}}</div>
+          <div *ngIf="orgLoaded">
+            <a mat-list-item *ngFor="let result of orgWithContactNumber"
+            [routerLink]="'/dash/organisation/orgdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">business</mat-icon>
+            <div mat-line><span style="color: #3F51B5;">{{result.companyName}}</span>
+            </div>
+            <div mat-line><span style="color: #3F51B5;">{{result.contactNo}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+          </a>
+          <div *ngIf=" orgWithContactNumberLength ==0 " style="padding-left: 30px;">
+            No results found
+          </div>
+          </div>
+         
+        </div>
+        <div *ngIf="searchSelected == 'Email'">
+          <div mat-subheader>{{fieldNameOrganization}} with email id {{routes}}</div>
+          <div *ngIf="orgLoaded">
+            <a mat-list-item *ngFor="let result of orgWithEmail"
+            [routerLink]="'/dash/organisation/orgdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">business</mat-icon>
+            <div mat-line><span style="color: #3F51B5;">{{result.companyName}}</span>
+            </div>
+            <div mat-line><span style="color: #3F51B5;">{{result.email}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+          </a>
+          <div *ngIf="orgWithEmailLength ==0 " style="padding-left: 30px;">
+            No results found
+          </div>
+          </div>
+         
+        </div>
+      </mat-nav-list>
+      <div class="centre" *ngIf="!orgLoaded">
+        <mat-spinner [diameter]=24 ></mat-spinner>
+      </div>
+    </div>
+    <!-- If Access is restricted -->
+    <div class="col-3" *ngIf="disableViewOrg && commonService.userPlan.orgAccess">
+      No Access For Viewing {{fieldNameOrganization}}
+    </div>
+
+
+
+    <!-- Search contacts with first name , second name or company name -->
+    <div class="col-3" *ngIf="!disableViewContact && commonService.userPlan.contactAccess">
+      <mat-nav-list>
+        <div *ngIf="searchSelected == 'Name'">
+          <div mat-subheader>{{fieldNameContact}} with name {{routes}}</div>
+          <div *ngIf="customerLoaded">
+            <a mat-list-item *ngFor="let result of customersFirstName"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line><span
+                style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}}&nbsp;{{result.surname}}
+            </div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+          <a mat-list-item *ngFor="let result of customersSecondName"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line>{{result.firstName}}&nbsp;<span
+                style="color:#3F51B5">{{result.secondName}}</span>&nbsp;{{result.surname}}</div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+
+          <a mat-list-item *ngFor="let result of customersSurname"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line>{{result.firstName}}&nbsp;{{result.secondName}}&nbsp;<span
+                style="color:#3F51B5">{{result.surname}}</span></div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+
+          <div *ngIf="customersFirstNameLength ==0 && customersSecondNameLength ==0 && customersSurnameLength ==0"
+            style="padding-left: 30px;">
+            No results found
+          </div>
+          </div>
+         
+        </div>
+        <div *ngIf="searchSelected == 'Company Name'">
+          <div mat-subheader>{{fieldNameContact}} with company name {{routes}}</div>
+          <div *ngIf="customerLoaded">
+            <a mat-list-item *ngFor="let result of customersCompanyName"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">domain</mat-icon>
+            <div mat-line>{{result.firstName}}&nbsp;{{result.secondName}}&nbsp;{{result.surname}}</div>
+            <div mat-line> <span style="color: #3F51B5;">{{result.companyName}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+
+          </a>
+          <div style="padding-left: 30px;" *ngIf="customersCompanyNameLength  ==0 ">
+            No results found
+          </div>
+          </div>
+        
+        </div>
+        <div *ngIf="searchSelected == 'Contact Number'">
+          <div mat-subheader>{{fieldNameContact}} with number {{routes}}</div>
+          <div *ngIf="customerLoaded">
+            <a mat-list-item *ngFor="let result of contactWithContactNumber"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line><span
+                style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}}&nbsp;{{result.surname}}
+            </div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line><span style="color: #3F51B5;">{{result.contactNo}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+          <a mat-list-item *ngFor="let result of contactWithAltContactNumber"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line><span
+                style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}}&nbsp;{{result.surname}}
+            </div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line><span style="color: #3F51B5;">{{result.alternateContactNumber}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+
+          <div *ngIf=" contactWithContactNumberLength ==0 && contactWithAltContactNumberLength ==0"
+            style="padding-left: 30px;">
+            No results found
+          </div>
+          </div>
+         
+        </div>
+        <div *ngIf="searchSelected == 'Email'">
+          <div mat-subheader>{{fieldNameContact}} with email id {{routes}}</div>
+          <div *ngIf="customerLoaded">
+            <a mat-list-item *ngFor="let result of contactWithEmail"
+            [routerLink]="'/dash/contact/customerdetails/' + result.id">
+            <mat-icon mat-list-icon color="accent">person</mat-icon>
+            <div mat-line><span
+                style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}}&nbsp;{{result.surname}}
+            </div>
+            <div mat-line> {{result.companyName}}</div>
+            <div mat-line><span style="color: #3F51B5;">{{result.email}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{contactStatusName.displayName}}: {{this.commonService.getStatusName('customers', result.selectedContactPipeline, result.status)}}</div>
+          </a>
+
+          <div *ngIf="contactWithEmailLength ==0 " style="padding-left: 30px;">
+            No results found
+          </div>
+          </div>
+         
+        </div>
+
+      </mat-nav-list>
+      <div class="centre" *ngIf="!customerLoaded">
+        <mat-spinner [diameter]=24 ></mat-spinner>
+      </div>
+    </div>
+    <!-- If Access is restricted -->
+    <div class="col-3" *ngIf="disableViewContact && commonService.userPlan.contactAccess">
+      No Access For Viewing {{fieldNameContact}}
+    </div>
+
+
+
+    <!-- Search sales with first name , second name or company name -->
+    <div class="col-3" *ngIf="!disableSaleView && commonService.userPlan.saleAccess">
+      <mat-nav-list>
+        <div *ngIf="searchSelected == 'Name'">
+          <div mat-subheader>{{fieldNameSales}} with {{fieldNameContact}} name {{routes}}</div>
+          <div *ngIf="saleLoaded">
+            <a mat-list-item *ngFor="let result of salesFirstName" [routerLink]="'/dash/sales/saleview/' + result.id">
+              <mat-icon mat-list-icon color="accent">work</mat-icon>
+              <div mat-line>{{result.saleTitle}}</div>
+              <div mat-line> <span style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}},
+                &nbsp;{{result.companyName}}</div>
+              <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+              <div mat-line>{{saleStageName.displayName}}: {{this.commonService.getStatusName('sales', result.selectedSalePipeline, result.salesStage )}}</div>
+            </a>
+            <a mat-list-item *ngFor="let result of salesSecondName" [routerLink]="'/dash/sales/saleview/' + result.id">
+              <mat-icon mat-list-icon color="accent">work</mat-icon>
+              <div mat-line>{{result.saleTitle}}</div>
+              <div mat-line> {{result.firstName}}&nbsp;<span
+                  style="color:#3F51B5">{{result.secondName}}</span>,&nbsp;{{result.companyName}}</div>
+              <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+              <div mat-line>{{saleStageName.displayName}}: {{this.commonService.getStatusName('sales', result.selectedSalePipeline, result.salesStage )}}</div>
+  
+            </a>
+            <a mat-list-item *ngFor="let result of salesSurname" [routerLink]="'/dash/sales/saleview/' + result.id">
+              <mat-icon mat-list-icon color="accent">work</mat-icon>
+              <div mat-line>{{result.saleTitle}}</div>
+              <div mat-line> {{result.firstName}}&nbsp;{{result.secondName}}&nbsp;<span
+                  style="color:#3F51B5">{{result.surname}}</span>,{{result.companyName}}</div>
+              <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+              <div mat-line>{{saleStageName.displayName}}: {{this.commonService.getStatusName('sales', result.selectedSalePipeline, result.salesStage )}}</div>
+  
+            </a>
+            <div style="padding-left: 30px;"
+              *ngIf="salesFirstNameLength  ==0 && salesSecondNameLength  ==0 && salesSurnameLength  ==0 "> No results
+              found </div>
+          </div>
+          
+        </div>
+        <div *ngIf="searchSelected == 'Company Name'">
+          <div mat-subheader>{{fieldNameSales}} with company name {{routes}}</div>
+          <div *ngIf="saleLoaded">
+          <a mat-list-item *ngFor="let result of salesCompanyName" [routerLink]="'/dash/sales/saleview/' + result.id">
+            <mat-icon mat-list-icon color="accent">work</mat-icon>
+            <div mat-line>{{result.saleTitle}}</div>
+            <div mat-line>{{result.firstName}}&nbsp;{{result.secondName}},&nbsp;<span
+                style="color: #3F51B5;">{{result.companyName}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{saleStageName.displayName}}: {{this.commonService.getStatusName('sales', result.selectedSalePipeline, result.salesStage )}}</div>
+          </a>
+          <div style="padding-left: 30px;" *ngIf="salesCompanyNameLength  ==0 "> No results found</div>
+          </div>
+        </div>
+      </mat-nav-list>
+      <div class="centre" *ngIf="!saleLoaded">
+        <mat-spinner [diameter]=24 ></mat-spinner>
+      </div>
+    </div>
+    <!-- If Access is restricted -->
+    <div class="col-3" *ngIf="disableSaleView && commonService.userPlan.saleAccess">
+      No Access For Viewing {{fieldNameSales}}
+    </div>
+
+
+    <!-- Search service with first name , second name or company name -->
+    <div class="col-3" *ngIf="!disableServiceView && commonService.userPlan.serviceAccess">
+      <mat-nav-list >
+        <div *ngIf="searchSelected == 'Name'">
+          <div mat-subheader>{{fieldNameService}} tickets with {{fieldNameContact}} name {{routes}}</div>
+          <div *ngIf="serviceLoaded">
+            <a mat-list-item *ngFor="let result of servicesFirstName"
+            [routerLink]="'/dash/service/service-details/' + result.id">
+            <mat-icon mat-list-icon color="accent">support_agent</mat-icon>
+            <div mat-line>{{result.serviceTitle}}</div>
+            <div mat-line> <span style="color: #3F51B5;">{{result.firstName}}</span>&nbsp;{{result.secondName}},
+              &nbsp;{{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{serviceStageName.displayName}}: {{this.commonService.getStatusName('services', result.selectedServPipeline, result.servicesStage)}}</div>
+          </a>
+          <a mat-list-item *ngFor="let result of servicesSecondName"
+            [routerLink]="'/dash/service/service-details/' + result.id">
+            <mat-icon mat-list-icon color="accent">support_agent</mat-icon>
+            <div mat-line>{{result.serviceTitle}}</div>
+            <div mat-line> {{result.firstName}}&nbsp;<span
+                style="color:#3F51B5">{{result.secondName}}</span>,&nbsp;{{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{serviceStageName.displayName}}: {{this.commonService.getStatusName('services', result.selectedServPipeline, result.servicesStage)}}</div>
+
+          </a>
+          <a mat-list-item *ngFor="let result of servicesSurname"
+            [routerLink]="'/dash/service/service-details/' + result.id">
+            <mat-icon mat-list-icon color="accent">support_agent</mat-icon>
+            <div mat-line>{{result.serviceTitle}}</div>
+            <div mat-line> {{result.firstName}}&nbsp;{{result.secondName}}&nbsp;<span
+                style="color:#3F51B5">{{result.surname}}</span>,&nbsp;{{result.companyName}}</div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{serviceStageName.displayName}}: {{result.servicesStage}}</div>
+          </a>
+          <div style="padding-left: 30px;"
+            *ngIf="servicesFirstNameLength  ==0 && servicesSecondNameLength  ==0&& servicesSurnameLength  ==0"> No
+            results
+            found </div>
+          </div>
+         
+        </div>
+        <div *ngIf="searchSelected == 'Company Name'">
+          <div mat-subheader>{{fieldNameService}} with company name {{routes}}</div>
+          <div *ngIf="serviceLoaded">
+            <a mat-list-item *ngFor="let result of servicesCompanyName"
+            [routerLink]="'/dash/service/service-details/' + result.id">
+            <mat-icon mat-list-icon color="accent">support_agent</mat-icon>
+            <div mat-line>{{result.serviceTitle}}</div>
+            <div mat-line>{{result.firstName}}&nbsp;{{result.secondName}},&nbsp;<span
+                style="color: #3F51B5;">{{result.companyName}}</span></div>
+            <div mat-line> Assigned to: {{commonService.getAssignedToName(result.assignedTo)}}</div>
+            <div mat-line>{{serviceStageName.displayName}}: {{result.servicesStage}}</div>
+          </a>
+          <div style="padding-left: 30px;" *ngIf="servicesCompanyNameLength  ==0 "> No results found</div>
+          </div>
+         
+        </div>
+      </mat-nav-list>
+      <div class="centre" *ngIf="!serviceLoaded">
+        <mat-spinner [diameter]=24 ></mat-spinner>
+      </div>
+      
+    </div>
+    <!-- If Access is restricted -->
+    <div class="col-3" *ngIf="disableServiceView && commonService.userPlan.serviceAccess">
+      No Access For Viewing {{fieldNameService}}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,247 @@
+<div *ngIf="!isMobilesize">
+  <h1 *ngIf="data.scenario == 'add'">
+    Add {{(data.fieldNameItems == 'Products and Service') ? 'Product' :
+    data.fieldNameItems}}
+  </h1>
+
+  <h1 *ngIf="data.scenario == 'edit'">
+    Edit {{(data.fieldNameItems == 'Products and Service') ? 'Product' :
+    data.fieldNameItems}}
+  </h1>
+
+  <h3 style="font-size: 18px" *ngIf="data.scenario == 'delete'">
+    Do you want to delete item {{data.name}} &nbsp;?&nbsp;
+  </h3>
+
+  <h4 *ngIf="data.scenario == 'add' && this.products?.length == 0">
+    Please add items under {{(data.fieldNameItems == 'Products and Service') ?
+    'Products and Service' : data.fieldNameItems}}s to choose
+  </h4>
+
+  <mat-dialog-content>
+
+    <!-- Product name and Code -->
+    <h3 style="font-size: 18px" *ngIf="data.scenario == 'edit'">
+      {{(data.fieldNameItems == 'Products and Service') ? 'Product' :
+      data.fieldNameItems}}&nbsp;:&nbsp;{{productName}}
+    </h3>
+    <h3 style="font-size: 18px" *ngIf="data.scenario == 'edit'">
+      Code&nbsp;:&nbsp;{{productCode}}
+    </h3>
+    <br *ngIf="data.scenario == 'edit'" />
+
+    <!-- Product name  and Code-->
+    <form *ngIf="data.scenario == 'add'">
+      <mat-form-field style="width: 48%" appearance="fill">
+        <mat-label
+          >Select a {{(data.fieldNameItems == 'Products and Service') ? 'Product'
+          : data.fieldNameItems}}</mat-label
+        >
+        <input
+          matInput
+          [formControl]="myControl"
+          [matAutocomplete]="auto"
+          [(ngModel)]="this.selectedProduct"
+          name="selectedProduct"
+          (ngModelChange)="productSelected()"
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option
+            *ngFor="let product of filteredOptions | async"
+            [value]="product"
+          >
+            {{product.prodName}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- Product Code -->
+      <mat-form-field
+        [ngClass]="{'isDisabled':true}"
+        *ngIf="this.prodSelected"
+        style="width: 48%; margin-left: 4%"
+        appearance="fill"
+      >
+        <mat-label
+          >{{(data.fieldNameItems == 'Products and Service') ? 'Product' :
+          data.fieldNameItems}} Code</mat-label
+        >
+        <input matInput [(ngModel)]="this.productCode" name="productCode" />
+      </mat-form-field>
+    </form>
+
+    <!-- Currency -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 19.6%"
+      appearance="fill"
+    >
+      <mat-label>Currency</mat-label>
+      <mat-select [(ngModel)]="this.currency" name="currency">
+        <mat-option *ngFor="let option of currencyList" [value]="option.isoCode"
+          >{{option.currencyName}}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <!-- unit price -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 19.6%; margin-left: 0.5%"
+      appearance="fill"
+    >
+      <mat-label>Unit Price</mat-label>
+      <input type="number" matInput [(ngModel)]="this.unitPrice" name="unitPrice" />
+    </mat-form-field>
+
+    <!-- unit -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 19.6%; margin-left: 0.5%"
+      appearance="fill"
+    >
+      <mat-label>Unit</mat-label>
+      <mat-select [(ngModel)]="this.unit" name="unit">
+        <mat-option *ngFor="let option of prodUnitaArray" [value]="option"
+          >{{option}}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Quantity -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 19.6%; margin-left: 0.5%"
+      appearance="fill"
+    >
+      <mat-label>Quantity</mat-label>
+      <input type="number" matInput [(ngModel)]="this.quantity" name="quantity" required />
+    </mat-form-field>
+
+    <!-- discount -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 19.6%; margin-left: 0.5%"
+      appearance="fill"
+    >
+      <mat-label>Discount(%)</mat-label>
+      <input type="number" matInput [(ngModel)]="this.discount" name="discount" />
+    </mat-form-field>
+
+    <!-- CGST -->
+    <mat-form-field
+      *ngIf="((this.taxType=='gst') && (this.prodSelected))"
+      style="width: 32%"
+      appearance="fill"
+    >
+      <mat-label>CGST(%)</mat-label>
+      <input type="number" matInput [(ngModel)]="this.cgst" name="cgst" />
+    </mat-form-field>
+
+    <!-- SGST -->
+    <mat-form-field
+      *ngIf="((this.taxType=='gst') && (this.prodSelected))"
+      style="width: 32%; margin-left: 2%"
+      appearance="fill"
+    >
+      <mat-label>SGST(%)</mat-label>
+      <input type="number" matInput [(ngModel)]="this.sgst" name="sgst" />
+    </mat-form-field>
+
+    <!-- IGST -->
+    <mat-form-field
+      *ngIf="((this.taxType=='gst') && (this.prodSelected))"
+      style="width: 32%; margin-left: 2%"
+      appearance="fill"
+    >
+      <mat-label>IGST(%)</mat-label>
+      <input type="number" matInput [(ngModel)]="this.igst" name="igst" />
+    </mat-form-field>
+
+    <!-- VAT RATE -->
+    <mat-form-field
+      *ngIf="((this.taxType=='vat') && (this.prodSelected))"
+      style="width: 32%"
+      appearance="fill"
+    >
+      <mat-label>VAT Rate(%)</mat-label>
+      <input type="number" matInput [(ngModel)]="this.vatRate" name="vatRate" />
+    </mat-form-field>
+
+    <!-- Product Description -->
+    <mat-form-field
+      *ngIf="this.prodSelected"
+      style="width: 100%"
+      appearance="fill"
+    >
+      <mat-label
+        >{{(data.fieldNameItems == 'Products and Service') ? 'Product' :
+        data.fieldNameItems}} Description</mat-label
+      >
+      <textarea
+        matInput
+        [(ngModel)]="this.productDes"
+        name="productDes"
+      ></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick1()">Cancel</button>
+    <button
+      [disabled]="!this.quantity"
+      *ngIf="this.prodSelected && data.scenario == 'add'"
+      [mat-dialog-close]="[
+      this.productName,
+      this.productCode,
+      this.productDes,
+      this.currency,
+      this.unitPrice,
+      this.unit,
+      this.quantity,
+      this.discount,
+      this.cgst,
+      this.sgst,
+      this.igst,
+      this.vatRate,
+      this.taxType,
+      this.productId,
+      this.productCategory
+      ]"
+      mat-button
+      color="accent"
+    >
+      Add
+    </button>
+    <button
+      [disabled]="!this.quantity"
+      *ngIf="this.prodSelected && data.scenario == 'edit'"
+      mat-button
+      color="accent"
+      [mat-dialog-close]="[
+      data.product.id,
+      this.productDes,
+      this.currency,
+      this.unitPrice,
+      this.unit,
+      this.quantity,
+      this.discount,
+      this.cgst,
+      this.sgst,
+      this.igst,
+      this.vatRate
+      ]"
+    >
+      Update
+    </button>
+    <button
+      mat-button
+      *ngIf="data.scenario == 'delete'"
+      color="warn"
+      [mat-dialog-close]="data"
+    >
+      Delete
+    </button>
+  </div>
+
+</div>

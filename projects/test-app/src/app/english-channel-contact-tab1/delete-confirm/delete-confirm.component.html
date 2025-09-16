@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 mat-dialog-title>Confirm Delete?</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <P>
+            <span class="confirm-message">Are you sure you want to <span class="delete">delete</span>
+             the document?</span></P>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <mat-dialog-actions align="end">
+            <button mat-stroked-button 
+            color="warn"
+            [mat-dialog-close]="true" 
+            cdkFocusInitial
+            (click)="deleteDocConfirmation()">Yes</button>
+
+            <button mat-stroked-button 
+            color="warn" 
+            [mat-dialog-close]>No</button>
+
+        </mat-dialog-actions>
+    </div>
+</div>
+

@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>Update SubUser Details</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <!-- firstname -->
+  <mat-form-field style="width: 49%;" appearance="fill">
+    <mat-label>First Name</mat-label>
+    <input minlength="2" maxlength="40" type="text" matInput [(ngModel)]="data.firstname" name="fName" (ngModelChange)="checkUserName()" required />
+  </mat-form-field>
+
+  <!-- last name -->
+  <mat-form-field style="width: 49%; margin-left: 2%" appearance="fill">
+    <mat-label>Last Name</mat-label>
+    <input minlength="2" maxlength="40" type="text" matInput [(ngModel)]="data.lastname" name="lName" (ngModelChange)="checkUserName()" />
+  </mat-form-field>
+
+  <!-- disableOnUserName -->
+  <small class="form-text danger" *ngIf="this.disableOnUserName === true">
+    User Name already exists
+  </small>
+
+  <!-- country code -->
+  <app-common-country-code [code]="this.defaultCode"
+    (countryCodeEvent)="countryCodeEventHander($event)"></app-common-country-code>
+
+  <!-- contactNo -->
+  <mat-form-field style="width: 28%; margin-left: 1%" appearance="fill">
+    <mat-label>Contact No</mat-label>
+    <input type="number" matInput [(ngModel)]="this.contactNo" name="cotactNo" (ngModelChange)="checkContactNo()" />
+    <small class="form-text danger" *ngIf="this.disableOnCOntNo === true">
+      Contact Number already exists
+    </small>
+  </mat-form-field>
+
+
+  <!-- email -->
+  <mat-form-field style="width: 49%; margin-left: 1%" appearance="fill">
+    <mat-label>Email</mat-label>
+    <input type="email" matInput [(ngModel)]="data.email" name="dataemail" [disabled]="true" />
+  </mat-form-field>
+<br>
+  <!-- Account type -->
+  <mat-form-field style="width: 32%;" appearance="fill">
+    <mat-label>Role Assigned </mat-label>
+    <mat-select [(value)]="data.accountType">
+      <mat-option value="{{profile}}" *ngFor="let profile of data.profilelist">{{profile}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- branch -->
+  <mat-form-field style="width: 32%; margin-left: 2%" appearance="fill"
+    *ngIf="(data.branches?.length > 0) && (data.plan =='diamond')">
+    <mat-label>Branch</mat-label>
+    <mat-select [(value)]="branchValue" required>
+      <mat-option value="{{branch.id}}" *ngFor="let branch of data.branches"
+        (click)="branchSelected(branch)">{{branch.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Report to  -->
+  <mat-form-field style="width: 32%; margin-left: 2%" appearance="fill">
+    <mat-label>Reports To</mat-label>
+    <input type="text" matInput [(ngModel)]="reportsTo" [formControl]="myControl" [matAutocomplete]="auto">
+    <button *ngIf="myControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearValue()">
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option" (click)="reportsToSelected(option)">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+    <!--extension num-->
+    <mat-form-field *ngIf="data.outBoundCallEnabled" style="width: 49%" appearance="fill">
+      <mat-label>Extension No</mat-label>
+      <input type="number" matInput [(ngModel)]="this.extensionNum" name="extensionNum" />
+    </mat-form-field>
+
+    <mat-form-field *ngIf="data.outBoundCallEnabled" style="width: 49%;margin-left: 2%" appearance="fill">
+      <mat-label>Caller Id</mat-label>
+      <input type="number" matInput [(ngModel)]="this.callerId" name="callerId" />
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button
+    [disabled]="!networkCheck.onNetworkCheck() || this.disableOnUserName || this.disableOnCOntNo || (data.branches?.length > 0 && !branchValue) || !data.firstname || !myControl.value "
+    [mat-dialog-close]="[data.subId,data.id,data.firstname,data.lastname,data.email,data.accountType,this.selectedReportsToId, this.selectedReportsToName, this.contactNo, this.defaultCode, this.selectedBranchId, this.selectedBranchName,this.extensionNum,this.callerId]">
+    Update
+  </button>
+</mat-dialog-actions>

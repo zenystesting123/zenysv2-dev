@@ -1,0 +1,13 @@
+<div style="text-align: center" *ngIf=" previewService.userData.contactname && (previewService.userData.contactno || previewService.userData.email)">
+    <p [style.color]="color1" *ngIf=" previewService.userData.contactname" id="fontsizereduce" class="unbreak">
+        In case of any queries, please contact
+        {{  previewService.userData.contactname }} at
+        <span *ngIf=" previewService.userData.contactno">{{  previewService.userData.contactno }}
+        </span>
+        <span *ngIf=" previewService.userData.contactno &&  previewService.userData.email"> or drop us an email at
+        </span>
+        <span *ngIf=" previewService.userData.email">{{
+            previewService.userData.email
+            }}</span>
+    </p>
+</div>

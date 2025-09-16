@@ -1,0 +1,40 @@
+
+    <!-- <h3>Are you sure you want to cancel the subscription&nbsp;?&nbsp;</h3> -->
+    <h2 mat-dialog-title>Upgrade your plan</h2>
+    <form >
+    <mat-form-field appearance="fill" >
+        <mat-label>Select plan</mat-label>
+        <mat-select [(ngModel)]="newPlan" [ngModelOptions]="{standalone: true}" >
+          <mat-option value="gold" *ngIf="plan.plan=='gold'">Gold</mat-option>
+          <!-- <mat-option value="option2" disabled>Option 2 (disabled)</mat-option> -->
+          <mat-option value="diamond">Diamond</mat-option>
+        </mat-select>
+        <mat-hint>You can also Upgrade your plan </mat-hint>
+      </mat-form-field>
+
+    <mat-form-field appearance="fill" >
+        <mat-label>Total number of Users</mat-label>
+        <input matInput type="number" [(ngModel)]="newNosubs" [ngModelOptions]="{standalone: true}">
+        <mat-hint>You can increase the number of subusers here </mat-hint>
+    </mat-form-field>
+</form>
+<!-- {{noofSubusers}} {{plan.plan}} -->
+
+<!-- message to display if user tries to reduce the number -->
+<p *ngIf="newNosubs >=1 && newNosubs<(invitationsCount+subuserCount+1)">
+  <br>
+  <span *ngIf="invitationsCount>0 && subuserCount>0">
+    Please suspend users from the active users list/cancel the invitations sent to users before reducing the count in the plan
+  </span>
+  <span *ngIf="invitationsCount>0 && subuserCount === 0">
+    Please cancel the invitations sent to users before reducing the count in the plan
+  </span>
+  <span *ngIf="invitationsCount === 0 && subuserCount>0">
+    Please suspend users from the active users list before reducing the count in the plan
+  </span>
+</p>
+
+<div mat-dialog-actions align="end">
+      <button mat-button  (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+      <button mat-button [disabled]="(((newNosubs<(invitationsCount+subuserCount+1))&&(newPlan==plan.plan))||(!newPlan))" (click)="onOKClick()" color="accent">Upgrade</button>
+    </div>

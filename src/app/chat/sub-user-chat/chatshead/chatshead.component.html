@@ -1,0 +1,55 @@
+<div style="height:100%;width:100%;margin:0%;padding:0%;" class="no-v-scroll">
+  <form>
+    <mat-form-field class="example-form-field" appearance="outline">
+      <mat-label>Search </mat-label>
+      <input matInput type="text" [(ngModel)]="value" [formControl]="myControl">
+      <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+
+    <mat-list style="height:75vh;width:100%;margin:0%;padding:0%;overflow-y: scroll;">
+    <!-- <mat-list-item *ngFor="let chathead of chatHeads;i as index" (click)="chatHeadClicked(chathead.customerUid,'')"  [class.activec]="chathead.customerUid==current">
+      <mat-icon matListAvatar class="rounded-circle" style="margin-top:auto;margin-bottom: auto;">
+        <ngx-avatar name="{{(chathead.customerEmail).split(' ')[0]}}" size="35" textSizeRatio="1.5"></ngx-avatar>
+    </mat-icon>
+    <h2 mat-line ><span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.customerEmail}}</span></h2>
+    <p mat-line > <span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.lastMessage.message}}</span>
+      <span class="width_limit" style="float: right;">{{chathead.timestamp|date:'short'}}</span>
+    </p>
+
+  <mat-divider></mat-divider>
+
+  </mat-list-item> -->
+  <mat-list-item *ngIf="chatHeads.length==0"><p>You have no sub users</p></mat-list-item>
+
+  <mat-list-item   style="cursor: pointer;"    class="example-item" *ngFor="let chathead of filteredChatHeads;i as index"
+  (click)="chatHeadClicked(chathead.userId,chathead.readStatus, chathead.identifier)"  [class.activec]="chathead.userId==current"
+      >
+        <mat-icon matListAvatar style="margin-top: auto; margin-bottom: auto">
+          <ngx-avatar
+            name="{{(chathead.identifier).split(' ')[0] }}"
+            size="35"
+            textSizeRatio="1.5"
+          ></ngx-avatar>
+        </mat-icon>
+
+          <h2 *ngIf="!!chathead.lastMessage" mat-line>
+            <span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.identifier}}</span>
+          </h2>
+          <p *ngIf="!!chathead.lastMessage" mat-line class="truncate-cell">
+            <span class="width_limit truncate-cell" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.lastMessage.message}}</span>
+            <span class="width_limit truncate-cell" style="float: right;">{{chathead.timestamp|date:'short'}}</span>
+          </p>
+        <h2 *ngIf="!!!chathead.lastMessage" mat-line>
+            <span class="width_limit">{{chathead?.identifier}}</span>
+          </h2>
+
+
+
+      </mat-list-item>
+
+
+  </mat-list>
+  </div>

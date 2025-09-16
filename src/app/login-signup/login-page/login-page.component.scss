@@ -1,0 +1,31 @@
+.centered {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.googleBtn {
+  width: 200px;
+}
+.emailBtn {
+  background-color: #dc3545;
+  color: white;
+  width: 200px;
+}
+.fullWidth {
+  width: 100%;
+}
+.paddin {
+  padding: 0 50px;
+}
+.customCenter {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

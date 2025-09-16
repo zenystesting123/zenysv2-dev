@@ -1,0 +1,20 @@
+<div class="card" style="height:fit-content;max-width: 450px;">
+    <img src="assets/images/temp1.png"  alt="preview5" *ngIf="id ==1">
+    <img src="assets/images/temp2.png"  alt="preview5" *ngIf="id ==2">
+    <img src="assets/images/temp3.png"  alt="preview5" *ngIf="id ==3">
+    <img src="assets/images/temp4.png"  alt="preview5" *ngIf="id ==4">
+    <img src="assets/images/temp5.png"  alt="preview5" *ngIf="id ==5">
+    <img src="assets/images/temp6.png"  alt="preview5" *ngIf="id ==6">
+    <img src="assets/images/temp7.png"  alt="preview5" *ngIf="id ==7">
+    <img src="assets/images/temp8.png"  alt="preview5" *ngIf="id ==8">
+    <img src="assets/images/temp9.png"  alt="preview5" *ngIf="id ==9">
+    <img src="assets/images/temp10.png"  alt="preview5" *ngIf="id ==10">
+</div>
+<div class="btn">
+    <button mat-button  [mat-dialog-close]="data.id" color="accent" title="Select ">
+        Select
+    </button>&nbsp;&nbsp;&nbsp;
+    <button mat-button  (click)="close()" color="accent" title="close ">
+        Close
+    </button>
+</div>

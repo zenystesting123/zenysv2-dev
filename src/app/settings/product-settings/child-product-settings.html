@@ -1,0 +1,45 @@
+<!-- headings -->
+<h2 mat-dialog-title *ngIf="data.scenario == 'add'">Add Category Name</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'edit'">Update Category Name</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'delete'">Delete Category Name</h2>
+
+<!-- content -->
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'add'">
+  <mat-form-field style="width:100%">
+    <mat-label>New category name</mat-label>
+    <input matInput [(ngModel)]="this.selectedCatName" maxlength="60" minlength="1">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'edit'">
+  <mat-form-field style="width:100%">
+    <mat-label>New category name</mat-label>
+    <input matInput [(ngModel)]="this.selectedCatName" maxlength="60" minlength="1">
+  </mat-form-field>
+  <br>
+  <!-- <span class="caption">
+    Note: All existing Items with this category will be automatically updated with the new category
+    name.
+  </span> -->
+</mat-dialog-content>
+
+<mat-dialog-content class="mat-typography" *ngIf="data.scenario == 'delete'">
+  Do you want to delete {{this.selectedCatName}} from list?
+</mat-dialog-content>
+
+<!-- Action buttons -->
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'delete'">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="warn" mat-button (click)="onDelete()">Delete</button>
+</mat-dialog-actions>
+
+
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'edit'">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button color="accent" (click)="onUpdate()" [disabled]="this.selectedCatName?.length < 1">Update </button>
+</mat-dialog-actions>
+
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'add'">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button color="accent" (click)="onAdd()" [disabled]="this.selectedCatName?.length < 1">Add </button>
+</mat-dialog-actions>

@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-6">
+    <div class="row">
+      <!------------ start date----------------->
+      <div class="col-7">
+        <div class="form-group">
+          
+          <mat-form-field class="example-full-width" (click)="picker.open()" class="example-full-width">
+            <mat-label>Start Date</mat-label>
+            <input matInput name="start" #start="ngModel" [(ngModel)]="startDateBind" [matDatepicker]="picker"
+              (dateChange)="onChangeEventStartDate($event)" />
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <!----------- start time------------------>
+      <div class="col-5">
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
+            <mat-label>Start Time</mat-label>
+            <mat-select [formControl]="startTimeCtrl" #singleSelect>
+              <mat-option style="width: 100px">
+                <ngx-mat-select-search [formControl]="startTimeFilterCtrl" placeholderLabel="Search"
+                  noEntriesFoundLabel="h:mm am/pm">
+                </ngx-mat-select-search>
+              </mat-option>
+
+              <mat-option *ngFor="let startTime of filteredStartTime | async" [value]="startTime.getTime()">
+                {{ startTime.getTime() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="row">
+      <!-------------end time---------------->
+      <div class="col-5">
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
+            <mat-label>End Time</mat-label>
+            <mat-select [formControl]="endTimeCtrl" #singleSelect>
+              <mat-option style="width: 100px">
+                <ngx-mat-select-search [formControl]="endTimeFilterCtrl" placeholderLabel="Search"
+                  noEntriesFoundLabel="h:mm am/pm"></ngx-mat-select-search>
+              </mat-option>
+
+              <mat-option *ngFor="let endTime of filteredEndTime | async" [value]="endTime.getTime()">
+                {{ endTime.getTime() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!------------end date----------------->
+      <div class="col-7">
+        <div class="form-group">
+          <mat-form-field class="example-full-width"  (click)="pickerEnd.open()" class="example-full-width"
+            *ngIf="endDayVisible">
+            <mat-label>End Date</mat-label>
+            <input name="end" #end="ngModel" [(ngModel)]="endDateBind" matInput [matDatepicker]="pickerEnd"
+              (dateChange)="onChangeEventEndDate($event)" />
+            <mat-datepicker #pickerEnd></mat-datepicker>
+          </mat-form-field>
+          <mat-error class="form-text text-muted danger" *ngIf="datePick.startDate > datePick.endDate">
+            Event must end after it starts.</mat-error>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

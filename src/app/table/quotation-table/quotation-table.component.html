@@ -1,0 +1,89 @@
+<div class="no-v-scroll bg-soft-secondary">
+    <!-- tool bar -->
+    <mat-toolbar *ngIf="!disableView && commonService.userPlan.documentsAccess && commonService.userPlan.quotationsAccess" class="border-bottom"
+        style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+        <mat-icon class="text-primary" mat-list-icon>article </mat-icon>&nbsp;
+        <span class="text-primary-light">{{ fieldNameQuotation }}s</span>&nbsp;
+        &nbsp;
+        <!-- view selection -->
+        <button mat-button class="border" style="border-radius: 20px; margin: 4px" [matMenuTriggerFor]="filterOne"
+            [ngClass]="{isDisabled:!onCheckNetwork()}">{{tableService.viewSelected}}
+            &nbsp;
+            <mat-icon>expand_more</mat-icon></button>
+        <mat-menu #filterOne="matMenu">
+            <button mat-menu-item (click)="viewSelected('This Week')">This Week
+                {{fieldNameQuotation}}</button>
+            <button mat-menu-item (click)="viewSelected('This Month')">This Month
+                {{fieldNameQuotation}}</button>
+            <button mat-menu-item (click)="viewSelected('This Quarter')">This Quarter
+                {{fieldNameQuotation}}</button>
+            <button mat-menu-item (click)="viewSelected('This Year')">This Year
+                {{fieldNameQuotation}}</button>
+        </mat-menu>
+     
+        <span class="example-spacer"></span>
+    </mat-toolbar>
+    <!-- New material Toolbar ends here -->
+    <div style="overflow-y: scroll">
+        <!-- If Access is restricted -->
+        <div *ngIf="!isLoading && (disableView || !commonService.userPlan.documentsAccess || !commonService.userPlan.quotationsAccess)" class="container" style="text-align: center">
+            <br />
+            <h3>No Access</h3>
+        </div>
+        <!-- display table -->
+        <div *ngIf="
+        !disableView && commonService.userPlan.documentsAccess && commonService.userPlan.quotationsAccess
+      " class="container-fluid" style="margin-bottom: 10px">
+            <br />
+            <div class="example-container border" style="border-radius: 5px;background-color: white;">
+                <!-- table toolbar -->
+                <mat-toolbar [ngStyle]="{'background-color':'white'}" [ngClass]="{isDisabled: isLoading}">
+                    <span class="example-spacer"></span>
+                    <button mat-icon-button color="accent" aria-label="Table settings" title="Customise table"
+                        [ngClass]="{isDisabled:!onCheckNetwork()}" (click)="openDialog()">
+                        <mat-icon class="material-icons-outlined">settings</mat-icon>
+                    </button>
+                    <button mat-icon-button color="accent" aria-label="Download table" title="Download table"
+                        [ngClass]="{isDisabled: !onCheckNetwork() || disableDownload}"
+                        (click)="tableService.quotationList.data.length>0 ? exporter.exportTable('csv',{fileName:fieldNameQuotation}): noDataMessage()">
+                        <mat-icon class="material-icons-outlined">download</mat-icon>
+                    </button>
+                </mat-toolbar>
+                <br>
+                <!-- spinner while data loading -->
+                <mat-spinner *ngIf="isLoading" color="accent" diameter="50"></mat-spinner>
+                <div class="border-top" [ngClass]="{ 'disabled': isLoading }">
+                    <!-- table starts here -->
+                    <table [ngClass]="{isDisabled: isLoading}" mat-table [dataSource]="tableService.quotationList"
+                        class="mat-elevation-z1 demo-table" matTableExporter #exporter="matTableExporter">
+                        <ng-container *ngFor="let column of columnsDispaly" [matColumnDef]="column.columnDef">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{column.header}}
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="truncate-cell">
+                                <span>
+                                    {{findColumnValue(row,column)}}
+                                </span>
+                            </td>
+                        </ng-container>
+                       
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns; " (click)="onRowClick(row)"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">
+                                No data to display
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- table ends here -->
+                    <!-- paginator -->
+                    <mat-paginator [length]="totalItems" [pageSize]="tableService.pageSize"
+                        [pageIndex]="tableService.pageIndex" [pageSizeOptions]="pageSizeOptions"
+                        (page)="onPageChanged($event)" [intl]="paginatorIntl"
+                        [ngClass]="{isDisabled: isLoading || !onCheckNetwork()}">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="box">
+    <div class="col-6">
+      Name
+    </div>
+    <div class="col-6" >
+        {{data.Name}}
+      
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        IFSC
+    </div>
+    <div class="col-6" >
+        {{data.IFSC}}
+      
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Account Number
+    </div>
+    <div class="col-6" >
+        {{data.AccountNumber}}
+      
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Firebase Id
+    </div>
+    <div class="col-6" >
+        {{data.id}}
+      
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Email
+    </div>
+    <div class="col-6" >
+      {{email}}
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Date Requested
+    </div>
+    <div class="col-6" >
+      {{data?.dateRequested}}
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Request Status
+    </div>
+    <div class="col-6" >
+      {{data?.requestStatus}}
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Date Approved
+    </div>
+    <div class="col-6" >
+      {{data.dateApproved?data.dateApproved:"Yet To Approve"}}
+    </div>
+  </div>
+  <div class="box">
+    <div class="col-6">
+        Razorpay Account Id
+    </div>
+    <div class="col-6" *ngIf="editToggle" >
+      {{rzrAccountId?rzrAccountId:"Yet To Approve"}}
+      <button mat-icon-button color="accent" aria-label="Example icon button with a plus one icon" (click)="editToggler()" class="my-fab">
+        <i class="material-icons " aria-label="favorite">edit</i>
+      </button>
+    </div>
+    <div class="col-6" *ngIf="!editToggle">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <!-- <mat-label>Favorite food</mat-label> -->
+        <input matInput placeholder="acc_xxxxxxxxxx" [(ngModel)]="rzrAccountId">
+      </mat-form-field>   
+      <button mat-icon-button color="accent" aria-label="Example icon button with a plus one icon" (click)="editToggler()" class="my-fab">
+        <i class="material-icons " aria-label="favorite">edit</i>
+      </button> 
+    </div>
+    
+  </div>
+
+  <button mat-stroked-button (click)="updateRequest()" [disabled]="rzrAccountId==originalindb" color="accent">Update</button>
+  <button mat-stroked-button (click)="closeDialog()">Close</button>

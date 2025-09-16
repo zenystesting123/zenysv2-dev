@@ -1,0 +1,89 @@
+<!----If user has calendar access----->
+<div *ngIf="commonService.userPlan.calendarIntegration && commonService.userPlan.activitiesAccess">
+    <!----tool bar starts----->
+    <mat-toolbar class="border-bottom" style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+      <button mat-icon-button title="back" (click)="onBackMob()">
+        <!----Back button----->
+        <mat-icon color="accent"> arrow_back </mat-icon>
+      </button>
+      <span>Calendar</span> &nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="example-spacer"></span>
+      <!---------Date filter----------->
+      <mat-form-field style="font-size: 14px" *ngIf="!connectCalendarDisplay">
+        <mat-label>Choose a date</mat-label>
+        <input matInput #fromInput [matDatepicker]="picker" [(ngModel)]="selectedDate"
+          (ngModelChange)="onChooseDate($event)" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <!----------Clear filter---------->
+      <button *ngIf="!connectCalendarDisplay" mat-icon-button color="warn" (click)="resetDateWeb()"
+        title="Clear filter">
+        <mat-icon>clear</mat-icon>
+      </button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <!-----------Add Event--------->
+      <button *ngIf="!connectCalendarDisplay" mat-mini-fab color="accent" mat-icon-button
+        aria-aria-label="Add new event icon" title="Add new event" (click)="onAddEvent()">
+        <mat-icon [ngStyle]="{ color: 'white' }">add</mat-icon>
+      </button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <!----------Choose day ,week or month view---------->
+      <mat-button-toggle-group name="fontStyle" aria-label="view" [(ngModel)]="view">
+        <mat-button-toggle *ngIf="!connectCalendarDisplay" (click)="view = 'day'"  value="day"
+         (click)="onDayChange(viewDate)">Day</mat-button-toggle>
+        <mat-button-toggle *ngIf="!connectCalendarDisplay" (click)="view = 'week'"  value="week"
+         (click)="onWeekChange(viewDate)">Week</mat-button-toggle>
+        <mat-button-toggle *ngIf="!connectCalendarDisplay" (click)="view = 'month'"  value="month"
+        (click)="onMonthChange(viewDate)" >Month</mat-button-toggle>
+      </mat-button-toggle-group>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <!-------logout button------------->
+      <button *ngIf="!connectCalendarDisplay" (click)="onLogOut()" mat-icon-button color="warn" title="Log Out">
+        <mat-icon>logout</mat-icon>
+      </button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </mat-toolbar>
+  
+    <!--------if user not signed in show the login button------------>
+    <!-- <div *ngIf="connectCalendarDisplay">
+      <div class="row">
+        <div class="col-md-12">
+          <a (click)="onLogIn()" class="btn btn-lg btn-google btn-block text-uppercase btn-outline" href="#"
+            onClick="return false;"><img src="https://img.icons8.com/color/48/null/ms-outlook.png" />
+            Connect to Outlook Calendar</a>
+        </div>
+      </div>
+      <br />
+    </div> -->
+    <!-------- if day view------------>
+    <div *ngIf="view == 'day' && !connectCalendarDisplay">
+  
+      <app-day-view [viewDate]="viewDate"></app-day-view>
+    </div>
+    <!--------if week view------------>
+    <div *ngIf="view == 'week' && !connectCalendarDisplay">
+      <app-week-view [viewDate]="viewDate"></app-week-view>
+    </div>
+    <!----------if month view---------->
+    <div *ngIf="view == 'month' && !connectCalendarDisplay">
+      <app-month-view [viewDate]="viewDate"></app-month-view>
+    </div>
+      <!----------progress bar---------->
+      <mat-progress-bar
+      [style.visibility]="connectCalendarDisplay ||outlookCalendarEventService.dayVisible ||outlookCalendarEventService.monthVisible ||outlookCalendarEventService.weekVisible ? 'hidden' : 'visible' "
+      mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+  <!----Message to show if plan is invoicing, if user doesnt have calendar access----->
+  <div class="container" *ngIf="(!commonService.userPlan.calendarIntegration || !commonService.userPlan.activitiesAccess) && (commonService.subscribedPlan == 'invoicing')"
+    style="text-align: center">
+    <h3>No Access</h3>
+  </div>
+  <!----Message to show if plan is not invoicing, if user doesnt have calendar access----->
+  <div class="container" *ngIf="(!commonService.userPlan.calendarIntegration || !commonService.userPlan.activitiesAccess) && (commonService.subscribedPlan != 'invoicing')"
+    style="text-align: center">
+    <h3>Upgrade To Diamond Plan To Access Calendar</h3>
+  </div>
+  

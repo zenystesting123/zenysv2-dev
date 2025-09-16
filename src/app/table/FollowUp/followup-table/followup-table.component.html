@@ -1,0 +1,104 @@
+<!-- If Access is restricted -->
+<div
+  *ngIf="!isLoading && (disableView || !commonService.userPlan.activitiesAccess || !commonService.userPlan.followupsAccess)"
+  class="container" style="text-align: center">
+  <br />
+  <h3>No Access</h3>
+</div>
+<!-- display table -->
+<div *ngIf="
+        !disableView &&
+        commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess
+      " class="container-fluid" style="margin-bottom: 10px">
+  <br />
+  <div class="example-container border" style="border-radius: 5px;background-color: white;">
+    <!-- table toolbar -->
+    <mat-toolbar [ngStyle]="{'background-color':'white'}" [ngClass]="{isDisabled: isLoading}">
+      <span class="example-spacer"></span>
+      <button mat-icon-button color="accent" aria-label="Table settings" title="Customise table"
+        [ngClass]="{isDisabled:!onCheckNetwork()}" (click)="openDialog()">
+        <mat-icon class="material-icons-outlined">settings</mat-icon>
+      </button>
+      <button mat-icon-button color="accent" aria-label="Download table" title="Download table"
+        [ngClass]="{isDisabled: !onCheckNetwork()}"
+        (click)="gridContainerService.followupList.data.length>0 ? exporter.exportTable('csv',{fileName:fieldNameFollowup}): noDataMessage()">
+        <mat-icon class="material-icons-outlined">download</mat-icon>
+      </button>
+    </mat-toolbar>
+    <br>
+    <!-- spinner while data loading -->
+    <mat-spinner *ngIf="isLoading" color="accent" diameter="50"></mat-spinner>
+    <div class="border-top" [ngClass]="{ 'disabled': isLoading }">
+
+      <!-- table starts here -->
+      <table [ngClass]="{isDisabled: isLoading}" mat-table [dataSource]="gridContainerService.followupList"
+        class="mat-elevation-z1 demo-table" matTableExporter #exporter="matTableExporter">
+
+        <ng-container *ngFor="let column of columnsDispaly" [matColumnDef]="column.columnDef">
+          <th mat-header-cell *matHeaderCellDef>
+            {{column.header}}
+          </th>
+          <td mat-cell *matCellDef="let row" class="truncate-cell">
+            <span>
+              {{findColumnValue(row,column)}}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Select Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions&nbsp;&nbsp;</th>
+          <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+            <button [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+              aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menuActions">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <!-- 3 dot icon mat menu -->
+            <mat-menu #menuActions="matMenu">
+              <!-- edit button -->
+              <button mat-menu-item [disabled]="disableFollEdit" (click)="onEditFollowUps(row)">Edit</button>
+              <!-- edit button -->
+              <button mat-menu-item *ngIf="!row.completedStatus" (click)="markasCompleted(row)"
+                [disabled]=disableFollEdit>Mark
+                as completed</button>
+              <!-- call button -->
+              <button mat-menu-item (click)="onCallFollowUp(row.id,row.customerId)" *ngIf="enableOutboundCallsViaCallBridging  && callBridgingServiceProvider == 'Bonvoice'
+                                    && userNumber
+                                    && !row.completedStatus ">Call</button>
+            </mat-menu>
+
+
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            No data to display
+          </td>
+        </tr>
+
+      </table>
+      <!-- table ends here -->
+      <!-- paginator -->
+      <mat-paginator [length]="totalItems" [pageSize]="gridContainerService.pageSize"
+        [pageIndex]="gridContainerService.pageIndex" [pageSizeOptions]="pageSizeOptions" (page)="onPageChanged($event)"
+        [intl]="paginatorIntl" [ngClass]="{isDisabled: isLoading || !onCheckNetwork()}">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

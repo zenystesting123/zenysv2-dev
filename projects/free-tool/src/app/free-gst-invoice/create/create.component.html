@@ -1,0 +1,1611 @@
+<!--Navbar-->
+<!-- <nav id="navbar" class="navbar fixed-top navbar-expand-xl navbar-header navbar-mobile header-scrolled">
+    <div class="navbar-container container">
+         LOGO 
+        <div class="navbar-brand">
+            <a class="navbar-brand-logo logo" href="#top">
+                <img src="assets/images/logo.png">
+            </a>
+            <a class="navbar-brand-logo logo-scroll" href="#top">
+                <img src="assets/images/logo.png">
+            </a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon "></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav ">
+
+            <ul class="navbar-nav menu-navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-target=".navbar-collapse.show" href="#top">
+                        <p class="nav-link-menu">Home</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target=".navbar-collapse.show" href="#about">
+                        <p class="nav-link-menu">About</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target=".navbar-collapse.show" href="#features">
+                        <p class="nav-link-menu">Features</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target=".navbar-collapse.show" href="#pricing">
+                        <p class="nav-link-menu">Pricing</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#testimonials">
+                        <p class="nav-link-menu">Reviews</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#clients">
+                        <p class="nav-link-menu">Clients</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#faq">
+                        <p class="nav-link-menu">FAQs</p>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav> -->
+<!--Navbar-->
+
+
+
+
+<!--Toolbar ends-->
+
+<div class="wrapper" style="min-height: 900px;">
+
+    <div class="container header-container">
+        <br>
+        <!-- <mat-toolbar >
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="Edit">
+
+                    <mat-button-toggle value="Edit" (click)="setPreviewOff()">Edit</mat-button-toggle>
+                    <mat-button-toggle value="Preview" (click)="setPreviewOn()">Print Preview
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <span class="example-spacer"></span>
+
+                <div *ngIf="previewMode">
+                    <button [(colorPicker)]="color1" mat-icon-button color="primary"
+                        aria-label="Example icon button with a home icon">
+                        <mat-icon color = "primary">palette</mat-icon>
+                    </button>
+
+                    <button (click)="prevTemplate()" mat-icon-button color="primary"
+                        aria-label="Example icon button with a home icon"
+                        title="Previous print layout">
+                        <mat-icon color = "primary">navigate_before</mat-icon>
+
+                    </button>
+                    Layout
+                    {{printTemplate}}
+
+                    <button (click)="nextTemplate()" mat-icon-button color="primary"
+                        aria-label="Example icon button with a home icon" title="Next print layout">
+                        <mat-icon color = "primary">navigate_next</mat-icon>
+                    </button>
+                 
+                    <button mat-raised-button color="primary" (click)="print()"
+                        aria-label="Example icon button with a print icon" title="Save/ Print">
+                        <mat-icon>print</mat-icon>    
+                    </button>
+                    <button mat-raised-button color="primary" (click)="printPdf()"
+                        aria-label="Example icon button with a print icon" title="Save/ Print">
+                        <mat-icon>print</mat-icon>
+
+                    </button> -->
+        <!-- <button mat-flat-button color="primary" (click)="print()" >Print</button> -->
+        <!-- &nbsp;&nbsp;
+                    <button mat-flat-button color="primary" (click)="print()">Download</button>
+
+                </div>
+            </mat-toolbar> -->
+        <br>
+        <div class="container-fluid" *ngIf="isLarge||isXLarge">
+            <br>
+            
+
+
+ 
+            <br>
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="row" *ngIf="!previewMode">
+
+                        <div *ngIf="docType=='Invoice'">
+                            <app-doc-forms></app-doc-forms>
+                            <br>
+                            <button mat-raised-button color="primary" (click)="setPreviewOn('btn_freeInv_preview')"
+                                style="font-size: 18px;">
+                                Print Preview</button>
+
+                            <!-- FAQ starts here -->
+                            <br>
+                            <br>
+                            <app-invoice-blogs></app-invoice-blogs>
+                            <br>
+                            <br>
+                            <div class="col-md-12 faq-title-section">
+                                <h3 style="color: #283593;">Frequently asked questions</h3>
+                            </div>
+
+                            <div class="container-fluid">
+                                <h3 class="mat-h2 mat-title"> 1. What is an invoice?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An invoice is a document that provides details about the products and services a
+                                        seller provides to the customer. It details the contact and billing information,
+                                        gives an itemized list of products or services provided, provides the charges
+                                        for the service/products sold and specifies payment terms, if any. Invoices are
+                                        essential for businesses as they keep a record of the transactions and enable
+                                        them to get paid for the products/services provided.
+
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">2. What is an invoice number? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An invoice number is a unique number for both the seller’s and buyer’s
+                                        reference. It helps businesses to track the payments.
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">3. As a freelancer, how do I make an invoice for the first
+                                    time? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        You can use Zenys invoice generator to create an invoice. It is an invoice
+                                        software designed for freelancers and small businesses that is easy to use and
+                                        absolutely free. You just need to choose an invoice template from the multiple
+                                        templates available in our invoice maker and type in the invoice details. You
+                                        can download the invoice PDF and send it to your clients. As simple as that!
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">4. How do I send my Invoice using Zenys invoice free
+                                    invoice generator? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Using our invoicing software you can send invoices by downloading the PDF of the
+                                        invoice. Just click the download button and you can email the invoice or send it
+                                        via whatsapp.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">5. Is this Online Invoice Maker free? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+
+                                        Absolutely. Our Invoice generator online is free for lifetime. You can create
+                                        any number of invoices with our invoice generator. We won't charge you a penny.
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">6. Can I make and send invoices while away from my office
+                                    using Zenys Invoice Generator Software?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Of Course. You can take this invoice software on the road and create and send
+                                        invoices to your clients. An exciting feature is that it works offline too.
+
+                                    </p>
+                                </div>
+
+                                <h3 class="mat-h2 mat-title">7. Can I create professional looking invoices using Zenys
+                                    Free Invoice Generator Online?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Why doubt? Our free invoice templates are designed in such a way to help small
+                                        businesses and freelancers win over clients. You can create the most
+                                        professional invoices with our invoice generator. If not sure, check out our
+                                        invoice formats and clear them right away.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">8. Is my data safe in this GST invoicing software? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. Our billing softwaredoes not save any details such as your billing details,
+                                        GST number, your customer number, items sold etc. The data entered is used to
+                                        print the document directly. In fact you can even use the tool offline.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">9. Can I personalize the invoice template using Zenys Free
+                                    Invoice Generator ?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Of course. Using our invoice software, you get an option to add your company
+                                        logo or signature to your invoices making them look professional. By clicking on
+                                        the palette icon, you can also choose colours for your invoice layout that match
+                                        your brand and logo.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">10. Will there be ads or watermarks on the invoices I
+                                    create using Zenys Free Online Invoice Maker ? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Absolutely not. The online invoices you create are totally free from
+                                        advertisements or watermarks. Although a free tool, you can create invoices
+                                        without having to worry about ads on them.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">11. Can I save my invoice and customer details using Zenys
+                                    invoicing software ? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        If you want to save your invoices, you can sign up for our CRM software. You can
+                                        access a lot of features including saving client’s details, tracking invoices,
+                                        creating sales invoices etc.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">12. Can I see a sample invoice using Zenys invoice
+                                    software?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. You can see sample invoices using our software.We have multiple invoice
+                                        formats available in the invoice format options. You can download a PDF invoice
+                                        template and use them to create invoices whenever you want. You can also preview
+                                        the invoice by clicking the preview button.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">13. Can I choose between different currency options using
+                                    Zenys Billing Software? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. With Zenys invoice generator you can choose different currency options to
+                                        generate invoices .
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">14. What is a tax invoice?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An invoice created by a GST registered business for taxable products/services is
+                                        called a tax invoice. Tax invoices are mandatory for claiming Input Tax Credit.
+
+                                    </p>
+                                </div>
+
+                                <h3 class="mat-h2 mat-title"> 15. How do I create tax invoices using this invoice
+                                    generator?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Using our invoice creator , you can generate invoices with tax by enabling the
+                                        GST/ Cess options provided in the invoice template, and typing in the percentage
+                                        of tax in the field.
+
+                                    </p>
+                                </div>
+
+                                <h3 class="mat-h2 mat-title">16. How do I calculate the taxes on my invoices using Zenys
+                                    invoice generator online? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        You can do GST invoicing easily with our GST Billing software. Calculation of
+                                        taxes is never a problem as we do all the calculations fo
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 17. Why Is Online Invoice Generator Free on Zenys invoice
+                                    generator ?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        As ours is a Small Business Invoice Software, our intention is to provide
+                                        freelancers, small businesses,freelancers, solopreneurs and entrepreneurs an
+                                        easy way to invoice clients easily and without having to spend any money on it.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 18. Do I have to create an account to use this online
+                                    invoice generator?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        No. You don't need to sign up for our invoice generator tool. All you need to do
+                                        to create an invoice is click the Create an Invoice button, type in the data and
+                                        click the download button. Your invoices are ready to be sent to your clients.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">19. Can I add more details to my invoices using Zenys
+                                    Online Invoice Maker?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes, you can. In the additional field provided in the invoice template you can
+                                        add more details to your invoices.
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title"> 20. Is Zenys invoice generator compatible with a Mac?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Zenys invoice generator software is available on any device.
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title"> 21. What is HSN Code? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        HSN code stands for “Harmonized System of Nomenclature”. It is a 6-digit uniform
+                                        code that has been introduced to bring a uniform classification of goods.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">22. What are the other free products provided by Zenys?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Other than our free invoice maker, Zenys provides a free quote generator, and a
+                                        free estimate maker. You can download bill formats for free including invoice
+                                        formats, quotation formats, or estimate formats using our tool. We also provide
+                                        CRM software that is designed for small businesses and freelancers. You can sign
+                                        up for our software and avail it.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">23. What is the difference between a bill and an invoice?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Both the terms are generally referred to as documents that provide details about
+                                        the cost of products sold or services rendered to the buyer. An invoice is
+                                        generally used by businesses that defines the payment requests to the buyer
+                                        while a bill is a term used by a customer to refer to payments they owe to the
+                                        sellers .
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title"> 24. What is a bill of supply? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        A bill of supply is a document issued by a GST registered business when GST is
+                                        not applicable on a transaction or if he is a Composite Scheme dealer.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 25. What is GSTIN?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        GSTIN, known as GST Identification Number, is a fifteen digit unique number that
+                                        is assigned to every GST registered person which will be State wise and PAN
+                                        based.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">26. What is the time limit to issue invoices in the GST
+                                    system? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        In case of services, the invoices should be issued before or after the services
+                                        are rendered. If after, the time period of issuing an invoice is 30days. For
+                                        goods , an invoice should be issued before or at the time of supply.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 27. How many copies of invoices are required under the
+                                    GST?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        In case of goods, you require 3 copies, if it involves its transportation( for
+                                        the customer, for your records and for the transporter of goods). For services,
+                                        2 copies of invoices are required.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">28. What is place of supply under GST? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Place of supply is simply the place of delivery of goods or the location of the
+                                        consumption of services.
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">29. What is reverse charge? </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Reverse charge is a mechanism by which the buyer of goods/services is liable to
+                                        pay taxes instead of the supplier.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 30. What is mixed and composite supply?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        A mixed supply means two or more individual goods/services are sold by a taxable
+                                        person for a single price. Whereas, a composite supply means a supply made by a
+                                        taxable person consisting of two or more goods/ services that are naturally
+                                        bundled together.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title"> 31. How are interstate and intrastate transactions treated
+                                    under the GST?</h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An intra state transaction is when the location of the supplier and place of
+                                        supply are in the same State (including UTs with legislature) . In such
+                                        transactions, the taxpayer is liable to pay State and Central Tax. The
+                                        transaction is inter state, if the locations are in different states. Here, a
+                                        combined tax called Integrated GST (IGST) will be collected by the Central
+                                        Government.
+
+                                    </p>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">Why choose Zenys invoice software?</h3>
+                                <br>
+                                <p>Our invoice generator is an invoicing software for small businesses and freelancers
+                                    who are in need of an invoice generator which is free and is easy to use. This
+                                    billing software helps you make and send professional-looking online invoices to
+                                    your customers in very few steps. All you need to do is add the invoice details,
+                                    billing information and the item charges in the fields provided in the invoice
+                                    template - no fuss in figuring out the interface of our invoice generator online.
+                                </p>
+                                <p>To look even more professional we have added an option to add your logo in the logo
+                                    field and your signature at the bottom of the invoice. To get paid on time, you can
+                                    also add your bank account details in the respective field of the invoice.
+                                </p>
+                                <p>If you need a GST bill format you can download the templates and can create unlimited
+                                    GST invoices in a minute. The quotation, estimates and GST invoice formats in excel,
+                                    let you create any number of invoices without having to spend time on creating your
+                                    own invoices. We have made that process easy for you. Now, don’t wait any longer,
+                                    create an invoice right now and see for yourself how easy and quick it is to create
+                                    invoices online with the best free invoice software you’ll ever use.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">Benefits of using an invoice generator</h3>
+                                <br>
+                                <p>Using an invoice software is the smartest way to do your job of creating and sending
+                                    invoices to your clients. When there are hundreds of reasons why you should use our
+                                    free gst invoice maker, we have listed down the most important ones:
+                                </p>
+                                <ul>
+                                    <li>
+                                        Our free invoice generator saves you much time, money and effort.
+                                    </li>
+                                    <li>
+                                        There are multiple GST bill formats in our online invoice generator that can
+                                        make your GST invoices look professional.
+                                    </li>
+                                    <li>
+                                        You can personalise your invoices by adding your company logo and signature to
+                                        the professional invoice templates we have.
+                                    </li>
+                                    <li>
+                                        Downloading an invoice is much easier with our invoice generator tool.
+                                    </li>
+                                    <li>
+                                        You get to download excel invoice formats and other bill formats so that you can
+                                        create unlimited invoices .
+                                    </li>
+                                    <li>
+                                        With our invoice software, you can send invoices to your clients on the go.
+                                    </li>
+                                    <li>
+                                        Our invoicing software makes your overall payment processes organized.
+                                    </li>
+                                </ul>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">What are the alternatives to using an invoice maker?</h3>
+                                <br>
+                                <p>There are a number of excel invoice templates available online. You can download
+                                    them, open it in excel and add the invoice details in it. This process of creating
+                                    an invoice seems good, but when you have to create a lot of invoices, you might find
+                                    it quite time consuming.
+                                </p>
+                                <p>If you are using an online invoice generator like Zenys free invoice generator, you
+                                    can create invoices online by typing in the client and invoice details using our
+                                    invoice generator itself. Also, saving client details and tracking invoices can keep
+                                    your payment processes organised. For that you can sign up for our CRM software and
+                                    avail all the free invoicing features.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;"> How to Customize invoices with our invoice maker?</h3>
+                                <br>
+                                <p>With our invoice generator, you can download invoice formats and open them in excel
+                                    to create invoices. It is totally free and you can create any number of invoices
+                                    with the bill formats we offer you. Using our tool you can also add in all the
+                                    invoice details in the template provided and change the layout of it according to
+                                    your needs.To make it look attractive, click the palette icon and add colours to
+                                    your invoice that suit your company brand.
+                                </p>
+                                <p>We also give our users an option to add the company logo and signature to the
+                                    invoices. This can make your invoices look professional and create an impression on
+                                    your clients.
+                                </p>
+                                <p>Check out our professional templates and customize your invoices easily!</p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">What are the mistakes to avoid while creating an invoice?
+                                </h3>
+                                <br>
+                                <p>It's less likely that you make an error in the invoice format if you are using Zenys
+                                    free invoice software. But, you have to be careful in the data you enter in the
+                                    invoice templates. Some of common mistakes are:
+                                </p>
+                                <ol>
+                                    <li>
+                                        Incorrect date
+                                    </li>
+                                    <li>Incorrect client details</li>
+                                    <li>Incorrect Client Billing Address</li>
+                                    <li>Incorrect rates and total cost</li>
+                                    <li>Spelling errors</li>
+                                </ol>
+                                <p>Make sure you avoid all the above mentioned errors as it can affect the credibility
+                                    of your business.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">What are the types of invoices?</h3>
+                                <br>
+                                <p>There are different types of invoices based on different industries and different
+                                    purposes. Say, you are a photographer. The invoice you create will not be the same
+                                    as one created by an import business owner. Invoices vary and it is important you
+                                    know about it. So,take a look at the 5 most commonly used invoices :
+                                </p>
+
+                                <ol>
+                                    <li>Proforma invoice: A proforma invoice is more like an estimation or a quote. It
+                                        is an invoice that is used to give the buyers a rough idea of what the
+                                        products/services cost.This invoice is sent before a work is done and is non
+                                        legal.
+                                    </li>
+                                    <li>Standard invoice : As the name suggests, standard invoice is a standard invoice
+                                        format that consists of all the details that is to be included in any invoice(
+                                        which includes the invoice number, invoice date, client details, billing
+                                        information, list of items and its cost). This invoice can be used for different
+                                        business transactions.
+                                    </li>
+                                    <li>Service invoice: Service invoices are mainly used by service based businesses
+                                        like web designers, software developers, etc, who charge for their services
+                                        based on the work time and not on quantity.
+                                    </li>
+                                    <li>Recurring invoice: Recurring invoices are invoices that are usually delivered at
+                                        the end of each month. They are fixed rates and mainly apply to rental
+                                        industries.
+                                    </li>
+                                    <li>Commercial invoice: Commercial invoicing also known as business invoicing is
+                                        done by a seller(exporter) documenting any foreign trade such as shipment.
+                                        Commercial invoices include the invoice details, invoice number,client details,
+                                        item charges and shipment details as well.
+                                    </li>
+                                </ol>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">How much does an online invoice generator generally cost in
+                                    India?</h3>
+                                <br>
+                                <p>Invoicing is a major part of any business to ensure they get paid on time. Most of
+                                    the businesses use an invoice software to do this job and the prices vary with
+                                    different software.
+                                </p>
+                                <p>There are hundreds of invoice generators online in India and some of them charge you
+                                    a fee for every invoice you create or a monthly fee. There are also invoice makers
+                                    that allow you to make upto 5 invoices for free but later charges you. However,
+                                    invoice generators like Zenys free invoice generator tool is free for lifetime that
+                                    allows users to create unlimited GST invoices .
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">3 Types of Invoicing Software for small business</h3>
+                                <br>
+                                <ol>
+                                    <li>Invoice generators: The quickest and easiest way for small businesses to invoice
+                                        their customers is by using an invoice generator. Zenys invoice generator is an
+                                        invoice generator that makes it easy for small businesses to do invoicing. It
+                                        helps you to create unlimited invoices and allows you to send invoices to
+                                        clients via mail by downloading the professional invoices in PDF format.
+                                    </li>
+                                    <li>Cloud based Invoicing Software : Cloud Invoicing Software provides a lot more
+                                        features than an invoice generator. With a Cloud Based Invoicing Software, you
+                                        can enable more invoice management features like tracking invoices and sending
+                                        them directly to your clients etc. For small businesses who are in need of a
+                                        software to simply create invoices this software might seem a little too
+                                        complicated. But if you need one which is easy to use and not as complicated as
+                                        other software in the market, you can sign up for our CRM software.
+                                    </li>
+                                    <li>Online billing and Accounting software: If you want to access more features like
+                                        accounting integration, managing accounts and tracking you can use an Accounting
+                                        Software. But most often small businesses do not require such software.
+                                    </li>
+                                </ol>
+
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;"> How to Create an Invoice Online using
+                                    Zenys Free Invoice Generator?</h3>
+                                <br>
+                                <p>Having doubts about creating an invoice with our invoicing software? Read this guide
+                                    and make sure you are creating invoices correctly using all the features our online
+                                    invoice maker offers you.
+                                </p>
+                                <h2 class="mat-h2 mat-title">Step 1 : Fill in the invoice details. </h2>
+                                <p>
+                                    In the invoice format provided, type in your document title in the field given.
+                                    Click on the logo field and click apply logo and select your logo. Type in the
+                                    invoice details where you can add the invoice number, invoice date, P O number etc.
+                                </p>
+                                <h2 class="mat-h2 mat-title">Step 2 : Billed by and billed to </h2>
+                                <p>
+                                    Once done with the invoice header, add the billing details of the client and your
+                                    company. If you are GST registered you can add your GST no also to make a GST
+                                    invoice. When you check the delivery location option you get to add the delivery
+                                    address.
+                                </p>
+                                <h2 class="mat-h2 mat-title">Step 3:Item and Charge </h2>
+                                <p>
+
+                                    This GST bill format allows you to add the respective currency, GST and Cess of your
+                                    item. Type in the Item name, quantity and the rate of it and if required you can add
+                                    your HSN code in the item description filed. To add more items click the Add Next
+                                    Item button and fill in the fields.
+
+                                </p>
+                                <h2 class="mat-h2 mat-title"> Step 4 : Additional Notes </h2>
+                                <p>
+                                    In the last step, you can type in any additional information, if you have any. To
+                                    ensure quick payment it’s better you enter your bank account details in the given
+                                    field. In the signature field, add your name and upload your signature. You dont
+                                    want to miss out on this feature as you can create invoices that look professional
+                                    and authentic. Lastly add your name, contact number and your email address.
+                                </p>
+                                <p>Once you have filled in all the details click preview and download your invoice by
+                                    clicking the Download button. If you feel like making changes to your invoice click
+                                    the Edit button and edit your invoice. Our online invoice generator provides you
+                                    with different layouts you can apply to your invoices. Follow these very simple 4
+                                    steps and create professional invoices in a minute.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;"> Who is it for?</h3>
+                                <br>
+                                <ul>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For photographers</h2>
+                                    </li>
+                                    <p>
+                                        Zenys invoice software is the best, free invoice software for photographers who
+                                        are not so tech-savvy. This simple invoicing software is the perfect,
+                                        tailor-made tool for such freelancers who don’t want to dip into their pockets
+                                        for an invoicing tool. You can choose an invoice template from the multiple
+                                        invoice templates available to create professional invoices online. You can
+                                        access it via the web or mobile phone to use this invoice maker.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For interior designers and architects</h2>
+                                    </li>
+                                    <p>
+                                        Zenys free invoice generator tool is the perfect choice for architects who are
+                                        in need of an online invoice maker to invoice clients. They can use their
+                                        company logo or signatures to create professional invoices with this free
+                                        invoice generator. You can access it via the web or mobile phone to use this
+                                        invoice maker.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For event planners </h2>
+                                    </li>
+                                    <p>
+                                        Being personalized for such business owners, Zenys invoice tool offers only the
+                                        required yet the best features for them. With an easy-to-use interface, event
+                                        planners and designers find it very easy to invoice their clients in seconds.
+                                        With Zenys they can make unlimited invoices for free from multiple invoice
+                                        samples like proforma invoice templates, sales invoice formats, GST invoice
+                                        formats and much more.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For designers</h2>
+                                    </li>
+                                    <p>
+                                        Zenys free invoice generator is a great invoicing tool for all small businesses
+                                        including designers. It is a free and easy-to-use invoice creator for India that
+                                        is accessible via the web and phones. They can create unlimited invoices without
+                                        having to pay or register.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For House owners/ Property owners </h2>
+                                    </li>
+                                    <p>
+                                        Zenys invoicing tool is the best invoice software even for house owners or
+                                        property managers. As a property owner, you have a lot of things to look over
+                                        including your rent collections. This online invoice creator helps things go
+                                        smoothly making your duties easier. With Zenys invoice tool, sending invoices to
+                                        your tenants is fast and easy. You get paid the right way with this invoice
+                                        maker.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title">For Boutique owners </h2>
+                                    </li>
+                                    <p>
+                                        Invoicing clients is a very essential part of a boutique business. For such
+                                        businesses the best invoice system you can opt for is Zenys free invoice
+                                        generator. There is no fuss in dealing with the finances with this easy, online
+                                        invoice software.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For bakers </h2>
+                                    </li>
+                                    <p>
+                                        Zenys free invoice generator is the right choice for bakers and people doing
+                                        homemade cake business. You can free yourself from having your hands full in the
+                                        financial matters of your business and spend your time on what you love. Sending
+                                        invoices to clients is never again a big deal with this easy invoice tool. For a
+                                        person who is not into too much technology, this invoice generator is the best
+                                        option. No sign in, no ads, no subscription, and multiple template options! You
+                                        get the most professional-looking invoices to send to your customers.
+
+                                    </p>
+
+
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For makeup artists </h2>
+                                    </li>
+                                    <p>
+                                        For all the love and dedication you put into your job to make your clients look
+                                        beautiful, you deserve to be paid quickly. When you have a lot of things to
+                                        focus on, Zenys free invoice generator has made the payment processes simple for
+                                        you. You can create professional invoices in a snap and share them with your
+                                        clients on the go. With this free invoice software, you save money, time, and
+                                        effort to settle the final deals with your clients.
+
+                                    </p>
+
+                                </ul>
+
+                            </div>
+                            <br>
+                            <br>
+
+
+
+
+
+
+
+
+                            <!-- FAQ end here -->
+
+                        </div>
+                        <div *ngIf="docType=='Estimate'">
+                            <app-estimate-forms></app-estimate-forms>
+                            <br>
+                            <button mat-raised-button color="primary" (click)="setPreviewOn('btn_freeEst_preview')"
+                                style="font-size: 18px;" class="btn_clk_freeEst_preview">
+                                Print Preview</button>
+
+                            <!-- FAQ starts here -->
+                            <br>
+                            <br>
+                            <div class="col-md-12 faq-title-section">
+                                <h3 style="color: #283593;">Frequently asked questions</h3>
+                            </div>
+                            <div class="container-fluid">
+                                <h3 class="mat-h2 mat-title">
+                                    1. What is an estimate in business?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An estimate is a document that gives an approximate price of goods and services
+                                        provided by the seller to the buyer. A service provider can begin with an
+                                        estimate to make an approximate guess of the cost of the work before issuing a
+                                        quotation to the buyer.
+
+                                    </p>
+                                </div>
+
+                                <h3 class="mat-h2 mat-title">
+                                    2. How is an estimate different from a quotation?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        An estimate is a document that holds an approximate price of the service
+                                        provided or products sold to the customer. It is an estimated guess on how much
+                                        the work cost. It is not binding and can change depending on the work. Whereas,
+                                        a quotation is a fixed priced offer which means the service providers can move
+                                        ahead with the work. Once approved, the service providers should adhere to the
+                                        details mentioned in the quotation for the validity period.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">
+                                    3. How can I send estimates to my clients using Zenys estimate software?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Using our estimate software, once done with creating estimates, you can download
+                                        a PDF estimate and send them to your clients via mail, WhatsApp, or any other
+                                        means.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">
+                                    4. Will there be ads or watermarks on the estimate I create using Zenys estimate
+                                    maker ?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Absolutely not. The online estimates you create are totally free from
+                                        advertisements or watermarks. Although a free tool, you can create estimates
+                                        without having to worry about ads on them.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">
+                                    5. Can I personalize the estimate template using Zenys free estimate generator?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Of course. Using our estimation software, you get an option to add your company
+                                        logo or signature to your estimates making them look professional. By clicking
+                                        on the palette icon, you can also choose colours for your estimate layout that
+                                        match your brand and logo.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">
+                                    6. Can I choose between different currency options using Zenys estimation software?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. With Zenys estimate generator you can choose different currency options to
+                                        build estimates.
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">
+                                    7. Can I generate a PDF estimate using Zenys Estimate Creator?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. With our estimate software you can create estimates online and generate a
+                                        PDF copy of them by just clicking the download button.
+                                    </p>
+                                </div>
+
+
+
+                                <h3 class="mat-h2 mat-title">
+                                    8. Can I save my estimates and customer details using Zenys Estimate Software?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        By signing up for our free CRM and billing software, you can save your estimates
+                                        and customer details.
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">
+                                    9. Is Zenys estimate maker actually free?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Absolutely. You can create estimates online for free with our estimate maker.
+                                        There is no sign-up required and you can work offline too with our free estimate
+                                        maker.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">
+                                    10. How do I create tax estimates using this estimate maker?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Using our estimate creator , you can generate tax estimates by enabling the GST/
+                                        Cess options provided in the estimate template, and typing in the percentage of
+                                        tax in the field.
+
+                                    </p>
+                                </div>
+                                <h3 class="mat-h2 mat-title">
+                                    11. Can I edit my estimates using Zenys free estimate software?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Of Course. You can edit estimates using our free estimate generator. All you
+                                        have to do is click the edit button provided above the estimate template and
+                                        make the required changes to the created online estimate.
+
+                                    </p>
+                                </div>
+
+
+                                <h3 class="mat-h2 mat-title">
+                                    12. Can I send estimates on the go using Zenys online estimate maker?
+                                </h3>
+                                <div class="panel">
+                                    <p class="text-justify">
+                                        Yes. Our estimate generator allows you to download a PDF estimate which could be
+                                        sent to your clients via email or whatsapp.
+                                    </p>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">Benefits of using an estimate maker</h3>
+                                <br>
+                                <p>
+                                    Using an estimation software is the smartest way to do your job of creating and
+                                    sending estimates to your clients. When there are hundreds of reasons why you should
+                                    use our free gst estimate generator, we have listed down the most important ones:
+
+                                </p>
+                                <ul>
+                                    <li>
+                                        Our free estimate creator saves you much time, money and effort..</li>
+                                    <li>You get to choose an estimate template from the multiple templates available
+                                        that suits your business with our online estimate maker
+                                    </li>
+                                    <li>
+                                        Make professional estimates by adding your company logo and signature.
+                                    </li>
+                                    <li>
+                                        Downloading an estimate is much easier.
+                                    </li>
+                                    <li>
+                                        You get to download excel estimate templates so that you can create unlimited
+                                        estimates.
+                                    </li>
+                                    <li>
+                                        Easy to send cost estimates to your clients using our estimate software.
+                                    </li>
+                                    <li>
+                                        Makes your overall payment processes organized.
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">What are the Different Types of Estimates?</h3>
+                                <br>
+                                <ul>
+                                    <li>
+                                        Preliminary Estimate :
+                                    </li>
+                                    <p>
+                                        Also called an approximate estimate, this cost estimate is usually prepared in
+                                        the initial stage to have an idea about the approximate cost of the project.
+                                        They are prepared with reference to the cost of similar services done
+                                        previously.
+
+                                    </p>
+                                    <li>
+                                        Quantity Estimate
+                                    </li>
+                                    <p>
+                                        This type of estimate is mainly used in construction projects in which the list
+                                        of quantities for all materials needed for project completion are specified.
+                                        This method of estimating helps the client get an idea about the list of
+                                        quantities and the corresponding costs for each quantity.
+
+                                    </p>
+                                    <li>
+                                        Detailed Estimate
+                                    </li>
+                                    <p>
+                                        A preliminary estimate is what later becomes a detailed estimate when more
+                                        details of the project are available. A detailed estimate is a more accurate
+                                        estimate that could be prepared when there is detailed information about the
+                                        quantity, costs, rates and all the materials required to complete the project.
+
+                                    </p>
+                                </ul>
+                            </div>
+                            <br>
+                            <br>
+
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">How to Make an Estimate in The Right Format</h3>
+
+                                <p> To make your estimate stand out from the crowd and create an impression on your
+                                    clients, it is important that your estimate looks professional. For that you need to
+                                    follow the right estimate format.
+                                </p>
+
+                                <p> When you have an option to use an online estimate maker, why take up the burden of
+                                    creating an estimate from scratch?
+                                </p>
+                                <p>
+                                    Zenys estimate creator provides you with a free estimate template that you never
+                                    have to worry about the estimate formats. You just have to select an estimate
+                                    template, fill up the fields and click the download button. You can create
+                                    professional estimates online in just seconds with our free gst estimate generator.
+
+                                </p>
+                                <br>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">Alternatives to using an estimate maker</h3>
+                                <br>
+                                <p>
+
+                                    If you are using an online estimate generator like Zenys estimation software, you
+                                    can create estimates online by typing in the client and estimate details using our
+                                    estimate maker itself. Also, saving client details can keep your payment processes
+                                    organised. For that you can sign up for our CRM software and avail all the features.
+                                </p>
+                                <p> There are a number of excel estimate templates available online. You can download
+                                    them, open it in excel and add the estimate details in it. This process of creating
+                                    an estimate seems good, but when you have to create a lot of estimates , you might
+                                    find it quite time consuming.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">What's special about our free estimate template?</h3>
+                                <br>
+                                <p>
+                                    Our estimate templates are designed in such a way that it is perfect for freelancers
+                                    and small businesses.
+                                    We have added options for you to customize and personalize them by adding your logo
+                                    and signature.
+                                    It is designed in the most professional way possible keeping in mind the needs of
+                                    your business.
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">How to Create an Estimate using Zenys estimate software?
+                                </h3>
+                                <br>
+                                <p>Here is a step-by-step guide for you on how to create an estimate with our online
+                                    estimate maker
+                                    so that you can create estimates online without any errors.
+                                </p>
+                                <h2 class="mat-h2 mat-title"> Step 1 : Fill in the Estimate details.</h2>
+                                <p>
+
+                                    In the estimate format provided, type in your document title in the field given.
+                                    Click on the logo field and click apply logo and select your logo. Type in the
+                                    estimate details where you can add the estimate number, estimate date etc.
+
+                                </p>
+                                <h2 class="mat-h2 mat-title"> Step 2 : Billed by and billed to</h2>
+                                <p>
+
+                                    Once done with the header, add the billing details of the client and your company.
+                                    If you are GST registered you can add your GST no also to make a cost estimate. When
+                                    you check the delivery location option, you get to add the delivery address.
+                                </p>
+                                <h2 class="mat-h2 mat-title"> Step 3:Item and Charge</h2>
+                                <p>
+
+                                    This GST bill format allows you to add the respective currency, GST and Cess of your
+                                    item. Type in the Item name, quantity and the rate of it and if required you can add
+                                    your HSN code in the item description field. To add more items click the Add Next
+                                    Item button and fill in the fields.
+
+                                </p>
+                                <h2 class="mat-h2 mat-title"> Step 4 : Additional Notes</h2>
+                                <p>
+                                    In the last step, you can type in any additional information, if you have any. To
+                                    ensure quick payment it’s better you enter your bank account details in the given
+                                    field. In the signature field, add your name and upload your signature. You don’t
+                                    want to miss out on this feature as you can create estimates that look professional
+                                    and authentic. Lastly, enter your name, contact num and your email address.
+                                </p>
+                                <p>
+                                    Once you have filled in all the details click preview and download your estimate by
+                                    clicking the Download button. If you feel like making changes to your estimate click
+                                    the Edit button and edit your estimate. Our online estimate maker provides you with
+                                    different layouts you can apply to your estimates. Follow these very simple 4 steps
+                                    and create estimates in a minute.
+
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="container-fluid">
+                                <h3 style="color: #283593;">Who is it for?</h3>
+                                <br>
+                                <ul>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For Architects and Interior Designers</h2>
+                                    </li>
+                                    <p>
+                                        Zenys estimate creator is the best estimate generator for architects and
+                                        interior designers who are looking for a way to create and send estimates
+                                        quickly and easily to their clients. Being an architect, it is an important part
+                                        of your business to send estimates to your clients and our free estimate maker
+                                        makes this job easy for you. Just a few clicks and some typing, the estimates
+                                        are ready to be sent to your clients.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For software developers</h2>
+                                    </li>
+                                    <p>
+                                        The job of a software developer is time consuming and sometimes stressful. Then
+                                        why complicate it with the finance processes? Make the job easy with our free
+                                        estimate maker where you can create and send estimates in the quickest and
+                                        simplest way possible.
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For photographers</h2>
+                                    </li>
+                                    <p>
+                                        Are you a photographer? Then this is the right estimate maker for you to create
+                                        estimates without having to stress yourself out. This is a tailor made estimate
+                                        maker for freelancers that you can totally count on as you never have to worry
+                                        about handling the software. It is so easy to use that you can make and send
+                                        estimates to your clients on the go.
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For web developers</h2>
+                                    </li>
+                                    <p>
+                                        Zenys estimate software is an estimate maker for freelancers including web
+                                        developers, designers etc who don't want to spend their hard earned money on an
+                                        estimate generator .With our free estimate software you can create unlimited,
+                                        professional estimates for free and that too without registering. Just a few
+                                        seconds to fill in the fields of our estimate templates and the estimates are
+                                        ready. No more hassle to create estimates for your clients.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For event planners</h2>
+                                    </li>
+                                    <p>
+                                        Being personalized for such business owners, Zenys online estimate maker offers
+                                        only the required yet the best features for them. With an easy-to-use interface,
+                                        event planners find it very easy to create estimates for their clients in
+                                        seconds.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For home bakers</h2>
+                                    </li>
+                                    <p>
+                                        For a person who is not into too much technology, this free online estimate
+                                        maker is the best option. For home bakers sending estimates to clients is never
+                                        again a big deal with this easy free GST estimate maker No sign in, no ads, no
+                                        subscription, and multiple estimate template options! With our free online
+                                        estimate templates, you get the most professional estimates to send to your
+                                        customers.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For makeup artists</h2>
+                                    </li>
+                                    <p>
+                                        When you have to put in all your love and passion for your job, it might seem a
+                                        little hard for you at times to deal with the numbers. Zenys estimate generator
+                                        has made this job easy for you. We have multiple estimate templates that you can
+                                        choose from, that make you create estimates without spending much time and
+                                        effort.
+
+                                    </p>
+                                    <li>
+                                        <h2 class="mat-h2 mat-title"> For boutique owners</h2>
+                                    </li>
+                                    <p>
+                                        Zenys online estimate maker is the right choice for boutique owners and people
+                                        in the fashion industry. You can free yourself from having your hands full in
+                                        the financial matters of your business and spend your time on what you love.
+                                        Without spending money, time and effort you can create the most professional
+                                        looking estimates for your clients using our online estimate creator.
+
+                                    </p>
+
+                                </ul>
+                            </div>
+                            <br>
+                            <br>
+
+                            <!-- FAQ ends here -->
+                        </div>
+                        <div *ngIf="docType=='Quotation'">
+                            <app-quotation-forms></app-quotation-forms>
+                            <br>
+                            <button mat-raised-button color="primary" (click)="setPreviewOn('btn_freeQt_preview')"
+                                style="font-size: 18px;" class="btn_clk_freeQut_preview">
+                                Print Preview</button>
+                            <br>
+
+                            <br>
+                            <app-quotationformfaqs></app-quotationformfaqs>
+                        </div>
+                        <div *ngIf="docType=='Proforma Invoice'">
+                            <app-proformas></app-proformas>
+                            <br>
+                            <button mat-raised-button color="primary" (click)="setPreviewOn('btn_freeProfInv_preview')"
+                                style="font-size: 18px;" class="btn_clk_freeProfInv_preview">
+                                Print Preview</button>
+                        </div>
+                        <div *ngIf="docType=='Purchase order'">
+                            <app-purchaseorderforms></app-purchaseorderforms>
+                            <br>
+                            <button mat-raised-button color="primary" (click)="setPreviewOn('btn_freePO_preview')"
+                                style="font-size: 18px;" class="btn_clk_freePO_preview">
+                                Print Preview</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+
+
+                            </div>
+                            <div class="col-8">
+
+                            </div>
+                        </div>
+                        <!--
+                            <app-preview *ngIf="previewMode" [printTemplate]="printTemplate" [color1]="color1">
+                            </app-preview>
+                            -->
+
+
+
+                    </div>
+                    <div class="row border" *ngIf="previewMode">
+                        <mat-toolbar>
+                            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="Edit">
+                            </mat-button-toggle-group>
+
+
+                            <span class="example-spacer"></span>
+                            <span class="example-spacer"></span> <span class="example-spacer"></span>
+                            <div>
+                                <button [(colorPicker)]="color1" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon">
+                                    <mat-icon color="primary">palette</mat-icon>
+                                </button>
+
+                                <button (click)="prevTemplate()" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon"
+                                    title="Previous print layout">
+                                    <mat-icon color="primary">navigate_before</mat-icon>
+
+                                </button>
+                                Layout
+                                {{printTemplate}}
+
+                                <button (click)="nextTemplate()" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon" title="Next print layout">
+                                    <mat-icon color="primary">navigate_next</mat-icon>
+                                </button>
+
+
+                                <!-- <button mat-flat-button color="primary" (click)="print()" >Print</button> -->
+                                &nbsp;&nbsp;
+                                <button mat-flat-button color="primary" value="Edit"
+                                    (click)="setPreviewOff()">Edit</button>
+                                &nbsp;&nbsp;
+                                <button type="button" mat-raised-button color="primary" [useExistingCss]="true"
+                                    printSectionId="printsection" (click)="onPrintEvent('btn_freeDoc_print')"
+                                    styleSheetFile="{{ styleName }}" ngxPrint>
+                                    Print</button>&nbsp;&nbsp;
+                                <button mat-flat-button color="primary"
+                                    (click)="makepdf('btn_freeDoc_dwnld')">Download</button>
+
+                            </div>
+                        </mat-toolbar>
+                        <br><br> <br><br>
+                        <div *ngIf="printTemplate == 2">
+                            <app-preview2s [color1]="color1"></app-preview2s>
+                        </div>
+                        <div *ngIf="printTemplate == 1">
+                            <app-preview1s [color1]="color1"></app-preview1s>
+                        </div>
+                        <div *ngIf="printTemplate == 3">
+                            <app-preview3s [color1]="color1"></app-preview3s>
+                        </div>
+                        <div *ngIf="printTemplate == 4">
+                            <app-preview4s [color1]="color1"></app-preview4s>
+                        </div>
+                    </div>
+                    <br>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+        <div *ngIf="isMobile">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div  *ngIf="isMessageOpen">
+                        <mat-card>
+                            <img mat-card-image src="assets/images/Free Tool Signup.png" alt="Zenys Free sign-up">
+                            <mat-card-content>
+                                <p>
+                                    Sign up for our free CRM, Sales management, Invoicing and Collection tool!
+                                </p>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button mat-button   (click)="onCloseCard()"
+                                title="Close">Close
+                            </button>&nbsp;&nbsp;
+                            <a href="https://zenys.org/" target="_blank">
+                                <button mat-raised-button (click)=onLogInMob() color="accent">Try Now</button>
+                            </a>
+                            </mat-card-actions>
+                        </mat-card>
+
+
+
+                    </div>
+                    <br>
+
+                    <!-- <h3 class="header-subtitle" *ngIf="!previewMode" style="padding-top: 5px;">Create your free {{docType}} ! </h3> -->
+
+                    <div class="row" *ngIf="!previewMode">
+                        <div *ngIf="docType=='Invoice'">
+                            <app-doc-forms></app-doc-forms>
+
+
+                            <!-- <button mat-raised-button color="primary" (click)="openPopUP('print')"  style="font-size: 18px;">
+                                Print</button><br><br> -->
+                        </div>
+                        <div *ngIf="docType=='Estimate'">
+
+                            <app-estimate-forms></app-estimate-forms>
+                            <!-- <br>
+                            <button mat-raised-button color="primary" (click)="openPopUP('download')"  style="font-size: 18px;">
+                                Download</button> &nbsp;&nbsp; -->
+
+                            <!-- <button mat-raised-button color="primary" (click)="openPopUP('print')"  style="font-size: 18px;">
+                                Print</button><br><br> -->
+                        </div>
+                        <div *ngIf="docType=='Quotation'">
+                            <app-quotation-forms></app-quotation-forms>
+                            <!-- <br>
+                            <button mat-raised-button color="primary" (click)="openPopUP('download')"  style="font-size: 18px;">
+                                Download</button> &nbsp;&nbsp; -->
+
+                            <!-- <button mat-raised-button color="primary" (click)="openPopUP('print')"  style="font-size: 18px;">
+                                Print</button><br><br> -->
+                        </div>
+                    </div>
+                    <!-- <div class="row"  *ngIf="previewMode">
+                        <div id="printsection" #printsection >
+                            <app-preview1  [color1]="color1"></app-preview1> 
+                        </div>
+                    </div> -->
+                </div>
+                <!-- <mat-toolbar>
+                        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="Edit">
+                            <mat-button-toggle value="Edit" (click)="setPreviewOff()">Edit</mat-button-toggle>
+                            <mat-button-toggle value="Preview" (click)="setPreviewOn()">Preview
+                            </mat-button-toggle>
+
+                        </mat-button-toggle-group>
+                        <span class="example-spacer"></span>
+                        <div *ngIf="previewMode">
+                            <button [(colorPicker)]="color1" mat-icon-button color="primary"
+                                aria-label="Example icon button with a home icon">
+                                <mat-icon>palette</mat-icon>
+                            </button>
+
+                            <button (click)="prevTemplate()" mat-icon-button color="primary"
+                                aria-label="Example icon button with a home icon" title="Previous print layout">
+                                <mat-icon>navigate_before</mat-icon>
+
+                            </button>
+
+                            <button (click)="nextTemplate()" mat-icon-button color="primary"
+                                aria-label="Example icon button with a home icon" title="Next print layout">
+                                <mat-icon>navigate_next</mat-icon>
+                            </button>
+                            &nbsp;&nbsp;
+                            <button mat-flat-button color="primary" (click)="print()">Print</button>
+
+                        </div>
+                    </mat-toolbar> -->
+            </div>
+
+
+
+        </div>
+        <div class="container-fluid" *ngIf="isTablet">
+            <div class="row">
+                <div class="col-md-9">
+                    <h3 class="header-subtitle">Create your free {{docType}} ! </h3>
+                    <div class="row">
+                        <!--Navbar-->
+                        <mat-toolbar>
+                            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="Edit">
+                                <mat-button-toggle value="Edit" (click)="setPreviewOff()">Edit</mat-button-toggle>
+                                <mat-button-toggle value="Preview" (click)="setPreviewOn()">Preview
+                                </mat-button-toggle>
+                            </mat-button-toggle-group>
+                            <span class="example-spacer"></span>
+                            <div *ngIf="previewMode">
+                                <button [(colorPicker)]="color1" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon">
+                                    <mat-icon>palette</mat-icon>
+                                </button>
+
+                                <button (click)="prevTemplate()" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon"
+                                    title="Previous print layout">
+                                    <mat-icon>navigate_before</mat-icon>
+
+                                </button>
+
+
+                                <button (click)="nextTemplate()" mat-icon-button color="primary"
+                                    aria-label="Example icon button with a home icon" title="Next print layout">
+                                    <mat-icon>navigate_next</mat-icon>
+                                </button>
+
+
+                                &nbsp;&nbsp;
+                                <!-- <button mat-flat-button color="primary" (click)="makepdf()">Download</button> -->
+
+                                <!-- 
+                                    <button mat-icon-button color="primary" (click)="print()"
+                                        aria-label="Example icon button with a print icon" title="Save/ Print">
+                                        <mat-icon>print</mat-icon>
+                                    </button> -->
+                            </div>
+                        </mat-toolbar>
+                        <!--Toolbar ends-->
+
+                    </div>
+                    <br>
+                    <div class="row">
+
+                        <div class="row" *ngIf="!previewMode">
+
+                            <div *ngIf="docType=='Invoice'">
+                                <app-doc-forms></app-doc-forms>
+                            </div>
+                            <div *ngIf="docType=='Estimate'">
+                                <app-estimate-forms></app-estimate-forms>
+                            </div>
+                            <div *ngIf="docType=='Quotation'">
+                                <app-quotation-forms></app-quotation-forms>
+                            </div>
+                            <button mat-raised-button color="primary" (click)="previewOn()" style="font-size: 18px;">
+                                Print Preview</button>
+                        </div>
+                        <!-- <app-doc-form *ngIf="!previewMode" [docType]="docType"></app-doc-form> -->
+                        <!--
+                            <app-preview *ngIf="previewMode" [printTemplate]="printTemplate" [color1]="color1">
+                            </app-preview>
+                            -->
+
+                        <div *ngIf="previewMode">
+                            <div *ngIf="printTemplate == 2">
+                                <app-preview2s [color1]="color1"></app-preview2s>
+                            </div>
+                            <div *ngIf="printTemplate == 1">
+                                <app-preview1s [color1]="color1"></app-preview1s>
+                            </div>
+                            <div *ngIf="printTemplate == 3">
+                                <app-preview3s [color1]="color1"></app-preview3s>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>

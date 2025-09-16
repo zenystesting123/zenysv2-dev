@@ -1,0 +1,138 @@
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+.full-width {
+  width: 100%;
+}
+.half-width {
+  width: 50%;
+}
+::ng-deep .mat-dialog-content {
+
+  overflow-y: auto !important;
+}
+// .customer-form {
+//   min-width: 300px;
+//   max-width: 800px;
+//   width: 100%;
+//   padding: 0%;
+//   // min-height: 600px;
+// }
+.wrapper {
+  // display:flex;
+  overflow: scroll;
+}
+.center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+.margin {
+  margin-left: 0px;
+  padding: 0;
+  overflow: hidden !important;
+}
+.rig {
+  float: right;
+  margin-right: 5%;
+}
+.padding {
+  padding-left: 3%;
+}
+.padd {
+  padding-left: 2%;
+  float: right;
+  margin-right: 16px;
+
+}
+.Select-option {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0;
+}
+.frame {
+  height: 440px;
+  margin-left: 16px;
+  padding: 0%;
+}
+
+.CompanyName,
+
+.ContactNumber,
+.Email,
+.GST,
+.Assignedto,
+.State,
+.Country,
+.District
+ {
+  width: 275px;
+  margin-left: 8px;
+  margin-right: 0px;
+  padding: 0%;
+}
+
+.FirstName,
+.SecondName,
+.billingaddress1,
+.billingaddress2{
+  width: 354px;
+  margin-left: 8px;
+  margin-right: 0px;
+  padding: 0%;
+
+}
+
+
+
+
+.Salutation,
+.CountryCode,
+.PIN {
+  width: 140px;
+  margin-left: 8px;
+  margin-right: 0px;
+  padding: 0%;
+}
+
+// .Priority,
+// .Status,
+// .Pipeline
+//  {
+//   width: 200px;
+//   margin-left: 8px;
+//   margin-right: 0px;
+//   padding: 0%;
+// }
+
+.row {
+  padding-left: 1%;
+  // width: 760px;
+}
+
+.heading{
+  margin-left:16px;
+}
+
+.mat-tab-body{
+  padding: 1%;
+  // margin-left: 1%;
+}
+// :host ::ng-deep .mat-dialog-content {
+//   overflow-y: hidden !important;
+//   max-height: auto;
+// }
+:host ::ng-deep .mat-drawer-inner-container::-webkit-scrollbar {
+  display: none;
+}
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}

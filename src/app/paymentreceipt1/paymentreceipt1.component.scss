@@ -1,0 +1,36 @@
+mat-form-field {
+    width: 100%;
+  }
+.rig{
+  float: right;
+}
+full-width{
+  width: 100%;
+}
+.width{
+  width: 100%;
+}
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+  padding-top: 5%;
+  padding-left: 15%;
+
+}
+.chipStyling {
+  color: #2a6af6;
+  background-color: #f1f2f4;
+  height: 24px;
+  top: calc(50% - 24px / 2);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+}  
+//date&time add'n field styling
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}

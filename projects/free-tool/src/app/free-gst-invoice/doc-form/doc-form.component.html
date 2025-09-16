@@ -1,0 +1,2377 @@
+<!-- Mobile View-->
+
+<form class="example-form" #form="ngForm" *ngIf="isMobile">
+  <div style="text-align:center;">
+    <h1 class="mat-h1"style="text-align:center;">
+      Zenys Free {{docType}} Generator
+     </h1>
+     <br>
+  </div>
+  
+  <h2 class="mat-h2">
+    {{docType}} Details
+  </h2>
+  <div style="align-items: center;">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Doc Title" [errorStateMatcher]="matcher" name="invoice" #invoice="ngModel"
+        [(ngModel)]="docData.docTitle" value="docData.docTitle" />
+    </mat-form-field>
+  </div>
+  <br />
+
+
+  <div style="font-weight: bold">
+    <span class="example-spacer"></span>
+
+    <mat-form-field class="example-full-width">
+      <mat-label *ngIf="docData.docTitle == ''">Invoice No</mat-label>
+      <mat-label *ngIf="docData.docTitle != ''">{{docData.docTitle}} No</mat-label>
+      <input matInput placeholder="Invoice No" name="invoiceno" [(ngModel)]="docData.invoiceno" #invoiceno="ngModel"
+        required [errorStateMatcher]="matcher">
+      <mat-error *ngIf="invoiceno.hasError('required')">
+        Document No is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <div class="row">
+      <div class="col-6" >
+        <mat-form-field class="example-full-width">
+          <mat-label *ngIf="docData.docTitle == ''"> Date</mat-label>
+          <mat-label *ngIf="docData.docTitle != ''">{{docType}} Date</mat-label>
+          <input [matDatepicker]="picker" matInput placeholder="Invoice Date" name="date" [(ngModel)]="docData.date"
+            #date="ngModel" required [errorStateMatcher]="matcher">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="date.hasError('required')">
+            Document Date is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-6" >
+        <mat-form-field class="example-full-width" *ngIf="docData.docTitle == '' || docData.docTitle == 'Invoice'">
+          <mat-label>Due Date</mat-label>
+          <input [matDatepicker]="picker" matInput placeholder="Due Date" name="duedate" [(ngModel)]="docData.duedate"
+            #duedate="ngModel" [errorStateMatcher]="matcher">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="duedate.hasError('required')">
+            Due Date is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+
+
+
+    <mat-form-field class="example-full-width" *ngIf="docData.docTitle != '' && docData.docTitle != 'Invoice'">
+      <mat-label>Valid Date</mat-label>
+      <input [matDatepicker]="picker" matInput placeholder="Due Date" name="docValidity"
+        [(ngModel)]="docData.docValidity" #docValidity="ngModel" [errorStateMatcher]="matcher">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="docValidity.hasError('required')">
+        Valid Date is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" *ngIf="docData.docTitle == 'Invoice' || docData.docTitle == ''">
+      <mat-label>Quotation Ref no: </mat-label>
+      <input matInput placeholder="Quotation Ref" name="quatationalreference" minlength="2" maxlength="30"
+        [(ngModel)]="docData.quatationreference" #quatationalreference="ngModel" [errorStateMatcher]="matcher"
+        minlength="2" max="30">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" *ngIf="docData.docTitle == 'Invoice' || docData.docTitle == ''">
+      <mat-label>P.O Ref no:</mat-label>
+      <input matInput placeholder="P.O Ref" minlength="2" maxlength="30" aria-describedby="PORef" name="purchaseorder"
+        [(ngModel)]="docData.purchaseorder" #purchaseorder="ngModel" [errorStateMatcher]="matcher">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" *ngIf="docData.docTitle == 'Invoice' || docData.docTitle == ''">
+      <mat-label>Payment Terms</mat-label>
+      <input matInput placeholder="Payment Terms" minlength="2" maxlength="30" name="paymentterm"
+        [(ngModel)]="docData.paymentterm" #paymentterm="ngModel">
+    </mat-form-field>
+  </div>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2">
+    Your Details<span class="example-spacer"></span>
+    <mat-icon style="float: right" [ngStyle]="{ color: '#2a6af6' }" (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'billfrom')
+      "
+      *ngIf="!docSettingsService.yourAddressAdded || (!userData.yourcompanyname && !userData.youraddressline && !userData.yourgst)">
+      add</mat-icon>
+    <mat-icon style="float: right" [ngStyle]="{ color: '#2a6af6' }" (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'billfrom')
+      "
+      *ngIf="docSettingsService.yourAddressAdded  && (userData.yourcompanyname || userData.youraddressline || userData.yourgst)">
+      edit</mat-icon>
+  </h2>
+
+  <div class="container-fluid border"
+    style="border-radius: 5px;min-height: 50px;background-color: ghostwhite;padding: 5px;">
+    <ul class="m-0 list-unstyled" *ngIf="docSettingsService.yourAddressAdded" style="padding-top: 5px;left:10px">
+      <li>{{ userData.yourcompanyname }}</li>
+      <pre class="mb-0">{{ userData.youraddressline }}</pre>
+      <li *ngIf="userData.yourgst && docSettingsService.yourAddressAdded"> {{ userData.yourgst }}</li>
+    </ul>
+  </div>
+  <br>
+  <h3 class="mat-h3">Your Logo
+    <span class="example-spacer"></span>
+
+    <mat-icon style="float: right" [ngStyle]="{ color: '#2a6af6' }" (click)="open(mymodal)" *ngIf="!userData.logo">add
+    </mat-icon>
+    <mat-icon color="warn" style="float: right;" *ngIf="userData.logo" (click)="deleteLogo()">delete</mat-icon>
+  </h3>
+  <div style="padding-top: 10px;align-items: center;text-align: center;">
+    <!--
+      <img crossOrigin="true" src="assets/img/icons/Logo.png" style="max-width: 150px;max-height: 150px;" class="img-thumbnail" (click)="open(mymodal)"
+      *ngIf="!userData.logo" />
+-->
+
+    <img crossOrigin="true" src="{{ userData.logo }}" class="img-thumbnail" (click)="open(mymodal)"
+      style="width: 80%;max-height: 150px;" *ngIf="userData.logo" />
+  </div>
+
+
+  <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+    (change)="fileChangeEventLogo($event)" style="display: none" accept="image/png, image/jpeg" />
+  <ng-template #mymodal let-modal>
+    <div class="card-content" >
+      <div class="card-body">
+        <div id="collapseExample">
+          <br />
+          <div class="row">
+              <div class="col-md-12 col-lg-12 col-sm-12" >
+                <div class="row align-items-center">
+                  <div class="col-md-6 col-lg-6 col-sm-12" *ngIf="!this.service.logoSelected">
+                <image-cropper [imageChangedEvent]="imageChangedEventLogo" [maintainAspectRatio]="false" format="png"
+                  (imageCropped)="imageCroppedLogo($event)" (imageLoaded)="imageLoaded()"
+                  (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"
+                  class="float-left mr-4 img-fluid">
+                </image-cropper>
+                </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <mat-icon color="warn" (click)="modal.dismiss('Cross click')">close
+      </mat-icon><span class="example-spacer"></span>
+      <button mat-button color="accent" (click)="applyLogo(); modal.close('Save click')">
+        Apply Logo
+      </button>
+    </div>
+  </ng-template>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2"> Customer Details
+    <span class="example-spacer"></span>
+    <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right"
+      *ngIf="!docSettingsService.ToAddressAdded 
+      || (!customerData.billcompanyname && !customerData.billaddressline && !customerData.billgst && !customerData.deliveredto)" (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'billto')
+      ">add</mat-icon>
+    <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right"
+      *ngIf="docSettingsService.ToAddressAdded && (customerData.billcompanyname || customerData.billaddressline || customerData.billgst || customerData.deliveredto)"
+      (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'billto')
+      ">edit</mat-icon>
+  </h2>
+  <div class="container-fluid border"
+    style="border-radius: 5px;min-height: 50px;background-color: ghostwhite;padding: 5px;">
+    <ul class="m-0 list-unstyled" *ngIf="docSettingsService.ToAddressAdded" style="padding-top: 5px">
+      <li>{{ customerData.billcompanyname }}</li>
+      <pre class="mb-0">{{ customerData.billaddressline }}</pre>
+      <li *ngIf="customerData.billgst">{{ customerData.billgst }}</li>
+      <li *ngIf="customerData.deliveredto">
+        Delivered To: <br>
+        <pre class="mb-0"> {{ customerData.deliveredto }}</pre>
+      </li>
+    </ul>
+  </div>
+
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2">
+    Items<span class="example-spacer"></span>
+    <mat-icon style="color: #2196f3;float: right" (click)="
+          onBottomSheet(docData, customerData, userData,dbUserData, 'settings')
+        ">settings</mat-icon>
+  </h2>
+
+  <div *ngFor="let line of lineItemForm.get('itemList')['controls']; let i = index, trackBy:identify">
+    <mat-card>
+      <mat-card-content>
+        <mat-grid-list cols="12" rowHeight="68px">
+          <mat-grid-tile [colspan]="12">
+            <mat-form-field class="example-full-width" appearance="fill" >
+              <mat-label>Item Name</mat-label>
+              <input matInput [formControl]="line.controls.item" required [(ngModel)]="this.itemList[i].item"
+                name="item" [errorStateMatcher]="matcher" placeholder="Item Name" type="text">
+              <mat-error *ngIf="line.controls.item.hasError('required')">
+                Required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <div class="row">
+
+            <div class="col-sm-4 col-md-4 col-lg-4">
+              <mat-grid-tile [colspan]="4">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Qty</mat-label>
+                  <input type="number" matInput [errorStateMatcher]="matcher" [(ngModel)]="itemList[i].qty"
+                    [formControl]="line.controls.qty" name="qty" required (ngModelChange)="getAmount(i)" id="padding"
+                    appTwoDigitDecimaNumber decimals="2" placeholder="1">
+                  <mat-error *ngIf="line.controls.qty.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+
+            </div>
+
+            <div class="col-sm-4  col-md-4 col-lg-4 " *ngIf="
+            docData.includeunit == true">
+
+              <mat-grid-tile [colspan]="4">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Unit</mat-label>
+                  <input type="text" matInput [errorStateMatcher]="matcher" placeholder="No"
+                    [formControl]="line.controls.unit" [(ngModel)]="itemList[i].unit" name="unit"
+                    (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2">
+
+                </mat-form-field>
+              </mat-grid-tile>
+
+            </div>
+
+            <div class="col-sm-4 col-md-4 col-lg-4">
+              <mat-grid-tile [colspan]="4">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Rate</mat-label>
+                  <input type="number" matInput [errorStateMatcher]="matcher" placeholder="10" required
+                    [formControl]="line.controls.rate" [(ngModel)]="itemList[i].rate" name="rate"
+                    (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.rate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col-sm-4 col-md-3 col-lg-2">
+
+              <mat-grid-tile [colspan]="4" *ngIf="docData.includeDiscount" >
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Discount%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" required type="number"
+                    [formControl]="line.controls.discountRate" [(ngModel)]="itemList[i].discountRate" name="discount"
+                    (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.discountRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+
+
+            <div class="col-sm-4 col-md-3 col-lg-2">
+
+              <mat-grid-tile [colspan]="4" *ngIf="
+              docData.includetax == true &&
+              docData.interstate != true && docData.taxType == 'gst'
+            ">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>CGST%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" required type="number"
+                    [formControl]="line.controls.cgstRate" [(ngModel)]="itemList[i].cgstRate" name="cgst"
+                    (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.cgstRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+
+
+
+            <div class="col-sm-4 col-md-3 col-lg-2">
+
+              <mat-grid-tile [colspan]="4" *ngIf="
+              docData.includetax == true &&
+              docData.interstate != true  && docData.taxType == 'gst'
+            ">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>SGST%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" type="number"
+                    [formControl]="line.controls.sgstRate" [(ngModel)]="itemList[i].sgstRate" name="sgst" required
+                    (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.sgstRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+
+            </div>
+            <div class="col-sm-4 col-md-3 col-lg-2">
+              <mat-grid-tile [colspan]="4" *ngIf="
+              docData.includetax == true &&
+              docData.taxType == 'vat'
+            ">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>VAT%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" type="number"
+                    [formControl]="line.controls.vatRate" [(ngModel)]="itemList[i].vatRate" name="vat" required
+                    (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.vatRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+
+            <div class="col-sm-4 col-md-3 col-lg-2">
+
+
+              <mat-grid-tile [colspan]="4" *ngIf="
+              docData.includetax == true &&
+              docData.interstate == true  && docData.taxType == 'gst'
+            ">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>IGST%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" type="number"
+                    [formControl]="line.controls.igstRate" [(ngModel)]="itemList[i].igstRate" name="igst" required
+                    (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2">
+                  <mat-error *ngIf="line.controls.igstRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+
+            <div class="col-sm-4 col-md-3 col-lg-2">
+
+              <mat-grid-tile [colspan]="4"
+                *ngIf="docData.includetax== true && docData.includecess == true && docData.taxType == 'gst'">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Cess%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="1%" [formControl]="line.controls.cessRate"
+                    required [(ngModel)]="itemList[i].cessRate" name="cess" (ngModelChange)="getAmount(i)"
+                    appTwoDigitDecimaNumber decimals="2" type="number">
+                  <mat-error *ngIf="line.controls.cessRate.hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+            </div>
+          </div>
+          <mat-grid-tile [colspan]="12">
+            <mat-form-field class="example-full-width" style="padding-top: 10px;" appearance="fill">
+              <mat-label>Item Description</mat-label>
+              <textarea matInput [errorStateMatcher]="matcher" placeholder="Description/ HSN Code"
+                [formControl]="line.controls.description" name="description"
+                [(ngModel)]="itemList[i].description"></textarea>
+            </mat-form-field>
+          </mat-grid-tile>
+
+        </mat-grid-list>
+
+
+      </mat-card-content>
+      <mat-card-actions>
+        <span flex></span>
+        <mat-icon-button  (click)="deleteFieldValue(i)"><mat-icon color="warn">delete</mat-icon></mat-icon-button>
+      </mat-card-actions>
+    </mat-card>
+    <br>
+  </div>
+  <button mat-mini-fab color="accent">
+    <mat-icon style="float: right" (click)="addFieldValue()" [ngStyle]="{ color: 'white' }">add</mat-icon>
+  </button>
+  <br><br>
+  <mat-divider></mat-divider>
+  <br />
+  <div style="text-align: justify">
+    <h3 class="mat-h2">
+     Item Summary<span class="example-spacer"></span>
+
+    </h3>
+    <p style="text-align: left">
+      Total amount:
+      <span style="float: right">
+        {{ docData.currency + " " }}{{ docData.total | number: "1.2-2" }}
+      </span>
+    </p>
+    <p  style="text-align: left" *ngIf="docData.includeDiscount">
+  Discount total:<span style="float: right">
+    {{ docData.currency + "
+    "
+    }}{{ docData.discountValue | number: "1.2-2" }}</span>
+</p>
+
+<p  style="text-align: left" *ngIf="docData.includeDiscount">
+ Total After Discounts:<span style="float: right">
+    {{ docData.currency + "
+    "
+    }}{{ docData.discountedAmount | number: "1.2-2" }}</span>
+</p>
+
+    <p *ngIf="
+        docData.includetax == true &&
+        docData.interstate != true &&
+        docData.taxType == 'gst'
+      " style="text-align: left">
+      SGST total:<span style="float: right">
+        {{ docData.currency + "
+        "
+        }}{{ docData.sgstvalue | number: "1.2-2" }}</span>
+    </p>
+
+    <p style="text-align: left" *ngIf="
+        docData.includetax == true &&
+        docData.interstate != true &&
+        docData.taxType == 'gst'
+      ">
+      CGST total:
+      <span style="float: right">{{ docData.currency + "
+        "
+        }}{{ docData.cgstvalue | number: "1.2-2" }}</span>
+    </p>
+    <p style="text-align: left" *ngIf="
+        docData.includetax == true &&
+        docData.interstate == true &&
+        docData.taxType == 'gst'
+      ">
+      IGST total:
+      <span style="float: right">{{ docData.currency + "
+        "
+        }}{{ docData.igstvalue | number: "1.2-2" }}</span>
+    </p>
+    <p style="text-align: left" *ngIf="docData.includetax == true && docData.taxType == 'vat'">
+      VAT total:
+      <span style="float: right">{{ docData.currency + "
+        "
+        }}{{ docData.vatvalue | number: "1.2-2" }}</span>
+    </p>
+    <p style="text-align: left" *ngIf="
+        docData.includetax == true &&
+        docData.includecess == true &&
+        docData.taxType == 'gst'
+      ">
+      Cess total:
+      <span style="float: right">{{ docData.currency + "
+        "
+        }}{{ docData.cessvalue | number: "1.2-2" }}</span>
+    </p>
+    <p style="text-align: left" *ngIf="docData.includetax == true">
+      Total Incl tax:
+      <span style="float: right">{{ docData.currency + " "
+        }}{{ docData.alltotal | number: "1.2-2" }}</span>
+    </p>
+  </div>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2">Additional Details</h2>
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Notes</mat-label>
+    <textarea matInput placeholder="Notes" name="notes" #notes="ngModel" maxlength="250"
+      [(ngModel)]="docData.notes"></textarea>
+  </mat-form-field>
+  <br />
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Bank Details</mat-label>
+    <textarea matInput name="bankdetails" [(ngModel)]="docData.bankdetails" #bankdetails="ngModel"
+      placeholder="Bank Details"></textarea>
+  </mat-form-field>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2">
+    Add Signature<span class="example-spacer"></span>
+    <mat-icon-button>
+      <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right" *ngIf="!userData.signature"
+      (click)="opens(mymodal1)">add</mat-icon>
+    </mat-icon-button>
+
+    <mat-icon-button>
+      <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right" *ngIf="userData.signature"
+      (click)="opens(mymodal1)">edit</mat-icon> 
+    </mat-icon-button>
+
+
+      <mat-icon-button>
+        &nbsp;&nbsp;
+        <mat-icon color="warn" style="float: right" *ngIf="userData.signature" (click)="deleteSignature()">delete</mat-icon>
+      </mat-icon-button>
+
+
+    <input type="file" class="custom-file-input sign-selector" id="inputGroupFile01"
+      (change)="fileChangeEventSign($event)" style="display: none" accept="image/png, image/jpeg">
+
+    <ng-template #mymodal1 let-modal>
+
+      <div class="card-content">
+        <div class="card-body">
+          <div id="collapseExample" [ngbCollapse]="isCollapsed">
+            <br>
+            <div class="row">
+              <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="row align-items-center">
+                  <div class="col-md-6 col-lg-6 col-sm-12" *ngIf="!this.service.signSelected">
+                    <image-cropper [imageChangedEvent]="imageChangedEventSign" [maintainAspectRatio]="false"
+                      format="png" (imageCropped)="imageCroppedSign($event)" (imageLoaded)="imageLoaded()"
+                      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"
+                      class="float-left mr-4 img-fluid">
+                    </image-cropper>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <mat-icon color="warn" (click)="modal.dismiss('Cross click')">close
+            </mat-icon><span class="example-spacer"></span>
+            <button mat-button color="accent" (click)="applySign(); modal.close('Save click')">Apply
+              Sign</button>
+          </div>
+
+        </div>
+      </div>
+    </ng-template>
+  </h2>
+  <div class="col-md-1 col-lg-1" *ngIf="userData.signature">
+    <br />
+    <img crossOrigin="true" src="{{ userData.signature }}" class="img-thumbnail" />
+    <br>
+
+    <br />
+    <mat-form-field class="example-full-width" *ngIf="userData.signature">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Name" [errorStateMatcher]="matcher" name="signatoryname" #signatoryName="ngModel"
+        [(ngModel)]="service.userData.signatoryname">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" *ngIf="userData.signature">
+      <mat-label>Designation</mat-label>
+      <input matInput placeholder="Designation" [errorStateMatcher]="matcher" name="designation" #designation="ngModel"
+        [(ngModel)]="service.userData.designation">
+
+    </mat-form-field>
+  </div>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <h2 class="mat-h2">
+    Add Contact Details<span class="example-spacer"></span>
+    <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right" *ngIf="!docSettingsService.contactAdded || 
+      (!dbUserData.contactname && !dbUserData.contactno &&
+      !dbUserData.email)" (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'contactAdded')
+      ">add</mat-icon>
+    <mat-icon [ngStyle]="{ color: '#2a6af6' }" style="float: right" *ngIf="docSettingsService.contactAdded && 
+      (dbUserData.contactname || dbUserData.contactno ||
+      dbUserData.email)" (click)="
+        onBottomSheet(docData, customerData, userData,dbUserData,  'contactAdded')
+      ">edit</mat-icon>
+  </h2>
+  <ul class="m-0 list-unstyled" *ngIf="docSettingsService.contactAdded" style="padding-top: 5px">
+    <li *ngIf="dbUserData.contactname">Contact Name: {{ dbUserData.contactname }}</li>
+    <li *ngIf="dbUserData.contactno">Contact No: {{ dbUserData.contactno}}</li>
+    <li *ngIf="dbUserData.email">email: {{ dbUserData.email }}</li>
+  </ul>
+  <br>
+  <button mat-raised-button color="primary"
+    (click)="form.valid && lineItemForm.valid ? openPopUP('download') : TypeErrors()" style="font-size: 18px;">
+    Download</button>
+  <br />
+</form>
+
+
+
+
+
+
+
+
+
+<!-- Tablet View-->
+<form class="example-form" #form="ngForm" *ngIf="isTablet">
+  <mat-accordion>
+    <mat-expansion-panel (opened)="panel1OpenState = true" (closed)="panelOpenState = false" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h5>Address & Document Details</h5>
+        </mat-panel-title>
+        <mat-panel-description> </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form class="example-form">
+        <div class="row">
+          <div class="container" style="border-radius: 5px; padding: 10px; max-width: 250px">
+            <!--<mat-card-title>Document Title </mat-card-title>-->
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Document Title" [errorStateMatcher]="matcher" name="invoice"
+                #invoice="ngModel" style="font-size: 36px" [(ngModel)]="docData.docTitle" value="docData.docTitle" />
+            </mat-form-field>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <!--User details-->
+          <!--Logo selector-->
+          <div class="col-4">
+            <!-- <h5> Logo Comes here</h5> -->
+            <div class="container" style="padding: 10px; border-radius: 5px">
+              <h5>Your Logo</h5>
+              <br />
+              <a>
+                <img src="assets/images/companylogo.png" alt="logo" style="max-width: 200px" (click)="open(mymodal)"
+                  class="responsive" *ngIf="!this.service.logoSelected" class="img-fluid img-thumbnail" />
+                <img [src]="service.userData.logo" alt="logo" tyle="max-width:200px;" (click)="open(mymodal)"
+                  class="img-fluid" *ngIf="this.service.logoSelected" class="img-fluid img-thumbnail" />
+              </a>
+              <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+                (change)="fileChangeEventLogo($event)" style="display: none" accept="image/png, image/jpeg" />
+              <ng-template #mymodal let-modal>
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modal-basic-title">Crop Logo</h5>
+                  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="card-content" class="row align-items-center" id="center">
+                  <div class="card-body">
+                    <div id="collapseExample">
+                      <br />
+                      <!--Collpsible component comes here-->
+                      <div class="row">
+                        <!--Select Logo-->
+                        <div class="row align-items-center">
+                          <div class="col-md-12 col-lg-12 col-sm-12" id="centerlogo" *ngIf="!this.service.logoSelected">
+                            <image-cropper [imageChangedEvent]="imageChangedEventLogo" [maintainAspectRatio]="false"
+                              format="png" (imageCropped)="imageCroppedLogo($event)" (imageLoaded)="imageLoaded()"
+                              (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"
+                              class="float-left mr-4 img-fluid">
+                            </image-cropper>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" (click)="applyLogo(); modal.close('Save click')">
+                    Apply Logo
+                  </button>
+                </div>
+              </ng-template>
+            </div>
+
+            <!--Logo Selector ends-->
+          </div>
+          <!--Document details-->
+          <div class="col-8">
+            <div class="container-fluid border" style="border-radius: 5px; padding: 10px">
+              <h5>{{ docData.docTitle }} Details</h5>
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field class="example-full-width">
+                    <mat-label *ngIf="docData.docTitle == ''">Document No</mat-label>
+                    <mat-label *ngIf="docData.docTitle != ''">{{ docData.docTitle }} No</mat-label>
+                    <input matInput placeholder="Invoice No" name="invoiceno" [(ngModel)]="docData.invoiceno"
+                      #invoiceno="ngModel" required [errorStateMatcher]="matcher" />
+                    <mat-error *ngIf="invoiceno.hasError('required')">
+                      Document No is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width">
+                    <mat-label *ngIf="docData.docTitle == ''">Invoice Date</mat-label>
+                    <mat-label *ngIf="docData.docTitle != ''">{{ docData.docTitle }} Date</mat-label>
+                    <input [matDatepicker]="picker" matInput placeholder="Invoice Date" name="date"
+                      [(ngModel)]="docData.date" #date="ngModel" required [errorStateMatcher]="matcher" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="date.hasError('required')">
+                      Document Date is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" *ngIf="
+                      docData.docTitle == 'Invoice' || docData.docTitle == ''
+                    ">
+                    <mat-label>P.O Ref</mat-label>
+                    <input matInput placeholder="P.O Ref" minlength="2" maxlength="30" aria-describedby="PORef"
+                      name="purchaseorder" [(ngModel)]="docData.purchaseorder" #purchaseorder="ngModel"
+                      [errorStateMatcher]="matcher" />
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="example-full-width" *ngIf="
+                      docData.docTitle != '' && docData.docTitle != 'Invoice'
+                    ">
+                    <mat-label>Valid Till</mat-label>
+                    <input [matDatepicker]="picker" matInput placeholder="Due Date" name="docValidity"
+                      [(ngModel)]="docData.docValidity" #docValidity="ngModel" [errorStateMatcher]="matcher" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="docValidity.hasError('required')">
+                      Valid Date is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" *ngIf="
+                      docData.docTitle == 'Invoice' || docData.docTitle == ''
+                    ">
+                    <mat-label>Quotation Ref</mat-label>
+                    <input matInput placeholder="Quotation Ref" name="quatationalreference" minlength="2" maxlength="30"
+                      [(ngModel)]="docData.quatationreference" type="text" #quatationalreference="ngModel"
+                      [errorStateMatcher]="matcher" minlength="2" max="30" />
+                    <mat-error>
+                      Enter a Valid <strong>Quotation Ref</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" *ngIf="
+                      docData.docTitle == '' || docData.docTitle == 'Invoice'
+                    ">
+                    <mat-label>Due Date</mat-label>
+                    <input [matDatepicker]="picker" matInput placeholder="Due Date" name="duedate"
+                      [(ngModel)]="docData.duedate" #duedate="ngModel" [errorStateMatcher]="matcher" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="duedate.hasError('required')">
+                      Due Date is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width" *ngIf="
+                      docData.docTitle == 'Invoice' || docData.docTitle == ''
+                    ">
+                    <mat-label>Payment Terms</mat-label>
+                    <input matInput placeholder="Payment Terms" minlength="2" maxlength="30" name="paymentterm"
+                      [(ngModel)]="docData.paymentterm" #paymentterm="ngModel" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <!--Billing party and billed to party details-->
+        <div class="row">
+          <!--Billed By-->
+          <div class="col-6">
+            <div class="container border" style="border-radius: 5px; padding: 10px">
+              <h5>Billed by</h5>
+              <mat-card-content>
+                <mat-form-field class="example-full-width">
+                  <mat-label>Person/Company Name</mat-label>
+                  <input matInput placeholder="Perosn/Company Name" [errorStateMatcher]="matcher" name="yourcompanyname"
+                    required #yourcompanyname="ngModel" [(ngModel)]="userData.yourcompanyname" minlength="2"
+                    maxlength="40" />
+                  <mat-error *ngIf="yourcompanyname.hasError('required')">
+                    Company/Person name is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Address</mat-label>
+                  <textarea matInput placeholder="Address" rows="3" name="youraddressline"
+                    [(ngModel)]="userData.youraddressline" #youraddressline="ngModel" required minlength="2"
+                    [errorStateMatcher]="matcher"></textarea>
+                  <mat-error *ngIf="youraddressline.hasError('required')">
+                    Address is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+                <!--
+                            <mat-form-field class="example-full-width">
+                              <mat-label>PIN/ZIP</mat-label>
+                              <input type="text" matInput placeholder="PIN/ZIP" [errorStateMatcher]="matcher"
+                                (keypress)="keyPress($event)" name="yourpincode" [(ngModel)]="userData.yourpincode" minlength='4'
+                                maxlength='10' #yourpincode="ngModel" required>
+                              <mat-error *ngIf="yourpincode.hasError('required')">
+                                PIN/ZIP is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                
+                            <mat-form-field class="example-full-width">
+                              <mat-label>State</mat-label>
+                              <input matInput placeholder="State" [errorStateMatcher]="matcher" name="statefrom" #statefrom="ngModel"
+                                [(ngModel)]="userData.statefrom" required minlength="2" maxlength="30">
+                              <mat-error *ngIf="statefrom.hasError('required')">
+                                State is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Country</mat-label>
+                              <input matInput placeholder="Country" name="yourcountry" [(ngModel)]="userData.yourcountry"
+                                #yourcountry="ngModel" required minlength="2" maxlength="30" [errorStateMatcher]="matcher">
+                              <mat-error *ngIf="yourcountry.hasError('required')">
+                                Country is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                -->
+                <mat-form-field class="example-full-width">
+                  <mat-label>GST/VAT No</mat-label>
+                  <input matInput placeholder="GST/VAT No:" name="yourgst" type="text" [(ngModel)]="userData.yourgst"
+                    required maxlength="25" #yourgst="ngModel" />
+                  <mat-error *ngIf="yourgst.hasError('required')">
+                    GST is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </mat-card-content>
+            </div>
+          </div>
+          <!--Bill to details-->
+          <div class="col-6">
+            <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+              <h5>Billed To</h5>
+              <mat-card-content>
+                <mat-form-field class="example-full-width">
+                  <mat-label>Person/Company Name</mat-label>
+                  <input matInput placeholder="Person/Company Name" name="billcompanyname"
+                    [(ngModel)]="customerData.billcompanyname" #billcompanyname="ngModel" required minlength="2"
+                    maxlength="30" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="billcompanyname.hasError('required')">
+                    Company/Person name is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Address</mat-label>
+                  <textarea matInput placeholder="Address" name="billaddressline" rows="3"
+                    [(ngModel)]="customerData.billaddressline" #billaddressline="ngModel" required minlength="2"
+                    [errorStateMatcher]="matcher"></textarea>
+                  <mat-error *ngIf="billaddressline.hasError('required')">
+                    Address is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+                <!--
+                  <mat-form-field class="example-full-width">
+                    <mat-label>PIN/ZIP</mat-label>
+                    <input type="text" matInput placeholder="PIN/ZIP" name="billpincode"
+                      [(ngModel)]="customerData.billpincode" (keypress)="keyPress($event)" #billpincode="ngModel" required
+                      minlength='4' maxlength='10' [errorStateMatcher]="matcher">
+                    <mat-error *ngIf="billpincode.hasError('required')">
+                      PIN/ZIP is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <mat-form-field class="example-full-width">
+                    <mat-label>State</mat-label>
+                    <input matInput placeholder="State" name="stateto" minlength="2" #stateto="ngModel"
+                      [(ngModel)]="customerData.stateto" required minlength="2" maxlength="30"
+                      [errorStateMatcher]="matcher">
+                    <mat-error *ngIf="stateto.hasError('required')">
+                      State is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Country</mat-label>
+                    <input matInput placeholder="Country" name="billcountry" [(ngModel)]="customerData.billcountry"
+                      #billcountry="ngModel" required minlength="2" maxlength="30" [errorStateMatcher]="matcher">
+                    <mat-error *ngIf="billcountry.hasError('required')">
+                      Country is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+  -->
+                <mat-form-field class="example-full-width">
+                  <mat-label>GST/VAT No</mat-label>
+                  <input matInput placeholder="GST/VAT No:" name="billgst" maxlength="25" type="text"
+                    [(ngModel)]="customerData.billgst" />
+                </mat-form-field>
+              </mat-card-content>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!--Item Details-->
+      <br />
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Items </mat-panel-title>
+        <mat-panel-description> </mat-panel-description>
+      </mat-expansion-panel-header>
+      <!--Item card layout for mobile view-->
+      <form class="example-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Currency</mat-label>
+          <mat-select matNativeControl id="inputGroupSelect01" name="currency" [formControl]="currencyControl"
+            [(ngModel)]="docData.currency">
+            <mat-option value="INR" selected="selected">Indian Rupees</mat-option>
+            <mat-option value="USD">United States Dollars</mat-option>
+            <mat-option value="EUR">Euro</mat-option>
+            <mat-option value="GBP">United Kingdom Pounds</mat-option>
+            <mat-option value="DZD">Algeria Dinars</mat-option>
+            <mat-option value="ARP">Argentina Pesos</mat-option>
+            <mat-option value="AUD">Australia Dollars</mat-option>
+            <mat-option value="ATS">Austria Schillings</mat-option>
+            <mat-option value="BSD">Bahamas Dollars</mat-option>
+            <mat-option value="BBD">Barbados Dollars</mat-option>
+            <mat-option value="BEF">Belgium Francs</mat-option>
+            <mat-option value="BMD">Bermuda Dollars</mat-option>
+            <mat-option value="BRL">Brazil Real</mat-option>
+            <mat-option value="BGN">Bulgaria Lev</mat-option>
+            <mat-option value="CAD">Canada Dollars</mat-option>
+            <mat-option value="CLP">Chile Pesos</mat-option>
+            <mat-option value="CNY">China Yuan Renmimbi</mat-option>
+            <mat-option value="CYP">Cyprus Pounds</mat-option>
+            <mat-option value="CSK">Czech Republic Koruna</mat-option>
+            <mat-option value="DKK">Denmark Kroner</mat-option>
+            <mat-option value="NLG">Dutch Guilders</mat-option>
+            <mat-option value="XCD">Eastern Caribbean Dollars</mat-option>
+            <mat-option value="EGP">Egypt Pounds</mat-option>
+            <mat-option value="FJD">Fiji Dollars</mat-option>
+            <mat-option value="FIM">Finland Markka</mat-option>
+            <mat-option value="FRF">France Francs</mat-option>
+            <mat-option value="DEM">Germany Deutsche Marks</mat-option>
+            <mat-option value="XAU">Gold Ounces</mat-option>
+            <mat-option value="GRD">Greece Drachmas</mat-option>
+            <mat-option value="HKD">Hong Kong Dollars</mat-option>
+            <mat-option value="HUF">Hungary Forint</mat-option>
+            <mat-option value="ISK">Iceland Krona</mat-option>
+
+            <mat-option value="IDR">Indonesia Rupiah</mat-option>
+            <mat-option value="IEP">Ireland Punt</mat-option>
+            <mat-option value="ILS">Israel New Shekels</mat-option>
+            <mat-option value="ITL">Italy Lira</mat-option>
+            <mat-option value="JMD">Jamaica Dollars</mat-option>
+            <mat-option value="JPY">Japan Yen</mat-option>
+            <mat-option value="JOD">Jordan Dinar</mat-option>
+            <mat-option value="KRW">Korea (South) Won</mat-option>
+            <mat-option value="LBP">Lebanon Pounds</mat-option>
+            <mat-option value="LUF">Luxembourg Francs</mat-option>
+            <mat-option value="MYR">Malaysia Ringgit</mat-option>
+            <mat-option value="MXP">Mexico Pesos</mat-option>
+            <mat-option value="NLG">Netherlands Guilders</mat-option>
+            <mat-option value="NZD">New Zealand Dollars</mat-option>
+            <mat-option value="NOK">Norway Kroner</mat-option>
+            <mat-option value="PKR">Pakistan Rupees</mat-option>
+            <mat-option value="XPD">Palladium Ounces</mat-option>
+            <mat-option value="PHP">Philippines Pesos</mat-option>
+            <mat-option value="XPT">Platinum Ounces</mat-option>
+            <mat-option value="PLZ">Poland Zloty</mat-option>
+            <mat-option value="PTE">Portugal Escudo</mat-option>
+            <mat-option value="ROL">Romania Leu</mat-option>
+            <mat-option value="RUR">Russia Rubles</mat-option>
+            <mat-option value="SAR">Saudi Arabia Riyal</mat-option>
+            <mat-option value="XAG">Silver Ounces</mat-option>
+            <mat-option value="SGD">Singapore Dollars</mat-option>
+            <mat-option value="SKK">Slovakia Koruna</mat-option>
+            <mat-option value="ZAR">South Africa Rand</mat-option>
+            <mat-option value="KRW">South Korea Won</mat-option>
+            <mat-option value="ESP">Spain Pesetas</mat-option>
+            <mat-option value="XDR">Special Drawing Right (IMF)</mat-option>
+            <mat-option value="SDD">Sudan Dinar</mat-option>
+            <mat-option value="SEK">Sweden Krona</mat-option>
+            <mat-option value="CHF">Switzerland Francs</mat-option>
+            <mat-option value="TWD">Taiwan Dollars</mat-option>
+            <mat-option value="THB">Thailand Baht</mat-option>
+            <mat-option value="TTD">Trinidad and Tobago Dollars</mat-option>
+            <mat-option value="TRL">Turkey Lira</mat-option>
+            <mat-option value="VEB">Venezuela Bolivar</mat-option>
+            <mat-option value="ZMK">Zambia Kwacha</mat-option>
+            <mat-option value="EUR">Euro</mat-option>
+            <mat-option value="XCD">Eastern Caribbean Dollars</mat-option>
+            <mat-option value="XDR">Special Drawing Right (IMF)</mat-option>
+          </mat-select>
+          <mat-error *ngIf="currencyControl.hasError('required')">
+            Currency is required
+          </mat-error>
+        </mat-form-field>
+        <div class="row">
+          <div class="col-sm-12">
+            <mat-checkbox class="example-margin" id="checkbox4" name="includeunit" isAtiv="ngModel"
+              [(ngModel)]="docData.includeunit" title="Include Unit">Include Unit</mat-checkbox>
+          </div>
+          <div class="col-sm-12">
+            <mat-checkbox class="example-margin" id="checkbox1" name="includetax" #isActiv="ngModel"
+              title="Include Tax" [(ngModel)]="docData.includetax">Include Tax</mat-checkbox>
+          </div>
+          <div class="col-sm-12" *ngIf="docData.includetax == true">
+            <mat-form-field>
+              <mat-label>Tax Type</mat-label>
+              <mat-select name="taxType" required #taxType="ngModel" [(ngModel)]="docData.taxType">
+                <mat-option value="gst">GST</mat-option>
+                <mat-option value="vat" (click)="onVat()">VAT</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-12" *ngIf="docData.includetax == true && docData.taxType == 'gst'">
+            <mat-checkbox class="example-margin" id="checkbox3" name="interstate" title="Apply IGST"
+              #isActivess="ngModel" [(ngModel)]="docData.interstate">Apply IGST
+            </mat-checkbox>
+          </div>
+          <div class="col-sm-12" *ngIf="docData.includetax == true && docData.taxType == 'gst'">
+            <mat-checkbox class="example-margin" id="checkbox2" name="includecess" #isActivs="ngModel"
+              title="Apply CESS" [(ngModel)]="docData.includecess">Include Cess</mat-checkbox>
+          </div>
+        </div>
+
+        <!--Items-->
+        <mat-card *ngFor="
+            let line of lineItemForm.get('itemList')['controls'];
+            let i = index;
+            trackBy: identify
+          ">
+          <mat-card-content>
+            <mat-grid-list cols="12" rowHeight="60px">
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Item Name</mat-label>
+                      <input matInput [formControl]="line.controls.item" required [(ngModel)]="this.itemList[i].item"
+                        name="item" [errorStateMatcher]="matcher" placeholder="Item Name" />
+                      <mat-error *ngIf="line.controls.item.hasError('required')">
+                        Please enter item name
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="6">
+                    <mat-form-field class="example-full-width" style="padding-top: 10px">
+                      <mat-label>Item Description</mat-label>
+                      <textarea matInput [errorStateMatcher]="matcher" placeholder="Description/ HSN Code"
+                        [formControl]="line.controls.description" name="description"
+                        [(ngModel)]="itemList[i].description"></textarea>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="12">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Qty</mat-label>
+                      <input type="number" matInput [errorStateMatcher]="matcher" [(ngModel)]="itemList[i].qty"
+                        [formControl]="line.controls.qty" name="qty" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" placeholder="1" />
+                      <mat-error *ngIf="line.controls.qty.hasError('required')">
+                        Qty is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="docData.includeunit == true">
+                  <mat-grid-tile [colspan]="12">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Unit</mat-label>
+                      <input type="text" matInput [errorStateMatcher]="matcher" placeholder="No"
+                        [formControl]="line.controls.unit" [(ngModel)]="itemList[i].unit" required name="unit"
+                        (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.unit.hasError('required')">
+                        Unit is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Rate</mat-label>
+                      <input type="number" matInput [errorStateMatcher]="matcher" placeholder="10" required
+                        [formControl]="line.controls.rate" [(ngModel)]="itemList[i].rate" name="rate"
+                        (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.rate.hasError('required')">
+                        Rate is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+              </div>
+              <!-- <div class="row">
+                <mat-grid-tile [colspan]="6">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Item Description</mat-label>
+                    <input matInput [errorStateMatcher]="matcher" placeholder="Description/ HSN Code"
+                      [formControl]="line.controls.description" name="description" [(ngModel)]="itemList[i].description">
+                  </mat-form-field>
+                </mat-grid-tile>
+              </div> -->
+              <div class="row">
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <mat-grid-tile [colspan]="4" *ngIf="
+                      docData.includetax == true &&
+                      docData.interstate != true &&
+                      docData.taxType == 'gst'
+                    ">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>CGST%</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" required type="number"
+                        [formControl]="line.controls.cgstRate" [(ngModel)]="itemList[i].cgstRate" name="cgst"
+                        (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.cgstRate.hasError('required')">
+                        CGST is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <mat-grid-tile [colspan]="4" *ngIf="
+                      docData.includetax == true &&
+                      docData.interstate != true &&
+                      docData.taxType == 'gst'
+                    ">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>SGST%</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                        [formControl]="line.controls.sgstRate" [(ngModel)]="itemList[i].sgstRate" name="sgst" required
+                        type="number" (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.sgstRate.hasError('required')">
+                        SGST is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <mat-grid-tile [colspan]="4" *ngIf="
+                      docData.includetax == true && docData.taxType == 'vat'
+                    ">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>VAT%</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                        [formControl]="line.controls.vatRate" [(ngModel)]="itemList[i].vatRate" name="vat" required
+                        type="number" (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.vatRate.hasError('required')">
+                        VAT is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <mat-grid-tile [colspan]="4" *ngIf="
+                      docData.includetax == true &&
+                      docData.interstate == true &&
+                      docData.taxType == 'gst'
+                    ">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>IGST%</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                        [formControl]="line.controls.igstRate" [(ngModel)]="itemList[i].igstRate" name="igst"
+                        type="number" required (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.igstRate.hasError('required')">
+                        IGST is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <mat-grid-tile [colspan]="4" *ngIf="
+                      docData.includetax == true &&
+                      docData.includecess == true &&
+                      docData.taxType == 'gst'
+                    ">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Cess%</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="1%"
+                        [formControl]="line.controls.cessRate" required [(ngModel)]="itemList[i].cessRate" name="cess"
+                        type="number" (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.cessRate.hasError('required')">
+                        Cess is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+              </div>
+            </mat-grid-list>
+            <span flex></span><button mat-raised-button color="warn" (click)="deleteFieldValue(i)">
+              Remove
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </form>
+      <!--Mobile view layout ends-->
+      <br />
+      <div>
+        <span class="flex"></span>
+        <button mat-raised-button color="primary" (click)="addFieldValue()">
+          Add Next Item
+        </button>
+      </div>
+
+      <!--Summary section-->
+      <br />
+      <div style="text-align: right">
+        <h3>Summary</h3>
+        <p>
+          Total amount:&nbsp;{{ docData.currency + " "
+          }}{{ docData.total | number: "1.2-2" }}<br />
+        </p>
+        <p *ngIf="
+            docData.includetax == true &&
+            docData.interstate != true &&
+            docData.taxType == 'gst'
+          ">
+          SGST total: &nbsp;{{ docData.currency + "
+          "
+          }}{{ docData.sgstvalue | number: "1.2-2" }}
+        </p>
+        <p *ngIf="
+            docData.includetax == true &&
+            docData.interstate != true &&
+            docData.taxType == 'gst'
+          ">
+          CGST total: &nbsp;{{ docData.currency + "
+          "
+          }}{{ docData.cgstvalue | number: "1.2-2" }}
+        </p>
+        <p *ngIf="
+            docData.includetax == true &&
+            docData.interstate == true &&
+            docData.taxType == 'gst'
+          ">
+          IGST total: &nbsp;{{ docData.currency + "
+          "
+          }}{{ docData.igstvalue | number: "1.2-2" }}
+        </p>
+        <p *ngIf="docData.includetax == true && docData.taxType == 'vat'">
+          VAT total: &nbsp;{{ docData.currency + "
+          "
+          }}{{ docData.vatvalue | number: "1.2-2" }}
+        </p>
+        <p *ngIf="
+            docData.includetax == true &&
+            docData.includecess == true &&
+            docData.taxType == 'gst'
+          ">
+          Cess total: &nbsp;{{ docData.currency + "
+          "
+          }}{{ docData.cessvalue | number: "1.2-2" }}
+        </p>
+        <p *ngIf="docData.includetax == true">
+          Total Incl tax: &nbsp;{{ docData.currency + " "
+          }}{{ docData.alltotal | number: "1.2-2" }}
+        </p>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h5>Document Notes</h5>
+        </mat-panel-title>
+        <mat-panel-description> </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form class="example-form">
+        <div class="row">
+          <div class="col-8">
+            <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+              <mat-form-field class="example-full-width">
+                <mat-label>Additional notes (optional)</mat-label>
+                <textarea matInput placeholder="Notes" name="notes" #notes="ngModel" maxlength="250"
+                  [(ngModel)]="docData.notes"></textarea>
+              </mat-form-field>
+            </div>
+            <br />
+            <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+              <mat-form-field class="example-full-width">
+                <mat-label>Bank Account Details (Optional)</mat-label>
+                <textarea matInput name="bankdetails" [(ngModel)]="docData.bankdetails" #bankdetails="ngModel"
+                  placeholder="Bank Details"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="container-fluid border" style="border-radius: 5px; padding: 20px">
+              <div class="row">
+                <mat-checkbox class="example-margin" id="signCheckBox" name="signChkBox" #isActiv="ngModel"
+                  [(ngModel)]="userData.showSign">Show Signature</mat-checkbox>
+                <div class="input-group mb-3 justify-content-center align-middle" *ngIf="userData.showSign">
+                  <a>
+                    <img [src]="userData.signature" alt="signature" style="max-width: 200px"
+                      *ngIf="this.service.signSelected" (click)="opens(mymodal1)" class="img-fluid img-thumbnail" />
+
+                    <img src="assets/images/signature.jpg" alt="signature" style="max-width: 200px"
+                      (click)="opens(mymodal1)" *ngIf="!this.service.signSelected" class="img-fluid img-thumbnail" />
+                  </a>
+
+                  <input type="file" class="custom-file-input sign-selector" id="inputGroupFile01"
+                    (change)="fileChangeEventSign($event)" style="display: none" accept="image/png, image/jpeg" />
+
+                  <ng-template #mymodal1 let-modal>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modal-basic-title">
+                        Sign Cropper
+                      </h5>
+                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="card-content">
+                      <div class="card-body">
+                        <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                          <br />
+                          <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                              <div class="row align-items-center">
+                                <div class="col-md-6 col-lg-6 col-sm-12" *ngIf="!this.service.signSelected">
+                                  <image-cropper [imageChangedEvent]="imageChangedEventSign"
+                                    [maintainAspectRatio]="false" format="png" (imageCropped)="imageCroppedSign($event)"
+                                    (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+                                    (loadImageFailed)="loadImageFailed()" class="float-left mr-4 img-fluid">
+                                  </image-cropper>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-success"
+                            (click)="applySign(); modal.close('Save click')">
+                            Apply Sign
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="row">
+                <mat-form-field>
+                  <mat-label>Name</mat-label>
+                  <input matInput [disabled]="!userData.showSign" placeholder="Name" [errorStateMatcher]="matcher"
+                    name="signatoryname" #signatoryName="ngModel" [(ngModel)]="service.userData.signatoryname" />
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <mat-form-field>
+                  <mat-label>Designation</mat-label>
+                  <input [disabled]="!userData.showSign" matInput placeholder="Designation"
+                    [errorStateMatcher]="matcher" name="designation" #designation="ngModel"
+                    [(ngModel)]="service.userData.designation" />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="contianer-fluid border" style="border-radius: 5px; padding: 10px">
+          <p>
+            In case of queries, contact
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Name" name="contactname" minlength="2" maxlength="30"
+                [(ngModel)]="dbUserData.contactname" #contactname="ngModel" id="centeralign" />
+            </mat-form-field>
+            at
+            <mat-form-field>
+              <mat-label>Contact No</mat-label>
+              <input type="text" matInput placeholder="Contact No" [(ngModel)]="dbUserData.contactno"
+                #contactno="ngModel" name="mobNo" id="centeralign" (keypress)="keyPress($event)" minlength="10"
+                maxlength="10" />
+            </mat-form-field>
+            or drop an email to
+            <mat-form-field>
+              <mat-label>email</mat-label>
+              <input matInput placeholder="Email" name="email" [(ngModel)]="dbUserData.email" #email="ngModel"
+                id="centeralign" email />
+            </mat-form-field>
+          </p>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <button type="submit" mat-raised-button color="primary" id="type-error"
+    (click)="form.valid ? onPrint() : TypeError()">
+    Print
+  </button>
+</form>
+
+<!-- Large View-->
+<form class="example-form" #form="ngForm" name="gstForm" *ngIf="isLarge || isXLarge">
+  <div class="row">
+    <div class="col-lg-9">
+      <mat-card>
+        <form class="form-group">
+          <div class="row">
+            <div class="container" style="border-radius: 5px; padding: 10px; max-width: 500px">
+              <!--<mat-card-title>Document Title </mat-card-title>-->
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Document Title" [errorStateMatcher]="matcher" name="Title" #Title="ngModel"
+                  style="font-size: 36px" [(ngModel)]="docData.docTitle" value="docData.docTitle" />
+              </mat-form-field>
+              <!-- <input type="text" name="docData.docTitle" [(ngModel)]="docData.docTitle" class="form-control" id="approvalText" > -->
+            </div>
+          </div>
+
+          <br />
+          <div class="row">
+            <!--User details-->
+            <!--Logo selector-->
+            <div class="col-4">
+              <!-- <h5> Logo Comes here</h5> -->
+              <div class="container" style="padding: 10px; border-radius: 5px">
+                <h5>Your Logo</h5>
+                <br />
+                <a>
+                  <img src="assets/images/companylogo.png" alt="logo" style="max-width: 200px" (click)="open(mymodal)"
+                    class="responsive" *ngIf="!this.service.logoSelected" class="img-fluid img-thumbnail" />
+                  <img [src]="service.userData.logo" alt="logo" tyle="max-width:200px;" (click)="open(mymodal)"
+                    class="img-fluid" *ngIf="this.service.logoSelected" class="img-fluid img-thumbnail" />
+                </a>
+                <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+                  (change)="fileChangeEventLogo($event)" style="display: none" accept="image/png, image/jpeg" />
+                <ng-template #mymodal let-modal>
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modal-basic-title">
+                      Crop Logo
+                    </h5>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="card-content" class="row align-items-center" id="center">
+                    <div class="card-body">
+                      <div id="collapseExample">
+                        <br />
+                        <!--Collpsible component comes here-->
+                        <div class="row">
+                          <!--Select Logo-->
+                          <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12" id="centerlogo"
+                              *ngIf="!this.service.logoSelected">
+                              <image-cropper [imageChangedEvent]="imageChangedEventLogo" [maintainAspectRatio]="false"
+                                format="png" (imageCropped)="imageCroppedLogo($event)" (imageLoaded)="imageLoaded()"
+                                (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"
+                                class="float-left mr-4 img-fluid">
+                              </image-cropper>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-success" (click)="applyLogo(); modal.close('Save click')">
+                      Apply Logo
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+
+              <!--Logo Selector ends-->
+            </div>
+            <!--Document details-->
+            <div class="col-8">
+              <div class="container-fluid border" style="border-radius: 5px; padding: 10px">
+                <h5>{{ docType }} Details</h5>
+                <div class="row" *ngIf="docType == 'Invoice'">
+                  <div class="col-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">Document No</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} No</mat-label>
+                      <input matInput placeholder="Invoice No" name="invoiceno" [(ngModel)]="docData.invoiceno"
+                        #invoiceno="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-error *ngIf="invoiceno.hasError('required')">
+                        Document No is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">
+                        Date</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} Date</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Invoice Date" name="date"
+                        [(ngModel)]="docData.date" #date="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="date.hasError('required')">
+                        Invoice Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                      <mat-label>P.O Ref </mat-label>
+                      <input matInput placeholder="P.O Ref" maxlength="30" aria-describedby="PORef" name="purchaseorder"
+                        [(ngModel)]="docData.purchaseorder" #purchaseorder="ngModel" [errorStateMatcher]="matcher" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <!-- <mat-form-field class="example-full-width" *ngIf="docType != '' && docType != 'Invoice'">
+                  <mat-label>Valid Till</mat-label>
+                  <input [matDatepicker]="picker" matInput placeholder="Due Date" name="docValidity"
+                    [(ngModel)]="docData.docValidity" #docValidity="ngModel" [errorStateMatcher]="matcher">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error *ngIf="docValidity.hasError('required')">
+                    Valid Date is <strong>required</strong>
+                  </mat-error> -->
+
+                    <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                      <mat-label>Quotation Ref </mat-label>
+                      <input matInput placeholder="Quotation Ref" name="quatationalreference" type="text" maxlength="30"
+                        [(ngModel)]="docData.quatationreference" #quatationalreference="ngModel"
+                        [errorStateMatcher]="matcher" minlength="2" max="30" />
+                      <!-- <mat-error>
+                    Enter a Valid <strong>Quotation Ref</strong>
+                  </mat-error> -->
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" *ngIf="docData.docTitle == '' || docType == 'Invoice'">
+                      <mat-label>Due Date</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Due Date" name="duedate"
+                        [(ngModel)]="docData.duedate" #duedate="ngModel" [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="duedate.hasError('required')">
+                        Due Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                      <mat-label>Payment Terms</mat-label>
+                      <input matInput placeholder="Payment Terms" maxlength="30" name="paymentterm"
+                        [(ngModel)]="docData.paymentterm" #paymentterm="ngModel" />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="docType == 'Quotation'">
+                  <div class="col-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">Document No</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} No</mat-label>
+                      <input matInput placeholder="Quotation No" name="invoiceno" [(ngModel)]="docData.invoiceno"
+                        #invoiceno="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-error *ngIf="invoiceno.hasError('required')">
+                        Quotation No is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">
+                        Date</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} Date</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Quotation Date" name="date"
+                        [(ngModel)]="docData.date" #date="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="date.hasError('required')">
+                        Quotation Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="example-full-width" *ngIf="docType != '' && docType != 'Invoice'">
+                      <mat-label>Valid Till</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Due Date" name="docValidity"
+                        [(ngModel)]="docData.docValidity" #docValidity="ngModel" [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="docValidity.hasError('required')">
+                        Valid Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                  <mat-label>P.O Ref </mat-label>
+                  <input matInput placeholder="P.O Ref"  maxlength="30" aria-describedby="PORef"
+                    name="purchaseorder" [(ngModel)]="docData.purchaseorder" #purchaseorder="ngModel"
+                    [errorStateMatcher]="matcher">
+                </mat-form-field>
+                <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                  <mat-label>Payment Terms</mat-label>
+                  <input matInput placeholder="Payment Terms" maxlength="30" name="paymentterm"
+                    [(ngModel)]="docData.paymentterm" #paymentterm="ngModel">
+                </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="row" *ngIf="docType == 'Estimate'">
+                  <div class="col-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">Document No</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} No</mat-label>
+                      <input matInput placeholder="Estimate No" name="invoiceno" [(ngModel)]="docData.invoiceno"
+                        #invoiceno="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-error *ngIf="invoiceno.hasError('required')">
+                        Estimate No is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                      <mat-label *ngIf="docData.docTitle == ''">
+                        Date</mat-label>
+                      <mat-label *ngIf="docData.docTitle != ''">{{ docType }} Date</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Estimate Date" name="date"
+                        [(ngModel)]="docData.date" #date="ngModel" required [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="date.hasError('required')">
+                        Estimate Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="example-full-width" *ngIf="docType != '' && docType != 'Invoice'">
+                      <mat-label>Valid Till</mat-label>
+                      <input [matDatepicker]="picker" matInput placeholder="Due Date" name="docValidity"
+                        [(ngModel)]="docData.docValidity" #docValidity="ngModel" [errorStateMatcher]="matcher" />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error *ngIf="docValidity.hasError('required')">
+                        Valid Date is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                  <mat-label>P.O Ref </mat-label>
+                  <input matInput placeholder="P.O Ref"  maxlength="30" aria-describedby="PORef"
+                    name="purchaseorder" [(ngModel)]="docData.purchaseorder" #purchaseorder="ngModel"
+                    [errorStateMatcher]="matcher">
+                </mat-form-field>
+                <mat-form-field class="example-full-width" *ngIf="docType == 'Invoice' || docType == ''">
+                  <mat-label>Payment Terms</mat-label>
+                  <input matInput placeholder="Payment Terms" maxlength="30" name="paymentterm"
+                    [(ngModel)]="docData.paymentterm" #paymentterm="ngModel">
+                </mat-form-field> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <!--Billing party and billed to party details-->
+          <div class="row">
+            <!--Billed By-->
+            <div class="col-6">
+              <div class="container border" style="border-radius: 5px; padding: 10px">
+                <h5>Billed by</h5>
+                <mat-card-content>
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Person/Company Name</mat-label>
+                    <input matInput placeholder="Person/Company Name" [errorStateMatcher]="matcher"
+                      name="yourcompanyname" required #yourcompanyname="ngModel" [(ngModel)]="userData.yourcompanyname"
+                      minlength="2" maxlength="40" />
+                    <mat-error *ngIf="yourcompanyname.hasError('required')">
+                      Company/Person name is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput placeholder="Address" rows="3" name="youraddressline"
+                      [(ngModel)]="userData.youraddressline" id="address" #youraddressline="ngModel" required
+                      minlength="2" [errorStateMatcher]="matcher"></textarea>
+                    <mat-error *ngIf="youraddressline.hasError('required')">
+                      Address is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--
+                            <mat-form-field class="example-full-width">
+                              <mat-label>PIN/ZIP</mat-label>
+                              <input type="text" matInput placeholder="PIN/ZIP" [errorStateMatcher]="matcher"
+                                (keypress)="keyPress($event)" name="yourpincode" [(ngModel)]="userData.yourpincode" minlength='4'
+                                maxlength='10' #yourpincode="ngModel" required>
+                              <mat-error *ngIf="yourpincode.hasError('required')">
+                                PIN/ZIP is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                
+                            <mat-form-field class="example-full-width">
+                              <mat-label>State</mat-label>
+                              <input matInput placeholder="State" [errorStateMatcher]="matcher" name="statefrom" #statefrom="ngModel"
+                                [(ngModel)]="userData.statefrom" required minlength="2" maxlength="30">
+                              <mat-error *ngIf="statefrom.hasError('required')">
+                                State is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Country</mat-label>
+                              <input matInput placeholder="Country" name="yourcountry" [(ngModel)]="userData.yourcountry"
+                                #yourcountry="ngModel" required minlength="2" maxlength="30" [errorStateMatcher]="matcher">
+                              <mat-error *ngIf="yourcountry.hasError('required')">
+                                Country is <strong>required</strong>
+                              </mat-error>
+                            </mat-form-field>
+                -->
+                  <mat-form-field class="example-full-width">
+                    <mat-label>GST/VAT No</mat-label>
+                    <!-- <input matInput placeholder="GST/VAT No:" name="yourgst" type="text" [(ngModel)]="userData.yourgst" required
+                  #yourgst="ngModel" minlength='15' maxlength='15' (keypress)="keyPress($event)">
+               -->
+                    <input matInput placeholder="GST/VAT No:" name="yourgst" type="text" maxlength="25"
+                      [(ngModel)]="userData.yourgst" />
+                    <!-- <mat-error *ngIf="yourgst.hasError('required')">
+                    GST is <strong>required</strong>
+                  </mat-error> -->
+                  </mat-form-field>
+                </mat-card-content>
+              </div>
+            </div>
+            <!--Bill to details-->
+            <div class="col-6">
+              <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+                <h5>Billed To</h5>
+                <mat-card-content>
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Person/Company Name</mat-label>
+                    <input matInput placeholder="Person/Company Name" name="billcompanyname"
+                      [(ngModel)]="customerData.billcompanyname" #billcompanyname="ngModel" required minlength="2"
+                      maxlength="30" [errorStateMatcher]="matcher" />
+                    <mat-error *ngIf="billcompanyname.hasError('required')">
+                      Company/Person name is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput placeholder="Address" name="billaddressline" rows="3"
+                      [(ngModel)]="customerData.billaddressline" #billaddressline="ngModel" required minlength="2"
+                      [errorStateMatcher]="matcher"></textarea>
+                    <mat-error *ngIf="billaddressline.hasError('required')">
+                      Address is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>GST/VAT No</mat-label>
+                    <input matInput placeholder="GST/VAT No:" name="billgst" type="text" maxlength="25"
+                      [(ngModel)]="customerData.billgst" />
+                  </mat-form-field>
+                </mat-card-content>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-6"></div>
+            <div class="col-6">
+              <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+                <mat-checkbox class="example-margin" id="delto0" name="delto" #isActiv="ngModel"
+                  [(ngModel)]="customerData.delto">Add Delivery Location</mat-checkbox>
+                <div style="padding: 10px; border-radius: 5px" *ngIf="customerData.delto">
+                  <mat-card-content>
+                    <mat-form-field class="example-full-width">
+                      <textarea matInput placeholder="Delivery Address" name="deliveredto" rows="3"
+                        [(ngModel)]="customerData.deliveredto" #deliveredto="ngModel" required minlength="2"
+                        [errorStateMatcher]="matcher"></textarea>
+                      <mat-error *ngIf="deliveredto.hasError('required')">
+                        Address is <strong>required</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-card-content>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!--Item Details-->
+        <br />
+        <!-- </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h5>Items</h5>
+        </mat-panel-title>
+      </mat-expansion-panel-header> -->
+        <!--Item Settings-->
+
+        <form class="example-form">
+          <br />
+          <div *ngFor="
+              let line of lineItemForm.get('itemList')['controls'];
+              let i = index;
+              trackBy: identify
+            ">
+            <mat-card>
+              <mat-card-content>
+                <mat-grid-list cols="12" rowHeight="60px">
+                  <mat-grid-tile [colspan]="3">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Item Name</mat-label>
+                      <input matInput [formControl]="line.controls.item" required [(ngModel)]="this.itemList[i].item"
+                        name="item" [errorStateMatcher]="matcher" placeholder="Item Name" />
+                      <mat-error *ngIf="line.controls.item.hasError('required')">
+                        Please enter item name
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+
+                  <br />
+
+                  <mat-grid-tile [colspan]="2">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Qty</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" [(ngModel)]="itemList[i].qty"
+                        [formControl]="line.controls.qty" name="qty" type="number" required
+                        (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2"
+                        placeholder="1" />
+                      <mat-error *ngIf="line.controls.qty.hasError('required')">
+                        Qty is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+
+                  <mat-grid-tile [colspan]="2" *ngIf="docData.includeunit == true">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Unit</mat-label>
+                      <input type="text" matInput [errorStateMatcher]="matcher" placeholder="Unit"
+                        [formControl]="line.controls.unit" [(ngModel)]="itemList[i].unit" name="unit" />
+                    </mat-form-field>
+                  </mat-grid-tile>
+
+                  <mat-grid-tile [colspan]="2">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Rate</mat-label>
+                      <input matInput [errorStateMatcher]="matcher" placeholder="10" required type="number"
+                        [formControl]="line.controls.rate" [(ngModel)]="itemList[i].rate" name="rate"
+                        (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error *ngIf="line.controls.rate.hasError('required')">
+                        Rate is required
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+
+
+
+                  <mat-grid-tile [colspan]="2" *ngIf="docData.includeDiscount">
+                <mat-form-field class="example-3quart-width">
+                  <mat-label>Discount%</mat-label>
+                  <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" required type="number"
+                    [formControl]="line.controls.discountRate" [(ngModel)]="itemList[i].discountRate" name="discount"
+                    (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2" />
+                  <mat-error *ngIf="line.controls.discountRate.hasError('required')">
+                    Discount is required
+                  </mat-error>
+                </mat-form-field>
+              </mat-grid-tile>
+
+              <mat-grid-tile [colspan]="6">
+                <mat-form-field class="example-full-width" style="padding-top: 10px">
+                  <mat-label>Item Description</mat-label>
+                  <textarea matInput [errorStateMatcher]="matcher" placeholder="Description/ HSN Code"
+                    [formControl]="line.controls.description" name="description"
+                    [(ngModel)]="itemList[i].description"></textarea>
+                </mat-form-field>
+              </mat-grid-tile>
+
+              <mat-grid-tile [colspan]="1" *ngIf="
+              docData.includetax == true &&
+              docData.interstate != true &&
+              docData.taxType == 'gst'
+            ">
+            <mat-form-field class="example-3quart-width"  style="padding-top: 22px">
+              <mat-label>CGST%</mat-label>
+              <input matInput [errorStateMatcher]="matcher" placeholder="5.5%" required type="number"
+                [formControl]="line.controls.cgstRate" [(ngModel)]="itemList[i].cgstRate" name="cgst"
+                (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber decimals="2" />
+              <mat-error *ngIf="line.controls.cgstRate.hasError('required')">
+                CGST is required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="1" *ngIf="
+              docData.includetax == true &&
+              docData.interstate != true &&
+              docData.taxType == 'gst'
+            ">
+            <mat-form-field class="example-3quart-width" style="padding-top: 22px">
+              <mat-label>SGST%</mat-label>
+              <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                [formControl]="line.controls.sgstRate" [(ngModel)]="itemList[i].sgstRate" name="sgst" required
+                type="number" (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+              <mat-error *ngIf="line.controls.sgstRate.hasError('required')">
+                SGST is required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1" *ngIf="
+              docData.includetax == true && docData.taxType == 'vat'
+            ">
+            <mat-form-field class="example-3quart-width " style="padding-top: 22px"> 
+              <mat-label>VAT%</mat-label>
+              <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                [formControl]="line.controls.vatRate" [(ngModel)]="itemList[i].vatRate" name="vat" type="number"
+                required (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+              <mat-error *ngIf="line.controls.vatRate.hasError('required')">
+                VAT is required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="1" *ngIf="
+              docData.includetax == true &&
+              docData.interstate == true &&
+              docData.taxType == 'gst'
+            ">
+            <mat-form-field class="example-3quart-width" style="padding-top: 22px">
+              <mat-label>IGST%</mat-label>
+              <input matInput [errorStateMatcher]="matcher" placeholder="5.5%"
+                [formControl]="line.controls.igstRate" [(ngModel)]="itemList[i].igstRate" name="igst"
+                type="number" required (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+              <mat-error *ngIf="line.controls.igstRate.hasError('required')">
+                IGST is required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile [colspan]="1" *ngIf="
+              docData.includetax == true &&
+              docData.includecess == true &&
+              docData.taxType == 'gst'
+            ">
+            <mat-form-field class="example-3quart-width" style="padding-top: 22px">
+              <mat-label>Cess%</mat-label>
+              <input matInput [errorStateMatcher]="matcher" placeholder="1%"
+                [formControl]="line.controls.cessRate" required type="number" [(ngModel)]="itemList[i].cessRate"
+                name="cess" (ngModelChange)="getAmount(i)" appTwoDigitDecimaNumber decimals="2" />
+              <mat-error *ngIf="line.controls.cessRate.hasError('required')">
+                Cess is required
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+                  <br />
+                  <p></p>
+
+                
+
+                  <mat-grid-tile [colspan]="2" style="float: right;">
+                    <span flex class="example-full-width"></span>
+                    <button mat-icon-button color="warn" (click)="deleteFieldValue(i)"
+                      aria-label="Example icon button with a heart icon">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </mat-card-content>
+            </mat-card>
+            <br />
+          </div>
+        </form>
+
+        <div class="container-fluid">
+          <span flex class="example-full-width"></span>
+          <button mat-raised-button color="primary" (click)="addFieldValue()">
+            Add Next Item
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-md-6 col-sm-12 col-lg-6">
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <h4>Item Summary</h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <p>Total Amount:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.total | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+
+            <div class="row"  *ngIf="docData.includeDiscount">
+              <div class="col-md-6 text-right">
+                <p>Discount Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.discountValue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            
+            <div class="row"  *ngIf="docData.includeDiscount">
+              <div class="col-md-6 text-right">
+                <p>Total After Discounts:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.discountedAmount | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+
+
+            <div class="row" *ngIf="
+                docData.includetax == true &&
+                docData.interstate != true &&
+                docData.taxType == 'gst'
+              ">
+              <div class="col-md-6 text-right">
+                <p>SGST Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.sgstvalue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="
+                docData.includetax == true &&
+                docData.interstate != true &&
+                docData.taxType == 'gst'
+              ">
+              <div class="col-md-6 text-right">
+                <p>CGST Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.cgstvalue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="
+                docData.includetax == true &&
+                docData.interstate == true &&
+                docData.taxType == 'gst'
+              ">
+              <div class="col-md-6 text-right">
+                <p>IGST Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.igstvalue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="
+                docData.includetax == true &&
+                docData.includecess == true &&
+                docData.taxType == 'gst'
+              ">
+              <div class="col-md-6 text-right">
+                <p>Cess Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.cessvalue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="docData.includetax == true && docData.taxType == 'vat'">
+              <div class="col-md-6 text-right">
+                <p>VAT Total:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.vatvalue | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="docData.includetax == true">
+              <div class="col-md-6 text-right">
+                <p>Total including Taxes:</p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  {{ docData.currency + " "
+                  }}{{ docData.alltotal | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h5>Document Notes</h5>
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header> -->
+        <br />
+
+        <form class="example-form">
+          <div class="row">
+            <div class="col-8">
+              <div class="container-fluid border" style="padding: 10px; border-radius: 5px">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Additional notes (optional)</mat-label>
+                  <textarea matInput placeholder="Notes" name="notes" #notes="ngModel" maxlength="250"
+                    [(ngModel)]="docData.notes"></textarea>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                  <mat-label>Bank Account Details (Optional)</mat-label>
+                  <textarea matInput name="bankdetails" [(ngModel)]="docData.bankdetails" #bankdetails="ngModel"
+                    placeholder="Bank Details"></textarea>
+                </mat-form-field>
+              </div>
+              <br />
+            </div>
+            <div class="col-4">
+              <div class="container-fluid border" style="border-radius: 5px; padding: 20px">
+                <div class="row">
+                  <mat-checkbox class="example-margin" id="signCheckBox" name="signChkBox" #isActiv="ngModel"
+                    [(ngModel)]="userData.showSign">Show Signature</mat-checkbox>
+                  <div class="input-group mb-3 justify-content-center align-middle" *ngIf="userData.showSign">
+                    <a>
+                      <img [src]="userData.signature" alt="signature" style="max-width: 200px"
+                        *ngIf="this.service.signSelected" (click)="opens(mymodal1)" class="img-fluid img-thumbnail" />
+
+                      <img src="assets/images/signature.jpg" alt="signature" style="max-width: 200px"
+                        (click)="opens(mymodal1)" *ngIf="!this.service.signSelected" class="img-fluid img-thumbnail" />
+                    </a>
+
+                    <input type="file" class="custom-file-input sign-selector" id="inputGroupFile01"
+                      (change)="fileChangeEventSign($event)" style="display: none" accept="image/png, image/jpeg" />
+
+                    <ng-template #mymodal1 let-modal>
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="modal-basic-title">
+                          Sign Cropper
+                        </h5>
+                        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                      <div class="card-content" class="row align-items-center" id="center">
+                        <div class="card-body">
+                          <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                            <br />
+                            <div class="row">
+                                  <div class="col-md-12 col-lg-12 col-sm-12" id="centerlogo" *ngIf="!this.service.signSelected">
+                                    <image-cropper [imageChangedEvent]="
+                                        imageChangedEventSign
+                                      " [maintainAspectRatio]="false" format="png"
+                                      (imageCropped)="imageCroppedSign($event)" (imageLoaded)="imageLoaded()"
+                                      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"
+                                      class="float-left mr-4 img-fluid">
+                                    </image-cropper>
+                                  </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-success"
+                              (click)="applySign(); modal.close('Save click')">
+                              Apply Sign
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="row">
+                  <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput [disabled]="!userData.showSign" placeholder="Name" [errorStateMatcher]="matcher"
+                      name="signatoryname" #signatoryName="ngModel" [(ngModel)]="service.userData.signatoryname" />
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field>
+                    <mat-label>Designation</mat-label>
+                    <input [disabled]="!userData.showSign" matInput placeholder="Designation"
+                      [errorStateMatcher]="matcher" name="designation" #designation="ngModel"
+                      [(ngModel)]="service.userData.designation" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="contianer-fluid border" style="border-radius: 5px; padding: 10px">
+            <form #users>
+              <p>
+                In case of queries, contact
+                <mat-form-field>
+                  <mat-label>Name</mat-label>
+                  <input matInput placeholder="Name" name="contactname" minlength="2" maxlength="30"
+                    [(ngModel)]="dbUserData.contactname" #contactname="ngModel" id="centeralign" />
+                </mat-form-field>
+                at
+                <mat-form-field>
+                  <mat-label>Contact No</mat-label>
+                  <input type="text" matInput placeholder="Contact No" [(ngModel)]="dbUserData.contactno"
+                    #contactno="ngModel" name="mobNo" id="centeralign" (keypress)="keyPress($event)" minlength="10"
+                    maxlength="10" />
+                </mat-form-field>
+                or drop an email to
+                <mat-form-field>
+                  <mat-label>email</mat-label>
+                  <input matInput placeholder="Email" name="email" [(ngModel)]="dbUserData.email" #email="ngModel"
+                    id="centeralign" email />
+                </mat-form-field>
+              </p>
+            </form>
+          </div>
+        </form>
+        <!-- <div *ngIf="previewMode">
+        <div *ngIf="printTemplate == 2">
+            <app-preview2 [color1]="color1"></app-preview2>
+        </div>
+        <div *ngIf="printTemplate == 1">
+            <app-preview1 [color1]="color1"></app-preview1>
+        </div>
+        <div *ngIf="printTemplate == 3">
+            <app-preview3 [color1]="color1"></app-preview3>
+        </div>
+    </div>
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="Edit">
+
+        <mat-button-toggle value="Edit" (click)="setPreviewOff()">Edit</mat-button-toggle>
+        <mat-button-toggle value="Preview" (click)="setPreviewOn()">Preview
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+    -->
+
+        <!-- 
+    </mat-expansion-panel>
+  </mat-accordion> -->
+      </mat-card>
+    </div>
+    <div class="col-lg-3">
+      <mat-card>
+        <mat-card-title>Settings</mat-card-title>
+        <mat-card-content>
+          <div class="container-fluid" style="padding: 10px">
+            <div class="row d-flex align-items-center">
+              <mat-form-field>
+                <mat-label>Currency</mat-label>
+                <mat-select matNativeControl id="inputGroupSelect01" name="currency" [formControl]="currencyControl"
+                  [(ngModel)]="docData.currency">
+                  <mat-option value="INR" selected="selected">Indian Rupees</mat-option>
+                  <mat-option value="USD">United States Dollars</mat-option>
+                  <mat-option value="EUR">Euro</mat-option>
+                  <mat-option value="GBP">United Kingdom Pounds</mat-option>
+                  <mat-option value="DZD">Algeria Dinars</mat-option>
+                  <mat-option value="ARP">Argentina Pesos</mat-option>
+                  <mat-option value="AUD">Australia Dollars</mat-option>
+                  <mat-option value="ATS">Austria Schillings</mat-option>
+                  <mat-option value="BSD">Bahamas Dollars</mat-option>
+                  <mat-option value="BBD">Barbados Dollars</mat-option>
+                  <mat-option value="BEF">Belgium Francs</mat-option>
+                  <mat-option value="BMD">Bermuda Dollars</mat-option>
+                  <mat-option value="BRL">Brazil Real</mat-option>
+                  <mat-option value="BGN">Bulgaria Lev</mat-option>
+                  <mat-option value="CAD">Canada Dollars</mat-option>
+                  <mat-option value="CLP">Chile Pesos</mat-option>
+                  <mat-option value="CNY">China Yuan Renmimbi</mat-option>
+                  <mat-option value="CYP">Cyprus Pounds</mat-option>
+                  <mat-option value="CSK">Czech Republic Koruna</mat-option>
+                  <mat-option value="DKK">Denmark Kroner</mat-option>
+                  <mat-option value="NLG">Dutch Guilders</mat-option>
+                  <mat-option value="XCD">Eastern Caribbean Dollars</mat-option>
+                  <mat-option value="EGP">Egypt Pounds</mat-option>
+                  <mat-option value="FJD">Fiji Dollars</mat-option>
+                  <mat-option value="FIM">Finland Markka</mat-option>
+                  <mat-option value="FRF">France Francs</mat-option>
+                  <mat-option value="DEM">Germany Deutsche Marks</mat-option>
+                  <mat-option value="XAU">Gold Ounces</mat-option>
+                  <mat-option value="GRD">Greece Drachmas</mat-option>
+                  <mat-option value="HKD">Hong Kong Dollars</mat-option>
+                  <mat-option value="HUF">Hungary Forint</mat-option>
+                  <mat-option value="ISK">Iceland Krona</mat-option>
+
+                  <mat-option value="IDR">Indonesia Rupiah</mat-option>
+                  <mat-option value="IEP">Ireland Punt</mat-option>
+                  <mat-option value="ILS">Israel New Shekels</mat-option>
+                  <mat-option value="ITL">Italy Lira</mat-option>
+                  <mat-option value="JMD">Jamaica Dollars</mat-option>
+                  <mat-option value="JPY">Japan Yen</mat-option>
+                  <mat-option value="JOD">Jordan Dinar</mat-option>
+                  <mat-option value="KRW">Korea (South) Won</mat-option>
+                  <mat-option value="LBP">Lebanon Pounds</mat-option>
+                  <mat-option value="LUF">Luxembourg Francs</mat-option>
+                  <mat-option value="MYR">Malaysia Ringgit</mat-option>
+                  <mat-option value="MXP">Mexico Pesos</mat-option>
+                  <mat-option value="NLG">Netherlands Guilders</mat-option>
+                  <mat-option value="NZD">New Zealand Dollars</mat-option>
+                  <mat-option value="NOK">Norway Kroner</mat-option>
+                  <mat-option value="PKR">Pakistan Rupees</mat-option>
+                  <mat-option value="XPD">Palladium Ounces</mat-option>
+                  <mat-option value="PHP">Philippines Pesos</mat-option>
+                  <mat-option value="XPT">Platinum Ounces</mat-option>
+                  <mat-option value="PLZ">Poland Zloty</mat-option>
+                  <mat-option value="PTE">Portugal Escudo</mat-option>
+                  <mat-option value="ROL">Romania Leu</mat-option>
+                  <mat-option value="RUR">Russia Rubles</mat-option>
+                  <mat-option value="SAR">Saudi Arabia Riyal</mat-option>
+                  <mat-option value="XAG">Silver Ounces</mat-option>
+                  <mat-option value="SGD">Singapore Dollars</mat-option>
+                  <mat-option value="SKK">Slovakia Koruna</mat-option>
+                  <mat-option value="ZAR">South Africa Rand</mat-option>
+                  <mat-option value="KRW">South Korea Won</mat-option>
+                  <mat-option value="ESP">Spain Pesetas</mat-option>
+                  <mat-option value="XDR">Special Drawing Right (IMF)</mat-option>
+                  <mat-option value="SDD">Sudan Dinar</mat-option>
+                  <mat-option value="SEK">Sweden Krona</mat-option>
+                  <mat-option value="CHF">Switzerland Francs</mat-option>
+                  <mat-option value="TWD">Taiwan Dollars</mat-option>
+                  <mat-option value="THB">Thailand Baht</mat-option>
+                  <mat-option value="TTD">Trinidad and Tobago Dollars</mat-option>
+                  <mat-option value="TRL">Turkey Lira</mat-option>
+                  <mat-option value="VEB">Venezuela Bolivar</mat-option>
+                  <mat-option value="ZMK">Zambia Kwacha</mat-option>
+                  <mat-option value="EUR">Euro</mat-option>
+                  <mat-option value="XCD">Eastern Caribbean Dollars</mat-option>
+                  <mat-option value="XDR">Special Drawing Right (IMF)</mat-option>
+                </mat-select>
+                <mat-error *ngIf="currencyControl.hasError('required')">
+                  Currency is required
+                </mat-error>
+              </mat-form-field>
+              <mat-checkbox class="example-margin" id="checkbox4" name="includeunit" isAtiv="ngModel"
+                [(ngModel)]="docData.includeunit" title="Include Unit">Include Unit</mat-checkbox>
+
+                <mat-checkbox class="example-margin" id="checkboxDiscount" name="includeDiscount" isAtiveDiscount="ngModel"
+                [(ngModel)]="docData.includeDiscount" title="Include Discount">Include Discount</mat-checkbox>
+
+
+              <mat-checkbox class="example-margin" id="checkbox1" name="includetax" #isActiv="ngModel"
+                title="Include Tax" [(ngModel)]="docData.includetax">Include Tax</mat-checkbox>
+
+              <mat-form-field *ngIf="docData.includetax == true">
+                <mat-label>Tax Type</mat-label>
+                <mat-select name="taxType" required #taxType="ngModel" [(ngModel)]="docData.taxType">
+                  <mat-option value="gst">GST</mat-option>
+                  <mat-option value="vat" (click)="onVat()">VAT</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-checkbox class="example-margin" id="checkbox3" name="interstate"
+                *ngIf="docData.includetax == true && docData.taxType == 'gst'" title="Apply IGST"
+                #isActivess="ngModel" [(ngModel)]="docData.interstate">Apply IGST
+              </mat-checkbox>
+
+              <mat-checkbox class="example-margin" id="checkbox2" name="includecess" #isActivs="ngModel"
+                *ngIf="docData.includetax == true && docData.taxType == 'gst'" title="Apply CESS"
+                [(ngModel)]="docData.includecess">Include Cess</mat-checkbox>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</form>
+<br />

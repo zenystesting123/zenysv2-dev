@@ -1,0 +1,87 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar *ngIf="commonService.userPlan.categoryAccess && commonService.userPlan.categoryAccess" class="border-bottom" style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="primary"> arrow_back </mat-icon>
+    </button>
+    <mat-icon class="text-primary" mat-list-icon>inventory_2
+    </mat-icon>&nbsp;
+    <span>{{
+      fieldNameItemsCategory
+      }}
+      </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <!-- If Access is restricted -->
+  <div class="container" class="bg-soft-secondary" style="overflow-y: auto; height: 100%;">
+    <div *ngIf="disableView === true || !(commonService.userPlan.categoryAccess && commonService.userPlan.categoryAccess)" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <div class="row" *ngIf="disableView === false && commonService.userPlan.categoryAccess && commonService.userPlan.categoryAccess">
+      <div class="col-2">
+        <!-- <br /> -->
+        <!-- <div class="example-container">
+          <div
+            class="container-fluid"
+            style="margin-bottom: 20px; padding-left: 0px"
+          >
+            <br />
+
+            <button
+              (click)="add()"
+              mat-raised-button
+              color="primary"
+              [disabled]="!onCheckNetwork()"
+            >
+              Add Category
+            </button>
+          </div>
+
+          <br />
+        </div> -->
+        <!-- <br /> -->
+      </div>
+      <div class="col-8">
+        <div class="container">
+          <div class="row justify-content-center">
+            <br />
+            <div class="col-12">
+              <div class="container-fluid" style="margin-bottom: 20px; margin-top: 20px">
+                <br />
+
+                <button (click)="add()" mat-raised-button color="primary" [disabled]="!onCheckNetwork() || disableCreate">
+                  Add {{fieldNameItemsCategory}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-12">
+              <div class="example-list">
+                <div class="example-box" *ngFor="let item of this.prodCatArray; let k = index">
+                  {{ item.length > 40 ? (item | slice: 0:35) + "...." : item }}
+                  <div class="rig">
+                    <button mat-icon-button aria-label="Edit" (click)="edit(item, k)" color="primary"
+                      title="Edit " [disabled]="disableEdit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" aria-label="delete" title="Delete"
+                      (click)="delete(item, k)" [disabled]="disableDelete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br />
+        </div>
+      </div>
+      <div class="col-2"></div>
+    </div>
+  </div>
+</div>

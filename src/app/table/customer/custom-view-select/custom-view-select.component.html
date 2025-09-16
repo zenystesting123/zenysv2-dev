@@ -1,0 +1,50 @@
+<div class="popup-container">
+    <div class="default-view">
+        <h3>Default View</h3>
+        <ul>
+            <li (click)="viewSelected('To be converted')">To be converted</li>
+            <li (click)="viewSelected('Created today')">Created today</li>
+            <li (click)="viewSelected('Created this week')">Created this
+                week</li>
+            <li (click)="viewSelected('Created this month')">Created this
+                month</li>
+            <li (click)="viewSelected('To be contacted today')">To be contacted
+                today</li>
+            <li (click)="viewSelected('To be contacted tomorrow')">To be contacted
+                tomorrow</li>
+            <li (click)="viewSelected('By next contact date')">By next contact
+                date</li>
+            <li (click)="viewSelected('Last note added date')">Last
+                {{fieldNameContactNotes}}
+                added date</li>
+            <li (click)="viewSelected('Last edited date')">Last edited date</li>
+            <li (click)="viewSelected('Converted this month')">Converted this
+                month</li>
+            <li (click)="viewSelected('Lost this month')">Lost this month</li>
+            <li (click)="viewSelected('All contacts')">All {{ fieldNameContact
+                }}s</li>
+            <li [matMenuTriggerFor]="statusAssignedToMe"
+                *ngIf="tableService.pipelineCustomerSelection != 'All Pipelines'">
+                {{ contactSettings.status.displayName }}</li>
+        </ul>
+        <h3 *ngIf="myViews.length >0">Created by me</h3>
+        <ul>
+            <li *ngFor="let view of myViews" (click)="viewChanged(view)"> {{ view.viewName
+                }}</li>
+        </ul>
+        <h3 *ngIf="publicViews.length>0">Public view</h3>
+        <ul>
+            <li *ngFor="let view of publicViews" (click)="viewChanged(view)"> {{ view.viewName
+                }}</li>
+        </ul>
+    </div>
+    <mat-menu #statusAssignedToMe="matMenu">
+        <button mat-menu-item *ngFor="let status of tableService.statusArray"
+            (click)="viewSelectedStatus('status',status)">{{status.name}}</button>
+    </mat-menu>
+
+    <div class="popup-footer" (click)="addView('Add')">
+        <mat-icon color="primary" class="iconclass">add</mat-icon>
+        <span>Create New</span>
+    </div>
+</div>

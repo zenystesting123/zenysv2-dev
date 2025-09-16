@@ -1,0 +1,87 @@
+.demo-table {
+    overflow: auto;
+    min-width: 100%;
+  }
+  
+  .truncate-cell {
+    min-width: 80px;
+    max-width: 205px;
+    /* feel free to include any other value */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .example-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+  }
+  
+  
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  
+  
+  .no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow-x: hidden;
+  }
+  
+  mat-form-field {
+    font-size: 15px;
+    width: 30%;
+    height: min-content;
+    margin-top: 18px;
+  }
+  
+  // mat-toolbar {
+  //   flex: 0 0 64px;
+  //   z-index: 10;
+  // }
+  
+  mat-spinner {
+    width: 100px;
+    height: 100px;
+  
+  
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  
+    margin: auto;
+  }
+  
+  .isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+  
+  .mat-row:hover .mat-cell {
+    background-color: ghostwhite;
+  }
+  
+  .mat-row .mat-cell {
+    cursor: pointer;
+  }
+  
+  ::ng-deep .mat-checkbox {
+    margin-right: 16px !important;
+  }
+  
+  mat-progress-spinner {
+    align-items: center;
+    justify-content: center;
+  }
+  

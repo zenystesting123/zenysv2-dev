@@ -1,0 +1,21 @@
+.no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+.required::after{
+  content: "*";
+}
+.example-full-width {
+  width: 100%;
+}
+.full-width{
+  width: 49%;
+  margin-right: 1%;
+}
+.margLeft{
+  margin-left: 2px;
+  margin-bottom: 16px;
+}

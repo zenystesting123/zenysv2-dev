@@ -1,0 +1,78 @@
+<!-- <p>allpayssubs works!</p> -->
+<!-- <h3>Payments</h3> -->
+<br>
+<div class="container-fluid" style="background-color: white;">
+ 
+  <mat-tab-group [selectedIndex]="getSelectedIndex()">
+    <!-- <mat-tab label="Payment History"> 
+    <div class="container-fluid">      
+      <br>
+      <app-payments></app-payments>
+      <br>      
+      <app-subscriptions></app-subscriptions>            
+    </mat-tab> -->
+    <mat-tab label="Invoices"> 
+      <!-- <h3><b>Invoices</b></h3> -->
+
+<div class="mat-elevation-z8">
+    <table style="width:100%"mat-table [dataSource]="documentsArray" matSort  matSortActive="docNumber" matSortDirection="asc">
+      <!-- <ng-container matColumnDef="docNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header start="asc">No</th>
+        <td mat-cell *matCellDef="let row">{{ row.docNumber }}</td>
+      </ng-container> -->
+      <!-- <ng-container matColumnDef="companyName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.companyName }}
+        </td>
+      </ng-container> -->
+      
+      <ng-container matColumnDef="saleTitle">
+        <th mat-header-cell  *matHeaderCellDef mat-sort-header>Sale Title</th>
+        <td mat-cell *matCellDef="let row" class="truncate-cell">
+          {{ (row.docData.saleTitle?.length>25)? (row.docData.saleTitle | slice:0:25)+'..':(row.docData. saleTitle) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="docDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.docData.docDate.toDate() | date }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="totalInclTax">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
+        <td mat-cell *matCellDef="let row">{{ row.docData.totalInclTax }}</td>
+      </ng-container>
+      <ng-container matColumnDef="collectedAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Collected Amount</th>
+        <td mat-cell *matCellDef="let row">{{ row.collectedAmount }}</td>
+      </ng-container>
+      <!-- <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+            [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onView(row.id,row.docData.saleID,row.customerData.custID)">View</button>
+            <button mat-menu-item (click)="onEdit(row.id,row.docData.saleID,row.customerData.custID)">Edit</button>
+          </mat-menu>
+        </td>
+      </ng-container> -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="example-element-row" (click)="invoiceRoute(row.sharedDocId)"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No invoices to be shown</td>
+      </tr>
+    </table>
+    <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
+  </div>
+
+       </mat-tab>
+    <!-- <mat-tab label="Third"> Content 3 </mat-tab> -->
+  </mat-tab-group>   
+
+
+<!-- <button mat-button (click)="route()" color="accent">Extend</button> -->
+</div>

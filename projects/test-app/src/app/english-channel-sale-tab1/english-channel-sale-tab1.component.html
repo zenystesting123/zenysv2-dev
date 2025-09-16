@@ -1,0 +1,143 @@
+<!-- <p>english-channel-sale-tab1 works!</p> -->
+<div class="container-fluid">
+  <br />
+  <mat-card>
+    <mat-card-header>
+<mat-card-title>Fee details</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <br>
+    <mat-card-content>
+      <mat-form-field class="col-4" appearance="outline">
+        <mat-label>Currency</mat-label>
+        <mat-select [disabled]="!formEnable" [(value)]="currency" required>
+          <mat-option
+            *ngFor="let currency of currencies"
+            [value]="currency.isoCode"
+            >{{ currency.currencyName }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-4" appearance="outline">
+        <mat-label>Total Universiity Fees</mat-label>
+        <input
+          [disabled]="!formEnable"
+          matInput
+          type="number"
+          [(ngModel)]="universityFees"
+        />
+      </mat-form-field>
+      <!-- <br /> -->
+      <mat-form-field class="col-4" appearance="outline">
+        <mat-label>Scholarship Amount</mat-label>
+        <input
+          [disabled]="!formEnable"
+          matInput
+          type="number"
+          [(ngModel)]="scholarshipAmount"
+        />
+      </mat-form-field>
+      <br />
+
+      <p>Payable Amount:
+      {{
+        !!universityFees && !!scholarshipAmount
+          ? universityFees - scholarshipAmount
+          : 0
+      }}</p>
+      <p *ngIf="!isNaN(pendingAmount)">Pending amount:{{ pendingAmount }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button *ngIf="!formEnable" (click)="formEnable = true" mat-button>
+        Edit
+      </button>
+      <button *ngIf="!!formEnable" (click)="formEnable = false" mat-button>
+        Cancel
+      </button>
+      <button
+        color="primary"
+        [disabled]="
+          !formEnable || !scholarshipAmount || !universityFees || !currency
+        "
+        (click)="saveAmounts()"
+        mat-button
+      >
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  <br />
+  <h2>Fees Paid   <button
+    style="float: right"
+    (click)="addPayment('create', {}, null)"
+    color="primary"
+    mat-button
+  >
+    Add Payment
+  </button></h2>
+  <table
+    mat-table
+    [dataSource]="paidInstallments"
+    style="width: 100%"
+    class="mat-elevation-z8"
+  >
+    <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="installmentName">
+      <th mat-header-cell *matHeaderCellDef>Installment</th>
+      <td mat-cell *matCellDef="let element">{{ element.installmentName }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="paymentDate">
+      <th mat-header-cell *matHeaderCellDef>Payment Date</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.paymentDate.toDate() | date }}
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="comments">
+      <th mat-header-cell *matHeaderCellDef>Comment</th>
+      <td mat-cell *matCellDef="let element">{{ element.comments }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="edit/delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element; index as i">
+        <span
+          ><button
+            mat-icon-button
+            color="accent"
+            (click)="addPayment('edit', paidInstallments[i], i)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button></span
+        >
+        <span
+          ><button
+            mat-icon-button
+            color="warn"
+            (click)="addPayment('delete', paidInstallments[i], i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button></span
+        >
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+
+
+</div>

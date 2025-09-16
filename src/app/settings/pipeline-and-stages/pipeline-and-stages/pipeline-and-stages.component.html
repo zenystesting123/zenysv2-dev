@@ -1,0 +1,165 @@
+<div>
+
+  <br />
+
+  <!-- div consisting Enable Ageing checkbox and Add Pipeline button -->
+  <div class="d-flex justify-content-between">
+    <div>
+      <mat-checkbox color="primary" [(ngModel)]="ageChecked" [checked]="ageChecked" (change)="ageValueChange($event)"
+        class="example-margin">Enable Ageing for {{statusFieldName}}</mat-checkbox>
+    </div>
+    <div *ngIf="multiPipelineAccess">
+      <button mat-raised-button color="primary" (click)="addNewPipeline()"
+        [disabled]="!networkCheck.onNetworkCheck() || disableAddPipelineBtn">Add
+        {{pipelineFieldName}}</button>
+    </div>
+  </div>
+  <br />
+
+  <div style="background-color: white; border-radius: 5px;" class="custom-container border">
+    <br>
+    <div class="d-flex justify-content-start">
+      <div class="bd-highlight border" *ngFor="let pipeline of mergedPipelineArray; let i = index" style="
+            background-color: white;
+            border-radius: 5px;
+            width: 275px; margin-left: 5px; margin-right: 5px;
+          ">
+
+        <!-- pipeline heading, edit and delete button -->
+        <div [ngClass]="{ isDisabled: !pipeline.display }" class="d-flex flex-row bd-highlight mb-1 justify-content-between" *ngIf="!pipeline.editPipelineName">
+          <div class="p-2 bd-highlight truncate-cell">
+            <h2 class="bold">{{ pipeline.pipelineName }}</h2>
+          </div>
+          <div class="p-2 bd-highlight">
+            <div class="d-flex flex-row">
+              <div>
+                <button matSuffix mat-icon-button aria-label="Edit" title="Edit {{pipelineFieldName}} name"
+                  color="primary" (click)="editpipelinename(pipeline)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="multiPipelineAccess">
+                <button matSuffix mat-icon-button title="Delete {{pipelineFieldName}}" color="warn"
+                  [disabled]="mergedPipelineArray.length === 1" (click)="
+                  deletePipeLine(pipeline, i)
+                ">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- pipelin e heading: edit mode -->
+        <mat-form-field appearance="fill" style="width: 100%" *ngIf="pipeline.editPipelineName">
+          <mat-label>Display Pipeline {{ i + 1 }} as</mat-label>
+          <input matInput [(ngModel)]="pipeline.pipelineName" name="pipelineName_{{ i }}" required
+            [disabled]="!pipeline.editPipelineName" [maxLength]="maxLength" />
+          <button *ngIf="!pipeline.editPipelineName" matSuffix mat-icon-button aria-label="Edit" color="primary"
+            (click)="editpipelinename(pipeline)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button *ngIf="pipeline.editPipelineName" mat-icon-button matSuffix aria-label="Clear" color="warn"
+            (click)="clearpipelinename(pipeline, i)">
+            <mat-icon>close</mat-icon>
+          </button>
+          <button *ngIf="pipeline.editPipelineName" mat-icon-button matSuffix aria-label="Save"
+            [disabled]="pipeline.pipelineName?.length < 2" color="primary" (click)="
+                savepipelinename(i, pipeline.pipelineName)
+              ">
+            <mat-icon>done</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- status div -->
+        <div cdkDropListGroup>
+          <div class="example-container" [ngClass]="{ isDisabled: !pipeline.display }">
+            <div cdkDropList [cdkDropListData]="pipeline.pipelineStages" class="example-list"
+              (cdkDropListDropped)="drop($event, i)">
+              <div class="example-box" *ngFor="
+                      let item of pipeline.pipelineStages
+                        | slice : 0 : pipeline.pipelineStages?.length - 2;
+                      let k = index
+                    " cdkDrag>
+                <div class="d-flex flex-row bd-highlight mb-1 justify-content-between">
+                  <div class="p-1 bd-highlight" style="white-space: pre-wrap; ">
+                    <span class="mat-body">{{ item.name }}</span><br />
+
+                    <span *ngIf="ageChecked" class="mat-small">Max Age: {{ item.age }} days
+                    </span>
+                  </div>
+
+                  <!-- edit and delete icons -->
+                  <div class="p-1 bd-highlight">
+                    <div class="d-flex flex-row">
+                      <div>
+                        <button mat-icon-button>
+                          <mat-icon color="primary" (click)="
+                                  edit_pipeline_status(
+                                    pipeline,
+                                    item,
+                                    true,
+                                    i,
+                                    k
+                                  )
+                                " color="primary" title="Edit ">edit</mat-icon>
+                        </button>
+                      </div>
+                      <div>
+                        <button mat-icon-button>
+                          <mat-icon color="warn" title="Delete " (click)="
+                                  deletePipelineStatus(pipeline, item, i, k)
+                                ">
+                            delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <mat-divider></mat-divider> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Status button -->
+        <br />
+        <button (click)="addPipelineStatus(pipeline, i)" mat-button color="primary"
+          [disabled]="!networkCheck.onNetworkCheck() || !pipeline.display">
+          Add {{statusFieldName}}
+        </button>
+        <br />
+
+        <!-- last two statuses won and rejected -->
+        <div *ngFor="
+                let item of pipeline.pipelineStages | slice : -2;
+                let k = index
+              ">
+          <div class="d-flex flex-row bd-highlight mb-1 justify-content-between" [ngClass]="{ isDisabled: !pipeline.display }">
+            <div class="p-2 bd-highlight">
+              <span class="mat-body">{{ item.name }}</span><br />
+            </div>
+
+            <div class="p-2 bd-highlight">
+              <button mat-icon-button>
+                <mat-icon color="primary" (click)="
+                        edit_pipeline_status(
+                          pipeline,
+                          item,
+                          false,
+                          i,
+                          k + (pipeline.pipelineStages?.length - 2)
+                        )
+                      " color="primary" title="Edit ">edit</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+
+      </div>
+    </div>
+    <br>
+  </div>
+
+</div>

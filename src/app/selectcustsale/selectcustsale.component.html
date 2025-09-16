@@ -1,0 +1,55 @@
+<h4 mat-dialog-title>Select a Customer</h4>
+<div mat-dialog-content>
+    <!--
+    <form class="example-form">
+
+        <mat-form-field class="example-full-width">
+            <mat-label>Customer Name</mat-label>
+            <input type="text" placeholder="Choose Contact" aria-label="Contact" matInput [formControl]="myControlCust"
+                [matAutocomplete]="auto" [(ngModel)]="selectedCust">
+            <button mat-button *ngIf="selectedCust" matSuffix mat-icon-button aria-label="Clear"
+                (click)="selectedCust=''">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let option of filteredOptions  | async" [value]="option">
+                    {{option.fname1}} {{option.cname}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+
+        <br>
+    -->
+
+
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <mat-label>Sale Title</mat-label>
+            <input type="text" placeholder="Choose Sale" aria-label="Sale" matInput [formControl]="myControlSale"
+                [matAutocomplete]="auto" [(ngModel)]="selectedSale">
+            <button mat-button *ngIf="selectedSale" matSuffix mat-icon-button aria-label="Clear"
+                (click)="selectedSale=''">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnSale">
+
+                <mat-option *ngFor="let sale of filteredOptionsSales  | async" [value]="sale">
+                    {{sale.title}}
+                </mat-option>
+
+
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+
+
+
+
+
+
+    <!--
+  <p *ngIf = "selectedCust"> Selected customer id: {{selectedCust.id}}
+  -->
+
+</div>

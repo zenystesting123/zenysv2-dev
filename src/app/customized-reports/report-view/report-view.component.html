@@ -1,0 +1,336 @@
+<div class="no-v-scroll" *ngIf="isLoaded"> 
+  <mat-toolbar *ngIf="showFilters"  class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+  [ngStyle]="{ 'background-color': 'white' }">
+    <mat-toolbar-row >
+      <button mat-icon-button [routerLink]="['/dash/custom-report/list']" color="accent"><mat-icon>arrow_back</mat-icon></button>
+      <mat-icon class="material-icons-outlined text-primary">query_stats</mat-icon>&nbsp;&nbsp;
+      <span *ngIf="titleEditMode == false">{{reportSetting.title}}</span> &nbsp;
+      <button *ngIf="titleEditMode == false" mat-icon-button color="accent" (click)="setTitleEditMode()"><mat-icon class="material-icons-outlined">edit</mat-icon></button>
+      <!-- delete a report -->
+      <button mat-icon-button title="Delete Report" (click)="deleteReport()">
+        <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+      </button>
+      <mat-form-field appearance="fill" *ngIf="titleEditMode == true" class="example-full-width">
+        <input matInput type="text" maxLength = "50" [(ngModel)] = "reportSetting.title" name="reportTitle" placeholder="Report title" required/>
+      </mat-form-field>
+      <button *ngIf="titleEditMode == true" mat-icon-button color="accent" (click)="updateTitle()"><mat-icon>done</mat-icon></button>
+      <button *ngIf="titleEditMode == true" mat-icon-button color="accent" (click)="cancelTitleUpdate()"><mat-icon>close</mat-icon></button>
+      <span class="example-spacer"></span>
+      <div class="example-button-row">
+
+        <button mat-button color="primary" (click)="onSaveQuery()"
+        [disabled]="
+        disableSaveButton(viewForm.form.valid,isChild1FormValid) || !onCheckNetwork()">Save </button>
+        <!--
+        <button mat-raised-button (click)="createNewReport()">Save as</button>
+        <button mat-raised-button color="accent" (click)="exportTojson()">Download </button>
+
+        -->
+
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <form  #viewForm="ngForm" style="overflow-y:scroll;height:100%;">
+
+    <div class="container-fluid bg-light"  *ngIf="showFilters"  >
+      <br>
+      <mat-accordion *ngIf = "reportDataloaded" class="example-headers-align" >
+        <mat-expansion-panel expanded="false" *ngIf="showFilters">
+          <mat-expansion-panel-header >
+            <mat-panel-title class="text-primary">
+          Filters
+            </mat-panel-title>
+            <mat-panel-description >&nbsp;
+              <mat-icon class="material-icons-outlined" color="accent">filter_alt</mat-icon>
+            </mat-panel-description>
+
+          </mat-expansion-panel-header>
+
+          <app-report-filter [module]="module" [(itemList)]="itemList" 
+          [(primaryQueryItem)]="primaryQueryItem" [superUserId]="superUserId"
+          [allSubUsers]="allSubUsers" [superUserFullName]="superUserFullName"
+          [statusArray]="statusArray"
+          [pipelineArray] = "pipelineNames"
+          [outcomeArray]="outcomeArray"
+          [directionArray]="directionArray"
+          [groupByOptionsPrimary]="groupByOptionsPrimary" ngModelGroup="child" (isChild1FormValid)="enableSubmitButton($event)"
+          [groupByOptions]="groupByOptions" [addnlFieldsArray] ="customFields" [module] ="module"
+          [prodCategoryArray]="prodCategoryArray" [prodArray]="prodArray"
+          [leadCaptureArray]="leadCaptureArray" [branches]="branches"
+          [fieldNameNotes]="fieldNameNotes" [fieldNameFollowup]="fieldNameFollowup"
+          ></app-report-filter>
+
+          <!--
+          <p>Query Dates: {{startDate | date}} {{endDate | date}}</p>
+          -->
+
+        </mat-expansion-panel>
+        <mat-expansion-panel expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="text-primary"> Summary </mat-panel-title>
+            <mat-panel-description >&nbsp;
+              <mat-icon class="material-icons-outlined" color="accent">analytics</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+
+          <div class="d-flex flex-row bd-highlight mb-1 justify-content-between">
+            <div class="bd-highlight">
+              <form *ngIf = "summaryType == 'Card'" >
+                <div class="d-flex flex-row bd-highlight">
+                  <div class="p-2 bd-highlight">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Display value</mat-label>
+                      <mat-select [(ngModel)] = "measureSelected" name="measure"      [compareWith]="comparer">
+                        <mat-option *ngFor="let elem of measureByOptions" [value]="elem" (click)="summarizeData() " >
+                          {{elem.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  </div>
+                  </form>
+
+              <form *ngIf = "summaryType == 'Vertical Stacked Bar' || summaryType =='Vertical Bar'" >
+                <div class="d-flex flex-row bd-highlight">
+                  <div class="p-2 bd-highlight">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Display value</mat-label>
+                      <mat-select [(ngModel)]="measureSelected" name="measure"   [compareWith]="comparer">
+                        <mat-option *ngFor="let elem of measureByOptions" [value]="elem" (click)="summarizeData()" >
+                          {{elem.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="p-2 bd-highlight" *ngIf="summaryType != 'Card' && (summaryType == 'Vertical Stacked Bar' ||summaryType == 'Horizontal Stacked Bar' )">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Segment by</mat-label>
+                      <mat-select [(ngModel)]="segmentSelected" name="segement"  [compareWith]="comparer">
+                        <mat-option *ngFor="let elem of segmentByOptions" [value]="elem" (click)="summarizeData()" >
+                          {{elem.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="p-2 bd-highlight" *ngIf="summaryType != 'Card' && 
+                  (summaryType == 'Vertical Stacked Bar' ||summaryType == 'Horizontal Stacked Bar' )
+                  && ((segmentSelected.field == 'status' && module == 'customers') ||
+                  (segmentSelected.field == 'salesStage' && module == 'sales') ||
+                  (segmentSelected.field == 'salesStage' && module == 'products') ||
+                  (segmentSelected.field == 'servicesStage' && module == 'services'))">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Select Pipeline </mat-label>
+                      <mat-select [(ngModel)]="pipelineSelected" name="segementsone" >
+                        <mat-option *ngFor="let elem of pipelineNames" [value]="elem.pipelineId" (click)="summarizeData()" >
+                          {{elem.pipelineName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                </form>
+                <form *ngIf = "summaryType == 'Horizontal Stacked Bar' || summaryType =='Horizontal Bar'" >
+                  <div class="d-flex flex-row bd-highlight">
+                    <div class="p-2 bd-highlight">
+                  <mat-form-field appearance="fill" >
+                    <mat-label>Group by</mat-label>
+                    <mat-select [(ngModel)]="groupingSelected" name="group"  [compareWith]="comparer">
+                      <mat-option *ngFor="let category of groupByOptions" [value]="category" (click)="summarizeData()">
+                        {{category.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  </div>
+
+                  <div class="p-2 bd-highlight">
+                    <mat-form-field appearance="fill" *ngIf="summaryType != 'Card' && 
+                    ( (module =='customers' && groupingSelected.field == 'status') ||groupingSelected.field == 'salesStage' ||
+                     groupingSelected.field =='servicesStage'  )" >
+                      <mat-label>Select Pipeline </mat-label>
+                      <mat-select [(ngModel)]="pipelineSelected" name="segementtwo"  >
+                        <mat-option *ngFor="let elem of pipelineNames; let i = index" [value]="elem.pipelineId" (click)="summarizeData()" >
+                          {{elem.pipelineName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                  <mat-form-field appearance="fill" *ngIf = "groupingSelected.type == 'date' || groupingSelected.type == 'timestamp' ">
+                    <mat-label>Frequency</mat-label>
+                    <mat-select [(ngModel)]="dateGrouping" name="dateGroupOne" >
+                      <mat-option *ngFor="let group of dateGroupingArray" [value]="group" (click)="summarizeData()" >
+                        {{group}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  </div>
+    </div>
+                </form>
+              </div>
+
+              </div>
+
+            <div style="text-align: center">
+              <span *ngIf="summaryType == 'Card'" class ="display-3" style="opacity: 90%;color: green;text-align: center">
+                {{cardSummaryValue}}
+              </span>
+            </div>
+
+                    <!-- bar graph-->
+                    <div class ="container-fluid border" *ngIf="summaryType != 'Card' && chartPrepared ==true">
+                      <br>
+                      <apx-chart [series]="graphOptions.series" [colors]="graphOptions.colors"
+                      [chart]="graphOptions.chart" [xaxis]="graphOptions.xaxis"
+                      [yaxis]="graphOptions.yaxis" [dataLabels]="graphOptions.dataLabels"
+                      [stroke]="graphOptions.stroke" [grid]="graphOptions.grid"
+                      [tooltip]="graphOptions.tooltip" [plotOptions]="graphOptions.plotOptions"
+                      [fill]="graphOptions.fill" [legend]="graphOptions.legend"
+                      [labels]="graphOptions.labels" [markers]="graphOptions.markers"
+                      [theme]="graphOptions.theme" [responsive]="graphOptions.responsive">
+                    </apx-chart>
+                    </div>
+                    <br>
+
+          <div class="d-flex flex-row justify-content-between " >
+            <div class="p-1 bd-highlight">
+              <div >
+                <div class="example-button-row">
+                  <mat-button-toggle-group name="Summary" aria-label="Report summary" [(ngModel)]="summaryType">
+                    <mat-button-toggle  [ngClass]="summaryType == 'Card' ? 'text-primary   bg-soft-primary' : 'text-secondary'" title="Score card" value="Card" (click)="summarizeData()"><mat-icon>score</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [ngClass]="summaryType == 'Vertical Bar' ? 'text-primary   bg-soft-primary' : 'text-secondary'" title="Vertical bar chart" value="Vertical Bar" (click)="summarizeData()"><mat-icon>bar_chart</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [ngClass]="summaryType == 'Vertical Stacked Bar' ? 'text-primary   bg-soft-primary' : 'text-secondary'" title="Stacked vertical bar chart"value="Vertical Stacked Bar" (click)="summarizeData()"><mat-icon>stacked_bar_chart</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [ngClass]="summaryType == 'Horizontal Bar' ? 'text-primary   bg-soft-primary' : 'text-secondary'" title="Horizontal bar chart" value="Horizontal Bar" (click)="summarizeData()"><mat-icon style="transform: rotate(90deg)">bar_chart</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [ngClass]="summaryType == 'Horizontal Stacked Bar' ? 'text-primary   bg-soft-primary' : 'text-secondary'" title="Stacked horizontal bar chart" value="Horizontal Stacked Bar" (click)="summarizeData()"><mat-icon style="transform: rotate(90deg)">stacked_bar_chart</mat-icon></mat-button-toggle>
+                    <!--
+                      <mat-button-toggle  title="Pie chart" value="Pie" (click)="summarizeData()"><mat-icon>pie_chart</mat-icon></mat-button-toggle>
+                    -->
+                  </mat-button-toggle-group>
+          </div>
+
+
+              </div>
+            </div>
+            <div class="p-1 bd-highlight">
+              <form *ngIf = "summaryType == 'Vertical Stacked Bar' || summaryType =='Vertical Bar'" >
+                <mat-form-field appearance="fill" >
+                  <mat-label>Group by</mat-label>
+                  <mat-select [(ngModel)]="groupingSelected" name="group"  [compareWith]="comparer">
+                    <mat-option *ngFor="let category of groupByOptions" [value]="category" (click)="summarizeData()">
+                      {{category.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field appearance="fill" *ngIf = "groupingSelected.type == 'date' || groupingSelected.type == 'timestamp' ">
+                  <mat-label>Frequency</mat-label>
+                  <mat-select [(ngModel)]="dateGrouping" name="dateGroupTwo"  >
+                    <mat-option *ngFor="let group of dateGroupingArray" [value]="group" (click)="summarizeData()" >
+                      {{group}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                  <mat-form-field appearance="fill" *ngIf="summaryType != 'Card' &&
+                   ((module =='customers' && groupingSelected.field == 'status') ||
+                   groupingSelected.field == 'salesStage' ||
+                    groupingSelected.field =='servicesStage' )">
+                    <mat-label>Select Pipeline </mat-label>
+                    <mat-select [(ngModel)]="pipelineSelected" name="segementthree"  >
+                      <mat-option *ngFor="let elem of pipelineNames; let i = index" [value]="elem.pipelineId" (click)="summarizeData()" >
+                        {{elem.pipelineName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+
+              </form>
+              <form *ngIf = "summaryType == 'Horizontal Stacked Bar' || summaryType =='Horizontal Bar'" >
+
+                <div class="d-flex flex-row bd-highlight mb-1">
+                  <div class="p-1 bd-highlight">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Display value</mat-label>
+                      <mat-select [(ngModel)]="measureSelected" name="measure"   [compareWith]="comparer">
+                        <mat-option *ngFor="let elem of measureByOptions" [value]="elem" (click)="summarizeData()" >
+                          {{elem.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="p-1 bd-highlight" *ngIf="summaryType != 'Card' && (summaryType == 'Vertical Stacked Bar' ||summaryType == 'Horizontal Stacked Bar' )">
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Segment by</mat-label>
+                      <mat-select [(ngModel)]="segmentSelected" name="segment"   [compareWith]="comparer">
+                        <mat-option *ngFor="let elem of segmentByOptions" [value]="elem" (click)="summarizeData()" >
+                          {{elem.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field appearance="fill" *ngIf="summaryType != 'Card' &&
+                    ((module =='customers' && segmentSelected.field == 'status') ||
+                    segmentSelected.field == 'salesStage' ||
+                    segmentSelected.field =='servicesStage' )">
+                     <mat-label>Select Pipeline </mat-label>
+                     <mat-select [(ngModel)]="pipelineSelected" name="segementfour"  >
+                       <mat-option *ngFor="let elem of pipelineNames; let i = index" [value]="elem.pipelineId" (click)="summarizeData()" >
+                         {{elem.pipelineName}}
+                       </mat-option>
+                     </mat-select>
+                   </mat-form-field>
+                  </div>
+                </div>
+                </form>
+            </div>
+
+          </div>
+
+          <!--
+          <p>start date: {{startDate | date}} end date:{{endDate | date}}</p>
+          -->
+
+
+
+
+        </mat-expansion-panel>
+      </mat-accordion>
+
+          <br>
+          <div *ngIf="showFilters">
+            <app-report-table [tableData] = "dataReadTableData" [module] ="module" [customFields] = "customFields" [displayColumnsSaved] = "displayColumnsSaved" [reportNo] = "reportId" [reportSetting] = "reportSetting" [userId] ="userId" [userIdsArray] ="userIdsArray" [pipelineNames] = "pipelineNames" [userNamesArray]="userNamesArray" 
+            [fieldNameNotes]="fieldNameNotes" [fieldNameFollowup]="fieldNameFollowup"></app-report-table>
+          </div>
+      <br>
+    </div>
+    <br>
+    </form>
+    <div class ="container-fluid" *ngIf="!showFilters" style="padding-top: 0px; padding-bottom:5px">
+      <h3 >{{reportSetting.title}}</h3> &nbsp;
+      <div style="text-align: center">
+        <span *ngIf="summaryType == 'Card'" class ="display-3" style="opacity: 90%;color: green;text-align: center">
+          {{cardSummaryValue}}
+        </span>
+      </div>
+
+              <!-- bar graph-->
+              <div class ="container-fluid border" *ngIf="summaryType != 'Card' && chartPrepared ==true">
+
+                <apx-chart [series]="graphOptions.series" [colors]="graphOptions.colors"
+                [chart]="graphOptions.chart" [xaxis]="graphOptions.xaxis"
+                [yaxis]="graphOptions.yaxis" [dataLabels]="graphOptions.dataLabels"
+                [stroke]="graphOptions.stroke" [grid]="graphOptions.grid"
+                [tooltip]="graphOptions.tooltip" [plotOptions]="graphOptions.plotOptions"
+                [fill]="graphOptions.fill" [legend]="graphOptions.legend"
+                [labels]="graphOptions.labels" [markers]="graphOptions.markers"
+                [theme]="graphOptions.theme" [responsive]="graphOptions.responsive">
+              </apx-chart>
+              </div>
+    </div>
+</div>
+<mat-spinner [diameter]="24" *ngIf="!isLoaded " color="primary">
+</mat-spinner>
+
+
+

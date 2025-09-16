@@ -1,0 +1,16 @@
+
+<!-- if loading is completed, and not mobilesize, router outlet is placed -->
+<router-outlet *ngIf="isLoaded && !isMobilesize" class="bg-soft-secondary"></router-outlet>
+
+<!-- if mobile size is detected, and platform is android, show message and link to install the app from playstore -->
+<div *ngIf="isMobilesize && isAndroid" class="centreClass">
+  <a href="https://play.google.com/store/apps/details?id=com.zenys.zenysapp">Please install the app!</a>
+</div>
+
+<!-- if mobile size is detected, and platform is ios, show message to signin from browser -->
+<div *ngIf="isMobilesize && isiOs" class="centreClass">
+  Please Signin from Desktop/Laptop!
+</div>
+
+
+<!-- <mat-spinner color="primary" *ngIf="!isLoaded"></mat-spinner> -->

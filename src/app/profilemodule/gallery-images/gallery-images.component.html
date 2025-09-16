@@ -1,0 +1,40 @@
+<div *ngIf="!isMobilesize">
+       <div class="color">
+              <button mat-icon-button color="accent" class="close rig" title="close" aria-label="close"
+                     (click)="close()">
+                     <mat-icon>close</mat-icon>
+              </button>
+              <br>
+              <img [src]='eachUrl[index]' class="tile-image img">
+              <br><br>
+              <div class="buttonset">
+                     <button mat-icon-button color="accent" title="previous" aria-label="previous"
+                            (click)="prev()">
+                            <mat-icon class="icon">keyboard_arrow_left</mat-icon>
+                     </button>{{index+1}}
+                     <button mat-icon-button color="accent" title="next" aria-label="next" (click)="next()">
+                            <mat-icon class="icon">keyboard_arrow_right</mat-icon>
+                     </button>
+              </div>
+       </div>
+</div>
+<div *ngIf="isMobilesize">
+       <div class="color">
+              <button mat-icon-button color="accent" class="close rig" title="close" aria-label="close"
+                     (click)="close()">
+                     <mat-icon>close</mat-icon>
+              </button>
+              <br>
+              <img [src]='eachUrl[index]' class="tile-image img1">
+              <br><br>
+              <div class="buttonset">
+                     <button mat-icon-button color="accent" title="previous" aria-label="previous"
+                            (click)="prev()">
+                            <mat-icon class="icon">keyboard_arrow_left</mat-icon>
+                     </button>{{index+1}}
+                     <button mat-icon-button color="accent" title="next" aria-label="next" (click)="next()">
+                            <mat-icon class="icon">keyboard_arrow_right</mat-icon>
+                     </button>
+              </div>
+       </div>
+</div>

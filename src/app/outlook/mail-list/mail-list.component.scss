@@ -1,0 +1,414 @@
+::ng-deep .mat-line{
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+  }
+  .example-spacer {
+      flex: 1 1 auto;
+    }
+    $accent-color:#3F51B5;
+  
+    .bgi{
+      color: whitesmoke;
+    }
+    // mat-icon{
+    //   color:grey;
+    // }
+    .border{
+      border: black 1px;
+    }
+    .width_limit{
+      display: block;
+      width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis
+    }
+    mat-icon{
+      color:grey
+    }
+    .mob-icon-button {
+      color: $accent-color;
+    }
+    .mob-icon{
+      color: primary;
+    }
+    .float {
+      position: fixed;
+      bottom: 4rem;
+      right: 3rem;
+      z-index: 2;
+    }
+    .example-full-width {
+      width: 100%;
+    }
+    .pad{
+      padding: 3%;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+      border-radius: 5px;
+    }
+    .bord{
+      border: solid 0.0005px rgb(223, 221, 221);
+    }
+    .create{
+      height: 340px;
+      width: auto;
+      border: solid 0.0005px rgb(223, 221, 221);
+      border-width: thin
+    }
+    .margin{
+      margin-right: 20%;
+    }
+    .rig{
+      float: right;
+    }
+    .pda{
+      padding-top: 5%;
+    }
+    .left{
+      float:left;
+    }
+    .color1{
+      background-color: rgb(208, 228, 255);
+      color:rgb(80, 80, 243)
+    }
+    .white-icon {
+      color: white !important;
+  }
+  .blue-icon{
+    color:blue !important;
+  }
+    .color2{
+      background-color: #F5BE41;
+      color:white
+    }
+    .center {
+      padding-top: 36% !important;
+      padding-left: 9% !important;
+      margin: auto;
+      width: 50%;
+      // border: 3px solid green;
+      padding: 10px;
+    }
+    .card-nav:hover {
+      box-shadow: -1px 5px 15px 0px rgba(0,0,0,0.7);
+      cursor: pointer;
+    }
+    mat-button:hover{
+      background-color: darkgray;
+      cursor: pointer;
+    }
+    .grey{
+      color:#93989d!important
+    }
+    .addbtn{
+      font-size: 30px;
+      color :#0080ff!important;
+    }
+    .sizes{
+      font-size: 50px;
+    }
+    h4, h3, p, mat-card-header{
+      color: rgb(80, 79, 79);
+    }
+  .rig{
+    float:right;
+  }
+  .bgc{
+    background-color:rgb(237, 237, 237)
+  }
+  
+    h4{
+      margin-bottom:2px;
+    }
+  .minibtn{
+    color: white;
+  }
+  
+  table{
+    width: 100%;
+  }
+   .mat-list .mat-list-item{
+     height:50px
+   }
+  
+  
+   ::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
+    min-width: 0!important;
+    padding-left: 5px!important;
+    padding-left: 5px!important;
+    margin-left: 5px!important;
+    margin-right: 5px!important;
+   }
+  
+   .highlight{
+    //  background:#42A948;
+     font-weight: bold;
+   }
+   .custom{
+    width: 130px;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* horizontal align */
+    display: table-cell; /*display as table cell to make possible vertical align */
+    vertical-align: middle;
+    height: 130px;
+   }
+   .customMat{
+    width: 313px;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* horizontal align */
+    display: table-cell; /*display as table cell to make possible vertical align */
+    vertical-align: middle;
+    height: 340px;
+   }
+   .customMat:hover{
+     cursor: pointer;
+   }
+   .custom:hover{
+    cursor: pointer;
+   }
+   .dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    // min-width: 80vw;
+    font-weight: 200;
+    height: 125px;
+    border: 2px dashed  #6bcbff;
+    // border-radius: 5px;
+    background: rgb(226, 246, 255);
+    margin: 10px 0;
+    width: auto;
+  
+    &.hovering {
+        border: 2px solid #0655ff;
+        color: #dadada !important;
+    }
+  
+    .file-label {
+        font-size: 1.2em;
+    }
+  }
+  
+  progress::-webkit-progress-value {
+    transition: width 0.1s ease;
+  }
+  .rig{
+    float:right
+  }
+  .pad{
+    width: 100%;
+    height: auto;
+    padding: 2%;
+    border: solid rgb(221, 221, 221) 0.0001px;
+  
+  }
+  .grab{
+    cursor:grab;
+  }
+  
+  
+  ::ng-deep .mat-dialog-container {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+  }
+  
+  
+  ::ng-deep .mobile.mat-tab-header {
+    overflow-x: scroll !important;
+  }
+  
+  ::ng-deep .mobile.mat-tab-label-container {
+    overflow: visible !important;
+  }
+  
+  ::ng-deep .mobile.mat-tab-header::-webkit-scrollbar {
+    display: none;
+  }
+  
+  
+  ::ng-deep .mobile.mat-tab-header-pagination {
+    display: none !important;
+  }
+  
+  
+  
+  .mat-list .mat-list-item{
+    height:40px;
+  }
+  
+  $accent-color:#3F51B5;
+  .mob-icon-button {
+    color: $accent-color;
+  }
+  .mob-icon{
+    color: primary;
+  }
+  
+  .mat-icon{
+    color: rgba(0, 0, 0, 0.6); ;
+  }
+  .Low{
+    color: #6ED56F;
+    ;
+  }
+  .Medium{
+    color:#F5BE41;
+  }
+  .High{
+    color:#EC605A;
+  }
+  .white{
+    background-color: white;
+    padding: 16px;
+  }
+   .whitedate{
+    color: rgba(0, 0, 0, 0.6) !important;
+    line-height: 20px;
+    font-size: 14px;
+   }
+   .whitetitle{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+   }
+   .whitechip1{
+    background-color: #EDEDED !important;
+    color: black;
+    white-space: nowrap !important;
+    padding-left: 1px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    // margin-bottom: 12px !important;
+    margin-top: 12px !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+  
+    letter-spacing: 0.25px;
+   }
+   .whitechip2{
+    background-color: #EDEDED !important;
+    color: #607D8B;
+    white-space: nowrap !important;
+    padding-left: 1px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    // margin-bottom: 12px !important;
+    margin-top: 12px !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+  
+    letter-spacing: 0.25px;
+   }
+   .whitechip1b{
+    background-color: #EDEDED !important;
+    color: black;
+    white-space: nowrap !important;
+    padding-left: 1px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    // margin-bottom: 12px !important;
+    margin-top: 12px !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+  
+    letter-spacing: 0.25px;
+   }
+   .whitechip2b{
+    background-color: #EDEDED !important;
+    color: #607D8B;
+    white-space: nowrap !important;
+    // margin-bottom: 12px !important;
+    margin-top: 12px !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+  
+    letter-spacing: 0.25px;
+   }
+   ::ng-deep.zeropad .mat-list-item-content {
+    padding: 0 !important;
+  }
+  .no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+  ::ng-deep .mat-tab-body-content {
+    overflow-x: hidden !important;
+  }
+  .field-name{
+    width: 150px;
+    opacity: 0.7;
+  }
+  
+  .field-name-main{
+    width: 75px;
+    opacity: 0.7;
+  }
+  
+  .btn {
+    border-radius: 2px;
+    text-transform: capitalize;
+    font-size: 15px;
+    padding: 10px 19px;
+    cursor: pointer
+  }
+  .btn-google {
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 1px #ddd
+  }
+  .spinner {
+      width: 100px;
+      height: 100px;
+  
+  
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+  
+      margin: auto;
+  }
+  #fixedbutton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+  .isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+  .footerPosition {
+    z-index: 1000;
+  }
+  
+  .mat-row:hover .mat-cell {
+    background-color: ghostwhite;
+  }
+  
+  .mat-row .mat-cell {
+    cursor: pointer;
+  }
+  

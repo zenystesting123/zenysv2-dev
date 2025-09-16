@@ -1,0 +1,65 @@
+<div>
+  <br />
+  <!-- download csv starts here -->
+  <h2 style="padding-left: 2%">Download CSV Template</h2>
+  <div style="margin-left: 2%" class="drops">
+    <!-- for download upload customers template -->
+    <button
+      style="margin: 30px"
+      mat-raised-button
+      color="accent"
+      (click)="csv_convertion()"
+    >
+      <mat-icon>cloud_download</mat-icon>&nbsp;&nbsp;Download
+    </button>
+
+    <h3 style="margin-top: 10px">Download the customer data upload template</h3>
+  </div>
+  <!-- download csv ends here -->
+  <br />
+  <!-- upload csv starts here -->
+  <h2 style="padding-left: 2%">Upload CSV Data</h2>
+  <!-- drag and drop to upload starts here -->
+  <div
+    style="margin-left: 2%"
+    class="dropzone"
+    dropzone
+    (hovered)="toggleHover($event)"
+    (dropped)="csvUploadFuntion($event)"
+    [class.hovering]="isHovering"
+  >
+    <!-- upload csv button -->
+    <button
+      style="margin: 30px"
+      mat-raised-button
+      color="accent"
+      (click)="openL()"
+      [disabled]="
+        commonService.addDocLimitaion.addContactDisable ||
+        this.commonService.getCSVStatus()
+      "
+    >
+      <mat-icon
+        [ngClass]="{
+          isDisabled: commonService.addDocLimitaion.addContactDisable
+        }"
+        >cloud_upload</mat-icon
+      >
+      &nbsp; Upload</button
+    ><br />
+    <h3 style="margin-top: 10px">
+      or Drag and drop customer data prepared using the upload template file
+    </h3>
+    <!-- hidden file selector -->
+    <input
+      type="file"
+      class="custom-file-input csv-selector"
+      (change)="csvUploadFuntion($event)"
+      style="display: none"
+      accept=".csv"
+    />
+  </div>
+  <!-- drag and drop to upload ends here -->
+  <!-- upload csv ends here -->
+  <!-- <p style="margin-left:45%">Disclamier: This action might not be reversed</p> -->
+</div>

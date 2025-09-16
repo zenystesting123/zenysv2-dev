@@ -1,0 +1,260 @@
+<mat-toolbar color="primary" [style.display]="(isMobilesize) ? 'block' : 'none'">
+  <button mat-icon-button aria-label="back" title="back" (click)="onBack()">
+    <mat-icon [ngStyle]="{'color':'white'}"><span class="material-icons-outlined">
+        arrow_back
+      </span></mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-tab-group color="primary">
+  <mat-tab label="Get Leads">
+    <div class="container-xl">
+      <div class="container" style="max-width: 800px">
+        <div *ngIf="leads?.length == 0">
+          <p clss="text-danger">No leads to display yet!</p>
+        </div>
+        <div *ngFor="let c of leads | slice: 0:c">
+          <mat-card class="example-card" *ngIf="this.userid != c.submittedBy">
+            <mat-card-content>
+              <div class="row">
+                <div class="col-sm-12 col-md-12">
+                  <mat-list>
+                    <mat-list-item>
+                      <div mat-line>
+                        <span class="mat-h3 mat-subheading-2">{{
+                          c?.description
+                        }}</span>
+                      </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="c.locationReq == true">
+                      <mat-icon mat-list-icon [ngStyle]="{ color: 'RoyalBlue' }"
+                        >add_location</mat-icon
+                      >
+                      <div mat-line>
+                        <span class="mat-h3 mat-subheading-2"
+                          >{{ c?.location }} {{ c?.district }}
+                          {{ c?.state }}</span
+                        >
+                      </div>
+                      <div mat-line>
+                        <span class="mat-small mat-caption">Location</span>
+                      </div>
+                    </mat-list-item>
+                  </mat-list>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      <mat-list>
+                        <mat-list-item>
+                          <mat-icon
+                            mat-list-icon
+                            [ngStyle]="{ color: 'RoyalBlue' }"
+                            >calendar_today</mat-icon
+                          >
+                          <div mat-line>
+                            <span class="mat-h3 mat-subheading-2">{{
+                              c.createDate | date: "mediumDate"
+                            }}</span>
+                          </div>
+                          <div mat-line>
+                            <span class="mat-small mat-caption">Shared on</span>
+                          </div>
+                        </mat-list-item>
+                        <mat-list-item>
+                          <mat-icon
+                            mat-list-icon
+                            [ngStyle]="{ color: 'RoyalBlue' }"
+                            >category</mat-icon
+                          >
+                          <div mat-line>
+                            <span class="mat-h3 mat-subheading-2">
+                              {{ c.category }}</span
+                            ><br />
+                          </div>
+                          <div mat-line>
+                            <span class="mat-small mat-caption">Category</span>
+                          </div>
+                        </mat-list-item>
+                      </mat-list>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <mat-list>
+                            <mat-list-item>
+                              <mat-icon
+                                mat-list-icon
+                                [ngStyle]="{ color: 'RoyalBlue' }"
+                                >money</mat-icon
+                              >
+                              <div mat-line>
+                                <span class="mat-h3 mat-subheading-2">{{
+                                  getPoints(
+                                    c.noPurchases,
+                                    c.usrProfileScore,
+                                    c.createDate
+                                  )
+                                }}</span>
+                              </div>
+                              <div mat-line>
+                                <span class="mat-small mat-caption"
+                                  >Points</span
+                                >
+                              </div>
+                            </mat-list-item>
+                          </mat-list>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button
+                (click)="
+                  onPurchase(
+                    c.id,
+                    c.submittedBy,
+                    c.firstName,
+                    c.lastName,
+                    c.companyName,
+                    c.leadEmail,
+                    c.leadContactNo,
+                    c.description,
+                    c.noPurchases,
+                    c.usrProfileScore,
+                    c.createDate
+                  )
+                "
+                mat-raised-button
+                color="accent"
+              >
+                BUY
+              </button>
+            </mat-card-actions>
+          </mat-card>
+          <br />
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Shared Leads">
+    <div class="container-xl">
+      <div class="container" style="max-width: 800px">
+        <br />
+
+        <button mat-raised-button color="primary" (click)="addLead('click')">
+          Share Lead
+        </button>
+        <br />
+
+        <div *ngIf="leads?.length == 0">
+          <p clss="text-danger">No leads to display yet!</p>
+        </div>
+        <div class="container" *ngFor="let c of leads | slice: 0:c">
+          <mat-card class="example-card" *ngIf="this.userid == c.submittedBy">
+            <mat-card-content>
+              <div class="row">
+                <div class="col-sm-12 col-md-12">
+                  <mat-list>
+                    <mat-list-item>
+                      <div mat-line>
+                        <span class="mat-h3 mat-subheading-2">{{
+                          c?.description
+                        }}</span>
+                      </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="c.locationReq == true">
+                      <mat-icon mat-list-icon [ngStyle]="{ color: 'RoyalBlue' }"
+                        >add_location</mat-icon
+                      >
+                      <div mat-line>
+                        <span class="mat-h3 mat-subheading-2"
+                          >{{ c?.location }} {{ c?.district }}
+                          {{ c?.state }}</span
+                        >
+                      </div>
+                      <div mat-line>
+                        <span class="mat-small mat-caption">Location</span>
+                      </div>
+                    </mat-list-item>
+                  </mat-list>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      <mat-list>
+                        <mat-list-item>
+                          <mat-icon
+                            mat-list-icon
+                            [ngStyle]="{ color: 'RoyalBlue' }"
+                            >calendar_today</mat-icon
+                          >
+                          <div mat-line>
+                            <span class="mat-h3 mat-subheading-2">{{
+                              c.createDate | date: "mediumDate"
+                            }}</span>
+                          </div>
+                          <div mat-line>
+                            <span class="mat-small mat-caption">Shared on</span>
+                          </div>
+                        </mat-list-item>
+                        <mat-list-item>
+                          <mat-icon
+                            mat-list-icon
+                            [ngStyle]="{ color: 'RoyalBlue' }"
+                            >category</mat-icon
+                          >
+                          <div mat-line>
+                            <span class="mat-h3 mat-subheading-2">
+                              {{ c.category }}</span
+                            ><br />
+                          </div>
+                          <div mat-line>
+                            <span class="mat-small mat-caption">Category</span>
+                          </div>
+                        </mat-list-item>
+                      </mat-list>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <mat-list>
+                            <mat-list-item>
+                              <mat-icon
+                                mat-list-icon
+                                [ngStyle]="{ color: 'RoyalBlue' }"
+                                >money</mat-icon
+                              >
+                              <div mat-line>
+                                <span class="mat-h3 mat-subheading-2">{{
+                                  getPoints(
+                                    c.noPurchases,
+                                    c.usrProfileScore,
+                                    c.createDate
+                                  )
+                                }}</span>
+                              </div>
+                              <div mat-line>
+                                <span class="mat-small mat-caption"
+                                  >Points</span
+                                >
+                              </div>
+                            </mat-list-item>
+                          </mat-list>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions> </mat-card-actions>
+          </mat-card>
+          <br />
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Purchased Leads">
+    <app-purchasedleads></app-purchasedleads>
+  </mat-tab>
+</mat-tab-group>

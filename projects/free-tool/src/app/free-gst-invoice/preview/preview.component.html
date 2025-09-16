@@ -1,0 +1,52 @@
+<br><br>
+<div class="wrapper" style="min-height: 900px;">
+
+  <div class="container header-container">
+
+    <div class="continer align-items-lg-expand">
+
+      <div class="row">
+
+        <!--Preview selector-->
+
+
+        <div class="col-lg-12 border">
+
+          <div *ngIf="printTemplate == 2" class="border">
+            <app-preview2 [color1]="color1"></app-preview2>
+          </div>
+          <div *ngIf="printTemplate == 1" class="border">
+            <app-preview1 [color1]="color1"></app-preview1>
+          </div>
+          <div *ngIf="printTemplate == 3" class="border">
+            <app-preview3 [color1]="color1"></app-preview3>
+          </div>
+          <div *ngIf="printTemplate == 4" class="border">
+            <app-preview4 [color1]="color1"></app-preview4>
+          </div>  
+          <!--
+       <app-preview *ngIf="previewMode" [printTemplate]="printTemplate" [color1]="color1">
+       </app-preview>
+       -->
+
+
+
+        </div>
+
+      </div>
+
+
+
+
+      <br>
+
+      <!-- <div *ngIf= Preview4>
+                <app-preview4></app-preview4>
+              </div>
+              <div *ngIf= Preview5>
+                <app-preview5></app-preview5>
+              </div> -->
+
+    </div>
+  </div>
+</div>

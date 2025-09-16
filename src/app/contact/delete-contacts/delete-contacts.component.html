@@ -1,0 +1,21 @@
+<h2 mat-dialog-title *ngIf="!spinner">Delete {{fieldNameContact}}</h2>
+
+<mat-dialog-content *ngIf="!spinner">
+  <h3 *ngIf="!data.scenario">Do you want to delete selected {{custLength}} {{fieldNameContact}} ?</h3>
+  <h3 *ngIf="data.scenario">Do you want to delete selected {{fieldNameContact}} ?</h3>
+
+  <p>All associated {{data.fieldNameTask}}s, {{data.fieldNameFollowup}}s and Attachments will also be deleted. {{fieldNameContact}}s with {{data.fieldNameSale}}s/{{data.fieldNameService}}s/Sales Documents/{{data.fieldNameExpense}}s/ {{data.fieldNameCollection}}s cannot be deleted</p>
+</mat-dialog-content>
+<!-- action buttons -->
+<mat-dialog-actions align="end" *ngIf="!spinner">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="deleteCustomer()" [disabled]="!onCheckNetwork()" color="warn">
+    Delete
+  </button>
+</mat-dialog-actions>
+
+<mat-dialog-content *ngIf="spinner" class="center">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span *ngIf="!this.data.scenario">&nbsp;Deleting {{custCount}} {{fieldNameContact}}s out of {{customerLength}}..</span>
+  <span *ngIf="!!this.data.scenario">&nbsp;Deleting {{fieldNameContact}}..</span>
+</mat-dialog-content>

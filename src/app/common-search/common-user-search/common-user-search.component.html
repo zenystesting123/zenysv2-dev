@@ -1,0 +1,112 @@
+
+<div   *ngIf="!assignedTo && !useremailSearch" class="p-1" >
+  <div class="d-flex flex-row bd-highlight  ">
+    <div class="bd-highlight" style="margin-top: auto; margin-bottom: auto">
+      <span class="h3-dialog" style="margin: auto; margin: auto; font-size: medium" >Assigned to </span > &nbsp;&nbsp;
+    </div>
+    <div
+      class="bd-highlight"
+    >
+    <mat-form-field
+  class="example-full-width"
+  appearance="outline"
+
+>
+    <mat-label>Select user</mat-label>
+    <input
+      type="text"
+      placeholder="Choose Assigned To"
+      aria-label="Assigned To"
+      matInput
+      [formControl]="myControl"
+      [matAutocomplete]="auto"
+      (ngModelChange)="select(myControl.value)"
+
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayData">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{ option.firstname }} {{ option.lastname }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="myControl.value && !assignedTo"
+  >Select Assigned To User</mat-error
+>
+  </mat-form-field>
+  </div>
+
+
+</div>
+</div>
+
+
+
+<div *ngIf="assignedTo && !useremailSearch" class="p-1" style="border-radius: 2px;">
+  <div class="d-flex flex-wrap bd-highlight  ">
+    <div class="bd-highlight" style="margin-top: auto; margin-bottom: auto">
+      <span class="h3-dialog" style="margin: auto; margin: auto; font-size: medium" >Assigned to </span > &nbsp;&nbsp;
+    </div>
+    <div
+      class="bd-highlight"
+    >
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight" style="margin: auto">
+          <ngx-avatar
+            name="{{ assignedToName.split(' ')[0] }}"
+            textSizeRatio="2"
+            size="30"
+          >
+          </ngx-avatar>
+        </div>
+        <div class="bd-highlight truncate-cell" style="margin: auto">
+          <span> {{ assignedToName }}</span>
+        </div>
+        <div class="bd-highlight">
+          <button
+            mat-icon-button
+            color="accent"
+            (click)="onClearAssignedTo()"
+            [disabled]="disableReAssign || !networkCheck.onNetworkCheck()"
+            title="Change"
+          >
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--
+  <mat-list>
+    <div class="row">
+      <mat-list-item class="col-12">
+        <ngx-avatar name="{{ assignedToName.split(' ')[0] }}" textSizeRatio="2" size="30">
+        </ngx-avatar>
+        <p matline class="mat-h3 mat-subtitle truncate-cell">
+          <span> {{ assignedToName }}</span>
+        </p>
+        <div matline class="float">
+          <button mat-icon-button color="warn" (click)="onClearAssignedTo()" title="Close">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+    </div>
+  </mat-list>
+  -->
+</div>
+
+<div *ngIf="useremailSearch" class="row">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Search User</mat-label>
+    <input type="text" placeholder="Choose User" aria-label="User" matInput [formControl]="myControl"
+      [matAutocomplete]="auto" />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayData">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+        (click)="selectUsers(myControl.value)">
+        <ngx-avatar class="avatar" name="{{ option.firstname.split(' ')[0] }}" size="30"
+          textSizeRatio="1.50"></ngx-avatar>
+          <span><span style="font-weight: bold;">{{ option.firstname}} {{ option.lastname }}</span> {{ option.email }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

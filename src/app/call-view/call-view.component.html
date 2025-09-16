@@ -1,0 +1,159 @@
+<div>
+    <!-----------ProgerssBar-->
+    <mat-progress-bar [style.visibility]="isLoaded ? 'hidden' : 'visible'" mode="indeterminate">
+    </mat-progress-bar>
+    <!--------Listing Followup Based on Status-->
+    <div class="container-fluid liststyle" *ngIf="isLoaded">
+        <!-- view filter starts here -->
+        <mat-form-field class="full-width" appearance="outline">
+            <input matInput [(ngModel)]="searchTerm" #query (keyup)="filter(query.value)" class="size"
+                placeholder="Search by {{fieldNameContact}} Name or Company Name " />
+        </mat-form-field>
+        <mat-chip-list aria-label="filter">
+            <mat-chip (click)="changeView('incoming')" color="primary" style="
+          color: #2a6af6;
+          background-color: #f1f2f4;
+          height: 24px;
+          top: calc(50% - 24px / 2);
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 24px;
+        " [ngStyle]="viewFilter=='incoming'?{'color':'blue'} : {'color': 'black'}">
+                Incoming</mat-chip>
+            <mat-chip (click)="changeView('outgoing')" color="primary" style="
+          color: #2a6af6;
+          background-color: #f1f2f4;
+          height: 24px;
+          top: calc(50% - 24px / 2);
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 24px;
+        " [ngStyle]="viewFilter=='outgoing'?{'color':'blue'} : {'color': 'black'}">
+                Outgoing
+            </mat-chip>
+            <!-- Datepicker button implementation ends-->
+            <button mat-icon-button color="accent" title="Filter" [matMenuTriggerFor]="view" class="btn-stye">
+                <mat-icon>filter_alt_outlined</mat-icon>
+            </button>
+            <mat-menu #view="matMenu">
+                <button mat-menu-item color="accent" (click)="picker.open()">{{fieldNameFollowup}}s date during</button>
+                <button mat-menu-item (click)="resetDate()" title="Clear filter">
+                    Clear filter
+                </button>
+            </mat-menu>
+            <mat-form-field class="invisible">
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date" [(ngModel)]="selectedDate1"
+                        [ngModelOptions]="{ standalone: true }" />
+                    <input matEndDate placeholder="End date" [(ngModel)]="selectedDate2"
+                        [ngModelOptions]="{ standalone: true }" (ngModelChange)="onDate2()" />
+                </mat-date-range-input>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </mat-chip-list>
+        <br>
+        <span class="caption" *ngIf="!isFilterApplied">Showing todays {{fieldNameFollowup}}</span>
+        <span class="caption" *ngIf="isFilterApplied">{{fieldNameFollowup}}s between {{selectedDate1 | date }} and
+            {{selectedDate2 |
+            date }}</span>
+        <div *ngIf="viewFilter =='incoming' ">
+            <mat-list *ngIf="incomingList?.length != 0">
+                <mat-list-item *ngFor=" let data of incomingList" style="height: 50px;">
+                    <mat-icon mat-list-icon *ngIf="data.status =='Missed'">call_missed</mat-icon>
+                    <mat-icon mat-list-icon *ngIf="data.status !='Missed'">call_received</mat-icon>
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"
+                        class="right">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngIf="data.customerId !='N/A'" (click)="onAddSale(data.customerId)">
+                            <mat-icon>work</mat-icon>
+                            <span>Create {{feildNameSale}}</span>
+                        </button>
+                        <button mat-menu-item
+                            (click)="onCallBack(data.customerName,data.direction,data.sourceNumber,data.destinationNumber,data.customerId,data.companyName,data.orgId,data.associatedBranch,data)"
+                            *ngIf="enableOutboundCallsViaCallBridging">
+                            <mat-icon>phone_callback</mat-icon>
+                            <span>Call</span>
+                        </button>
+                        <button mat-menu-item *ngIf="data.resourceURL && data.status !='Missed'"
+                            (click)="onPlayAudio(data.resourceURL)">
+                            <mat-icon>play_arrow</mat-icon>
+                            <span>Play</span>
+                        </button>
+                        <button mat-menu-item *ngIf="data.customerId =='N/A'"
+                            (click)="addcontactfn(data.sourceNumber,data.id)">
+                            <mat-icon>person_add</mat-icon>
+                            <span>Add {{fieldNameContact}}</span>
+                        </button>
+                        <button mat-menu-item (click)="editCall(data)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                    </mat-menu>
+                    <div mat-line>
+                        <span class="width_limit"> {{data.sourceNumber}}</span>
+
+                    </div>
+                    <div mat-line>
+                        <span class="width_limit"> {{
+                            data.customerName }} &nbsp; {{ data.companyName }}</span>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+            <div *ngIf="incomingList?.length == 0">
+                <h3>No {{fieldNameFollowup}} Present</h3>
+            </div>
+        </div>
+        <div *ngIf="viewFilter =='outgoing' ">
+            <mat-list *ngIf="outgoingList?.length != 0">
+                <mat-list-item *ngFor=" let data of outgoingList" style="height: 70px;">
+                    <mat-icon mat-list-icon *ngIf="data.status =='Missed'">call_missed</mat-icon>
+                    <mat-icon mat-list-icon *ngIf="data.status !='Missed'">call_made</mat-icon>
+                    <button mat-icon-button [matMenuTriggerFor]="menus" aria-label="Example icon-button with a menu"
+                        class="right">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menus="matMenu">
+                        <button mat-menu-item
+                            (click)="onCallBack(data.customerName,data.direction,data.sourceNumber,data.destinationNumber,data.customerId,data.companyName,data.orgId,data.associatedBranch)"
+                            *ngIf="enableOutboundCallsViaCallBridging ">
+                            <mat-icon>phone_callback</mat-icon>
+                            <span>Call</span>
+                        </button>
+                        <button mat-menu-item *ngIf="data.resourceURL && data.status !='Missed'"
+                            (click)="onPlayAudio(data.resourceURL)">
+                            <mat-icon>play_arrow</mat-icon>
+                            <span>Play</span>
+                        </button>
+                        <button mat-menu-item (click)="editCall(data)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                    </mat-menu>
+                    <div mat-line>
+                        <span class="width_limit"> {{data.destinationNumber}}</span>
+                    </div>
+                    <div mat-line>
+                        <span class="width_limit"> {{
+                            data.customerName }}&nbsp; {{ data.companyName }}
+                        </span>
+                    </div>
+                    <div mat-line *ngIf="data.completedStatus">
+                        <span class="width_limit"> Completed</span>
+                    </div>
+                    <div mat-line *ngIf="!data.completedStatus">
+                        <span class="width_limit"> Pending</span>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+            <div *ngIf="outgoingList?.length == 0">
+                <h3>No {{fieldNameFollowup}} Present</h3>
+            </div>
+        </div>
+    </div>
+</div>

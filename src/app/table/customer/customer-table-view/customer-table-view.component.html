@@ -1,0 +1,232 @@
+<!-- display table -->
+<div *ngIf="
+ !disableViewContact &&
+ commonService.userPlan.contactAccess
+"  style="margin-bottom: 10px;">
+    <div class="example-container border" style="border-radius: 5px;background-color: white;">
+        <!-- table toolbar -->
+        <mat-toolbar [ngStyle]="{'background-color':'white'}" [ngClass]="{isDisabled: isLoading}">
+            <span class="example-spacer"></span>
+            <button mat-icon-button color="accent" aria-label="Table settings" title="Customise table"
+                [ngClass]="{isDisabled:!onCheckNetwork()}" (click)="openDialog()">
+                <mat-icon class="material-icons-outlined">settings</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" aria-label="Download table" title="Download table"
+                [ngClass]="{isDisabled: disableDownloadContact || !onCheckNetwork()}"
+                (click)="tableService.customerList.data.length>0 ? exporter.exportTable('csv',{fileName:tableName}): noDataMessage()">
+                <mat-icon class="material-icons-outlined">download</mat-icon>
+            </button>
+        </mat-toolbar>
+        <!-- spinner while data loading -->
+        <mat-spinner *ngIf="isLoading" color="accent" diameter="50"></mat-spinner>
+        <div class="border-top" [ngClass]="{ 'disabled': isLoading }">
+
+            <!-- table starts here -->
+            <table [ngClass]="{isDisabled: isLoading}" mat-table [dataSource]="tableService.customerList"
+                class="mat-elevation-z1 demo-table" matTableExporter #exporter="matTableExporter">
+
+                <ng-container *ngFor="let column of columnsDispaly" [matColumnDef]="column.columnDef">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{column.header}}
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="truncate-cell">
+
+                        <span *ngIf="column.columnDef =='aged contact' && !isLoading">
+                            <a class="link-primary">
+                                {{getAgedStatus(row)}}
+                            </a>
+                        </span>
+
+                        <span *ngIf="column.fieldType =='contact name' ">
+                            <a class="link-primary" [routerLink]="['/dash/contact/customerdetails/',row.id]">
+                                {{findColumnValue(row,column)}}
+                            </a>
+                        </span>
+                        <span *ngIf="column.fieldType !='contact name'
+                        && column.columnDef !='aged contact' ">
+                            {{findColumnValue(row,column)}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Select Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions&nbsp;&nbsp;</th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <button [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+                            aria-label="Example icon button with a vertical three dot icon"
+                            [matMenuTriggerFor]="menuActions">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+
+                        <!-- 3 dot icon mat menu -->
+                        <mat-menu #menuActions="matMenu">
+                            <!-- call button -->
+                            <button mat-menu-item (click)="onCall(row)" *ngIf="
+                           row?.contactNo &&
+                           enableOutboundCallsViaCallBridging 
+                         ">Call</button>
+
+                            <!-- add button -->
+                            <button mat-menu-item [matMenuTriggerFor]="menuAdd" *ngIf="
+                         commonService.userPlan.saleAccess ||
+                         commonService.userPlan.serviceAccess ||
+                         (commonService.userPlan.activitiesAccess &&
+                           commonService.userPlan.tasksAccess) ||
+                         (commonService.userPlan.activitiesAccess &&
+                           commonService.userPlan.followupsAccess)
+                       ">Add</button>
+
+                            <!-- add button matmenu -->
+                            <mat-menu #menuAdd="matMenu">
+                                <!-- add sale -->
+                                <button *ngIf="commonService.userPlan.saleAccess" mat-menu-item
+                                    (click)="onAddSale(row.id)" [disabled]="
+                             commonService.addDocLimitaion
+                               .addSaleDisable || disableSale
+                           ">
+                                    <mat-icon [ngClass]="{
+                               isDisabled:
+                                 commonService.addDocLimitaion
+                                   .addSaleDisable || disableSale
+                             }" color="accent">work</mat-icon>{{ fieldNameSale }}
+                                </button>
+
+                                <!-- add service -->
+                                <button *ngIf="commonService.userPlan.serviceAccess" mat-menu-item
+                                    (click)="onAddService(row.id)" [disabled]="disableService">
+                                    <mat-icon color="accent" [ngClass]="{ isDisabled: disableService }">support_agent
+                                    </mat-icon>{{
+                                    fieldNameService }}
+                                </button>
+
+                                <!-- add task -->
+                                <button
+                                    *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess"
+                                    mat-menu-item (click)="
+                             addTask(
+                               row
+                             )
+                           ">
+                                    <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+                                </button>
+
+                                <!-- add followUp -->
+                                <button
+                                    *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess"
+                                    mat-menu-item (click)="
+                             onCreateFollowUps(
+                               row
+                             )
+                           " [ngClass]="{ isDisabled: disableFoll }">
+                                    <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+                                </button>
+
+                                <!-- add note -->
+                                <button mat-menu-item (click)="
+                           addNotes(row,'btn_create_note_web')
+                           " [ngClass]="{ isDisabled: disableCreateNote }">
+                                    <mat-icon color="accent">note_add</mat-icon>{{ fieldNameContactNotes }}
+                                </button>
+
+                            </mat-menu>
+
+                            <!-- edit button -->
+                            <button mat-menu-item [disabled]="disableEditContact"
+                                (click)="editCustomer(row)">Edit</button>
+
+                            <!-- chat options -->
+                            <button mat-menu-item [matMenuTriggerFor]="menuChat">Send</button>
+                        </mat-menu>
+
+                        <!-- chat sub options -->
+                        <mat-menu #menuChat="matMenu">
+                            <button mat-menu-item [matMenuTriggerFor]="sendEmailCard" *ngIf="emailEnabled && row.email">
+                                Email
+                            </button>
+                            <button mat-menu-item [matMenuTriggerFor]="sendSMSCard" *ngIf="smsEnabled">
+                                SMS
+                            </button>
+                            <button mat-menu-item [matMenuTriggerFor]="sendWhatsappCard">
+                                Whatsapp
+                            </button>
+                        </mat-menu>
+
+                        <!-- send sms sub options -->
+                        <mat-menu #sendSMSCard="matMenu">
+                            <button mat-menu-item *ngFor="let smsTempltate of smsTemplates"
+                                (click)="triggerSms(smsTempltate, row)">
+                                {{ smsTempltate.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="smsTemplates.length === 0">
+                                No templates added!
+                            </button>
+                        </mat-menu>
+
+                        <!-- send email sub options -->
+                        <mat-menu #sendEmailCard="matMenu">
+                            <button mat-menu-item *ngFor="let emailTempltate of emailTemplates" (click)="
+                               triggerEmail(emailTempltate, row)
+                             ">
+                                {{ emailTempltate.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="emailTemplates.length === 0">
+                                No templates added!
+                            </button>
+                        </mat-menu>
+
+                        <!-- send whatsapp sub options -->
+                        <mat-menu #sendWhatsappCard="matMenu">
+                            <button mat-menu-item *ngFor="let waTempltates of whatsAppTemplates" (click)="
+                               triggerWhatsapp(waTempltates, row)
+                             ">
+                                {{ waTempltates.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="
+                               whatsAppTemplates.length === 0 &&
+                               waEnabled === true
+                             ">
+                                No templates added!
+                            </button>
+                            <button mat-menu-item *ngIf="waEnabled === false" (click)="
+                               triggerWhatsapp('noTemplate', row)
+                             ">
+                                --without template--
+                            </button>
+                        </mat-menu>
+
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; " (click)="onRowClick(row)"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">
+                        No data to display
+                    </td>
+                </tr>
+
+            </table>
+            <!-- table ends here -->
+            <!-- paginator -->
+            <mat-paginator [length]="totalItems" [pageSize]="tableService.pageSize" [pageIndex]="tableService.pageIndex"
+                [pageSizeOptions]="pageSizeOptions" (page)="onPageChanged($event)" [intl]="paginatorIntl"
+                [ngClass]="{isDisabled: isLoading || !onCheckNetwork()}">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+
+
+  <div class="row full container-lg nomarg" *ngIf="!isMobilesize">
+    <div class="col-4 chatheads nomarg" style="padding-right: 0%;">
+        <app-chatshead [chatHeads]="chatHeads" [uid]="uid" (chatheadClickedevent)="chatHeadClicked($event)"></app-chatshead>
+    </div>
+    <div class="col-8 nomarg chatlist" *ngIf="!!currentContactuid">
+        <div  #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <app-chatslist ></app-chatslist>
+        </div>
+        <!-- <div style="height:10vh;"class="bg-light"> -->
+
+        <!-- <form #form="ngForm" style="max-width: 90%;" >
+            <div class="input-group" style="padding-top: 10px;">
+              <input style="border-radius: 30px;" type="text" placeholder="Type a message" name="message" aria-describedby="button-addon2" class="form-control py-4" [(ngModel)]="message">
+              <div class="input-group-append">
+                <button mat-icon-button type="submit" class="btn btn-link" (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+              </div>
+            </div>
+          </form> -->
+        <!-- </div>     -->
+    </div>
+
+
+</div>
+
+
+
+
+<div class="row full" *ngIf="isMobilesize" style="margin: 0%;padding: 0%;">
+  <mat-toolbar style="position: sticky; top: 0;"
+    [ngStyle]="{'background-color':'white'}" disablePagination=true>
+    <!-- <button mat-icon-button aria-label="back" title="back" (click)="onBack()">
+      <mat-icon [ngStyle]="{'color':'#2A6AF6'}"><span class="material-icons-outlined">
+          arrow_back
+        </span></mat-icon>
+    </button> -->
+    <span>
+      Chat
+    </span>
+    <span class="example-spacer"></span>
+    <mat-icon style="color: white" *ngIf="!onCheckNetwork()">wifi_off icon</mat-icon>
+    <!-- <button (click)="onAddCustomerMob()" mat-mini-fab aria-label="Add options" color="accent">
+        <mat-icon [ngStyle]="{'color':'white'}">add</mat-icon>
+      </button> -->
+
+  </mat-toolbar>
+  <div class="col-12 chatheads nomarg " style="width:100%;height: 90%;" *ngIf="!showChatList">
+    <app-chatshead [chatHeads]="chatHeads" [uid]="uid" (chatheadClickedevent)="chatHeadClicked($event)"></app-chatshead>
+</div>
+
+<!-- <div class="row" *ngIf="showChatList" style="width:100%; margin: 0%;padding: 0%;"> -->
+  <!-- <div class="chatlist" class="col-12" style="width:100%; margin: 0%;padding: 0%;">
+    <app-chatslist ></app-chatslist>
+    </div>
+    <form #form="ngForm" class="col-12 input-group">
+        <div class="input-group">
+          <input type="text" placeholder="Type a message" name="message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" [(ngModel)]="message">
+          <div class="input-group-append">
+            <button mat-icon-button type="submit" color="primary" class="btn btn-link" (click)="sendMessage()">
+                <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </form> -->
+
+<!-- </div> -->
+
+</div>

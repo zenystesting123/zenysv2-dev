@@ -1,0 +1,68 @@
+<mat-toolbar *ngIf="isMobilesize" style="position: sticky; top: 0;"
+    [ngStyle]="{'background-color':'white'}" disablePagination=true>
+    <button mat-icon-button aria-label="back" title="back" (click)="onBack()">
+      <mat-icon [ngStyle]="{'color':'#2A6AF6'}"><span class="material-icons-outlined">
+          arrow_back
+        </span></mat-icon>
+    </button>
+    <span>
+      Chat
+    </span>
+    <span class="example-spacer"></span>
+    <mat-icon style="color: white" *ngIf="!onCheckNetwork()">wifi_off icon</mat-icon>
+    <!-- <button (click)="onAddCustomerMob()" mat-mini-fab aria-label="Add options" color="accent">
+        <mat-icon [ngStyle]="{'color':'white'}">add</mat-icon>
+      </button> -->
+
+  </mat-toolbar>
+
+    <div class="row bg-light"  style="width:100%; margin: 0%;padding: 0%;">
+
+  <div class="chatlist" class="col-12" style="width:100%; margin: 0%;padding: 0%;">
+
+      <div class="row container d-flex " style="width: 100%;max-height: 75vh;padding: 0%;margin: 0%;">
+          <div style="width: 100%;padding: 0%;margin: 0%;">
+              <!-- <div class="card card-bordered"> -->
+                  <div #myList class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:70vh !important; width: 100%; margin: 0%;padding: 0%;">
+                      <div *ngFor="let message of List;let last=last">
+                      <div *ngIf="message.From==uid"class="media media-chat media-chat-reverse" style="padding: 0%;margin: 0%;">
+                          <div class="media-body" style="padding-right:20px;">
+                              <!-- <p>{{Date.now()|date}}</p> -->
+                              <p>{{message.message}}</p>
+                              <p class="meta" style="color: #8b95a5;"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                          </div>
+                      </div>
+                      <div *ngIf="message.From!=uid" class="media media-chat" style="padding: 0%;margin: 0%;">
+                        <!-- <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."> -->
+                          <div class="media-body" style="padding-left:20px;">
+                              <p style="background-color:white">{{message.message}}</p>
+                              <p class="meta"><time datetime="2018">{{message.timestamp | date:'short'}}</time></p>
+                          </div>
+                      </div>
+                    </div>
+                    <!-- {{last ? scrollToBottom() : ''}}                       -->
+                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                      </div>
+                      <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
+                          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
+                      </div>
+                  </div>
+
+              <!-- </div> -->
+          </div>
+      </div>
+  </div>
+  <form #form="ngForm" class="col-12 input-group">
+    <div class="input-group d-flex align-items-center">
+      <input type="text" placeholder="Type a message" name="message" aria-describedby="button-addon2" class="form-control py-4 inputform" [(ngModel)]="message">
+      <div class="input-group-append">
+        <button mat-icon-button type="submit" style="color:grey" class="btn btn-link" [disabled]="!!!message" (click)="sendMessage()" (keyup)="keypressevent($event)">
+            <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+</div>

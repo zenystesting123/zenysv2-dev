@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <br />
+  <h2 class="mat-h2">Add {{this.documentsData.fieldNameSale}} Documents</h2>
+  <mat-nav-list>
+    <a
+      mat-list-item
+      (click)="openLink1($event)"
+      [disabled]="commonService.addDocLimitaion.addEstimateDisable || this.documentsData.disableEst"
+    >
+      <h3 mat-line>Create New {{this.documentsData.fieldNameEstimate}}</h3>
+    </a>
+
+    <a
+      mat-list-item
+      (click)="openLink2($event)"
+      [disabled]="commonService.addDocLimitaion.addQuotationDisable || this.documentsData.disableQuot"
+    >
+      <h3 mat-line>Create New {{this.documentsData.fieldNameQuotation}}</h3>
+    </a>
+
+    <a
+      mat-list-item
+      (click)="openLink3($event)"
+      [disabled]="commonService.addDocLimitaion.addInvoiceDisable || this.documentsData.disableInv"
+    >
+      <h3 mat-line>Create New {{this.documentsData.fieldNameInvoice}}</h3>
+    </a>
+  </mat-nav-list>
+  <br />
+  <button
+    style="float: right"
+    (click)="openLink($event)"
+    color="accent"
+    mat-button
+  >
+    Cancel
+  </button>
+</div>

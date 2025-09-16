@@ -1,0 +1,43 @@
+.right {
+  float: right;
+}
+.full-width {
+  width: 100%;
+}
+.parent {
+  display: flex;
+}
+
+.first {
+  width: 300px;
+}
+
+.second {
+  flex: 1;
+  display: flex;
+}
+.expDatewidth{
+  width: 100%; 
+
+}
+.chipStyling {
+  color: #2a6af6;
+  background-color: #f1f2f4;
+  height: 24px;
+  top: calc(50% - 24px / 2);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+}  
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}
+// .add-width{
+//   width: 100% !important;
+// }
+.form-fields{
+  width:100% !important;
+}

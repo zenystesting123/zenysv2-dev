@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>
+  Delete Automation
+</h2>
+<mat-dialog-content class="mat-typography">
+  Do you want to delete this automation&nbsp;?&nbsp;
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <button mat-button (click)="onOKClick()" color="warn">Delete</button>
+</mat-dialog-actions>

@@ -1,0 +1,195 @@
+<br />
+<div class="container-xl">
+  <div *ngFor="let lead of purchasedLeads">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>account_circle</mat-icon>
+        <mat-card-title
+          > {{ lead.firstName
+          }}{{ lead.lastName }}</mat-card-title
+        >
+        <span class="example-spacer"></span>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+        >
+          <mat-icon color="accent">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            *ngIf="
+              lead.reqMetFlag == false &&
+              lead.invalidContactFlag == false &&
+              lead.invalidReqFlag == false
+            "
+            mat-menu-item
+            (click)="
+              openDialog(
+                lead.leadId,
+                lead.customerId,
+                lead.id,
+                lead.invalidContactFlag,
+                lead.invalidReqFlag,
+                lead.reqMetFlag
+              )
+            "
+          >
+            <span>Report lead</span>
+          </button>
+          <button
+            *ngIf="!lead.customerId"
+            mat-menu-item
+            (click)="
+              onAddContact(
+                lead.id,
+                lead.firstName,
+                lead.lastName,
+                lead.companyName,
+                lead.leadEmail,
+                lead.leadContactNo,
+                lead.title
+              )
+            "
+          >
+            <span>Add Contact</span>
+          </button>
+          <button
+            *ngIf="lead.customerId"
+            mat-menu-item
+            (click)="onViewCustomer(lead.customerId)"
+          >
+            <span>View Contact</span>
+          </button>
+          <button
+            *ngIf="!lead.saleId && lead.customerId"
+            mat-menu-item
+            (click)="onAddSale(lead.customerId, lead.id,lead.title)"
+          >
+            <span>Add Sale</span>
+          </button>
+          <button
+            mat-menu-item
+            *ngIf="lead.saleId"
+            (click)="onViewSale(lead.saleId)"
+          >
+            <span>View Sale</span>
+          </button>
+        </mat-menu>
+        <mat-card-subtitle
+          >{{ lead.leadContactNo }}&nbsp;&nbsp; {{ lead.leadEmail }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <br />
+        <div class="container">
+          <mat-chip-list
+            class="example-chip"
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+          >
+            <mat-chip>
+              <mat-icon color="primary" title="Points paid"
+                >money</mat-icon
+              >
+              &nbsp;&nbsp;{{ lead.purchaseValue }} Points Paid
+            </mat-chip>
+            <mat-chip>
+              <mat-icon color="primary" title="Rating provided">
+                stars</mat-icon
+              >&nbsp;&nbsp; Rated {{ lead.leadSharedRating }}
+            </mat-chip>
+            <div *ngIf="lead.leadSharedRating == 0">
+              <button
+                mat-icon-button
+                [color]="color"
+                *ngFor="let ratingId of ratingArr; index as i"
+                [id]="'star_' + i"
+                (click)="onClickRating(i + 1)"
+                (click)="onClick(i + 1, lead.id, lead.leadId, lead.submittedBy)"
+                [title]="ratingId + 1"
+                titlePosition="above"
+              >
+                <mat-icon>
+                  {{ showIcon(i, lead.leadSharedRating) }}
+                </mat-icon>
+              </button>
+              <mat-error *ngIf="starCount == null || starCount == 0">
+                Star count is <strong>required</strong> and cannot be zero
+              </mat-error>
+            </div>
+          </mat-chip-list>
+        </div>
+        <br />
+        <h3>
+          {{ lead.title }}
+        </h3>
+
+        <p class="card-subtitle">
+          Date: {{ lead.purchasedDate | date }}<br />
+          {{ lead.description }}
+        </p>
+        <br />
+
+        <div
+          class="container"
+          *ngIf="
+            lead.invalidContactFlag || lead.invalidReqFlag || lead.reqMetFlag
+          "
+        >
+          <span *ngIf="lead.invalidContactFlag">
+            <mat-icon
+              title="You have reported this lead as an invaid contact"
+            >
+              warning</mat-icon
+            > &nbsp;&nbsp;&nbsp;<label> Reported as invalid contact</label>
+          </span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span *ngIf="lead.invalidReqFlag">
+            <mat-icon
+              title="You have reported this lead as an incorrect requirement"
+              >notification_important</mat-icon
+            > &nbsp;&nbsp;&nbsp;
+            <label> Reported as wrong requirement</label>
+          </span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <span *ngIf="lead.reqMetFlag">
+            <mat-icon
+              title="You have reported this lead as requirement met"
+              >feedback</mat-icon
+            > &nbsp;&nbsp;&nbsp;
+            <label> Reported as requirement met</label>
+            <!-- <span class="cdk-visually-hidden">
+                  Reported as requirement met
+                </span> -->
+          </span>
+          &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          *ngIf="
+            lead.reqMetFlag == false &&
+            lead.invalidContactFlag == false &&
+            lead.invalidReqFlag == false
+          "
+          mat-button
+          (click)="
+            openDialog(
+              lead.leadId,
+              lead.customerId,
+              lead.id,
+              lead.invalidContactFlag,
+              lead.invalidReqFlag,
+              lead.reqMetFlag
+            )
+          "
+        >
+          REPORT
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    <br />
+  </div>
+</div>

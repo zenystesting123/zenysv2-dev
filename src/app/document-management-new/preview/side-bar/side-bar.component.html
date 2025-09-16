@@ -1,0 +1,337 @@
+<div id="div">
+  <mat-selection-list [multiple]="false">
+    <mat-list-option
+      (click)="contactView()"
+      [ngClass]="{ isDisabled: previewService.disableViewContact }"
+      *ngIf="
+        previewService.customerData.custID && !previewService.customerData.orgID
+      "
+    >
+      <mat-icon matListAvatar>
+        <ngx-avatar
+          name="{{ previewService.customerData.fname1?.split(' ')[0] }}"
+          textSizeRatio="2"
+          size="35"
+        >
+        </ngx-avatar>
+      </mat-icon>
+      <h3 mat-line class="mat-h2 mat-title">
+        <span id="span1">
+          {{ previewService.customerData.fname1 }}
+          {{ previewService.customerData.sname }}
+          {{ previewService.customerData.surname }}
+        </span>
+      </h3>
+      <h4 mat-line *ngIf="previewService.customerData.companyName">
+        Company: {{ previewService.customerData.companyName }}
+      </h4>
+    </mat-list-option>
+    <mat-list-option
+      (click)="orgView()"
+      [ngClass]="{ isDisabled: previewService.disableViewOrg }"
+      *ngIf="previewService.customerData.orgID"
+    >
+      <mat-icon matListAvatar>
+        <ngx-avatar
+          name="{{ previewService.customerData.companyName?.split(' ')[0] }}"
+          textSizeRatio="2"
+          size="35"
+        >
+        </ngx-avatar>
+      </mat-icon>
+      <h3 mat-line class="mat-h2 mat-title">
+        <span id="span1">
+          Company: {{ previewService.customerData.companyName }}
+        </span>
+      </h3>
+      <h4
+        mat-line
+        *ngIf="
+          previewService.customerData.fname1 ||
+          previewService.customerData.sname ||
+          previewService.customerData.surname
+        "
+      >
+        {{ previewService.customerData.fname1 }}
+        {{ previewService.customerData.sname }}
+        {{ previewService.customerData.surname }}
+      </h4>
+    </mat-list-option>
+    <mat-divider></mat-divider>
+    <br />
+    <div class="container-fluid">
+      <mat-card-content>
+        <h3
+          class="mat-h3 mat-subheading-2"
+          *ngIf="previewService.docData.saleID"
+        >
+          {{ previewService.fieldNameSale }} Title:
+        </h3>
+        <h4 mat-line *ngIf="previewService.docData.saleID">
+          &nbsp;&nbsp;&nbsp;
+          <span class="align-top">{{
+            previewService.docData.saleTitle | slice : 0 : 50
+          }}</span>
+        </h4>
+
+        <h3 class="mat-h3 mat-subheading-2">Document Details:</h3>
+
+        <h4 mat-line>
+          &nbsp;&nbsp;&nbsp;
+          <span class="align-top"
+            >Created On&nbsp;:&nbsp;{{
+              previewService.docData.createdDate | date
+            }}</span
+          >
+        </h4>
+
+        <h4 mat-line>
+          &nbsp;&nbsp;&nbsp;
+          <span class="align-top"
+            >Amount&nbsp;:&nbsp;{{ previewService.docData.currency }}
+            {{ previewService.docData.totalInclTax }}</span
+          >
+        </h4>
+        <h4
+          mat-line
+          *ngIf="
+            previewService.docType == 'Invoice' &&
+            commonService.userPlan.collectionsAccess
+          "
+        >
+          &nbsp;&nbsp;&nbsp;
+          <span class="align-top"
+            >Collected Amount&nbsp;:{{ previewService.docData.currency }}
+            {{ previewService.collectedAmount }}&nbsp;</span
+          >
+        </h4>
+        <h3 class="mat-h3 mat-subheading-2" *ngIf="changeLogLength > 0">
+          ChangeLog
+        </h3>
+        <!-- Display change log according to last modified date-->
+        <div
+          class="mb-3 border-bottom"
+          *ngFor="
+            let item of previewService.changeLog | keyvalue : customsort;
+            let i = index
+          "
+        >
+          <div class="d-flex align-items-center mb-3">
+            <div class="flex-shrink-0">
+              <img
+                class="avatar avatar-sm avatar-circle"
+                src="../assets/img/160x160/img1.jpg"
+                alt="Image Description"
+              />
+            </div>
+
+            <div class="flex-grow-1 ms-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">{{ item.value.changedByName }}</h4>
+                <span class="d-block small text-muted">
+                  {{ item.value.dateModified | date : "medium" }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div
+            matLine
+            *ngIf="
+              item.value.currentValues == '' && item.value.previousValues == ''
+            "
+          >
+            <p>
+              {{ previewService.toolbar.documentTypeFeildName }} created by
+              {{ item.value.changedByName }}
+            </p>
+          </div>
+
+          <div
+            *ngFor="
+              let celem of item.value.currentValues | keyvalue : onCompare
+            "
+          >
+            <div *ngIf="celem.key == 'addedProducts'">
+              <div *ngFor="let k of celem.value | keyvalue : onCompare">
+                <p>
+                  Added item
+                  {{ k.value.item }}
+                </p>
+              </div>
+            </div>
+
+            <div *ngIf="celem.key == 'deletedProducts'">
+              <div *ngFor="let k of celem.value | keyvalue : onCompare">
+                <p>
+                  Deleted item
+                  {{ k.value.item }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            matLine
+            *ngFor="
+              let pelem of item.value.previousValues | keyvalue : onCompare
+            "
+          >
+            <div
+              *ngFor="
+                let celem of item.value.currentValues | keyvalue : onCompare
+              "
+            >
+              <div *ngIf="pelem.key == celem.key">
+                <div
+                  *ngIf="
+                    pelem.key == 'cancelDocument' &&
+                    celem.key == 'cancelDocument' &&
+                    celem.value == true
+                  "
+                >
+                  <p>The document has been cancelled</p>
+                </div>
+
+                <!-- Items changed -->
+                <div *ngIf="pelem.key == 'itemList' && celem.key == 'itemList'">
+                  <div *ngIf="pelem.value && celem.value">
+                    <div *ngFor="let j of pelem.value | keyvalue : onCompare">
+                      <div *ngFor="let k of celem.value | keyvalue : onCompare">
+                        <div *ngIf="j.key == k.key">
+                          <div *ngFor="let m of j.value | keyvalue : onCompare">
+                            <div *ngFor="let n of k.value | keyvalue : onCompare">
+                              <div *ngIf="m.key == n.key && m.key !== 'item'">
+                                <p *ngIf="m.value || n.value">
+                                  Modified Item {{ j.value["item"] }}'s
+                                  {{
+                                    docFieldNames[$any(m.key)]?.displayName
+                                      ? docFieldNames[$any(m.key)]?.displayName
+                                      : m.key
+                                  }}
+                                  from {{ m.value ? m.value : m.value === false ? 'false' : "None" }} to
+                                  {{ n.value ? n.value : n.value === false ? 'false' : "None" }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                </div>
+
+                <div
+                  *ngIf="
+                    pelem.key == 'isDeliveryAddressPresent' &&
+                    celem.key == 'isDeliveryAddressPresent'
+                  "
+                >
+                  <p *ngIf="celem.value === true">
+                    Show delivery address enabled
+                  </p>
+                  <p *ngIf="celem.value === null || celem.value === false">
+                    Show delivery address disabled
+                  </p>
+                </div>
+
+                <!-- Additional fields -->
+                <div
+                  *ngIf="
+                    pelem.key == 'additionalFields' &&
+                    celem.key == 'additionalFields'
+                  "
+                >
+                  <div *ngFor="let j of pelem.value | keyvalue : onCompare">
+                    <div *ngFor="let k of celem.value | keyvalue : onCompare">
+                      <div *ngIf="j.key == k.key">
+                        <p>
+                          Modified {{ j.value.fieldName }} from
+                          {{ j.value.fieldValue ? j.value.fieldValue : j.value.fieldValue === false ? 'false' : "None" }}
+                          to
+                          {{ k.value.fieldValue ? k.value.fieldValue : k.value.fieldValue === false ? 'false' : "None" }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="
+                    pelem.key != 'additionalFields' &&
+                    celem.key != 'additionalFields' &&
+                    pelem.key != 'itemList' &&
+                    celem.key != 'itemList' &&
+                    pelem.key != 'isDeliveryAddressPresent' &&
+                    celem.key != 'isDeliveryAddressPresent' &&
+                    pelem.key != 'cancelDocument' &&
+                    celem.key != 'cancelDocument'
+                  "
+                >
+                  <div
+                    *ngIf="
+                      pelem.key != 'assignedTo' &&
+                      celem.key != 'assignedTo' &&
+                      pelem.key != 'orgId' &&
+                      celem.key != 'orgId'
+                    "
+                  >
+                    <p *ngIf="pelem.key == 'logo' &&
+                              celem.key == 'logo'">
+                      Modified logo 
+                    </p>
+
+                    <p *ngIf="pelem.key == 'signature' &&
+                              celem.key == 'signature'">
+                      Modified signature
+                    </p>
+
+                    <p *ngIf="pelem.key != 'logo' &&
+                              celem.key != 'logo' &&
+                              pelem.key != 'signature' &&
+                              celem.key != 'signature' &&
+                              (pelem.value || celem.value)">
+                      Modified
+                      {{
+                        docFieldNames[pelem.key]?.displayName
+                          ? docFieldNames[pelem.key]?.displayName
+                          : pelem.key == 'saleTitle' ? 
+                          previewService.fieldNameSale+' Title' :
+                            pelem.key
+                      }}
+                      from {{ pelem.value ? pelem.value : pelem.value === false ? 'false' : "None" }} to
+                      {{ celem.value ? celem.value : celem.value === false ? 'false' :"None" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+    <div class="container-fluid">
+      <mat-list>
+        <h3
+          class="mat-h3 mat-subheading-2"
+          *ngIf="!!previewService.paymentLink"
+        >
+          Payment Details
+        </h3>
+        <ng-container *ngIf="!!previewService.paymentLink">
+          <h4 mat-line>
+            &nbsp;&nbsp;&nbsp;
+            <span class="align-top"
+              >Payment link&nbsp;:&nbsp;{{
+                previewService.paymentLink.short_url
+              }}</span
+            >
+          </h4>
+        </ng-container>
+      </mat-list>
+    </div>
+  </mat-selection-list>
+</div>

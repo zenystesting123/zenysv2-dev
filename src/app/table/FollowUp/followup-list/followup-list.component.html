@@ -1,0 +1,156 @@
+<ng-container *ngIf="reload">
+  <div class="example-list bg-white border" style="border-radius: 5px">
+    <h3
+      id="titleDesign"
+      class="mat-h3 mat-subheading-2"
+      [ngClass]="{
+        'text-info': followupType === 'Upcoming',
+        'text-danger': followupType === 'OverDue',
+        'text-success': followupType === 'Completed'
+      }"
+    >
+      {{ followupType }} {{ fieldNameFollowup }}s
+    </h3>
+    <mat-divider></mat-divider>
+    <cdk-virtual-scroll-viewport
+      itemSize="200"
+      class="example-viewport"
+      (scrolledIndexChange)="onScroll()"
+    >
+      <div
+        class="data-item card"
+        style="margin: 10px"
+        *cdkVirtualFor="let item of displayedData | async; let i = index"
+      >
+        <div class="card-body">
+          <div class="d-flex flex-row bd-highlight justify-content-between">
+            <div class="bd-highlight">
+              <h4>
+                Call Date: {{ item.callStartDate?.toDate() | date }} &nbsp;
+                {{
+                  item.callStartTime
+                    ? (item.callStartTime | convertFrom24To12Format)
+                    : ""
+                }}
+              </h4>
+            </div>
+            <div class="bd-highlight">
+              <mat-chip class="chipStyling">{{ item.direction }}</mat-chip>
+            </div>
+          </div>
+          <p class="caption">
+            {{ item.notes }}
+          </p>
+          <ul class="list-unstyled">
+            <li *ngFor="let field of displayFields">
+              {{ field.header }}: {{ getFieldValue(field, item) }}
+            </li>
+          </ul>
+          <mat-chip-list>
+            <mat-chip
+              *ngIf="item.orgId  && commonService.userPlan.orgAccess"
+              class="chipStyling"
+              (click)="onViewOrg(item.orgId)"
+              title="{{ fieldNameOrganization }} tagged"
+            >
+              <mat-chip-avatar> <mat-icon>business</mat-icon> </mat-chip-avatar
+              >{{ item.companyName }}
+            </mat-chip>
+            <mat-chip
+              class="chipStyling"
+              title="{{ fieldNameCustomer }} tagged"
+              (click)="onViewCustomer(item.customerId)"
+            >
+              <mat-chip-avatar> <mat-icon>person</mat-icon> </mat-chip-avatar
+              >{{ item.customerName }}
+            </mat-chip>
+
+            <mat-chip
+              class="chipStyling"
+              title="{{ fieldNameSale }} Title"
+              *ngIf="item.saleTitle && commonService.userPlan.saleAccess"
+              (click)="onViewSale(item.saleId)"
+            >
+              <mat-chip-avatar>
+                <mat-icon>work</mat-icon>
+              </mat-chip-avatar>
+              {{ item.saleTitle }}
+            </mat-chip>
+            <mat-chip
+              class="chipStyling"
+              title="{{ fieldNameService }} Title"
+              *ngIf="item.serviceTitle && commonService.userPlan.serviceAccess"
+              (click)="onViewSupport(item.serviceId)"
+            >
+              <mat-chip-avatar>
+                <mat-icon>support_agent</mat-icon>
+              </mat-chip-avatar>
+              {{ item.serviceTitle }}
+            </mat-chip>
+          </mat-chip-list>
+          <br />
+          <div style="float: left">
+            <ngx-avatar
+              name="{{
+                commonService.getAssignedToName(item.assignedTo).split(' ')[0]
+              }}"
+              textSizeRatio="2"
+              size="30"
+              title="Assigned to {{
+                commonService.getAssignedToName(item.assignedTo)
+              }}"
+            >
+            </ngx-avatar>
+          </div>
+          <div style="float: right">
+            <div class="example-flex-container">
+              <!--Buttons-->
+              <button
+                *ngIf="!item.completedStatus"
+                color="accent"
+                mat-icon-button
+                title="Mark as completed"
+                (click)="markasCompleted(item)"
+                [disabled]="disableFollEdit || disableMarkAsCompleted"
+              >
+                <mat-icon>done</mat-icon>
+              </button>
+              <button
+                [disabled]="disableFollEdit"
+                color="accent"
+                mat-icon-button
+                title="Edit"
+                (click)="onEditFollowUps(item)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                color="accent"
+                mat-icon-button
+                (click)="onCallFollowUp(item.id, item.customerId, item)"
+                title="Call"
+                *ngIf="
+                  enableOutboundCallsViaCallBridging && !item.completedStatus
+                "
+              >
+                <mat-icon>phone_forwarded</mat-icon>
+              </button>
+              <button
+                color="accent"
+                mat-icon-button
+                *ngIf="item.callDuration != null && item.callDuration"
+                (click)="onPlayAudio(item.resourceURL)"
+                title="Play recording"
+              >
+                <mat-icon class="material-icons-outlined">play_arrow</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="centre" *ngIf="loading">
+        <mat-spinner [diameter]="24"></mat-spinner>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+</ng-container>

@@ -1,0 +1,220 @@
+<div class="no-v-scroll">
+  <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+  </mat-progress-bar>
+  <div class="container-fluid" >
+    <br>
+    <div *ngIf="notEdit && progressBarStatus" class="container-xl" style="background-color: white">
+      <mat-card>
+        Access Denied. Please contact your SuperUser to make changes to
+        settings fields.
+      </mat-card>
+    </div>
+    <span class="caption">Configure additional custom fields for {{fieldNameFollowup}}. When you add a new
+      {{fieldNameFollowup}}, these fields will appear in the Additional details tab</span>
+
+    <div class="container">
+      <br>
+      <button type="submit" style="margin-right: 25px;float: right;border: rgb(216, 216, 216) 0.5px solid;" mat-button
+        color="accent" (click)="addField()"><i class="ft-check-square mr-1"></i>
+        Add field</button>
+      <br /><br />
+    </div>
+    <br>
+    <!-- field for adding new field starts here -->
+    <mat-card *ngIf="addNewField">
+      <mat-card-header>
+        <mat-card-title>
+          Add new field
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content style=" padding: 2%; margin: 0px">
+        <div class="row">
+          <div class="col-2">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Field Name</mat-label>
+              <input matInput [(ngModel)]="fieldName" name="fieldName" maxlength="20" required>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Field Type</mat-label>
+              <mat-select #type="ngModel" [(ngModel)]="fieldType" ngModel name="type" (selectionChange)="clear()"
+                required [ngModelOptions]="{standalone: true}">
+                <mat-option value="textarea">Textarea</mat-option>
+                <mat-option value="inputField">Input Field</mat-option>
+                <mat-option value="category">Category</mat-option>
+                <mat-option value="number">Number</mat-option>
+                <mat-option value="date">Date</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3" *ngIf="fieldType=='category'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Options seperated by commas</mat-label>
+              <textarea matInput [(ngModel)]="categories" name="categories"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="fieldType=='inputField'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Default Value</mat-label>
+              <input matInput [(ngModel)]="defaultValue" name="defaultValue">
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="fieldType=='category'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Default Value</mat-label>
+              <input matInput [(ngModel)]="defaultValue" name="defaultValue">
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="fieldType=='textarea'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Default Value</mat-label>
+              <textarea matInput [(ngModel)]="defaultValue" name="defaultValue"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="fieldType=='date'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Default Value</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="defaultValue" name="defaultValue">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-2" *ngIf="fieldType=='number'">
+            <mat-form-field style="width: 100%;" appearance="fill">
+              <mat-label>Default Value</mat-label>
+              <input matInput type="number" [(ngModel)]="defaultValue" name="defaultValue">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1">
+            <mat-checkbox #Checkbox1 class="example-margin" [(ngModel)]="mandatory" (ngModelChange)="mandatory"
+              name="mandatory">Mandatory</mat-checkbox>&nbsp;
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <div class="row" style="margin-right: 20px">
+          <button mat-icon-button aria-label="close" (click)="submitFieldClose()" title="Cancel ">
+            Cancel</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button mat-icon-button aria-label="Add" [disabled]="!fieldName || !fieldType" (click)="submitField()"
+            color="accent" title="Add ">
+            Add</button>
+          &nbsp;&nbsp;
+        </div>
+      </mat-card-actions>
+    </mat-card>
+    <!-- field for adding new field ends here -->
+    <br />
+    <!-- accordian for showing current fields and its edit option starts here -->
+    <mat-accordion class="example-headers-align">
+
+      <mat-expansion-panel *ngFor="let fields of currentFollowupField let i = index">
+        <mat-expansion-panel-header (click)="editField(i,container)" style=" padding-left: 4%;">
+          <mat-panel-title>{{fields.fieldName}}</mat-panel-title>
+          <mat-panel-description>
+            <span *ngIf="fields.fieldType=='textarea'">
+              Text Area
+            </span>
+            <span *ngIf="fields.fieldType=='inputField'">
+              Input Field
+            </span>
+            <span *ngIf="fields.fieldType=='category'">
+              Category
+            </span>
+            <span *ngIf="fields.fieldType=='date'">
+              Date
+            </span>
+            <span *ngIf="fields.fieldType=='number'">
+              Number
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div #container *ngIf="editedField" style=" padding: 2%;">
+          <div class="row">
+            <div class="col-2">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Field Name</mat-label>
+                <input matInput [(ngModel)]="editFname" name="fieldName" required maxlength="20">
+              </mat-form-field>
+            </div>
+            <div class="col-2">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Field Type</mat-label>
+                <mat-select #type="ngModel" [(ngModel)]="editFieldType" ngModel name="type" required disabled
+                  [ngModelOptions]="{standalone: true}">
+                  <mat-option value="textarea">Textarea</mat-option>
+                  <mat-option value="inputField">Input Field</mat-option>
+                  <mat-option value="category">Category</mat-option>
+                  <mat-option value="number">Number</mat-option>
+                  <mat-option value="date">Date</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-3" *ngIf="editFieldType=='category'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Options seperated by commas</mat-label>
+                <textarea matInput [(ngModel)]="editCategoriesOpn" name="categories"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-2" *ngIf="editFieldType=='category'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Default Value</mat-label>
+                <input matInput type="text" [(ngModel)]="editDefaultValue" name="defaultValue">
+              </mat-form-field>
+            </div>
+            <div class="col-2" *ngIf="editFieldType=='inputField'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Default Value</mat-label>
+                <input matInput type="text" [(ngModel)]="editDefaultValue" name="defaultValue">
+              </mat-form-field>
+            </div>
+            <div class="col-2" *ngIf="editFieldType=='textarea'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Default Value</mat-label>
+                <textarea matInput type="text" [(ngModel)]="editDefaultValue" name="defaultValue"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-2" *ngIf="editFieldType=='number'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Default Value</mat-label>
+                <input matInput type="number" [(ngModel)]="editDefaultValue" name="defaultValue">
+              </mat-form-field>
+            </div>
+            <div class="col-2" *ngIf="editFieldType=='date'">
+              <mat-form-field style="width: 100%;" appearance="fill">
+                <mat-label>Default Value</mat-label>
+                <input matInput [matDatepicker]="additFld_i" [(ngModel)]="editDefaultValue" name="defaultValue">
+                <mat-datepicker-toggle matSuffix [for]="additFld_i"></mat-datepicker-toggle>
+                <mat-datepicker #additFld_i></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <mat-checkbox #Checkbox1 class="example-margin" [(ngModel)]="editMandatory" (ngModelChange)="mandatory"
+                name="mandatory">Mandatory</mat-checkbox>&nbsp;
+            </div>
+          </div>
+
+          <br />
+          <div class="row" style="float: right">
+            <button mat-icon-button color="warn" aria-label="delete" title="Delete " (click)="deleteField(i)">
+              Delete
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-icon-button color="accent" aria-label="Edit" [disabled]="!editFname || !editFieldType"
+              (click)="submitEditField()" color="accent" title="save ">
+              Update</button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+    <!-- accordian for showing current fields and its edit option ends here -->
+    <br />
+  </div>
+</div>

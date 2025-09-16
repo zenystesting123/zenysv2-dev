@@ -1,0 +1,11 @@
+<!-- showing how many customers are uploaded and remaining numbers -->
+<h3 style="font-size: 20px;">
+    You can't add {{this.value.uploadNo}} more customers ,You can add only {{this.value.pendingNo}} more in your free package
+    
+</h3>
+<br>
+<!-- reponse button starts here -->
+<div class="rig">
+    <button mat-button color="accent" (click)="pay()" >Upgrade to Premium Now</button> &nbsp;&nbsp;
+    <button mat-button color="basic" (click)="close()">Close</button>
+  </div>

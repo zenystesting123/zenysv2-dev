@@ -1,0 +1,85 @@
+<div class="container-fluid" style="align-items: center">
+  <br />
+  <h2 style="color: #3a9efd;align-items: center;text-align: center;">Settings</h2>
+  <div class="row align-items-start">
+    <div class="col-md-4 col-lg-4 col-sm-12">
+      <div class="input-group">
+        <!-- SELECT CURRENY -->
+        <mat-form-field appearance="fill" style="text-align: center">
+          <mat-label>Currency</mat-label>
+          <mat-select name="currency" required #currency="ngModel" [(ngModel)]="currencyTemp">
+            <mat-option value="{{ currency.isoCode }}" *ngFor="let currency of currencyList">{{ currency.currencyName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- INCLUDE UNIT CHECK BOX -->
+    <div class="col flex-column mb-2">
+      <div class="checkbox">
+        <mat-checkbox class="example-margin" id="checkbox6" name="includeUnit" #isActived="ngModel"
+          [(ngModel)]="includeUnitTemp">Include Unit
+        </mat-checkbox>
+      </div>
+    </div>
+      <!-- INCLUDE DISCOUNT CHECK BOX -->
+    <div class="col flex-column mb-2">
+      <div class="checkbox">
+        <mat-checkbox class="example-margin" id="checkboxDiscount" name="includeDiscount" #isActiv="ngModel"
+          [(ngModel)]="includeDiscountTemp">Include Discount
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <!-- INCLUDE TAX CHECK BOX -->
+  <div class="row align-items-start">
+    <div class="col flex-column mb-2">
+      <div class="checkbox">
+        <mat-checkbox class="example-margin" id="checkbox1" name="includetax" #isActiv="ngModel"
+          [(ngModel)]="includeTaxTemp">Include Tax
+        </mat-checkbox>
+      </div>
+    </div>
+  <!-- INCLUDE TAX TYPE CHECK BOX -->
+    <div class="col flex-column mb-1" *ngIf="includeTaxTemp == true">
+      <mat-form-field appearance="fill" style="text-align: center">
+        <mat-label>Tax Type</mat-label>
+        <mat-select name="taxType" required #taxType="ngModel" [(ngModel)]="taxTypeTemp">
+          <mat-option value="gst">GST</mat-option>
+          <mat-option value="vat" (click)="onVat()">VAT</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  <!-- INCLUDE IGST CHECK BOX -->
+    <div class="col flex-column mb-2" *ngIf="includeTaxTemp == true && taxTypeTemp == 'gst'">
+      <div class="checkbox">
+        <mat-checkbox class="example-margin" id="checkbox3" name="interstate" #isActivess="ngModel"
+          [(ngModel)]="interStateTemp">Apply IGST (Interstate Sale)</mat-checkbox>
+      </div>
+    </div>
+      <!-- INCLUDE CESS CHECK BOX -->
+    <div class="col flex-column mb-2" *ngIf="includeTaxTemp == true && taxTypeTemp == 'gst'">
+      <div class="checkbox">
+        <mat-checkbox class="example-margin" id="checkbox2" name="includecess" #isActivs="ngModel"
+          [(ngModel)]="includeCessTemp">Include Cess
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+  <!-- ON SUBMIT -->
+  <div class="d-flex bd-highlight">
+    <div class="p-2 flex-fill bd-highlight" (click)="onSubmit()" style="text-align: center">
+      <div class="toolbar-icon">
+        <mat-icon color="accent">done</mat-icon>
+      </div>
+      <div class="toolbar-icon-text">Done</div>
+    </div>
+<!-- ON CLOSE  -->
+    <div class="p-2 flex-fill bd-highlight" (click)="closeComponentSheetMenu()" style="text-align: center">
+      <div class="toolbar-icon">
+        <mat-icon color="accent">close</mat-icon>
+      </div>
+      <div class="toolbar-icon-text">Close</div>
+    </div>
+  </div>
+</div>

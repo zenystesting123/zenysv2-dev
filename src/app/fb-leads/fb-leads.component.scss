@@ -1,0 +1,25 @@
+.matList{
+    height: 80%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display:block !important;
+}
+.mat-form-field{
+    width: 90%;
+}
+.searchInput{
+    width: 90%;
+}
+
+.no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+
+.mat-tab-body-content{
+    padding-top: 0px !important;
+}

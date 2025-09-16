@@ -1,0 +1,325 @@
+<!-- <div class="container-fluid"
+  style="background:linear-gradient(to right, #303F9F 0%,RoyalBlue 100%);height: 100px;  position: relative;">
+  <br>
+  <div class="container-lg ">
+    <div class="d-flex justify-content-between">
+      <div class="mr-auto p-2  flex-grow-1 ">
+        <h2 style="color: white;font-size: 36px;">Contacts Dashboard
+        </h2>
+      </div>
+    </div>
+  </div>
+</div> -->
+<mat-toolbar>
+  <span>Leads to Customer Dashboard</span> &nbsp;&nbsp;
+</mat-toolbar>
+
+<mat-progress-bar
+  *ngIf="
+    !customerLoaded || !opportunityLoaded || !prospectLoaded || !leadLoaded
+  "
+  mode="indeterminate"
+></mat-progress-bar>
+
+<div
+  class="container-fluid"
+  style="
+    background: linear-gradient(to right, #303f9f 0%, RoyalBlue 100%);
+    height: 200px;
+    position: relative;
+  "
+>
+  <br />
+  <div
+    class="container-xl"
+    *ngIf="customerLoaded && opportunityLoaded && prospectLoaded && leadLoaded"
+  >
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Month wise inquiries</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="inquiryOptions.series"
+              [colors]="inquiryOptions.colors"
+              [chart]="inquiryOptions.chart"
+              [xaxis]="inquiryOptions.xaxis"
+              [yaxis]="inquiryOptions.yaxis"
+              [dataLabels]="inquiryOptions.dataLabels"
+              [stroke]="inquiryOptions.stroke"
+              [grid]="inquiryOptions.grid"
+              [tooltip]="inquiryOptions.tooltip"
+              [plotOptions]="inquiryOptions.plotOptions"
+              [fill]="inquiryOptions.fill"
+              [legend]="inquiryOptions.legend"
+              [labels]="inquiryOptions.labels"
+              [markers]="inquiryOptions.markers"
+              [theme]="inquiryOptions.theme"
+              [responsive]="inquiryOptions.responsive"
+            ></apx-chart>
+            <button mat-button color="accent" (click)="onInquiry()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Month wise contact addition</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="customerOptions.series"
+              [colors]="customerOptions.colors"
+              [chart]="customerOptions.chart"
+              [xaxis]="customerOptions.xaxis"
+              [yaxis]="customerOptions.yaxis"
+              [title]="customerOptions.title"
+              [dataLabels]="customerOptions.dataLabels"
+              [stroke]="customerOptions.stroke"
+              [grid]="customerOptions.grid"
+              [tooltip]="customerOptions.tooltip"
+              [plotOptions]="customerOptions.plotOptions"
+              [fill]="customerOptions.fill"
+              [legend]="customerOptions.legend"
+              [labels]="customerOptions.labels"
+              [markers]="customerOptions.markers"
+              [theme]="customerOptions.theme"
+              [responsive]="customerOptions.responsive"
+            ></apx-chart>
+            <button mat-button color="accent" (click)="onContactFunnel()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Customer Funnel</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="customerfunnelOptions.series"
+              [colors]="customerfunnelOptions.colors"
+              [chart]="customerfunnelOptions.chart"
+              [xaxis]="customerfunnelOptions.xaxis"
+              [yaxis]="customerfunnelOptions.yaxis"
+              [title]="customerfunnelOptions.title"
+              [dataLabels]="customerfunnelOptions.dataLabels"
+              [stroke]="customerfunnelOptions.stroke"
+              [grid]="customerfunnelOptions.grid"
+              [tooltip]="customerfunnelOptions.tooltip"
+              [plotOptions]="customerfunnelOptions.plotOptions"
+              [fill]="customerfunnelOptions.fill"
+              [legend]="customerfunnelOptions.legend"
+              [labels]="customerfunnelOptions.labels"
+              [markers]="customerfunnelOptions.markers"
+              [theme]="customerfunnelOptions.theme"
+              [responsive]="customerfunnelOptions.responsive"
+            >
+            </apx-chart>
+            <button mat-button color="accent" (click)="onContactFunnel()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Leads by age</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="leadOptions.series"
+              [colors]="leadOptions.colors"
+              [chart]="leadOptions.chart"
+              [xaxis]="leadOptions.xaxis"
+              [yaxis]="leadOptions.yaxis"
+              [title]="leadOptions.title"
+              [dataLabels]="leadOptions.dataLabels"
+              [stroke]="leadOptions.stroke"
+              [grid]="leadOptions.grid"
+              [tooltip]="leadOptions.tooltip"
+              [plotOptions]="leadOptions.plotOptions"
+              [fill]="leadOptions.fill"
+              [legend]="leadOptions.legend"
+              [labels]="leadOptions.labels"
+              [markers]="leadOptions.markers"
+              [theme]="leadOptions.theme"
+              [responsive]="leadOptions.responsive"
+            >
+            </apx-chart>
+            <button mat-button color="accent" (click)="onLeadReport()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Prospects by age</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="prospectOptions.series"
+              [colors]="prospectOptions.colors"
+              [chart]="prospectOptions.chart"
+              [xaxis]="prospectOptions.xaxis"
+              [yaxis]="prospectOptions.yaxis"
+              [title]="prospectOptions.title"
+              [dataLabels]="prospectOptions.dataLabels"
+              [stroke]="prospectOptions.stroke"
+              [grid]="prospectOptions.grid"
+              [tooltip]="prospectOptions.tooltip"
+              [plotOptions]="prospectOptions.plotOptions"
+              [fill]="prospectOptions.fill"
+              [legend]="prospectOptions.legend"
+              [labels]="prospectOptions.labels"
+              [markers]="prospectOptions.markers"
+              [theme]="prospectOptions.theme"
+              [responsive]="prospectOptions.responsive"
+            >
+            </apx-chart>
+            <button mat-button color="accent" (click)="onProspectReport()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Opportunity by age</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="opportunityOptions.series"
+              [colors]="opportunityOptions.colors"
+              [chart]="opportunityOptions.chart"
+              [xaxis]="opportunityOptions.xaxis"
+              [yaxis]="opportunityOptions.yaxis"
+              [title]="opportunityOptions.title"
+              [dataLabels]="opportunityOptions.dataLabels"
+              [stroke]="opportunityOptions.stroke"
+              [grid]="opportunityOptions.grid"
+              [tooltip]="opportunityOptions.tooltip"
+              [plotOptions]="opportunityOptions.plotOptions"
+              [fill]="opportunityOptions.fill"
+              [legend]="opportunityOptions.legend"
+              [labels]="opportunityOptions.labels"
+              [markers]="opportunityOptions.markers"
+              [theme]="opportunityOptions.theme"
+              [responsive]="opportunityOptions.responsive"
+            >
+            </apx-chart>
+            <button mat-button color="accent" (click)="onOpportunityReport()">
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Lead Follow Ups</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              [series]="followupOptions.series"
+              [colors]="followupOptions.colors"
+              [chart]="followupOptions.chart"
+              [xaxis]="followupOptions.xaxis"
+              [yaxis]="followupOptions.yaxis"
+              [title]="followupOptions.title"
+              [dataLabels]="followupOptions.dataLabels"
+              [stroke]="followupOptions.stroke"
+              [grid]="followupOptions.grid"
+              [tooltip]="followupOptions.tooltip"
+              [plotOptions]="followupOptions.plotOptions"
+              [fill]="followupOptions.fill"
+              [legend]="followupOptions.legend"
+              [labels]="followupOptions.labels"
+              [markers]="followupOptions.markers"
+              [theme]="followupOptions.theme"
+              [responsive]="followupOptions.responsive"
+            >
+            </apx-chart>
+            <button
+              mat-button
+              color="accent"
+              (click)="onContactReportNoFolowUp()"
+            >
+              VIEW REPORT
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br />
+
+    <div class="row">
+      <div class="col">
+        <div *ngIf="!inquiryFlag">
+          <div *ngFor="let in of inquiries; let last = last; let i = index">
+            {{ inquiryValue(in.month, in.year) }}
+          </div>
+          {{ inquiryChart() }}
+        </div>
+
+        <div *ngIf="!leadFlag">
+          <div *ngFor="let l of leads; let last = last; let i = index">
+            {{ leadsvalue(l?.leadStageDate) }}
+          </div>
+          {{ leadsChart() }}
+        </div>
+      </div>
+      <div class="col">
+        <div *ngIf="!customerFlag">
+          <div *ngFor="let c of customers; let last = last; let i = index">
+            {{ customerValue(c.month, c.createdYear) }}
+          </div>
+          {{ customerChart() }}
+        </div>
+
+        <div *ngIf="!prospectFlag">
+          <div *ngFor="let p of prospect; let last = last; let i = index">
+            {{ prospectvalue(p.prospStageDate) }}
+          </div>
+          {{ prospectChart() }}
+        </div>
+
+        <div *ngIf="!opportunityFlag">
+          <div *ngFor="let o of opportunity; let last = last; let i = index">
+            {{ opportunityvalue(o.oppStageDate) }}
+          </div>
+          {{ opportunityChart() }}
+        </div>
+        <div *ngIf="!followupFlag">
+          <div *ngFor="let l of leads; let last = last; let i = index">
+            {{ followupValue(l.followUpFlag) }}
+          </div>
+          {{ followupChart() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,760 @@
+<head>
+  <style type="text/css">
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-lg-12 col-md-12">
+      <div id="printsection" #printsection>
+        <section class="invoice-template"  id="downloadsection" #downloadsection
+        style="font-size: 14px;color: #212529;font-family: Arial, Helvetica, sans-serif;">
+          <div class="row">
+            <div class="col-12">
+              <div>
+                <div class="p-3">
+                  <div id="invoice-template" class="pb-0">
+                    <div class="col-12">
+                      <h1 class="text-uppercase" [style.color]="color1" style="font-size: 28px;">{{docData.docTitle}}</h1>
+                    </div>
+                    <div class="col-12" *ngIf="docData.docTitle == ''">
+                      <h1 class="text-uppercase" [style.color]="color1" style="font-size: 28px;"> {{docType}}</h1>
+                    </div>
+                    <br>
+                    <mat-divider [style.border-top-color]="color1"></mat-divider>
+                    <br>
+                    <!-- Invoice Company Details starts -->
+                    <div class="row d-flex align-items-center">
+
+                      <div class="col-8">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-4 " *ngIf="userData.logo">
+                            <img src="{{userData.logo}}" class="img-fluid" style="min-height: 100px;min-width: 150px;max-height: 100px;">
+                          </div>
+                          <div class="col-8">
+                            <ul class="m-0 list-unstyled" id="j">
+                              <b>
+                                <li>
+                                  <!-- class="text-bold-800"> -->
+                                  {{userData.yourcompanyname}}
+                                </li>
+                              </b>
+                              <li>
+                                <pre class="mb-0" style="font-size: 14px;">{{userData.youraddressline}}</pre>
+                              </li>
+                              <li *ngIf="userData.yourgst && docData.taxType == 'gst'">
+                                GST No: {{ userData.yourgst }}
+                              </li>
+                              <li *ngIf="userData.yourgst && docData.taxType != 'gst'">
+                                VAT No: {{ userData.yourgst }}
+                              </li>
+                            </ul>
+                          </div>
+                          <br>
+                        </div>
+                        <!--
+                        <div class="row">
+                          <div class="col-4 d-flex align-items-center" *ngIf="userData.logo">
+                            <img src="{{userData.logo}}" class="img-fluid">
+                          </div>
+                          <div class=" col-8 ">
+                            <ul class="m-0 list-unstyled" id="j">
+                              <b>
+                                <li style="margin-top: 60px;">
+
+                                  {{userData.yourcompanyname}}
+                                </li>
+                              </b>
+                              <li>
+                                <pre class="mb-0">{{userData.youraddressline}}</pre>
+                              </li>
+                            </ul>
+                            <p *ngIf="userData.yourgst">GST No: {{userData.yourgst}}
+                            </p>
+                          </div>
+
+                        </div>
+                        -->
+
+                        <div class="col-4">
+
+                        </div>
+                      </div>
+
+                      <div class="col-md-4 col-12" id="detial"
+                        >
+                        <div class="row d-flex  text-left border" style="border-radius: 5px;padding: 10px;margin-right: 20px;"
+                        *ngIf=" docData.invoiceno || docData.date || (docData.duedate && (docType=='Invoice' || docType=='Proforma Invoice')) || (docData.quatationreference && (docType=='Invoice' || docType=='Proforma Invoice')) || (docData.paymentterm && (docType=='Invoice' || docType=='Proforma Invoice')) || (docData.purchaseorder && (docType=='Invoice' || docType=='Proforma Invoice' || docType=='Purchase order')) ||  (docData.docValidity && (docType=='Quotation' || docType=='Estimate'))" >
+                        <ul class="m-0 list-unstyled" *ngIf="docType=='Proforma Invoice'">
+                          <li *ngIf="docData.invoiceno && docData.docTitle != '' ">Invoice No:
+                              {{docData.invoiceno}}</li>
+
+                          <li *ngIf="docData.date && docType == 'Proforma Invoice'">Invoice
+                              Date: {{docData.date | date }}
+
+                          <li *ngIf="docData.duedate && docType == 'Proforma Invoice'">Due
+                              Date: {{docData.duedate | date }}
+                          </li>
+
+                          <li
+                              *ngIf="docData.quatationreference  && docType == 'Proforma Invoice'">
+                              Quotation Ref: {{docData.quatationreference}}</li>
+                          <li *ngIf="docData.purchaseorder  && docType == 'Proforma Invoice'">
+                              P.O. Ref: {{docData.purchaseorder}} </li>
+                          <li *ngIf="docData.paymentterm  && docType == 'Proforma Invoice'">
+                              Payment Terms: {{docData.paymentterm}}</li>
+                      </ul>
+                   
+                      <ul class="m-0 list-unstyled" *ngIf="docType!='Proforma Invoice'">
+                          <li *ngIf="docData.invoiceno && docData.docTitle != '' ">{{docType}} No:
+                              {{docData.invoiceno}}</li>
+                          <li *ngIf="docData.invoiceno && docData.docTitle == '' "> {{docType}} No:
+                              {{docData.invoiceno}}</li>
+
+                          <li *ngIf="docData.date && docData.docTitle == '' "> {{docType}} Date:
+                              {{docData.date | date }}
+                          <li *ngIf="docData.date && docData.docTitle != '' ">{{docType}} Date:
+                              {{docData.date
+                              | date }}
+                          </li>
+                          <li
+                              *ngIf="docData.duedate  && docType == 'Invoice'">
+                              Due
+                              Date: {{docData.duedate | date }}
+                          </li>
+                          <li
+                          *ngIf="
+                          (docData.docValidity &&
+                            docData.docTitle != '' &&
+                            docType == 'Quotation') ||
+                            (docData.docValidity &&
+                            docData.docTitle != '' &&
+                            docType == 'Estimate') 
+                        ">
+                              Valid Till: {{docData.docValidity | date }}
+                          </li>
+                          <li
+                              *ngIf="docData.quatationreference   && docType == 'Invoice'">
+                              Quotation Ref: {{docData.quatationreference}}</li>
+                          <li
+                              *ngIf="docData.purchaseorder  && (docType == 'Invoice' || docType=='Purchase order' ) ">
+                              P.O. Ref: {{docData.purchaseorder}} </li>
+                          <li
+                              *ngIf="docData.paymentterm   && docType == 'Invoice'">
+                              Payment Terms: {{docData.paymentterm}}</li>
+                      </ul>
+                     
+                      </div>
+                   
+                    </div>
+                    </div>
+
+                    <!-- Invoice Company Details ends -->
+                    <br>
+                    <!-- <mat-divider></mat-divider> -->
+                    <div id="invoice-customer-details" class="row"
+                      *ngIf=" docType=='Invoice' || docType=='Quotation' || docType=='Estimate'">
+                      <div class="row">
+                        <div class="col-6 text-left">
+                          <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                          <ul class="m-0 list-unstyled" id="j" *ngIf="customerData.billcompanyname || customerData.billaddressline || customerData.billgst">
+                            <li class="text-bold-800" style="padding-bottom: 10px;">Billed To:</li>
+                            <b>
+                              <li style="padding-left: 20px;">
+                                <!-- class="text-bold-800 text-left"> -->
+                                {{customerData.billcompanyname}}
+                              </li>
+                            </b>
+                            <li style="padding-left: 20px;">
+                              <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{customerData.billaddressline}}</pre>
+                            </li>
+                            <li *ngIf="customerData.billgst && docData.taxType == 'gst'" style="padding-left: 20px;">
+                              GST No: {{ customerData.billgst }}
+                            </li>
+                            <li *ngIf="customerData.billgst && docData.taxType != 'gst'" style="padding-left: 20px;">
+                              VAT No: {{ customerData.billgst }}
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col-2"></div>
+
+
+                        <div class="col-4 text-left" *ngIf="customerData.delto ">
+                          <div>
+                            <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                            <ul class="m-0 list-unstyled" id="j">
+                              <li class="text-bold-800">Delivery Address:</li>
+
+                              <li style="padding-left: 20px;padding-top: 10px;">
+                                <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{customerData.deliveredto}}</pre>
+                              </li>
+
+                            </ul>
+
+                          </div>
+
+                        </div>
+
+
+
+                      </div>
+
+                      <!-- <div class="col-md-6 col-12 text-right"> -->
+
+                      <!-- <div class="col-md-5 col-12 text-left">
+          <ul class="m-0 list-unstyled">
+            <li *ngIf="docData.invoiceno">Invoice No:
+              {{docData.invoiceno}}</li>
+            <li *ngIf="docData.date">Invoice Date: {{docData.date}}
+            </li>
+            <li *ngIf="docData.duedate">Due Date: {{docData.duedate}}
+            </li>
+            <li *ngIf="docData.quatationreference">Quotation
+              Ref: {{docData.quatationreference}}</li>
+            <li *ngIf="docData.purchaseorder">P.O.
+              Ref: {{docData.purchaseorder}} </li>
+            <li *ngIf="docData.paymentterm">Payment
+              Terms: {{docData.paymentterm}}</li>
+          </ul>
+        </div> -->
+                    </div>
+
+                    <div id="invoice-customer-details" class="row" *ngIf="docType=='Proforma Invoice'">
+                      <div class="col-8 text-left">
+                        <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                        <ul class="m-0 list-unstyled" id="j"  *ngIf="customerData.billcompanyname || customerData.billaddressline || customerData.billgst">
+                          <li class="text-bold-800" style="padding-bottom: 10px;">Billed To:</li>
+                          <b>
+                            <li style="padding-left: 20px;">
+                              <!-- class="text-bold-800 text-left"> -->
+                              {{customerData.billcompanyname}}
+                            </li>
+                          </b>
+                          <li style="padding-left: 20px;">
+                            <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{customerData.billaddressline}}</pre>
+                          </li>
+                          <li *ngIf="customerData.billgst && docData.taxType == 'gst'" style="padding-left: 20px;">
+                            GST No: {{ customerData.billgst }}
+                          </li>
+                          <li *ngIf="customerData.billgst && docData.taxType != 'gst'" style="padding-left: 20px;">
+                            VAT No: {{ customerData.billgst }}
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-4 text-left">
+                        <div *ngIf="shipData.shipto">
+
+                          <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                          <ul class="m-0 list-unstyled" id="j">
+                            <li class="text-bold-800" style="padding-bottom: 10px;">Ship To:</li>
+
+                            <li style="padding-left: 20px;">
+                              {{shipData.shipcompanyname}}
+                            </li>
+
+                            <li style="padding-left: 20px;">
+                              <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{shipData.shipaddress}}</pre>
+                            </li>
+
+                            <li style="padding-left: 20px;">
+                              {{shipData.zip}}
+                            </li>
+
+                          </ul>
+
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-6 col-12 text-right"> -->
+                     
+                    </div>
+                    <!-- purchaseorder -->
+                    <div id="invoice-customer-details" class="row" *ngIf="docType=='Purchase order'">
+                      <div class="col-6 text-left">
+                        <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                        <ul class="m-0 list-unstyled" id="j"  *ngIf="customerData.billcompanyname || customerData.billaddressline || customerData.billgst">
+                          <li class="text-bold-800" style="padding-bottom: 10px;">Billed To:</li>
+                          <b>
+                            <li style="padding-left: 20px;">
+                              <!-- class="text-bold-800 text-left"> -->
+                              {{customerData.billcompanyname}}
+                            </li>
+                          </b>
+                          <li style="padding-left: 20px;">
+                            <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{customerData.billaddressline}}</pre>
+                          </li>
+                          <li *ngIf="customerData.billgst && docData.taxType == 'gst'" style="padding-left: 20px;">
+                            GST No: {{ customerData.billgst }}
+                          </li>
+                          <li *ngIf="customerData.billgst && docData.taxType != 'gst'" style="padding-left: 20px;">
+                            VAT No: {{ customerData.billgst }}
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-2 text-left"></div>
+                      <div class="col-4 text-left">
+                        <div *ngIf="shipData.shipto">
+
+                          <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                          <ul class="m-0 list-unstyled" id="j">
+                            <li class="text-bold-800" style="padding-bottom: 10px;">Ship To:</li>
+
+                            <li style="padding-left: 20px;">
+                              {{shipData.shipcompanyname}}
+                            </li>
+
+                            <li style="padding-left: 20px;">
+                              <pre class="mb-0" style="overflow:hidden;font-size: 14px;">{{shipData.shipaddress}}</pre>
+                            </li>
+
+                            <li style="padding-left: 20px;">
+                              {{shipData.zip}}
+                            </li>
+
+                          </ul>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <br>
+                    <div id="invoice-customer-details" class="row" *ngIf="docType=='Purchase order'">
+                      <div class="col-8 text-left">
+
+                      </div>
+                      <div class="col-4 text-left"
+                        *ngIf="shipData.requisition || shipData.shipvia || shipData.fob || shipData.shippingterms">
+                        <div>
+                          <ul class="m-0 list-unstyled" id="j">
+                            <li *ngIf="shipData.requisition">
+                              Requisitioner: {{shipData.requisition}}
+                            </li>
+                            <li *ngIf="shipData.shipvia">
+                             Ship via: {{shipData.shipvia}}
+                            </li>
+                            <li *ngIf="shipData.fob">
+                             F.O.B: {{shipData.fob}}
+                            </li>
+                            <li *ngIf="shipData.shippingterms">
+                             Shipping Terms: {{shipData.shippingterms}}
+                            </li>
+                          </ul>
+
+
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div id="invoice-customer-details" class="row" *ngIf="docType=='Proforma Invoice'">
+                      <div class="col-8 text-left" *ngIf="docData.country || docData.embarkation || docData.discharge">
+                        <div>
+                          <ul class="m-0 list-unstyled" id="j">
+                            <li *ngIf="docData.country">
+                              Country of Origin: {{docData.country}}
+                            </li>
+                            <li *ngIf="docData.embarkation">
+                              Port of Embarkation: {{docData.embarkation}}
+                            </li>
+                            <li *ngIf="docData.discharge">
+                              Port of Discharge: {{docData.discharge}}
+                            </li>
+                          </ul>
+
+
+                        </div>
+                      </div>
+                      <div class="col-4 text-left" *ngIf="shipData.shipdet">
+                        <div>
+
+                          <!-- <ul class="px-0 list-unstyled  " id="j"> -->
+                          <ul class="m-0 list-unstyled" id="j">
+                            <li class="text-bold-800" style="padding-bottom: 10px;">Shipping Details</li>
+
+                            <li *ngIf="shipData.frieghttype">
+                              Frieght Type: {{shipData.frieghttype}}
+                            </li>
+
+                            <li *ngIf="shipData.shipdate">
+                              Ship Date: {{shipData.shipdate |date}}
+                            </li>
+                            <li *ngIf="shipData.grossweight">
+                              Gross weight: {{shipData.grossweight}}
+                            </li>
+                            <li *ngIf="shipData.totalpackage">
+                              Total package: {{shipData.totalpackage}}
+                            </li>
+                          </ul>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  
+                    <div id="invoice-items-details">
+                      <br>
+                      <!--Line Item Section-->
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <!-- <tr id="tabheader" [style.background-color]="color1"> -->
+                            <th>No</th>
+                            <th>Item & Description</th>
+                            <th>Qty</th>
+                            <th *ngIf="docData.includeunit == true">Unit</th>
+                            <th>Rate</th>
+                            <th *ngIf="docData.includeDiscount">Discount %</th>
+                            <th *ngIf="
+                                docData.includetax == true &&
+                                docData.taxType == 'gst' &&
+                                docData.interstate != true
+                              ">
+                              SGST %
+                            </th>
+                            <th *ngIf="
+                                docData.includetax == true &&
+                                docData.taxType == 'gst' &&
+                                docData.interstate != true
+                              ">
+                              CGST %
+                            </th>
+                            <th *ngIf="
+                                docData.includetax == true &&
+                                docData.taxType == 'gst' &&
+                                docData.interstate == true
+                              ">
+                              IGST %
+                            </th>
+                            <th *ngIf="
+                                docData.includetax == true &&
+                                docData.includecess == true &&
+                                docData.taxType == 'gst'
+                              ">
+                              Cess %
+                            </th>
+                            <th *ngIf="
+                                docData.includetax == true &&
+                                docData.taxType == 'vat'
+                              ">
+                              VAT %
+                            </th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let i of itemList; index as in">
+                            <td id="tabrow">{{ in + 1 }}</td>
+                            <td id="tabrow" style="max-width: 100px;">
+                              <p>{{ i.item }}</p>
+                              <pre class="mb-0" style="font-size: 14px">{{
+                                i.description
+                              }}</pre>
+                            </td>
+                            <td id="tabrow">{{ i.qty }}</td>
+                            <td *ngIf="docData.includeunit == true" id="tabrow">
+                              {{ i.unit }}
+                            </td>
+                            <td id="tabrow">{{ i.rate }}</td>
+
+                            <td id="tabrow" *ngIf="docData.includeDiscount">
+                              {{ i.discountRate + "%" }}
+
+                            </td>
+                            <td id="tabrow" *ngIf="
+                                docData.includetax == true &&
+                                docData.interstate != true &&
+                                docData.taxType == 'gst'
+                              ">
+                              {{ i.sgstRate + "%" }}
+                            </td>
+                            <td id="tabrow" *ngIf="
+                                docData.includetax == true &&
+                                docData.interstate != true &&
+                                docData.taxType == 'gst'
+                              ">
+                              {{ i.cgstRate + "%" }}
+                            </td>
+                            <td id="tabrow" *ngIf="
+                                docData.includetax == true &&
+                                docData.interstate == true &&
+                                docData.taxType == 'gst'
+                              ">
+                              {{ i.igstRate + "%" }}
+                            </td>
+                            <td id="tabrow" *ngIf="
+                                docData.includetax == true &&
+                                docData.includecess == true &&
+                                docData.taxType == 'gst'
+                              ">
+                              {{ i.cessRate + "%" }}
+                            </td>
+                            <td id="tabrow" *ngIf="
+                                docData.includetax == true &&
+                                docData.taxType == 'vat'
+                              ">
+                              {{ i.vatRate + "%" }}
+                            </td>
+                            <td id="tabrow">
+                              {{ i.amountInclTax | number: "1.2-2" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!--Line Item Ends-->
+                    <br>
+                    <div class="row unbreak">
+                      <!-- <br> -->
+                      <!--Bank Account details and notes-->
+                      <div class="col-6 text-left">
+                        <div class="container-fluid  " *ngIf="docData.bankdetails"
+                          style="border-color: blue;
+                            border-width: 1px;
+                            border-radius: 5px; 
+                            padding: 10px;">
+                          <p style="font-weight: bold;">Bank Account Details:</p>
+                          <pre class="mb-0" style="font-size: 14px;padding-left: 10px;">{{docData.bankdetails}}</pre>
+                        </div>
+                        <!-- Here adding notes-->
+                        <br>
+                        <div class="col-12 align-items-center">
+                          <p *ngIf="docData.notes" style="font-weight: bold;">
+                            Notes
+                          </p>
+                          <div class="container-fluid " *ngIf="docData.notes" >
+                            <div class="terms-conditions mb-2">
+                              <pre class="mb-0" style="font-size: 14px;">{{docData.notes}}</pre>
+                            </div>
+                          </div>
+      
+                        </div>
+      
+                      </div>
+                      <!--Amount Summary-->
+                      <div class="col-6 text-left">
+                        <div class="row">
+                          <div class="col-6 text-left">
+                            <p style="font-weight: bold;">Item Summary</p>
+                          </div>
+                          <div class="col-6">
+                           
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6 text-left">
+                            <p>Total amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.total | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="row"
+                        *ngIf="docData.includeDiscount"
+                      >
+                        <div class="col-6 text-left">
+                          <p>Discount Amount:</p>
+                        </div>
+                        <div class="col-6">
+                          <p>
+                            {{ docData.currency + " "
+                            }}{{ docData.discountValue | number: "1.2-2" }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="row"
+                      *ngIf="docData.includeDiscount"
+                    >
+                      <div class="col-6 text-left">
+                        <p>Total After Discounts:</p>
+                      </div>
+                      <div class="col-6">
+                        <p>
+                          {{ docData.currency + " "
+                          }}{{ docData.discountedAmount | number: "1.2-2" }}
+                        </p>
+                      </div>
+                    </div>
+
+
+                        <div class="row"
+                          *ngIf="
+                            docData.includetax == true &&
+                            docData.interstate != true &&
+                            docData.taxType == 'gst'
+                          "
+                        >
+                          <div class="col-6 text-left">
+                            <p>SGST Amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.sgstvalue | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="row"
+                          *ngIf="
+                            docData.includetax == true &&
+                            docData.interstate != true &&
+                            docData.taxType == 'gst'
+                          "
+                        >
+                          <div class="col-6 text-left">
+                            <p>CGST Amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.cgstvalue | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="row"
+                          *ngIf="
+                            docData.includetax == true &&
+                            docData.interstate == true &&
+                            docData.taxType == 'gst'
+                          "
+                        >
+                          <div class="col-6 text-left">
+                            <p>IGST Amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.igstvalue | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="row"
+                          *ngIf="
+                            docData.includetax == true &&
+                            docData.includecess == true &&
+                            docData.taxType == 'gst'
+                          "
+                        >
+                          <div class="col-6 text-left">
+                            <p>Cess Amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.cessvalue | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="row"
+                          *ngIf="
+                            docData.includetax == true &&
+                            docData.taxType == 'vat'
+                          "
+                        >
+                          <div class="col-6 text-left">
+                            <p>VAT Amount:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.vatvalue | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="row" *ngIf="docData.includetax == true">
+                          <div class="col-6 text-left">
+                            <p>Total including Taxes:</p>
+                          </div>
+                          <div class="col-6">
+                            <p>
+                              {{ docData.currency + " "
+                              }}{{ docData.alltotal | number: "1.2-2" }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- Adding sign -->
+                        <br>
+                        <div class="row">
+                          <div class="col-2"></div>
+                          <div class="col-3 " *ngIf="userData.showSign"  >
+                            <img src="{{userData.signature}}" class="img-fluid" style="min-height: 100px;min-width: 150px;max-height: 100px;">
+                            <br>
+                          <p style="align-items: center;text-align: center;min-height: 100px;min-width: 150px;"> {{userData.signatoryname}}<br>{{
+                            userData.designation
+                          }}</p>
+                          </div>
+                        
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <!-- <mat-divider></mat-divider> -->
+              
+                    <!-- Notes and Signature-->
+                    <!-- <div class="row unbreak">
+
+                      <div class="col-8">
+                      </div>
+                      <div class="col-3">
+
+                      </div>
+                      <div class="col-1"></div>
+
+                    </div>
+                    <br> -->
+                                        <!-- <div class="col-md-4 col-sm-12 col-lg-4  ">
+                          <div class = "row text-right">
+                              <h5 style="text-align:center">{{userData.signatoryname}} </h5>
+                            </div>
+                            <div class = "row text-center">
+                              <p style="text-align:center">{{userData.designation}}</p>
+                            </div>
+                        </div> -->
+                  </div>
+                  <div style="text-align: center;" >
+                    <p style="font-size: 14px;color: black;" class="unbreak"   *ngIf="dbUserData.contactname ||dbUserData.contactno ||  dbUserData.email" id="fontsizereduce">
+                      <mat-divider [style.border-top-color]="color1"></mat-divider>
+                      <br>
+                      In case of any queries, please contact
+                      <span style="font-size: 14px;" *ngIf="dbUserData.contactname"> {{ dbUserData.contactname }} &nbsp;</span>
+                     
+                      <span style="font-size: 14px;" *ngIf="dbUserData.contactno">at &nbsp;</span>
+
+                      <span style="font-size: 14px;" *ngIf="dbUserData.contactno"
+                        >{{ dbUserData.contactno }} &nbsp;
+                      </span>
+                      <span style="font-size: 14px;" *ngIf="dbUserData.email"> or drop us an email at &nbsp;</span>
+
+                      <span  style="font-size: 14px;" *ngIf="dbUserData.email">{{
+                        dbUserData.email
+                      }}</span>
+                    </p>
+                  </div>
+                  <br>
+                  <mat-divider [style.border-top-color]="color1"></mat-divider>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+     
+
+    </div>
+  </div>
+</div>
+
+
+<!-- for pdfmake -->

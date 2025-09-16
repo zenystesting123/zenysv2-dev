@@ -1,0 +1,73 @@
+<!-- if baranch selected, display branch name with clear icon -->
+<div *ngIf="associatedBranch" class="p-1" >
+  <div class="d-flex flex-row bd-highlight">
+    <div class="bd-highlight" style="margin-top: auto; margin-bottom: auto">
+      <span
+        class="h3-dialog"
+        style="margin: auto; margin: auto; font-size: medium"
+        >Branch</span
+      >
+    </div>
+    <div
+      class="bd-highlight"
+    >
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight truncate-cell" style="margin: auto">
+          <span> {{ associatedBranchName }}</span>
+        </div>
+        <div class="bd-highlight">
+          <button
+            mat-icon-button
+            color="accent"
+            (click)="onClearBranch()"
+            title="change branch tagged"
+            [disabled]="!networkCheck.onNetworkCheck() || disableEdit"
+          >
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div   *ngIf="!associatedBranch || associatedBranch === null" class="p-1" >
+  <div class="d-flex flex-row bd-highlight">
+    <div class="bd-highlight" style="margin-top: auto; margin-bottom: auto">
+      <span
+        class="h3-dialog"
+        style="margin: auto; margin: auto; font-size: medium"
+        >Branch</span
+      >&nbsp;&nbsp;
+    </div>
+    <div
+      class="bd-highlight"
+    >
+    <form
+    class="example-form"
+    *ngIf="!associatedBranch || associatedBranch === null"
+  >
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Branch</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+          (click)="select(myControl.value)"
+        >
+          {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+    </div>
+  </div>
+</div>
+

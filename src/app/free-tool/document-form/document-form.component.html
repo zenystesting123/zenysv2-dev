@@ -1,0 +1,3308 @@
+<!-- Web size starts here -->
+<div class="container-xxl" *ngIf="!isMobilesize && !isLoaded">
+  <br />
+  <form #form="ngForm">
+    <div class="row">
+      <div class="col-lg-9">
+        <section id="basic-hidden-label-form-layouts">
+          <div class="row match-height">
+            <div class="col-lg-12 col-sm-12 col-md-12">
+              <mat-card>
+                <div class="card-body" style="padding-left: 1%; padding-right: 1%">
+                  <div class="row">
+                    <h1 mat-h1 style="align-items: center; text-align: center">
+                      Free Online {{ docData.docType }} Generator
+                    </h1>
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                      <div class="row">
+                        <!-- Document Title-->
+                        <mat-form-field class="example-full-width  justify-content-between" appearance="fill"
+                          style="align-items: center; text-align: center">
+                          <mat-label>Document Title</mat-label>
+                          <input matInput placeholder="Document Title" id="doc-title" name="invoice"
+                            style="align-items: center; text-align: center" #invoice="ngModel"
+                            [(ngModel)]="docData.docTitle" value="Invoice" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-12">
+                      <div class="container-fluid " style="padding-top:auto;padding-bottom: auto;">
+
+                        <a>
+                          <img style="cursor: pointer" src="assets/images/companylogo.png" alt="logo" height="250"
+                            class="img-thumbnail float-right" (click)="openLogo()" width="250" *ngIf="!logoPreview"
+                            title="Upload Logo" />
+                          <img [src]="logoPreview" alt="logo" height="250" width="250" (click)="openLogo()"
+                            *ngIf="logoPreview" />
+                        </a>
+                        <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+                          (change)="uploadLogo($event.target.files)" style="display: none"
+                          accept="image/png, image/jpeg" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-0">
+                      <div class="container-fluid border" style="border-radius: 5px">
+                        <!-- Document details -->
+                        <br>
+                        <h4 class="card-title">
+                          <span>{{ docData.docTitle }} Details</span>
+                        </h4>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>{{ docData.docTitle }} Prefix:</mat-label>
+                                <input type="text" matInput placeholder="eg: 2021/" name="prefix"
+                                  [(ngModel)]="docData.docPrefix" #prefix="ngModel" />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>{{ docData.docTitle }} No:</mat-label>
+                                <input type="number" matInput placeholder="{{ docData.docTitle }} No:" name="invoiceno"
+                                  [(ngModel)]="docData.docNumber" #invoiceno="ngModel" required />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>{{ docData.docTitle }} Date:</mat-label>
+                                <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="docData.docDate"
+                                  #date="ngModel" required />
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !date.valid) ||
+                              (!date.valid && (date.dirty || date.touched))
+                            ">
+                              Please enter a date!</mat-error>
+                          </div>
+                          <div class="col-6">
+                            <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Due Date</mat-label>
+                                <input matInput [matDatepicker]="picker" name="duedate" [(ngModel)]="docData.dueDate"
+                                  #duedate="ngModel" />
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                            <div *ngIf="
+                              docData.docType == 'Quotation' ||
+                              docData.docType == 'Estimate'
+                            " class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Valid Till:</mat-label>
+                                <input matInput [matDatepicker]="picker" name="docValidity"
+                                  [(ngModel)]="docData.docValidity" #docValidity="ngModel" />
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="docData.docType == 'Invoice'">
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="input-group mb-1">
+                                <mat-form-field class="example-full-width">
+                                  <mat-label>Quotation Ref:</mat-label>
+                                  <input matInput placeholder="Quotation Ref:" name="quatationalreference"
+                                    [(ngModel)]="docData.quoteRef" #quatationalreference="ngModel" />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="input-group mb-1">
+                                <mat-form-field class="example-full-width">
+                                  <mat-label>P.O Ref:</mat-label>
+                                  <input matInput placeholder="P.O Ref:" name="purchaseorder"
+                                    [(ngModel)]="docData.poRef" #purchaseorder="ngModel" />
+                                </mat-form-field>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Payment Terms</mat-label>
+                            <input matInput placeholder="Payment Terms" name="paymentterm"
+                              [(ngModel)]="docData.paymentTerm" #paymentterm="ngModel" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <br />
+
+                    </div>
+                  </div>
+                  <mat-divider></mat-divider>
+                  <br>
+                  <div class="row align-items-center">
+                    <div class="col-sm-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-md-7 col-lg-7 col-sm-12"></div>
+                    <div class="col-md-1 col-lg-1 col-sm-12"></div>
+                  </div>
+                  <mat-accordion>
+                    <mat-expansion-panel [expanded]="true" (opened)="panelOpenState1 = true"
+                      (closed)="panelOpenState1 = true">
+                      <mat-expansion-panel-header>
+                        <!-- Billed from address -->
+                        <mat-panel-title> Buyer & Seller details </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                          <div class="container-fluid border" style="border-radius: 5px;">
+                            <br>
+                            <h4 class="card-title">Billed By</h4>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Company Name</mat-label>
+                                <input matInput placeholder="Your Company Name" name="yourcompanyname"
+                                  [(ngModel)]="this.userData.companyName" #yourcompanyname="ngModel" minlength="2"
+                                  required maxlength="60" />
+                              </mat-form-field>
+                              <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true && !yourcompanyname.valid) ||
+                                (!yourcompanyname.valid &&
+                                  (yourcompanyname.dirty ||
+                                    yourcompanyname.touched))
+                              ">
+                                Please enter your company name!</mat-error>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line 1</mat-label>
+                                <input matInput placeholder="Address Line1" name="youraddressline1"
+                                  [(ngModel)]="userData.addressline1" #youraddressline1="ngModel" minlength="3"
+                                  maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !youraddressline1.valid) ||
+                              (!youraddressline1.valid &&
+                                (youraddressline1.dirty ||
+                                  youraddressline1.touched))
+                            ">
+                              Please enter a valid address!</mat-error>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line 2</mat-label>
+                                <input matInput placeholder="Address Line2" name="youraddressline2"
+                                  [(ngModel)]="userData.addressline2" #youraddressline2="ngModel" minlength="3"
+                                  maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !youraddressline2.valid) ||
+                              (!youraddressline2.valid &&
+                                (youraddressline2.dirty ||
+                                  youraddressline2.touched))
+                            ">
+                              Please enter a valid Address!</mat-error>
+                            <div class="row">
+                              <div class="col-8">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>City</mat-label>
+                                    <input matInput placeholder="City" name="city" [(ngModel)]="userData.city"
+                                      #city="ngModel" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !city.valid) ||
+                                  (!city.valid && (city.dirty || city.touched))
+                                ">
+                                  Required!</mat-error>
+                              </div>
+                              <div class="col-4">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>PIN/ ZIP</mat-label>
+                                    <input matInput placeholder="PIN/ ZIP" name="yourpincode"
+                                      [(ngModel)]="userData.pinCode" #yourpincode="ngModel" minlength="4"
+                                      maxlength="12" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !yourpincode.valid) ||
+                                  (!yourpincode.valid &&
+                                    (yourpincode.dirty || yourpincode.touched))
+                                ">
+                                  Required!</mat-error>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>State</mat-label>
+                                    <input matInput placeholder="State" name="statefrom" #statefrom="ngModel"
+                                      [(ngModel)]="userData.state" minlength="3" maxlength="50" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !statefrom.valid) ||
+                                  (!statefrom.valid &&
+                                    (statefrom.dirty || statefrom.touched))
+                                ">
+                                  Please enter a valid state!</mat-error>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>Country</mat-label>
+                                    <input matInput placeholder="Country" name="yourcountry"
+                                      [(ngModel)]="userData.country" #yourcountry="ngModel" minlength="2" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !yourcountry.valid) ||
+                                  (!yourcountry.valid &&
+                                    (yourcountry.dirty || yourcountry.touched))
+                                ">
+                                  Please enter a valid country!</mat-error>
+                              </div>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Tax Identification/ GST/ VAT No</mat-label>
+                                <input matInput placeholder="Tax Identificatio/ GST/ VAT" name="yourgst"
+                                  [(ngModel)]="userData.gst" #yourgst="ngModel" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !yourgst.valid) ||
+                              (!yourgst.valid &&
+                                (yourgst.dirty || yourgst.touched))
+                            ">
+                              Please provide tax identificaiton number</mat-error>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                          <div class="container-fluid border" style="border-radius: 5px;">
+                            <br>
+                            <!-- Billed to and document details-->
+                            <div class="row">
+                              <div class="col-8">
+                                <h4 class="card-title">Billed To</h4>
+                              </div>
+                              <div class="col-4" *ngIf="
+                                scenario == 'create' &&
+                                customerData.custID == 'na'
+                              ">
+                                <div style="float: right"></div>
+                              </div>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Company Name/ Contact Name</mat-label>
+                                <input matInput placeholder="Contact Name" name="billContactname"
+                                  [(ngModel)]="customerData.fname1" #billContactname="ngModel" minlength="3" required
+                                  maxlength="60" />
+                              </mat-form-field>
+                              <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true && !billContactname.valid) ||
+                                (!billContactname.valid &&
+                                  (billContactname.dirty ||
+                                  billContactname.touched))
+                              ">
+                                Please enter a valid name!</mat-error>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line1</mat-label>
+                                <input matInput placeholder="Address Line1" name="billaddressline1"
+                                  [(ngModel)]="customerData.addressline1" #billaddressline1="ngModel" minlength="3"
+                                  maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !billaddressline1.valid) ||
+                              (!billaddressline1.valid &&
+                                (billaddressline1.dirty ||
+                                  billaddressline1.touched))
+                            ">
+                              Please enter a valid address!</mat-error>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line2</mat-label>
+                                <input matInput placeholder="Address Line2" name="billaddressline2"
+                                  [(ngModel)]="customerData.addressline2" #billaddressline2="ngModel" minlength="3"
+                                  maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !billaddressline2.valid) ||
+                              (!billaddressline2.valid &&
+                                (billaddressline2.dirty ||
+                                  billaddressline2.touched))
+                            ">
+                              Please enter a valid address!</mat-error>
+                            <div class="row">
+                              <div class="col-md-8">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>District</mat-label>
+                                    <input matInput placeholder="District" name="billdistrict"
+                                      [(ngModel)]="customerData.district" #billdistrict="ngModel" minlength="3"
+                                      maxlength="50" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !billdistrict.valid) ||
+                                  (!billdistrict.valid &&
+                                    (billdistrict.dirty ||
+                                      billdistrict.touched))
+                                ">
+                                  Please enter a valid district!</mat-error>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>PIN/ ZIP</mat-label>
+                                    <input matInput placeholder="PIN/ ZIP" name="billpincode"
+                                      [(ngModel)]="customerData.pinCode" #billpincode="ngModel" minlength="4"
+                                      maxlength="12" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !billpincode.valid) ||
+                                  (!billpincode.valid &&
+                                    (billpincode.dirty || billpincode.touched))
+                                ">
+                                  Required!</mat-error>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>State</mat-label>
+                                    <input matInput placeholder="State" name="stateto" #stateto="ngModel"
+                                      [(ngModel)]="customerData.state" minlength="3" maxlength="50" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !stateto.valid) ||
+                                  (!stateto.valid &&
+                                    (stateto.dirty || stateto.touched))
+                                ">
+                                  Please enter a valid state!</mat-error>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>Country</mat-label>
+                                    <input matInput placeholder="Country" name="billcountry"
+                                      [(ngModel)]="customerData.country" #billcountry="ngModel" minlength="2" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !billcountry.valid) ||
+                                  (!billcountry.valid &&
+                                    (billcountry.dirty || billcountry.touched))
+                                ">
+                                  Please enter a valid country!</mat-error>
+                              </div>
+                            </div>
+
+
+
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Tax identification No - GST/ VAT</mat-label>
+                                <input matInput placeholder="Tax identification No - GST/ VAT" name="billgst"
+                                  #billgst="ngModel" [(ngModel)]="customerData.gst" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !billgst.valid) ||
+                              (!billgst.valid &&
+                                (billgst.dirty || billgst.touched))
+                            ">
+                              Please provide tax identification no</mat-error>
+                          </div>
+                          <div class="col-md-5 col-lg-5 col-sm-12"></div>
+                        </div>
+                      </div>
+                      <br>
+
+                      <div class="row align-items-center">
+                        <div class="row">
+                          <div class="col-3">
+                            <mat-checkbox class="example-margin" name="isDeliveryAddressPresent"
+                              (click)="clearDeliveryAddress()" #isDeliveryAddressPresent="ngModel"
+                              [(ngModel)]="customerData.isDeliveryAddressPresent" id="isDeliveryAddressPresent">Show
+                              Delivery Address
+                            </mat-checkbox>
+                          </div>
+                          <div class="col-3" *ngIf="customerData.isDeliveryAddressPresent">
+                            <button mat-button color="primary" (click)="copyDeliveryAddress()">Copy Bill to
+                              Address</button>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12" *ngIf="customerData.isDeliveryAddressPresent">
+                          <div class="container-fluid border" style="border-radius: 5px;">
+                            <br>
+                            <!-- Billed to and document details-->
+                            <div class="row">
+                              <div class="col-8">
+                                <h4 class="card-title">Delivered To</h4>
+                              </div>
+                              <div class="col-4">
+                                <div style="float: right"></div>
+                              </div>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Contact Name</mat-label>
+                                <input matInput placeholder="Contact Name" name="deliveryContactName"
+                                  [(ngModel)]="customerData.deliveryContactName" #deliveryContactName="ngModel"
+                                  minlength="3" maxlength="60" />
+                              </mat-form-field>
+                              <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true && !deliveryContactName.valid) ||
+                                (!deliveryContactName.valid &&
+                                  (deliveryContactName.dirty ||
+                                  deliveryContactName.touched))
+                              ">
+                                Please enter a valid name!</mat-error>
+                            </div>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line1</mat-label>
+                                <input matInput placeholder="Address Line1" name="deliveryAddressline1"
+                                  [(ngModel)]="customerData.deliveryAddressline1" #deliveryAddressline1="ngModel"
+                                  minlength="3" maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !deliveryAddressline1.valid) ||
+                              (!deliveryAddressline1.valid &&
+                                (deliveryAddressline1.dirty ||
+                                deliveryAddressline1.touched))
+                            ">
+                              Please enter a valid address!</mat-error>
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Address Line2</mat-label>
+                                <input matInput placeholder="Address Line2" name="deliveryAddressline2"
+                                  [(ngModel)]="customerData.deliveryAddressline2" #deliveryAddressline2="ngModel"
+                                  minlength="3" maxlength="100" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                              (submitted == true && !deliveryAddressline2.valid) ||
+                              (!deliveryAddressline2.valid &&
+                                (deliveryAddressline2.dirty ||
+                                deliveryAddressline2.touched))
+                            ">
+                              Please enter a valid address!</mat-error>
+                            <div class="row">
+                              <div class="col-md-8">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>District</mat-label>
+                                    <input matInput placeholder="District" name="deliveryDistrict"
+                                      [(ngModel)]="customerData.deliveryDistrict" #deliveryDistrict="ngModel"
+                                      minlength="3" maxlength="50" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !deliveryDistrict.valid) ||
+                                  (!deliveryDistrict.valid &&
+                                    (deliveryDistrict.dirty ||
+                                    deliveryDistrict.touched))
+                                ">
+                                  Please enter a valid district!</mat-error>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>PIN/ ZIP</mat-label>
+                                    <input matInput placeholder="PIN/ ZIP" name="deliveryPinCode"
+                                      [(ngModel)]="customerData.deliveryPinCode" #deliveryPinCode="ngModel"
+                                      minlength="4" maxlength="12" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !deliveryPinCode.valid) ||
+                                  (!deliveryPinCode.valid &&
+                                    (deliveryPinCode.dirty || deliveryPinCode.touched))
+                                ">
+                                  Required!</mat-error>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>State</mat-label>
+                                    <input matInput placeholder="State" name="deliveryState" #deliveryState="ngModel"
+                                      [(ngModel)]="customerData.deliveryState" minlength="3" maxlength="50" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !deliveryState.valid) ||
+                                  (!deliveryState.valid &&
+                                    (deliveryState.dirty || deliveryState.touched))
+                                ">
+                                  Please enter a valid state!</mat-error>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>Country</mat-label>
+                                    <input matInput placeholder="Country" name="deliveryCountry"
+                                      [(ngModel)]="customerData.deliveryCountry" #deliveryCountry="ngModel"
+                                      minlength="2" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                  (submitted == true && !deliveryCountry.valid) ||
+                                  (!deliveryCountry.valid &&
+                                    (deliveryCountry.dirty || deliveryCountry.touched))
+                                ">
+                                  Please enter a valid country!</mat-error>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>Country Code</mat-label>
+                                    <mat-select (selectionChange)="(customerData.deliverycountryCode)"
+                                      #deliverycountryCode="ngModel" [(ngModel)]="customerData.deliverycountryCode"
+                                      name="deliverycountryCode">
+                                      <mat-option *ngFor="let countryCode of CountryCodes"
+                                        [value]="countryCode.dial_code">
+                                        {{ countryCode.code }}&nbsp;{{
+                                        countryCode.dial_code
+                                        }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                    (submitted == true && !deliverycountryCode.valid) ||
+                                    (!deliverycountryCode.valid && (deliverycountryCode.dirty || deliverycountryCode.touched))
+                                  ">
+                                  Please enter Country code</mat-error>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="input-group mb-1">
+                                  <mat-form-field class="example-full-width">
+                                    <mat-label>Contact Number</mat-label>
+                                    <input type="number" matInput placeholder="Contact Number"
+                                      name="deliveryContactNumber" #deliveryContactNumber="ngModel"
+                                      [(ngModel)]="customerData.deliveryContactNumber" />
+                                  </mat-form-field>
+                                </div>
+                                <mat-error class="form-text text-muted danger" *ngIf="
+                                      (submitted == true && !deliveryContactNumber.valid) ||
+                                      (!deliveryContactNumber.valid && (deliveryContactNumber.dirty || deliveryContactNumber.touched))
+                                    ">
+                                  Please enter contact number</mat-error>
+                              </div>
+                            </div>
+
+
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Email</mat-label>
+                                <input matInput placeholder="Email" name="deliveryEmail" #deliveryEmail="ngModel"
+                                  [(ngModel)]="customerData.deliveryEmail" type="email" email />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                    (submitted == true && !deliveryEmail.valid) ||
+                                    (!deliveryEmail.valid && (deliveryEmail.dirty || deliveryEmail.touched))
+                                  ">
+                              Please enter email</mat-error>
+
+                          </div>
+                          <div class="col-md-5 col-lg-5 col-sm-12"></div>
+                        </div>
+                      </div>
+                      <!-- <hr class="hr-highlight" /> -->
+                    </mat-expansion-panel>
+                    <!-- Item details -->
+                    <mat-expansion-panel (opened)="panelOpenState2 = true" (closed)="panelOpenState2 = false">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Item Details </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div class="container-fluid" style="background-color: #3a9efd">
+                        <div class="row mt-3 mb-3 align-items-center" style="height: 40px; color: white">
+                          <div class="col-md-3">Item Name</div>
+                          <div class="col-md-1">Qty</div>
+                          <div class="col-md-1" *ngIf="docData.includeUnit == true">
+                            Unit
+                          </div>
+                          <div class="col-md-2">Rate</div>
+
+                          <div class="col-md-1" *ngIf="docData.includeDiscount">
+                            Discount%
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.taxType == 'vat'
+                            ">
+                            VAT%
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState != true &&
+                              docData.taxType == 'gst'
+                            ">
+                            CGST%
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState != true &&
+                              docData.taxType == 'gst'
+                            ">
+                            SGST%
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState == true &&
+                              docData.taxType == 'gst'
+                            ">
+                            IGST%
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.includeCess == true &&
+                              docData.taxType == 'gst'
+                            ">
+                            CESS%
+                          </div>
+                          <div class="col-md-1">Amount</div>
+                          <div class="col-md-1"></div>
+                        </div>
+                      </div>
+                      <div class="container-fluid" *ngFor="
+                          let line of lineItemForm.get('itemList')['controls'];
+                          let i = index;
+                          trackBy: identify
+                        ">
+                        <div class="row" id="padding">
+                          <div class="col-md-3">
+                            <div class="row" id="padding">
+                              <div class="input-group mb-1">
+                                <mat-form-field class="example-full-width">
+                                  <mat-label>Item Name</mat-label>
+                                  <input matInput placeholder="Item Name" [formControl]="line.controls.item"
+                                    [(ngModel)]="this.itemList[i].item" name="item" required />
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.item.valid) ||
+                                (!line.controls.item.valid &&
+                                  (line.controls.item.dirty ||
+                                    line.controls.item.touched))
+                              ">
+                              Required</mat-error>
+
+                          </div>
+                          <div class="col-md-1">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Qty</mat-label>
+                                <input matInput placeholder="Qty" type="number" [(ngModel)]="itemList[i].qty"
+                                  [formControl]="line.controls.qty" name="qty" required (ngModelChange)="getAmount(i)"
+                                  id="padding" appTwoDigitDecimaNumber decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.qty.valid) ||
+                                (!line.controls.qty.valid &&
+                                  (line.controls.qty.dirty ||
+                                    line.controls.qty.touched))
+                              ">
+                              Req</mat-error>
+                          </div>
+                          <div class="col-md-1" *ngIf="docData.includeUnit == true">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Unit</mat-label>
+                                <input matInput placeholder="Unit" type="text" [(ngModel)]="itemList[i].unit"
+                                  [formControl]="line.controls.unit" name="unit" id="padding" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.unit.valid) ||
+                                (!line.controls.unit.valid &&
+                                  (line.controls.unit.dirty ||
+                                    line.controls.unit.touched))
+                              ">
+                              Req</mat-error>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Rate</mat-label>
+                                <input matInput required placeholder="Rate" type="number" [(ngModel)]="itemList[i].rate"
+                                  [formControl]="line.controls.rate" name="rate" (ngModelChange)="getAmount(i)"
+                                  id="padding" appTwoDigitDecimaNumber decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.rate.valid) ||
+                                (!line.controls.rate.valid &&
+                                  (line.controls.rate.dirty ||
+                                    line.controls.rate.touched))
+                              ">
+                              Req</mat-error>
+                          </div>
+                          <div *ngIf="docData.includeDiscount" class="col-md-1">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Discount(%)</mat-label>
+                                <input matInput placeholder="Discount(%)" type="number"
+                                  [formControl]="line.controls.discountRate" [(ngModel)]="itemList[i].discountRate"
+                                  name="discount" required (ngModelChange)="getAmount(i)" id="padding"
+                                  appTwoDigitDecimaNumber decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.discountRate.valid) ||
+                                (!line.controls.discountRate.valid &&
+                                  (line.controls.discountRate.dirty ||
+                                    line.controls.discountRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState != true &&
+                              docData.taxType == 'gst'
+                            ">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>CGST(%)</mat-label>
+                                <input matInput placeholder="CGST(%)" type="number"
+                                  [formControl]="line.controls.cgstRate" [(ngModel)]="itemList[i].cgstRate" name="cgst"
+                                  required (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber
+                                  decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.cgstRate.valid) ||
+                                (!line.controls.cgstRate.valid &&
+                                  (line.controls.cgstRate.dirty ||
+                                    line.controls.cgstRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState != true &&
+                              docData.taxType == 'gst'
+                            ">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>SGST(%)</mat-label>
+                                <input matInput placeholder="SGST(%)" type="number"
+                                  [formControl]="line.controls.sgstRate" [(ngModel)]="itemList[i].sgstRate" name="sgst"
+                                  required (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber
+                                  decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.sgstRate.valid) ||
+                                (!line.controls.sgstRate.valid &&
+                                  (line.controls.sgstRate.dirty ||
+                                    line.controls.sgstRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.taxType == 'vat'
+                            ">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>VAT(%)</mat-label>
+                                <input matInput placeholder="VAT(%)" type="number" [formControl]="line.controls.vatRate"
+                                  [(ngModel)]="itemList[i].vatRate" name="vat" required (ngModelChange)="getAmount(i)"
+                                  id="padding" appTwoDigitDecimaNumber decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.vatRate.valid) ||
+                                (!line.controls.vatRate.valid &&
+                                  (line.controls.vatRate.dirty ||
+                                    line.controls.vatRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState == true &&
+                              docData.taxType == 'gst'
+                            ">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>IGST(%)</mat-label>
+                                <input matInput required placeholder="IGST(%)" type="number"
+                                  [formControl]="line.controls.igstRate" [(ngModel)]="itemList[i].igstRate" name="igst"
+                                  required (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber
+                                  decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.igstRate.valid) ||
+                                (!line.controls.igstRate.valid &&
+                                  (line.controls.igstRate.dirty ||
+                                    line.controls.igstRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+                          <div class="col-md-1" *ngIf="
+                              docData.includeTax == true &&
+                              docData.includeCess == true &&
+                              docData.taxType == 'gst'
+                            ">
+                            <div class="input-group mb-1">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>CESS(%)</mat-label>
+                                <input matInput placeholder="CESS(%)" type="number"
+                                  [formControl]="line.controls.cessRate" [(ngModel)]="itemList[i].cessRate" name="cess"
+                                  required (ngModelChange)="getAmount(i)" id="padding" appTwoDigitDecimaNumber
+                                  decimals="2" />
+                              </mat-form-field>
+                            </div>
+                            <mat-error class="form-text text-muted danger" *ngIf="
+                                (submitted == true &&
+                                  !line.controls.cessRate.valid) ||
+                                (!line.controls.cessRate.valid &&
+                                  (line.controls.cessRate.dirty ||
+                                    line.controls.cessRate.touched))
+                              ">
+                              required</mat-error>
+                          </div>
+                          <div class="col-md-1">
+                            <div class="input-group mb-1">
+                              <p id="paddingamount">
+                                {{ getAmount(i) }}
+                              </p>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group mb-1">
+                              <mat-form-field class="example-full-width" appearance="fill">
+                                <mat-label>Description</mat-label>
+                                <textarea matInput id="exampleFormControlTextarea1" rows="2" placeholder="Description"
+                                  [formControl]="line.controls.description" name="description"
+                                  [(ngModel)]="itemList[i].description" id="padding"></textarea>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="col-md-5">
+                          </div>
+                          <div class="col-md-1">
+                            <mat-icon-button *ngIf="itemList.length != 1" color="warn" (click)="deleteFieldValue(i)" style="cursor: pointer">
+                              <mat-icon color="warn">delete</mat-icon>
+                            </mat-icon-button>
+                          </div>
+                        </div>
+                        <hr>
+                      </div>
+
+                      <button mat-raised-button color="accent" (click)="addFieldValue()">
+                        Add Item
+                      </button>
+                      <br>
+                      <div class="row">
+                        <div class="col-sm-0 col-md-6 col-lg-6"></div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <h3>Item Summary</h3>
+                          <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">Total amount:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-9 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.total }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="docData.includeDiscount">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">Discount total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-9 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }}
+                                  {{ docData.discountValue }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="docData.includeDiscount">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">Total after discounts:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-9 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }}
+                                  {{ docData.discountedAmount }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row"
+                            *ngIf=" docData.includeTax == true && docData.interState != true && docData.taxType == 'gst' ">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">CGST total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-9 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.cgstValue }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState != true &&
+                              docData.taxType == 'gst'
+                            ">
+
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">SGST total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.sgstValue }}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-0 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-9 col-lg-9">
+
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="
+                              docData.includeTax == true &&
+                              docData.interState == true &&
+                              docData.taxType == 'gst'
+                            ">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="conatiner float-right">
+                                <p class="card-title">IGST total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-9 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.igstValue }}
+                                </p>
+                              </div>
+                            </div>
+
+
+                          </div>
+                          <div class="row" *ngIf="
+                          docData.includeTax == true &&
+                          docData.includeCess == true &&
+                          docData.taxType == 'gst'
+                        ">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">Cess total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.cessValue }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="
+                          docData.includeTax == true &&
+                          docData.taxType == 'vat'
+                        ">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">VAT total:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }} {{ docData.vatValue }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+
+
+
+                          <div class="row" *ngIf="docData.includeTax == true">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-left">
+                                <p class="card-title">Total including taxes:</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                              <div class="container float-right">
+                                <p>
+                                  {{ docData.currency }}
+                                  {{ docData.totalInclTax }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+
+
+                        </div>
+                      </div>
+
+                    </mat-expansion-panel>
+                    <mat-expansion-panel (opened)="panelOpenState3 = true" (closed)="panelOpenState3 = false">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          Additional Notes & Signature
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div class="row">
+                        <div class="col-sm-12 col-md-8 col-lg-8">
+                          <div class="form-group mb-1">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                              <mat-label>Additional Notes</mat-label>
+                              <textarea matInput placeholder="Additional Notes" name="notes" #notes="ngModel"
+                                [(ngModel)]="docData.notes"></textarea>
+                            </mat-form-field>
+                          </div>
+                          <div class="form-group mb-1">
+                            <mat-form-field class="example-full-width" appearance="fill">
+                              <mat-label>Bank Account Details</mat-label>
+                              <textarea matInput placeholder="Bank Account Details" name="bankdetails"
+                                [(ngModel)]="docData.bankDetails" #bankdetails="ngModel"></textarea>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                          <div class="container justify-content-center">
+                            <div class="
+                                input-group
+                                mb-3
+                                justify-content-center
+                                align-middle
+                              ">
+                              <div>
+                                <a>
+                                  <img [src]="signPreview" alt="signature" height="150" width="150"
+                                    class="img-thumbnail" (click)="openSignature()" *ngIf="signPreview" />
+                                  <img style="cursor: pointer" src="assets/images/signature.jpg" alt="signature"
+                                    class="img-thumbnail" height="150" (click)="openSignature()" width="150"
+                                    *ngIf="!signPreview" title="Upload Signature " />
+                                </a>
+                                <input type="file" class="custom-file-input sign-selector" id="inputGroupFileSign"
+                                  (change)="uploadSign($event.target.files)" style="display: none"
+                                  accept="image/png, image/jpeg" />
+                              </div>
+                            </div>
+                            <div class="input-group mb-1" *ngIf="signPreview">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Name</mat-label>
+                                <input matInput placeholder="Name" name="signatoryName" #signatoryName="ngModel"
+                                  [(ngModel)]="userData.signatoryName" />
+                              </mat-form-field>
+                            </div>
+                            <div class="input-group mb-1" *ngIf="signPreview">
+                              <mat-form-field class="example-full-width">
+                                <mat-label>Designation</mat-label>
+                                <input matInput placeholder="Designation" name="designation" #designation="ngModel"
+                                  [(ngModel)]="userData.designation" minlength="1" maxlength="15" />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <br />
+                        </div>
+                      </div>
+                      <div>
+                        <mat-divider></mat-divider>
+                        <br>
+                        <p>
+                          In case of queries, please contact
+                          <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input matInput placeholder="Name" name="contactname" id="centeralign"
+                              [(ngModel)]="userData.contactname" #contactname="ngModel" />
+                          </mat-form-field>
+                          at
+                          <mat-form-field>
+                            <mat-label>Contact No</mat-label>
+                            <input matInput placeholder="Contact No" [(ngModel)]="userData.contactno" id="centeralign"
+                              #contactno="ngModel" name="mobNo" minlength="10" maxlength="12" />
+                          </mat-form-field>
+                          or drop an email to
+                          <mat-form-field>
+                            <mat-label>Email</mat-label>
+                            <input matInput placeholder="Email" name="email" [(ngModel)]="userData.email"
+                              id="centeralign" #email="ngModel" />
+                          </mat-form-field>
+                        </p>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                  <br>
+                  <div>
+                    <!-- save ducumnt -->
+                    <button type="submit" mat-raised-button color="accent" id="type-error"
+                      [disabled]="!onCheckNetwork()" (click)="
+                        form.valid && lineItemForm.valid
+                          ? generateDocument()
+                          : TypeError()
+                      ">
+                      <i class="ft-check-square mr-1"></i>Save and Continue
+                    </button>
+                  </div>
+                  <br />
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- settings part -->
+      <div class="col-3">
+        <div *ngIf="isMessageOpen">
+          <mat-card>
+            <img mat-card-image src="assets/images/Free Sales Management App.png" alt="Zenys Free sign-up">
+            <mat-card-content>
+              <h3>
+                Sign up for our free CRM, Sales management, Invoicing and Collection tool!
+              </h3>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="onCloseCard()" title="Close">Close
+              </button>&nbsp;&nbsp;
+              <a target="_blank">
+                <button mat-raised-button (click)=onLogIn() color="accent">Try Now</button>
+              </a>
+            </mat-card-actions>
+          </mat-card>
+          <br>
+        </div>
+
+        <mat-card>
+          <mat-card-title>Settings</mat-card-title>
+          <mat-card-content>
+            <div class="container-fluid" style="padding: 10px">
+              <div class="row align-items-start">
+                <div>
+                  <div class="input-group">
+                    <mat-form-field>
+                      <mat-label>Currency</mat-label>
+                      <mat-select name="currency" required #currency="ngModel" [(ngModel)]="docData.currency">
+                        <mat-option value="{{ currency.isoCode }}" *ngFor="let currency of currencyList">{{
+                          currency.currencyName }}</mat-option>
+                      </mat-select>
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true && !currency.valid) ||
+                          (!currency.valid &&
+                            (currency.dirty || currency.touched))
+                        ">
+                        Please enter Currency Type!</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div>
+                  <div class="checkbox">
+                    <mat-checkbox class="example-margin" id="checkbox6" name="includeUnit" #isActived="ngModel"
+                      [(ngModel)]="docData.includeUnit">Include Unit
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div>
+                  <div class="checkbox">
+                    <mat-checkbox class="example-margin" id="checkbox1" name="includetax" #isActiv="ngModel"
+                      [(ngModel)]="docData.includeTax">Include Tax
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div>
+                  <div class="checkbox">
+                    <mat-checkbox class="example-margin" id="checkboxDiscount" name="includeDiscount"
+                      #isActiveDiscount="ngModel" [(ngModel)]="docData.includeDiscount">Include Discount
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-start">
+                <div *ngIf="docData.includeTax == true">
+                  <mat-form-field>
+                    <mat-label>Tax Type</mat-label>
+                    <mat-select name="taxType" required #taxType="ngModel" [(ngModel)]="docData.taxType">
+                      <mat-option value="gst">GST</mat-option>
+                      <mat-option value="vat" (click)="onVat()">VAT</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="docData.includeTax == true && docData.taxType == 'gst'">
+                  <div class="checkbox">
+                    <mat-checkbox class="example-margin" id="checkbox3" name="interstate" #isActivess="ngModel"
+                      [(ngModel)]="docData.interState">Apply IGST (Interstate Sale)</mat-checkbox>
+                  </div>
+                </div>
+                <div *ngIf="docData.includeTax == true && docData.taxType == 'gst'">
+                  <div class="checkbox">
+                    <mat-checkbox class="example-margin" id="checkbox2" name="includecess" #isActivs="ngModel"
+                      [(ngModel)]="docData.includeCess">Include Cess
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </div>
+  </form>
+  <br />
+</div>
+<!-- Web size ends here -->
+<!-- Mobie size starts here -->
+<div *ngIf="isMobilesize == true && !isLoaded" [ngStyle]="{ 'background-color': 'white' }" style="color: black">
+  <!-- Tool bar starts here -->
+  <!-- <mat-toolbar class="mat-elevation-z2" [ngStyle]="{ 'background-color': 'white' }" disablePagination="true">
+    <button mat-icon-button aria-label="back" title="back" (click)="onBackMob()">
+      <mat-icon [ngStyle]="{ color: '#2A6AF6' }"><span class="material-icons-outlined"> arrow_back </span></mat-icon>
+    </button>
+    <span>
+      {{ docData.docTitle }}
+    </span>
+    <span class="example-spacer"></span>
+    <mat-icon style="color: #2196f3" *ngIf="!onCheckNetwork()">wifi_off icon</mat-icon>
+  </mat-toolbar> -->
+  <div *ngIf="isMessageOpen" style="margin: 10px;;">
+    <mat-card>
+      <img mat-card-image src="assets/images/Free Tool Signup.png" alt="Zenys Free sign-up">
+      <mat-card-content>
+        <h3>
+          Sign up for our free CRM, Sales management, Invoicing and Collection tool!
+        </h3>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button (click)="onCloseCard()" title="Close">Close
+        </button>&nbsp;&nbsp;
+        <a target="_blank">
+          <button mat-raised-button (click)=onLogInMob() color="accent">Try Now</button>
+        </a>
+      </mat-card-actions>
+    </mat-card>
+    <br>
+  </div>
+  <form #form="ngForm" style="margin: 10px">
+    <div class="row" style="align-items: center; text-align: center">
+      <div class="col-md-6 col-lg-6 col-sm-12">
+        <div>
+          <div>
+            <mat-form-field class="example-half-width" appearance="fill">
+              <mat-label>Doc Title</mat-label>
+              <input matInput id="doc-title" name="invoice" #invoice="ngModel" placeholder="Doc Title"
+                [(ngModel)]="docData.docTitle" value="Invoice" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-0"></div>
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <div>
+          <a>
+            <img style="cursor: pointer" src="assets/images/companylogo.png" alt="logo" height="150"
+              (click)="openLogo()" width="150" *ngIf="!logoPreview" class="img-thumbnail" title="Upload Logo" />
+            <img [src]="logoPreview" alt="logo" height="150" width="150" (click)="openLogo()" class="img-fluid"
+              *ngIf="logoPreview" />
+          </a>
+          <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+            (change)="uploadLogo($event.target.files)" style="display: none" accept="image/png, image/jpeg" />
+        </div>
+        <br /><br />
+      </div>
+      <!-- Document details -->
+      <h4 style="text-align: left; padding-left: 15px">
+        <span>{{ docData.docTitle }} Details</span>
+      </h4>
+      <div class="row" style="padding-left: 15px; padding-right: 0%">
+        <div class="col-6">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>{{ docData.docTitle }} Prefix:</mat-label>
+              <input type="text" matInput placeholder="eg:2021/" name="prefix" [(ngModel)]="docData.docPrefix"
+                #prefix="ngModel" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>{{ docData.docTitle }} No:</mat-label>
+              <input type="number" matInput placeholder="{{ docData.docTitle }} No:" name="invoiceno"
+                [(ngModel)]="docData.docNumber" #invoiceno="ngModel" required />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-left: 15px; padding-right: 0%">
+        <div class="col-6">
+          <div class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>{{ docData.docTitle }} Date:</mat-label>
+              <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="docData.docDate" #date="ngModel"
+                required />
+              <mat-datepicker-toggle matSuffix [for]="picker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <mat-error class="form-text text-muted danger" *ngIf="
+              (submitted == true && !date.valid) ||
+              (!date.valid && (date.dirty || date.touched))
+            ">
+            Please enter a date!</mat-error>
+        </div>
+        <div class="col-6">
+          <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Due Date</mat-label>
+              <input matInput [matDatepicker]="picker" name="duedate" [(ngModel)]="docData.dueDate"
+                #duedate="ngModel" />
+              <mat-datepicker-toggle matSuffix [for]="picker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div *ngIf="
+              docData.docType == 'Quotation' || docData.docType == 'Estimate'
+            " class="input-group mb-1">
+            <mat-form-field class="example-full-width">
+              <mat-label>Valid Till:</mat-label>
+              <input matInput [matDatepicker]="picker" name="docValidity" [(ngModel)]="docData.docValidity"
+                #docValidity="ngModel" />
+              <mat-datepicker-toggle matSuffix [for]="picker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center" style="padding-left: 15px; padding-right: 0%">
+        <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Quotation Ref:</mat-label>
+            <input matInput placeholder="Quotation Ref:" name="quatationalreference" [(ngModel)]="docData.quoteRef"
+              #quatationalreference="ngModel" />
+          </mat-form-field>
+        </div>
+        <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>P.O Ref:</mat-label>
+            <input matInput placeholder="P.O Ref:" name="purchaseorder" [(ngModel)]="docData.poRef"
+              #purchaseorder="ngModel" />
+          </mat-form-field>
+        </div>
+        <div *ngIf="docData.docType == 'Invoice'" class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Payment Terms</mat-label>
+            <input matInput placeholder="Payment Terms" name="paymentterm" [(ngModel)]="docData.paymentTerm"
+              #paymentterm="ngModel" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <h2 class="mat-h2" style="color: #303f9f">Address</h2>
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true" (opened)="panelOpenState1 = true" (closed)="panelOpenState1 = true">
+        <!-- Billed from details -->
+        <mat-expansion-panel-header>
+          <mat-panel-title> Billed From </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row align-items-center">
+          <div class="col-lg-7 col-md-7 col-sm-12">
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>Your Company Name</mat-label>
+                <input matInput placeholder="Company Name" name="yourcompanyname"
+                  [(ngModel)]="this.userData.companyName" #yourcompanyname="ngModel" minlength="2" required
+                  maxlength="60" />
+              </mat-form-field>
+              <mat-error class="form-text text-muted danger" *ngIf="
+                  (submitted == true && !yourcompanyname.valid) ||
+                  (!yourcompanyname.valid &&
+                    (yourcompanyname.dirty || yourcompanyname.touched))
+                ">
+                Please enter your company name!</mat-error>
+            </div>
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>Address Line 1</mat-label>
+                <input matInput placeholder="Address Line1" name="youraddressline1" [(ngModel)]="userData.addressline1"
+                  #youraddressline1="ngModel" minlength="2" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+                (submitted == true && !youraddressline1.valid) ||
+                (!youraddressline1.valid &&
+                  (youraddressline1.dirty || youraddressline1.touched))
+              ">
+              Please enter a valid address!</mat-error>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Address Line 2</mat-label>
+                    <input matInput placeholder="Address Line2" name="youraddressline2"
+                      [(ngModel)]="userData.addressline2" #youraddressline2="ngModel" minlength="2" />
+                  </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                    (submitted == true && !youraddressline2.valid) ||
+                    (!youraddressline2.valid &&
+                      (youraddressline2.dirty || youraddressline2.touched))
+                  ">
+                  Please enter a valid Address!</mat-error>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>City</mat-label>
+                    <input matInput placeholder="City" name="city" [(ngModel)]="userData.city" #city="ngModel"
+                      minlength="2" />
+                  </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                    (submitted == true && !city.valid) ||
+                    (!city.valid && (city.dirty || city.touched))
+                  ">
+                  Please enter a valid city!</mat-error>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>State</mat-label>
+                    <input matInput placeholder="State" name="statefrom" #statefrom="ngModel"
+                      [(ngModel)]="userData.state" minlength="2" />
+                  </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                    (submitted == true && !statefrom.valid) ||
+                    (!statefrom.valid && (statefrom.dirty || statefrom.touched))
+                  ">
+                  Please enter a valid state!</mat-error>
+              </div>
+              <div class="col-6">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>PIN/ ZIP</mat-label>
+                    <input matInput placeholder="PIN/ ZIP" name="yourpincode" [(ngModel)]="userData.pinCode"
+                      #yourpincode="ngModel" />
+                  </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                    (submitted == true && !yourpincode.valid) ||
+                    (!yourpincode.valid &&
+                      (yourpincode.dirty || yourpincode.touched))
+                  ">
+                  Required!</mat-error>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Country</mat-label>
+                    <input matInput placeholder="Country" name="yourcountry" [(ngModel)]="userData.country"
+                      #yourcountry="ngModel" minlength="2" />
+                  </mat-form-field>
+                </div>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                    (submitted == true && !yourcountry.valid) ||
+                    (!yourcountry.valid &&
+                      (yourcountry.dirty || yourcountry.touched))
+                  ">
+                  Please enter a valid country!</mat-error>
+              </div>
+            </div>
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>Tax Identification/ GST/ VAT No</mat-label>
+                <input matInput placeholder="Tax Identification No/ GST/ VAT" name="yourgst" [(ngModel)]="userData.gst"
+                  #yourgst="ngModel" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+                (submitted == true && !yourgst.valid) ||
+                (!yourgst.valid && (yourgst.dirty || yourgst.touched))
+              ">
+              Please provide tax identificaiton number</mat-error>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel (opened)="panelOpenState1 = true" (closed)="panelOpenState1 = true">
+        <!-- billed to details -->
+        <mat-expansion-panel-header>
+          <mat-panel-title> Billed To </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Company Name/ Contact Name</mat-label>
+            <input matInput placeholder="Contact Name" name="billcontactname" [(ngModel)]="customerData.fname1"
+              #billcontactname="ngModel" minlength="3" maxlength="60" required />
+          </mat-form-field>
+          <mat-error class="form-text text-muted danger" *ngIf="
+              (submitted == true && !billcontactname.valid) ||
+              (!billcontactname.valid &&
+                (billcontactname.dirty || billcontactname.touched))
+            ">
+            Please enter a valid name!</mat-error>
+        </div>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Address Line1</mat-label>
+            <input matInput placeholder="Address Line1" name="billaddressline1" [(ngModel)]="customerData.addressline1"
+              #billaddressline1="ngModel" minlength="3" maxlength="100" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !billaddressline1.valid) ||
+            (!billaddressline1.valid &&
+              (billaddressline1.dirty || billaddressline1.touched))
+          ">
+          Please enter a valid address!</mat-error>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Address Line2</mat-label>
+            <input matInput placeholder="Address Line2" name="billaddressline2" [(ngModel)]="customerData.addressline2"
+              #billaddressline2="ngModel" minlength="3" maxlength="100" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !billaddressline2.valid) ||
+            (!billaddressline2.valid &&
+              (billaddressline2.dirty || billaddressline2.touched))
+          ">
+          Please enter a valid address!</mat-error>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>District</mat-label>
+            <input matInput placeholder="District" name="billdistrict" [(ngModel)]="customerData.district"
+              #billdistrict="ngModel" minlength="3" maxlength="50" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !billdistrict.valid) ||
+            (!billdistrict.valid &&
+              (billdistrict.dirty || billdistrict.touched))
+          ">
+          Please enter a valid district!</mat-error>
+        <div class="row">
+          <div class="col-6">
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>State</mat-label>
+                <input matInput placeholder="State" name="stateto" #stateto="ngModel" [(ngModel)]="customerData.state"
+                  minlength="3" maxlength="50" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+                (submitted == true && !stateto.valid) ||
+                (!stateto.valid && (stateto.dirty || stateto.touched))
+              ">
+              Please enter a valid state!</mat-error>
+          </div>
+          <div class="col-6">
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>PIN/ ZIP</mat-label>
+                <input matInput placeholder="PIN/ ZIP" name="billpincode" [(ngModel)]="customerData.pinCode"
+                  #billpincode="ngModel" minlength="4" maxlength="12" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+                (submitted == true && !billpincode.valid) ||
+                (!billpincode.valid &&
+                  (billpincode.dirty || billpincode.touched))
+              ">
+              Required!</mat-error>
+          </div>
+
+        </div>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Country</mat-label>
+            <input matInput placeholder="Country" name="billcountry" [(ngModel)]="customerData.country"
+              #billcountry="ngModel" minlength="2" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !billcountry.valid) ||
+            (!billcountry.valid && (billcountry.dirty || billcountry.touched))
+          ">
+          Please enter a valid country!</mat-error>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Tax identification No - GST/ VAT</mat-label>
+            <input matInput placeholder="Tax identification No/ GST/ VAT No" name="billgst" #billgst="ngModel"
+              [(ngModel)]="customerData.gst" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !billgst.valid) ||
+            (!billgst.valid && (billgst.dirty || billgst.touched))
+          ">
+          Please provide tax identification no</mat-error>
+      </mat-expansion-panel>
+      <br>
+      <div class="row">
+       
+          <mat-checkbox class="example-margin" name="isDeliveryAddressPresent" (click)="clearDeliveryAddress()"
+            #isDeliveryAddressPresent="ngModel" [(ngModel)]="customerData.isDeliveryAddressPresent"
+            id="isDeliveryAddressPresent">Show
+            Delivery Address
+          </mat-checkbox>
+          <button mat-button color="primary" *ngIf="customerData.isDeliveryAddressPresent" (click)="copyDeliveryAddress()">Copy Bill to Address</button>
+        
+      </div>
+      <mat-expansion-panel (opened)="panelOpenState1 = true" (closed)="panelOpenState1 = true"  *ngIf="customerData.isDeliveryAddressPresent">
+        <!-- billed to details -->
+        <mat-expansion-panel-header>
+          <mat-panel-title> Delivered To </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Contact Name</mat-label>
+            <input matInput placeholder="Contact Name" name="deliveryContactName"
+              [(ngModel)]="customerData.deliveryContactName" #deliveryContactName="ngModel" minlength="3"
+              maxlength="60" />
+          </mat-form-field>
+          <mat-error class="form-text text-muted danger" *ngIf="
+            (submitted == true && !deliveryContactName.valid) ||
+            (!deliveryContactName.valid &&
+              (deliveryContactName.dirty ||
+              deliveryContactName.touched))
+          ">
+            Please enter a valid name!</mat-error>
+        </div>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Address Line1</mat-label>
+            <input matInput placeholder="Address Line1" name="deliveryAddressline1"
+              [(ngModel)]="customerData.deliveryAddressline1" #deliveryAddressline1="ngModel" minlength="3"
+              maxlength="100" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+        (submitted == true && !deliveryAddressline1.valid) ||
+        (!deliveryAddressline1.valid &&
+          (deliveryAddressline1.dirty ||
+          deliveryAddressline1.touched))
+      ">
+          Please enter a valid address!</mat-error>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Address Line2</mat-label>
+            <input matInput placeholder="Address Line2" name="deliveryAddressline2"
+              [(ngModel)]="customerData.deliveryAddressline2" #deliveryAddressline2="ngModel" minlength="3"
+              maxlength="100" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+          (submitted == true && !deliveryAddressline2.valid) ||
+          (!deliveryAddressline2.valid &&
+            (deliveryAddressline2.dirty ||
+            deliveryAddressline2.touched))
+        ">
+          Please enter a valid address!</mat-error>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>District</mat-label>
+            <input matInput placeholder="District" name="deliveryDistrict" [(ngModel)]="customerData.deliveryDistrict"
+              #deliveryDistrict="ngModel" minlength="3" maxlength="50" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+          (submitted == true && !deliveryDistrict.valid) ||
+          (!deliveryDistrict.valid &&
+            (deliveryDistrict.dirty ||
+            deliveryDistrict.touched))
+        ">
+          Please enter a valid district!</mat-error>
+        <div class="row">
+          <div class="col-6">
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>State</mat-label>
+                <input matInput placeholder="State" name="deliveryState" #deliveryState="ngModel"
+                  [(ngModel)]="customerData.deliveryState" minlength="3" maxlength="50" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+              (submitted == true && !deliveryState.valid) ||
+              (!deliveryState.valid &&
+                (deliveryState.dirty || deliveryState.touched))
+            ">
+              Please enter a valid state!</mat-error>
+          </div>
+          <div class="col-6">
+            <div class="input-group mb-1">
+              <mat-form-field class="example-full-width">
+                <mat-label>PIN/ ZIP</mat-label>
+                <input matInput placeholder="PIN/ ZIP" name="deliveryPinCode" [(ngModel)]="customerData.deliveryPinCode"
+                  #deliveryPinCode="ngModel" minlength="4" maxlength="12" />
+              </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf="
+              (submitted == true && !deliveryPinCode.valid) ||
+              (!deliveryPinCode.valid &&
+                (deliveryPinCode.dirty || deliveryPinCode.touched))
+            ">
+              Required!</mat-error>
+          </div>
+
+        </div>
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Country</mat-label>
+            <input matInput placeholder="Country" name="deliveryCountry" [(ngModel)]="customerData.deliveryCountry"
+              #deliveryCountry="ngModel" minlength="2" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+          (submitted == true && !deliveryCountry.valid) ||
+          (!deliveryCountry.valid &&
+            (deliveryCountry.dirty || deliveryCountry.touched))
+        ">
+          Please enter a valid country!</mat-error>
+
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Country Code</mat-label>
+            <mat-select (selectionChange)="(customerData.deliverycountryCode)" #deliverycountryCode="ngModel"
+              [(ngModel)]="customerData.deliverycountryCode" name="deliverycountryCode">
+              <mat-option *ngFor="let countryCode of CountryCodes" [value]="countryCode.dial_code">
+                {{ countryCode.code }}&nbsp;{{
+                countryCode.dial_code
+                }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+              (submitted == true && !deliverycountryCode.valid) ||
+              (!deliverycountryCode.valid && (deliverycountryCode.dirty || deliverycountryCode.touched))
+            ">
+          Please enter Country code</mat-error>
+
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Contact Number</mat-label>
+            <input type="number" matInput placeholder="Contact Number" name="deliveryContactNumber"
+              #deliveryContactNumber="ngModel" [(ngModel)]="customerData.deliveryContactNumber" />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+                  (submitted == true && !deliveryContactNumber.valid) ||
+                  (!deliveryContactNumber.valid && (deliveryContactNumber.dirty || deliveryContactNumber.touched))
+                ">
+          Please enter contact number</mat-error>
+
+        <div class="input-group mb-1">
+          <mat-form-field class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" name="deliveryEmail" #deliveryEmail="ngModel"
+              [(ngModel)]="customerData.deliveryEmail" type="email" email />
+          </mat-form-field>
+        </div>
+        <mat-error class="form-text text-muted danger" *ngIf="
+                                    (submitted == true && !deliveryEmail.valid) ||
+                                    (!deliveryEmail.valid && (deliveryEmail.dirty || deliveryEmail.touched))
+                                  ">
+          Please enter email</mat-error>
+
+
+      </mat-expansion-panel>
+    </mat-accordion>
+    <br />
+    <!-- Item details -->
+    <div class="row">
+      <div class="col-6">
+        <h2 class="mat-h2" style="color: #303f9f">Items</h2>
+      </div>
+      <div class="col-6" style="float: right">
+        <button mat-button style="float: right">
+          <mat-icon style="color: #2196f3" (click)="onBottomSheet(docData)">settings</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngFor="
+        let line of lineItemForm.get('itemList')['controls'];
+        let i = index;
+        trackBy: identify
+      ">
+      <mat-card style="width: 100%">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="row">
+                <div class="input-group mb-1">
+                  <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Item Name</mat-label>
+                    <input matInput placeholder="Item Name" [formControl]="line.controls.item"
+                      [(ngModel)]="this.itemList[i].item" name="item" required />
+                  </mat-form-field>
+                </div>
+              </div>
+              <mat-error class="form-text text-muted danger" *ngIf="
+                  (submitted == true && !line.controls.item.valid) ||
+                  (!line.controls.item.valid &&
+                    (line.controls.item.dirty || line.controls.item.touched))
+                ">
+                Required</mat-error>
+            </div>
+            <mat-grid-list cols="12" rowHeight="60px">
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Qty</mat-label>
+                      <input matInput placeholder="Qty" type="number" [(ngModel)]="itemList[i].qty"
+                        [formControl]="line.controls.qty" name="qty" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true && !line.controls.qty.valid) ||
+                          (!line.controls.qty.valid &&
+                            (line.controls.qty.dirty ||
+                              line.controls.qty.touched))
+                        ">
+                        Req</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="docData.includeUnit == true">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Unit</mat-label>
+                      <input matInput placeholder="Unit" type="text" [(ngModel)]="itemList[i].unit"
+                        [formControl]="line.controls.unit" name="unit" id="padding" />
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Rate</mat-label>
+                      <input matInput required placeholder="Rate" type="number" [(ngModel)]="itemList[i].rate"
+                        [formControl]="line.controls.rate" name="rate" (ngModelChange)="getAmount(i)" id="padding"
+                        appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true && !line.controls.rate.valid) ||
+                          (!line.controls.rate.valid &&
+                            (line.controls.rate.dirty ||
+                              line.controls.rate.touched))
+                        ">
+                        Req</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="docData.includeDiscount">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>Discount(%)</mat-label>
+                      <input matInput placeholder="Discount(%)" type="number" [formControl]="line.controls.discountRate"
+                        [(ngModel)]="itemList[i].discountRate" name="discount" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true &&
+                            !line.controls.discountRate.valid) ||
+                          (!line.controls.discountRate.valid &&
+                            (line.controls.discountRate.dirty ||
+                              line.controls.discountRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="docData.includeTax == true && docData.taxType == 'vat'">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>VAT(%)</mat-label>
+                      <input matInput placeholder="VAT(%)" type="number" [formControl]="line.controls.vatRate"
+                        [(ngModel)]="itemList[i].vatRate" name="vat" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true && !line.controls.vatRate.valid) ||
+                          (!line.controls.vatRate.valid &&
+                            (line.controls.vatRate.dirty ||
+                              line.controls.vatRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="
+                    docData.includeTax == true &&
+                    docData.interState != true &&
+                    docData.taxType == 'gst'
+                  ">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>CGST(%)</mat-label>
+                      <input matInput placeholder="CGST(%)" type="number" [formControl]="line.controls.cgstRate"
+                        [(ngModel)]="itemList[i].cgstRate" name="cgst" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true &&
+                            !line.controls.cgstRate.valid) ||
+                          (!line.controls.cgstRate.valid &&
+                            (line.controls.cgstRate.dirty ||
+                              line.controls.cgstRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="
+                    docData.includeTax == true &&
+                    docData.interState != true &&
+                    docData.taxType == 'gst'
+                  ">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>SGST(%)</mat-label>
+                      <input matInput placeholder="SGST(%)" type="number" [formControl]="line.controls.sgstRate"
+                        [(ngModel)]="itemList[i].sgstRate" name="sgst" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true &&
+                            !line.controls.sgstRate.valid) ||
+                          (!line.controls.sgstRate.valid &&
+                            (line.controls.sgstRate.dirty ||
+                              line.controls.sgstRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="
+                    docData.includeTax == true &&
+                    docData.interState == true &&
+                    docData.taxType == 'gst'
+                  ">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>IGST(%)</mat-label>
+                      <input matInput placeholder="IGST(%)" type="number" [formControl]="line.controls.igstRate"
+                        [(ngModel)]="itemList[i].igstRate" name="igst" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true &&
+                            !line.controls.igstRate.valid) ||
+                          (!line.controls.igstRate.valid &&
+                            (line.controls.igstRate.dirty ||
+                              line.controls.igstRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4" *ngIf="
+                    docData.includeTax == true &&
+                    docData.includeCess == true &&
+                    docData.taxType == 'gst'
+                  ">
+                  <mat-grid-tile [colspan]="4">
+                    <mat-form-field class="example-3quart-width">
+                      <mat-label>CESS(%)</mat-label>
+                      <input matInput placeholder="CESS(%)" type="number" [formControl]="line.controls.cessRate"
+                        [(ngModel)]="itemList[i].cessRate" name="cess" required (ngModelChange)="getAmount(i)"
+                        id="padding" appTwoDigitDecimaNumber decimals="2" />
+                      <mat-error class="form-text text-muted danger" *ngIf="
+                          (submitted == true &&
+                            !line.controls.cessRate.valid) ||
+                          (!line.controls.cessRate.valid &&
+                            (line.controls.cessRate.dirty ||
+                              line.controls.cessRate.touched))
+                        ">
+                        required</mat-error>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </div>
+              </div>
+            </mat-grid-list>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="input-group mb-1">
+                <mat-form-field class="example-full-width" appearance="fill">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput id="exampleFormControlTextarea1" rows="2" placeholder="Description"
+                    [formControl]="line.controls.description" name="description" [(ngModel)]="itemList[i].description"
+                    id="padding"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 text-left">
+              <p>Total:</p>
+            </div>
+            <div class="col-6">
+              <p>{{ docData.currency + " " }} {{ getAmount(i) }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions *ngIf="itemList.length != 1">
+          <span flex></span>
+          <mat-icon-button (click)="deleteFieldValue(i)"  style="cursor: pointer">
+            <mat-icon color="warn">delete</mat-icon>
+          </mat-icon-button>
+        </mat-card-actions>
+      </mat-card>
+      <br />
+    </div>
+    <button mat-mini-fab color="accent">
+      <mat-icon style="float: right" (click)="addFieldValue()" [ngStyle]="{ color: 'white' }">add</mat-icon>
+    </button>
+    <br /><br />
+    <mat-divider></mat-divider>
+    <br />
+    <div style="text-align: justify">
+      <h3 class="mat-h2" style="color: #303f9f">
+        Item Summary<span class="example-spacer"></span>
+      </h3>
+      <div class="row">
+        <div class="col-6 text-left">
+          <p>Total amount:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }}{{ docData.total }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="docData.includeDiscount">
+        <div class="col-6 text-left">
+          <p>Discount total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.discountValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="docData.includeDiscount">
+        <div class="col-6 text-left">
+          <p>Total after discounts:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.discountedAmount }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="
+          docData.includeTax == true &&
+          docData.interState != true &&
+          docData.taxType == 'gst'
+        ">
+        <div class="col-6 text-left">
+          <p>CGST total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.cgstValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="
+          docData.includeTax == true &&
+          docData.interState != true &&
+          docData.taxType == 'gst'
+        ">
+        <div class="col-6 text-left">
+          <p>SGST total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.sgstValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="
+          docData.includeTax == true &&
+          docData.interState == true &&
+          docData.taxType == 'gst'
+        ">
+        <div class="col-6 text-left">
+          <p>IGST total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.igstValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="
+          docData.includeTax == true &&
+          docData.includeCess == true &&
+          docData.taxType == 'gst'
+        ">
+        <div class="col-6 text-left">
+          <p>Cess total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.cessValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="docData.includeTax == true && docData.taxType == 'vat'">
+        <div class="col-6 text-left">
+          <p>VAT total:</p>
+        </div>
+        <div class="col-6">
+          <p>{{ docData.currency + " " }} {{ docData.vatValue }}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="docData.includeTax == true">
+        <div class="col-6 text-left">
+          <p>Total including taxes:</p>
+        </div>
+        <div class="col-6 ">
+          <p>{{ docData.currency + " " }} {{ docData.totalInclTax }}</p>
+        </div>
+      </div>
+    </div>
+    <br />
+    <h2 class="mat-h2" style="color: #303f9f">Additional Notes & Signature</h2>
+    <div class="row">
+      <div class="col-sm-12 col-md-8 col-lg-8">
+        <div class="form-group mb-1">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Additional Notes</mat-label>
+            <textarea matInput placeholder="Additional Notes" name="notes" #notes="ngModel"
+              [(ngModel)]="docData.notes"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="form-group mb-1">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Bank Account Details</mat-label>
+            <textarea matInput placeholder="Bank Account Details" name="bankdetails" [(ngModel)]="docData.bankDetails"
+              #bankdetails="ngModel"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-4">
+        <div class="container justify-content-center">
+          <div class="input-group mb-3 justify-content-center align-middle">
+            <div>
+              <a>
+                <img [src]="signPreview" alt="signature" height="150" width="150" (click)="openSignature()"
+                  *ngIf="signPreview" />
+                <img style="cursor: pointer" src="assets/images/signature.jpg" alt="signature" height="150"
+                  class="img-thumbnail" (click)="openSignature()" width="150" *ngIf="!signPreview"
+                  title="Upload Signature " />
+              </a>
+              <input type="file" class="custom-file-input sign-selector" id="inputGroupFileSign"
+                (change)="uploadSign($event.target.files)" style="display: none" accept="image/png, image/jpeg" />
+            </div>
+
+            <br />
+            <br />
+            <div class="input-group mb-1" style="align-items: center; justify-content: center" *ngIf="signPreview">
+              <mat-form-field class="example-half-width">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" name="signatoryName" #signatoryName="ngModel"
+                  [(ngModel)]="userData.signatoryName" />
+              </mat-form-field>
+            </div>
+            <div class="input-group mb-1" style="align-items: center; justify-content: center" *ngIf="signPreview">
+              <mat-form-field class="example-half-width">
+                <mat-label>Designation</mat-label>
+                <input matInput placeholder="Designation" name="designation" #designation="ngModel"
+                  [(ngModel)]="userData.designation" minlength="1" maxlength="15" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br />
+      </div>
+    </div>
+    <div>
+      <h2 class="mat-h2" style="color: #303f9f">Contact Details</h2>
+      <p class="container border">
+        In case of queries, please contact
+        <mat-form-field style="width: 140px">
+          <input matInput name="contactname" id="centeralign" [(ngModel)]="userData.contactname"
+            #contactname="ngModel" />
+        </mat-form-field>
+        at
+        <mat-form-field style="width: 100px">
+          <input matInput [(ngModel)]="userData.contactno" id="centeralign" #contactno="ngModel" name="mobNo"
+            minlength="10" maxlength="12" />
+        </mat-form-field>
+        or drop an email to
+        <mat-form-field style="width: 140px">
+          <input matInput name="email" [(ngModel)]="userData.email" id="centeralign" #email="ngModel" />
+        </mat-form-field>
+      </p>
+    </div>
+
+    <div>
+      <button type="submit" mat-raised-button color="accent" id="type-error" [disabled]="!onCheckNetwork()" (click)="
+          form.valid && lineItemForm.valid ? generateDocument() : TypeError()
+        ">
+        <i class="ft-check-square mr-1"></i>Save and Continue
+      </button>
+    </div>
+
+    <br />
+    <br />
+    <br />
+  </form>
+</div>
+<!-- Spinner on saving document -->
+<div class="container-xxl" *ngIf="isLoaded" style="height: 800px;background-color: whitesmoke; ">
+<mat-spinner  [diameter]="70" style="align-items: center;"></mat-spinner>
+</div>
+<div class="container-lg" *ngIf="!isLoaded && docData.docType == 'Invoice'">
+  <h2 style="font-weight: bold">Make An Invoice Online</h2>
+  <p>
+    Use our online invoice generator to make invoices online for free in three simple steps.
+  </p>
+  <mat-list>
+    <mat-list-item> Step 1: Enter all the invoice details </mat-list-item>
+    <mat-list-item> Step 2: Click on the "Save and Continue" button and login with your gmail </mat-list-item>
+    <mat-list-item> Step 3: Download your invoice in pdf format </mat-list-item>
+  </mat-list>
+  <br>
+  <p>You can customize your Invoice by going to the Document Settings and apply your brand color and change the
+    quotation design as well!</p>
+  <h2>FAQ</h2>
+  <ol>
+    <li>
+      <h3>What is an invoice?</h3>
+      <p>
+        An invoice is a document that provides details about the products and
+        services a seller provides to the customer. It details the contact and
+        billing information, gives an itemized list of products or services
+        provided, provides the charges for the service/products sold and
+        specifies payment terms if any. Invoices are essential for businesses as
+        they keep a record of the transactions and enable them to get paid for
+        the products/services provided.
+      </p>
+    </li>
+    <li>
+      <h3>What is an invoice number?</h3>
+      <p>
+        An invoice number is a unique number for both the seller’s and buyer’s
+        reference. It helps businesses to track the payments.
+      </p>
+    </li>
+    <li>
+      <h3>Can I make an invoice online for free using Zenys?</h3>
+      <p>
+        Absolutely. Zenys billing software with GST is free for lifetime. You
+        can create invoices online any number of times.
+      </p>
+    </li>
+    <li>
+      <h3>How can I send invoices?</h3>
+      <p>
+        You can download your invoice and send it to your customers via mail or
+        print it and mail it directly. By signing in to Zenys Business
+        Management Software you can send invoices directly to your customers.
+      </p>
+    </li>
+    <li>
+      <h3>Is my data safe?</h3>
+      <p>
+        Yes. We do not save any details such as your billing details, GST
+        number, your customer number, items sold etc. The data entered is used
+        to print the document directly. In fact you can even use the tool
+        offline.
+      </p>
+    </li>
+    <li>
+      <h3>Will there be ads or watermarks on the invoices I create?</h3>
+      <p>
+        Absolutely not. The online invoices you create are totally free from
+        advertisements or watermarks.
+      </p>
+    </li>
+    <li>
+      <h3>Can I save my invoice?</h3>
+      <p>
+        Yes, your invoices will be automatically saved to your invoice list.
+      </p>
+    </li>
+    <li>
+      <h3>Can I see sample GST invoice formats?</h3>
+
+      <p>
+        Yes. We have multiple GST invoice formats in word and excel available in
+        our free invoice template options. You can download a PDF invoice
+        template and use them to create invoices whenever you want. You can also
+        preview the invoice by clicking the preview button.
+      </p>
+    </li>
+    <li>
+      <h3>Can I choose between different currency options?</h3>
+      <p>
+        Yes. With Zenys invoice generator you can choose different currency
+        options to generate invoices .
+      </p>
+    </li>
+    <li>
+      <h3>What is a tax invoice?</h3>
+      <p>
+        An invoice created by a GST registered business for taxable
+        products/services is called a tax invoice. Only if the recipient
+        possesses this document, he/she can avail Input Tax Credit ( ITC). The
+        tax invoice must contain details such as the product/service name and
+        description along with the quantity, rate and tax charged. In Zenys
+        invoice template you can enter these details by just filling out the
+        fields provided in the template.
+      </p>
+    </li>
+    <li>
+      <h3>How do I create tax invoices?</h3>
+      <p>
+        Using our invoice creator , you can generate invoices with tax by
+        enabling the GST/ Cess options provided in the invoice template, and
+        typing in the percentage of tax in the field.
+      </p>
+    </li>
+    <li>
+      <h3>How do I calculate the taxes on my invoices?</h3>
+      <p>
+        Zenys invoice generator will do all the calculations. All you need to is
+        add the tax percentage to the items list field. Our tool will
+        automatically calculate the taxes and the total amount will be displayed
+        at the bottom of the template.
+      </p>
+    </li>
+    <li>
+      <h3>What is HSN Code?</h3>
+      <p>
+        HSN code stands for “Harmonized System of Nomenclature”. It is a 6-digit
+        uniform code that has been introduced to bring a uniform classification
+        of goods. HSN code facilitates the systematic classification of goods
+        all over the world. This system assigns codes to products globally and
+        simplifies the classification processes of products across the world
+        facilitating international trade. This classification helps in
+        understanding the tax rate of specific products in a country which
+        applies to both imports and exports. Businesses with a turnover of more
+        than ₹5 crores are required to furnish 6 digit HSN code and businesses
+        with a turnover of up to 5 crores should furnish a four-digit HSN code
+        on the B2B invoices. Using invoice generator you can add the HSN code in
+        the respective field provided in the invoice template.
+      </p>
+    </li>
+    <li>
+      <h3>What are the other free products provided by Zenys?</h3>
+      <p>
+        Other than our online invoice maker, Zenys provides a free quote
+        generator, and a free estimate maker. You can download bill formats for
+        free including invoice formats, quotation formats, or estimate formats
+        using our tool. We also provide CRM software that is designed for small
+        businesses and freelancers. You can sign up for our software and avail
+        the trial version for free.
+      </p>
+    </li>
+    <li>
+      <h3>What is the difference between a bill and an invoice?</h3>
+      <p>
+        Both the terms are generally referred to as documents that provide
+        details about the cost of products sold or services rendered to the
+        buyer. An invoice is generally used by businesses that define the
+        payment requests to the buyer while a bill is a term used by a customer
+        to refer to payments they owe to the sellers . A bill, compared to an
+        invoice, contains only limited details such as the price of the
+        product/services, the quantity, rate and tax charged. It generally does
+        not contain the name and contact information of the customer and any
+        unique number. Bill serves just as a document for evidence of
+        transaction, unlike invoices which is a legal document.
+      </p>
+    </li>
+    <li>
+      <h3>What is a bill of supply?</h3>
+      <p>
+        A GST registered business issues a tax invoice to the buyer mentioning
+        the tax charges for the goods/services sold. However, some GST
+        registered businesses cannot charge tax on the transaction. In this
+        case, they should issue a bill of supply. A bill of supply is a document
+        issued by a GST sregistered business when GST is not applicable on a
+        transaction or if he is a Composite Scheme dealer.
+      </p>
+    </li>
+    <li>
+      <h3>What is GSTIN?</h3>
+
+      <p>
+        GSTIN, known as GST Identification Number, is a fifteen digit unique
+        number that is assigned to every GST registered person which will be
+        State-wise and PAN-based. It is mandatory to add the GSTIN on the
+        invoices issued by a tax payer. While creating an invoice using Zenys
+        you can add the GST number in the field provided in the template.
+      </p>
+    </li>
+    <li>
+      <h3>What is the time limit to issue invoices in the GST system?</h3>
+      <p>
+        The time limit to issue invoices will depend on whether the nature of
+        supply is goods or services.
+        <br />
+        In the case of goods, the invoice must be issued before or at the time
+        of supply of goods. In the case of services, the invoice must be issued
+        before or after the service is provided. If the invoice is issued after
+        the service is provided, it has to be issued within the specified time
+        of 30 days from the date of service provided.
+      </p>
+    </li>
+    <li>
+      <h3>How many copies of invoices are required under the GST?</h3>
+      <p>
+        In the case of goods, you require 3 copies, if it involves
+        transportation. ( one copy for the customer, the 2nd copy for your
+        records and the 3rd for the transporter of goods). For services, 2
+        copies of invoices are required. (one copy is issued to the customer,
+        the other copy is retained by the supplies for their records)
+      </p>
+    </li>
+    <li>
+      <h3>What is a place of supply under GST?</h3>
+      <p>
+        Place of supply is simply the place of delivery of goods or the location
+        of the consumption of services. The place of supply will decide whether
+        the transaction is interstate or intrastate and if the taxpayer is
+        liable to pay SGCT, CGST or IGST.
+      </p>
+    </li>
+    <li>
+      <h3>What is reverse charge?</h3>
+      <p>
+        Reverse charge is a mechanism by which the buyer of goods/services is
+        liable to pay taxes instead of the supplier. If a service is listed
+        under reverse charge the GST will be collected by the receiver of
+        goods/services. This is applicable in 2 cases: When the supply of
+        goods/services is notified by the government. When a GST registered
+        person buys goods/services from an unregistered seller.
+      </p>
+    </li>
+    <li>
+      <h3>What is mixed and composite supply?</h3>
+
+      <p>
+        Supplies of two or more products/services can be mixed or composite
+        supply. A mixed supply consist of two or more products/services that are
+        sold for a single price. The products are not dependant on each other
+        and can be sold separately too. Whereas, a composite supply means a
+        supply made by a taxable person consisting of two or more goods/
+        services that are naturally bundled together. They are sold as a
+        combination.
+      </p>
+    </li>
+    <li>
+      <h3>
+        How are interstate and intrastate transactions treated under the GST?
+      </h3>
+      <p>
+        An intra state transaction is when the location of the supplier and
+        place of supply are in the same State (including UTs with legislature) .
+        In such transactions, the taxpayer is liable to pay State and Central
+        Tax. The transaction is inter state, if the locations are in different
+        states. Here, a combined tax called Integrated GST (IGST) will be
+        collected by the Central Government.
+      </p>
+    </li>
+  </ol>
+
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    How to Make an Invoice Online Using Zenys
+  </h3>
+
+  <p>
+    Using Zenys online invoice maker you can create invoices online easily by
+    just filling out the fields provided in the GST invoice format. Follow these
+    steps to create your invoice.
+  </p>
+  <ol>
+    <li>Start by entering your company name and contact information.</li>
+    <li>Provide the name and contact information of your customer.</li>
+    <li>
+      Add the invoice details. Enter the item details which included the
+      item/product/service name along with the quantity, rate and tax.
+    </li>
+    <li>
+      Finally, enter your bank account details and any other additional
+      information, if necessary.
+    </li>
+  </ol>
+  <p>
+    You can save the document by clicking on the ‘Save Document’ button. You can
+    later download the invoice and send it to your customers via mail or by
+    printing and mailing to them directly.
+  </p>
+  <img src="assets/images/invoiceimage.png" height="600" width="500" alt="preview1" />
+
+  <h2 style="text-align: center">Why choose Zenys?</h2>
+  <p>
+    Getting paid on time is crucial for your business to run smoothly. So, you
+    need to send proper invoices to your customers. To make sure you are
+    creating error-free and professional invoices, it is always best to use an
+    online invoice generator.
+    <br />
+    Ours is a billing software with GST designed for small businesses and
+    freelancers which is free and easy to use. It helps you make and send
+    professional-looking online invoices to your customers in just a few steps.
+    All you need to do is fill out the fields in the GST invoice format
+    provided. Enter the invoice details, company details, billing information
+    and the item charges in the fields given.
+    <br />
+    To look even more professional we have added an option to add your logo in
+    the logo field and your signature at the bottom of the invoice. You can also
+    add your bank account details in the respective field of the invoice.
+    <br />
+    If you need a GST invoice format in excel you can download the templates and
+    create unlimited GST invoices in a minute. Now, don’t wait any longer, make
+    an invoice online right now by filling the template and get started.
+  </p>
+
+  <h2 style="text-align: center">
+    What is the alternate way to make an invoice online?
+  </h2>
+  <p>
+    There are a number of GST invoice formats in excel available online. You can
+    download them, open it in excel and add the invoice details. This process of
+    creating an invoice seems good, but when you have to create a lot of
+    invoices, you might find it quite time consuming and disorganized. In fact,
+    for every invoice, you create you will need to duplicate the invoice
+    template. To create an invoice online for the same customer you’ll need to
+    enter the customer information again. This process takes up a lot of your
+    time. So, we always recommend you use an online invoice maker.
+  </p>
+
+  <h2 style="text-align: center">How to customize invoices using Zenys?</h2>
+  <p>
+    With our free invoice generator, you can download GST invoice formats and
+    open them in excel to create invoices. It is totally free and you can create
+    any number of invoices with the bill formats we offer you. Using our tool
+    you can also add in all the invoice details in the template provided and
+    change the layout of it according to your needs. To make it look attractive,
+    click the palette icon and add colours to your invoice that suit your
+    company brand.
+    <br />
+    We also give our users an option to add the company logo and signature to
+    the invoices. This can make your invoices look professional and create an
+    impression on your clients. Check out our professional templates and
+    customize your invoices easily!
+  </p>
+
+  <h2 style="text-align: center">
+    What are the mistakes to avoid while creating an invoice?
+  </h2>
+  <p>
+    It's less likely that you make an error in the invoice format if you are
+    using Zenys. But, you have to be careful in the data you enter in the
+    invoice templates. Some of the common mistakes are while creating an invoice
+    are:
+  </p>
+  <ul>
+    <li>Incorrect date</li>
+    <li>Incorrect client details</li>
+    <li>Incorrect Client Billing Address</li>
+    <li>Incorrect rates and total cost</li>
+    <li>Spelling errors</li>
+  </ul>
+  <p>
+    Make sure you avoid all the above-mentioned errors as they can affect the
+    credibility of your business.
+  </p>
+
+  <h2 style="text-align: center">What are the types of invoices?</h2>
+
+  <p>
+    There are different types of invoices based on different industries and
+    different purposes. Say, you are a photographer. The invoice you create will
+    not be the same as one created by an import business owner. Invoices vary
+    and it is important you know about them. So, take a look at the 5 most
+    commonly used invoices :
+  </p>
+  <ul>
+    <li>
+      Proforma invoice: A proforma invoice is more like an estimation or a
+      quote. It is an invoice that is used to give the buyers a rough idea of
+      what the products/services cost. This invoice is sent before a work is
+      done and is non-legal.
+    </li>
+    <li>
+      Standard invoice : As the name suggests, standard invoice is a standard
+      invoice format that consists of all the details that are to be included in
+      any invoice( which includes the invoice number, invoice date, client
+      details, billing information, list of items and its cost). This invoice
+      can be used for different business transactions.
+    </li>
+    <li>
+      Service invoice: Service invoices are mainly used by service-based
+      businesses like web designers, software developers, etc, who charge for
+      their services based on the work time and not on quantity.
+    </li>
+    <li>
+      Recurring invoice: Recurring invoices are invoices that are usually
+      delivered at the end of each month. They are fixed rates and mainly apply
+      to rental industries.
+    </li>
+    <li>
+      Commercial invoice: Commercial invoicing also known as business invoicing
+      is done by a seller(exporter) documenting any foreign trade such as
+      shipment. Commercial invoices include the invoice details, invoice number,
+      client details, item charges and shipment details as well.
+    </li>
+  </ul>
+
+  <h2 style="text-align: center">
+    3 Types of Invoicing Software for small business
+  </h2>
+
+  <p>
+    Online Invoice generators: The quickest and easiest way for small businesses
+    to create invoices online is by using an online invoice generator. Zenys is
+    a free billing software with GST that makes it easy for small businesses to
+    do invoicing. It helps you to create unlimited invoices and allows you to
+    send invoices to clients via mail by downloading the invoices in PDF format.
+    <br />
+    Cloud based Invoicing Software : Cloud Invoicing Software provides a lot
+    more features than an invoice generator. With a Cloud Based Invoicing
+    Software, you can enable more invoice management features like tracking
+    invoices and sending them directly to your clients etc. For small businesses
+    who are in need of a software to simply create invoices, this software might
+    seem a little too complicated. But if you need one which is easy to use and
+    not as complicated as other software in the market, you can sign up for our
+    CRM software.
+    <br />
+
+    Online billing and Accounting software: If you want to access more features
+    like accounting integration, managing accounts and tracking you can use an
+    Accounting Software. But most often small businesses do not require such
+    software.
+  </p>
+  <button mat-raised-button color="accent" [routerLink]="''">
+    Free Sign Up
+  </button>
+</div>
+<br />
+
+<div class="container-lg" *ngIf="!isLoaded && docData.docType == 'Estimate'">
+  <h2 style="font-weight: bold">Online Estimate Maker</h2>
+  <p>
+    Create professional estimates using our free online estimate maker in three easy steps.
+  </p>
+  <mat-list>
+    <mat-list-item> Step 1: Enter all the estimate details </mat-list-item>
+    <mat-list-item> Step 2: Click on the "Save and Continue" button and login with your gmail </mat-list-item>
+    <mat-list-item> Step 3: Download your estimate in pdf format </mat-list-item>
+  </mat-list>
+  <br>
+  <p>You can customize your Estimate by going to the Document Settings and apply your brand color and change the
+    quotation design as well!</p>
+
+  <h2>FAQ</h2>
+  <ol>
+    <li>
+      <h3>What is an estimate in business?</h3>
+      <p>
+        An estimate is a document that gives an approximate price of goods and
+        services provided by the seller to the buyer. A service provider can
+        begin with an estimate to make an approximate guess of the cost of the
+        work before issuing a quotation to the buyer.
+      </p>
+    </li>
+    <li>
+      <h3>How is an estimate different from a quotation?</h3>
+      <p>
+        An estimate is a document that holds an approximate price of the service
+        provided or products sold to the customer. It is an estimated guess on
+        how much the work cost. It is not binding and can change depending on
+        the work. Whereas, a quotation is a fixed priced offer which means the
+        service providers can move ahead with the work. Once approved, the
+        service providers should adhere to the details mentioned in the
+        quotation for the validity period.
+      </p>
+    </li>
+    <li>
+      <h3>How can I send estimates to my clients?</h3>
+      <p>
+        Using Zenys estimate generator, you can download a PDF estimate and send
+        them to your clients via mail. If you want to send estimates directly to
+        your customer you can sign up for our business management software. Your
+        customers can view the estimate by logging into the Zenys customer
+        portal.
+      </p>
+    </li>
+
+    <li>
+      <h3>Will there be ads or watermarks on the estimate I create?</h3>
+      <p>
+        Absolutely not. The online estimates you create are totally free from
+        advertisements or watermarks.
+      </p>
+    </li>
+    <li>
+      <h3>Can I personalize the estimate template?</h3>
+      <p>
+        Of course. Using our free online estimate generator, you get an option
+        to add your company logo or signature to your estimates making them look
+        professional. By clicking on the palette icon, you can also choose
+        colours for your estimate layout that match your brand and logo.
+      </p>
+    </li>
+    <li>
+      <h3>Can I choose between different currency options?</h3>
+      <p>
+        Yes. With our free online estimate maker, you can choose different
+        currency options to build estimates.
+      </p>
+    </li>
+    <li>
+      <h3>Can I save my estimates and customer details?</h3>
+      <p>
+        Yes. By signing up for our
+        <a href="">free business management tool</a> you can save your estimates
+        and customer details. You can also send the estimates directly to your
+        customers and track them separately.
+      </p>
+    </li>
+    <li>
+      <h3>Is Zenys estimate maker actually free?</h3>
+      <p>
+        Absolutely. You can create estimates online for free with our online
+        estimate maker. All you need to do is fill out the template provided.
+        You can save the document, download it and send them to your customers
+        via mail
+      </p>
+    </li>
+    <li>
+      <h3>How do I create tax estimates?</h3>
+      <p>
+        To create tax estimates, you can type in the tax rate in the field
+        provided in the estimate template. Our online estimate maker will
+        automatically calculate the total amount and will be displayed at the
+        button of the estimate.
+      </p>
+    </li>
+    <li>
+      <h3>Can I edit my estimates?</h3>
+      <p>
+        Of Course. All you have to do is click the edit button provided above
+        the estimate template and make the required changes to the created
+        online estimate. If you wish to save the estimate
+        <a href="">you can sign up for our free business management software.</a>
+        You will also be able to access a lot more features to manage your
+        business.
+      </p>
+    </li>
+  </ol>
+
+  <h2>Create Estimate for free- Zenys Online Estimate Maker</h2>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    How to Create an Estimate using Zenys estimate software?
+  </h3>
+  <p>
+    You can easily create an estimate online with Zenys in just a few steps. All
+    you need to do is fill in the fields in the template. Once it is done, you
+    can download the estimate and send it to your clients. If you need to create
+    more than one estimate a month, you can switch to our business management
+    tool and make the process much easier.
+    <br />
+    Here is a step by step guide on how to fill out the estimate template.
+  </p>
+  <h3 style="font-weight: bold">Step 1: Fill in the Estimate details.</h3>
+  <p>
+    In the estimate format provided, type in your document title in the field
+    given. Click on the logo field and click apply logo and select your logo.
+    Type in the estimate details where you can add the Estimate number, Estimate
+    date etc.
+  </p>
+  <h3 style="font-weight: bold">Step 2: Billed by and billed to</h3>
+  <p>
+    Once done with the header, add the name and contact details of the client
+    and your company. If you are GST registered you can add your GST no in the
+    field given.
+  </p>
+  <h3 style="font-weight: bold">Step 3: Item and Charge</h3>
+  <p>
+    Add the list of your products/ services in the items field. Enter the
+    quantity, rate per item and tax next to each item. To add more items click
+    the Add Next Item button and fill in the fields. The total amount will be
+    automatically calculated and displayed at the bottom of the estimate.
+  </p>
+  <h3 style="font-weight: bold">Step 4: Additional Notes</h3>
+  <p>
+    In the last step, you can type in any additional information. In the
+    signature field, add your name and upload your signature. Lastly, enter your
+    name, contact num and your email address.
+    <br />
+    Once you have filled in all the details click preview and download your
+    estimate by clicking the Download button. If you feel like making changes to
+    your estimate click the Edit button and edit your estimate. Our online
+    estimate maker provides you with different layouts which you can apply to
+    your estimates. Follow these very simple steps and create estimates in a
+    minute.
+  </p>
+
+  <h2>Estimate Template in Excel and Word</h2>
+
+  <p>
+    <b>Want more template options?</b> We also provide you with different
+    estimate templates in excel and word format
+    <a href="free-tool/Free-Estimate-Template-Download">(click here)</a>. You
+    can download them for free and modify them as per your business
+    requirements.
+  </p>
+
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    Benefits of using an estimate maker
+  </h3>
+  <p>
+    Creating estimates from scratch takes a lot of your time and effort. When
+    there is an easier and better way to create an estimate, why waste your
+    time? An online estimate maker helps you make professional estimates in just
+    a minute. All you need to do is fill in the estimate details in the template
+    provided. Here are some more benefits of using a free estimate maker like
+    Zenys.
+  </p>
+  <ul>
+    <li>Saves you much time, money and effort.</li>
+    <li>Multiple templates that suit your business needs.</li>
+    <li>
+      Helps you create professional estimates with options to customize them.
+    </li>
+    <li>Feature to add your company logo and signature.</li>
+    <li>Easy PDF download.</li>
+    <li>Simple user interface.</li>
+  </ul>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    What are the Different Types of Estimates?
+  </h3>
+
+  <ul>
+    <li>
+      Preliminary Estimate :
+      <br />
+      Also called an approximate estimate, this cost estimate is usually
+      prepared in the initial stage to have an idea about the approximate cost
+      of the project. They are prepared with reference to the cost of similar
+      services done previously.
+    </li>
+    <li>
+      Quantity Estimate
+      <br />
+      This type of estimate is mainly used in construction projects in which the
+      list of quantities for all materials needed for project completion is
+      specified. This method of estimating helps the client to get an idea about
+      the list of quantities and the corresponding costs for each quantity.
+    </li>
+    <li>
+      Detailed Estimate
+      <br />
+      A preliminary estimate is what later becomes a detailed estimate when more
+      details of the project are available. A detailed estimate is a more
+      accurate estimate that could be prepared when there is detailed
+      information about the quantity, costs, rates and all the materials
+      required to complete the project.
+    </li>
+  </ul>
+
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    Alternatives to using an estimate maker
+  </h3>
+  <p>
+    There are a number of excel estimate templates available on Zenys. You can
+    download them, open them in excel and fill in the estimate details. However,
+    this process of manually typing in the details is time-consuming.
+    <br />
+    Using an online estimate generator you can free yourself with these tiring
+    tasks by simply filling up the fields in the estimate template. But, as a
+    small business owner, you might need to create more than one estimate a
+    month and you don’t want to re-type the client and item details every time.
+    For them, it is much better to switch to a business management software like
+    <a href="">Zenys</a>. Using Zenys you can enjoy a lot of features to manage
+    your business and make your invoicing and payment collections simplified.
+  </p>
+
+  <button mat-raised-button color="accent" [routerLink]="''">
+    Free Sign Up
+  </button>
+</div>
+<br />
+
+<div class="container-lg" *ngIf="!isLoaded && docData.docType == 'Quotation'">
+  <h2 style="font-weight: bold">Quotation Maker Online</h2>
+  <p>
+    Create professional quotations using our free quotation maker online in three simple steps
+  </p>
+  <mat-list>
+    <mat-list-item> Step 1: Enter all the quotation details </mat-list-item>
+    <mat-list-item> Step 2: Click on the "Save and Continue" button and login with your gmail </mat-list-item>
+    <mat-list-item> Step 3: Download your quotation in pdf format </mat-list-item>
+  </mat-list>
+  <br>
+  <p>You can customize your Quotation by going to the Document Settings and apply your brand color and change the
+    quotation design as well!</p>
+
+  <h2>FAQ</h2>
+  <ol>
+    <li>
+      <h3>What is a quotation?</h3>
+      <p>
+        A quotation is a document issued by a seller to a buyer that contains
+        the proposed price of the seller’s goods or services. A quotation may
+        contain additional information such as the taxes, material and labour
+        charge and other factors that contribute to the total amount. It also
+        includes the time period of when the service will be completed or goods
+        will be delivered.
+      </p>
+    </li>
+    <li>
+      <h3>What is the difference between an invoice and a quotation?</h3>
+
+      <p>
+        A quotation includes the proposed price of the goods or services needed
+        by the buyer. It allows the potential customer to know how much the
+        goods or services will cost. It gives the price details, the taxes and
+        other factors that contribute to the total charge of the service or
+        goods.
+        <br />
+        Whereas, an invoice is a document that lists the services or products
+        that have been already sold. It contains information such as the contact
+        details of the buyer and seller, item details with the prices, and the
+        due date of payment.
+      </p>
+    </li>
+    <li>
+      <h3>Is a quote a fixed price?</h3>
+      <p>
+        Yes. A Quote is a fixed price. Once a quotation is accepted by the
+        buyer, it cannot be altered by the seller. But in general practice, the
+        buyer might negotiate on the price and terms and then finalize the sale.
+      </p>
+    </li>
+    <li>
+      <h3>What is the difference between quotation and tender?</h3>
+      <p>
+        A quotation is a proposed price of the services or products issued to a
+        buyer by a seller. It gives a proposed cost of the services to the buyer
+        which is left to the buyer to accept or reject. While a tender is a
+        process where sellers or service providers submit a proposal or bid to
+        provide the goods/services to a potential customer. It is used to find
+        out the best value for money from the service providers.
+      </p>
+    </li>
+    <li>
+      <h3>How do I write a quote to a company?</h3>
+      <p>To write a quote to a company:</p>
+      <ul>
+        <li>
+          Analyze the project: Understand the requirements of your clients and
+          examine their conditions.
+        </li>
+        <li>
+          Set a budget and time schedule: Once you are certain of all
+          requirements you need for the project completion, estimate expenses
+          and fix a timeline.
+        </li>
+        <li>
+          Create a quotation online using a quotation generator: You can use
+          Zenys quotation maker online to create a quotation easily. You only
+          need to fill out the fields provided in the quotation template.
+          Download the quotation format PDF and send them to your customer via
+          mail.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h3>Can we make quotations for free using Zenys?</h3>
+
+      <p>
+        Absolutely. You can create quotations online for free with our online
+        quotation maker. There is no sign-up required. You simply need to fill
+        out the fields in the template provided and download the quotation
+        format PDF to send to your potential customers.
+      </p>
+    </li>
+    <li>
+      <h3>Are quotations legally binding?</h3>
+
+      <p>
+        Yes. Quotations are legally binding once they are approved by the buyer.
+      </p>
+    </li>
+    <li>
+      <h3>Can I choose between different currency options using Zenys?</h3>
+      <p>
+        Yes. With Zenys you can choose different currency options for quote
+        creation.
+      </p>
+    </li>
+    <li>
+      <h3>How can I make a PDF quote?</h3>
+
+      <p>
+        After you create quotes using Zenys, you can download the quotation in
+        pdf format and send them to your clients via email.
+      </p>
+    </li>
+    <li>
+      <h3>How can I send a quotation?</h3>
+
+      <p>
+        Using our quotation maker online, you can download the pdf of the quote
+        you have created and send it to your customers via email. If you want to
+        send quotations directly to your customer you can sign up for our
+        business management software.
+      </p>
+    </li>
+    <li>
+      <h3>Will there be ads or watermarks on the quote I create?</h3>
+      <p>
+        Absolutely not. Your quotations are totally free from advertisements or
+        watermarks. In fact, you can personalize your quotation by adding your
+        company logo and signature.
+      </p>
+    </li>
+    <li>
+      <h3>What is the difference between a quote and an estimate?</h3>
+      <p>
+        A quote and an estimate differ from each other in a few ways.<br />
+        A quotation is a fixed priced offer which means the service providers
+        can move ahead with the work. Once approved, the service providers
+        should adhere to the details mentioned in the quotation for the validity
+        period. However, an estimate is an approximate guess of what the work
+        cost. It is not binding and can change depending on the work.
+      </p>
+    </li>
+    <li>
+      <h3>Does Zenys have multiple quotation templates?</h3>
+      <p>
+        Yes. Zenys provides you with multiple quotation formats for excel and
+        word. You can download them and customize them as per your requirements.
+      </p>
+    </li>
+    <li>
+      <h3>Can I personalize my quotations?</h3>
+      <p>
+        Of course. On Zenys you get an option to add your company logo or
+        signature to your quotes making them look professional. Click on the
+        logo field and upload your logo. At the bottom of the template, you can
+        add the signature in the corresponding field provided. By clicking on
+        the palette icon, you can also choose colours for your quotation layout
+        that match your brand and logo.
+      </p>
+    </li>
+    <li>
+      <h3>How is a price quote different from a sales quote?</h3>
+      <p>
+        A price quote and a sales quote have only slight differences between
+        them. A price quote is a legally binding document that gives a fixed
+        price for a project. However, a sales quote is like a price quote but
+        specifically gives cost details about the buyer’s products only. A price
+        quote could include costs of either products or services or both while a
+        sales quote gives the quantity and price for products only.
+      </p>
+    </li>
+    <li>
+      <h3>What are the other free products provided by Zenys?</h3>
+      <p>
+        Other than a quotation generator, Zenys provides a GST invoice maker and
+        a free estimate maker. You can download formats for free including GST
+        invoice formats, quotation formats, or estimate formats using our tool.
+        We also provide a business management tool and an online platform that
+        is designed for small businesses and freelancers to manage their
+        businesses. You can sign up for our software and avail it.
+      </p>
+    </li>
+  </ol>
+
+  <h2>Create a Quotation Online- Zenys Free Quotation Maker Online</h2>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    How to create a quotation online with Zenys?
+  </h3>
+  <p>
+    You can easily create a quotation online with Zenys in just a few steps. All
+    you need to do is fill in the fields in the template. Once it is done, you
+    can download the quotation and send it to your clients. If you need to
+    create more than one quotation a month, you can switch to our business
+    management tool and make the process much easier. Here is a step by step
+    guide on how to fill out the quotation template.
+  </p>
+  <h3 style="font-weight: bold">Step 1: Fill in the quotation details.</h3>
+  <p>
+    In the quotation format provided, type in your document title in the field
+    given. Click on the logo field and click apply logo and select your logo.
+    Type in the quotation details where you can add the quotation number,
+    quotation date etc.
+  </p>
+
+  <h3 style="font-weight: bold">Step 2: Billed by and billed to</h3>
+  <p>
+    Once done with the header, add the billing details of the client and your
+    company. If you are GST registered you can add your GST no.
+  </p>
+
+  <h3 style="font-weight: bold">Step 3:Item and Charge</h3>
+  <p>
+    Add the list of your products/ services in the items field. Enter the
+    quantity, rate per item and tax next to each item. To add more items click
+    the Add Next Item button and fill in the fields. The total amount will be
+    automatically calculated and displayed at the bottom of the quotation.
+  </p>
+  <h3 style="font-weight: bold">Step 4: Additional Notes</h3>
+  <p>
+    In the last step, you can type in any additional information. In the
+    signature field, add your name and upload your signature. Lastly, enter your
+    name, contact num and your email address.
+    <br />
+    Once you have filled in all the details click preview and download your
+    quotation by clicking the Download button. If you feel like making changes
+    to your quotation click the Edit button and edit your quotation. Our
+    quotation maker online provides you with different layouts which you can
+    apply to your quotations. Follow these very simple steps and create
+    quotations in a minute.
+  </p>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    Why choose Zenys Quotation Maker Online?
+  </h3>
+  <p>
+    Our quotation maker is designed for small businesses and freelancers which
+    is free and easy to use. It helps you make and send professional-looking
+    online quotations to your customers in just a few steps. All you need to do
+    is fill out the fields in the quotation format provided.
+    <br />
+    To look even more professional we have added an option to add your logo in
+    the logo field and your signature at the bottom of the quotation.
+    <br />
+    If you need a quotation template for excel or word you can download the
+    quotation format we provide and customize it as per your needs.
+  </p>
+
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    Benefits of using an online quotation generator?
+  </h3>
+  <p>
+    If you are a small business owner or a freelancer you might have to do
+    multiple tasks at a time. Creating a quotation from scratch takes a lot of
+    time and effort. This is one important reason why you should use a quotation
+    maker. After you worked out all your cost and made a thorough understanding
+    of the service your potential customer needs, you just have to enter the
+    details in the template provided. Using a tool like Zenys you can enjoy a
+    lot more benefits. We have listed down some of the highlights of our
+    software.
+  </p>
+  <ul>
+    <li>Simple user interface</li>
+    <li>Easy to access and create online quotations.</li>
+    <li>Helps to make personalized quotations with logo and signature</li>
+    <li>Saves time and money</li>
+    <li>Multiple quotation templates are available</li>
+    <li>PDF download available</li>
+  </ul>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    Why do you need a Quote?
+  </h3>
+  <p>
+    If you want to establish your business as a credible firm in front of your
+    clients, a quote could help you. Here are the other reasons why it is
+    important for you to issue a quote to your clients.
+  </p>
+  <ul>
+    <li>Document the scope of your project and how much it will cost.</li>
+    <li>Helps strengthen client relationships.</li>
+    <li>Minimizes the risk of confusion, disputes, & business conflicts.</li>
+    <li>Saves time and effort.</li>
+    <li>Makes your firm look professional and an established one.</li>
+    <li>
+      Helps both buyer and seller in understanding the project and the resources
+      required.
+    </li>
+    <li>Helps in reducing the chance of unfinished business.</li>
+    <li>Helps in outlining the terms and conditions in your agreement.</li>
+  </ul>
+  <h3 style="align-items: center; text-align: center; font-weight: bold">
+    A Better Alternative Way To Create A Quotation Online
+  </h3>
+
+  <p>
+    Each time you create a quote for your clients you’ll have to re-enter all
+    the information in the quotation template. This can be a really tiring task.
+    If you are a small business owner you might need to create multiple
+    quotations and save the details for reuse. For them, it is always better to
+    switch to a business management software like Zenys where you can automate
+    this process.
+    <br />
+    Zenys lets you create professional-looking quotations and send them directly
+    to your potential clients in just a few clicks. You can easily track them
+    and convert the quotations into invoices once accepted by the customer too
+    using Zenys. So, make this process easier by signing up for our all in one
+    app.
+  </p>
+  <button mat-raised-button color="accent" [routerLink]="''">
+    Free Sign Up
+  </button>
+  <br />
+</div>
+<br />

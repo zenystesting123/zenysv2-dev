@@ -1,0 +1,109 @@
+<app-topnav></app-topnav>
+
+<div class="container-fluid" style="padding: 0px;background-color: ghostwhite;" *ngIf="!loading">
+    <br>
+   
+    <div
+      class="container-fluid"
+      style="background-color: white; min-height: 750px"
+      *ngIf="previewMode && !viewModeLoading"
+    >
+      <div class="row">
+        <div class="col-md-3" *ngIf="!isMobilesize" style="padding: 0px;">
+          <div style="border-right: 1px solid lightgrey; height: 100%">
+            <mat-selection-list [multiple]="false">
+              <mat-list-option  (click)="contactView()">
+                <mat-icon matListAvatar>
+                  <ngx-avatar
+                    name="{{ customerData.fname1 }}"
+                    textSizeRatio="2"
+                    size="35"
+                  ></ngx-avatar>
+                </mat-icon>
+                <h3 mat-line class="mat-h2 mat-title">
+                  <span style="font-weight: bold" class="truncate-cell">
+                    {{ userData.contactname }}
+                    {{ userData?.secondName }}
+                  </span>
+                </h3>
+                <h4 mat-line *ngIf="!(customerData.companyName === 'N/A' || customerData.companyName === 'Individual')">Company: {{ customerData.companyName }}</h4>
+              </mat-list-option>
+              <mat-divider></mat-divider>
+              <br />
+              <div class="container-fluid">
+                <mat-card-content>
+                  <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold">
+                    Sale Title:
+                  </h3>
+                  <h4 mat-line>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="align-top" 
+                      >{{ (sale | async)?.saleTitle | slice: 0:50 }}</span
+                    >
+                  </h4>
+                  <!-- <h3 mat-line class="mat-h2 mat-title">
+                    <span style="font-weight: bold">
+                      {{ (sale | async)?.saleTitle | slice: 0:50 }}
+                    </span>
+                  </h3> -->
+                  <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold">
+                    Document Details:
+                  </h3>
+  
+                  <h4 mat-line>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="align-top"
+                      >Created On&nbsp;:&nbsp;{{ docData.createdDate | date }}</span
+                    >
+                  </h4>
+  
+                  <h4 mat-line>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="align-top"
+                      >Amount&nbsp;:&nbsp;{{docData.currency}} {{ docData.totalInclTax }}</span
+                    >
+                  </h4>
+                </mat-card-content>
+              </div>
+            </mat-selection-list>
+            <div *ngIf ="docType=='Invoice'" class="container-fluid">
+              <mat-list>
+                <h3 class="mat-h3 mat-subheading-2" style="font-weight: bold">Payment Details</h3>
+                <ng-container *ngIf="!!paymentLink">
+                <h4 mat-line>
+                  &nbsp;&nbsp;&nbsp;
+                  <span class="align-top"
+                    >Payment link&nbsp;:&nbsp;<a href="{{paymentLink.short_url}}"  target="_blank">Click here to pay</a></span
+                  >
+                </h4>
+                </ng-container>
+                <mat-list-item  *ngFor="let payment of paymentList">
+                  <div mat-line>Collected:{{payment.amountCollected}}</div>
+                  <div mat-line> {{payment.paymentDate.toDate() | date}} </div>
+                </mat-list-item>
+              </mat-list>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding: 0px;">
+          <app-docpreview *ngIf="!!userData"
+            [docSaved]="docSaved"
+            [userData]="userData"
+            [docData]="docData"
+            [customerData]="customerData"
+            [itemList]="itemList"
+            [printTemplate]="printTemplate"
+            (editClicked)="editClicked($event)"
+            [scenario]="scenario"
+            (shareClicked)="shareClicked($event)"          
+          >
+          </app-docpreview>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <!-- <div class="container-xl" *ngIf = "loading">
+      <mat-spinner></mat-spinner>
+  </div> -->
+  

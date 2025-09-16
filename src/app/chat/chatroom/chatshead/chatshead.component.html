@@ -1,0 +1,39 @@
+<div style="height:100%;width:100%;margin:0%;padding:0%;">
+  <mat-list style="height:100%;width:100%;margin:0%;padding:0%;">
+  <!-- <mat-list-item *ngFor="let chathead of chatHeads;i as index" (click)="chatHeadClicked(chathead.customerUid,'')"  [class.activec]="chathead.customerUid==current">
+    <mat-icon matListAvatar class="rounded-circle" style="margin-top:auto;margin-bottom: auto;">
+      <ngx-avatar name="{{(chathead.customerEmail).split(' ')[0]}}" size="35" textSizeRatio="1.5"></ngx-avatar>
+  </mat-icon>
+  <h2 mat-line ><span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.customerEmail}}</span></h2>
+  <p mat-line > <span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.lastMessage.message}}</span>
+    <span class="width_limit" style="float: right;">{{chathead.timestamp|date:'short'}}</span>
+  </p>
+ 
+<mat-divider></mat-divider>
+
+</mat-list-item> -->
+<mat-list-item *ngIf="chatHeads.length==0">
+  <p>You have no chats</p>
+</mat-list-item>
+<mat-list-item     style="cursor: pointer;"  class="list" *ngFor="let chathead of chatHeads;i as index"
+(click)="chatHeadClicked(chathead.customerUid,'',chathead.readStatus)"  [class.activec]="chathead.customerUid==current"
+    >
+      <mat-icon matListAvatar style="margin-top: auto; margin-bottom: auto">
+        <ngx-avatar
+          name="{{(chathead.customerEmail).split(' ')[0] }}"
+          size="35"
+          textSizeRatio="1.5"
+        ></ngx-avatar>
+      </mat-icon>
+      <h2 mat-line>
+        <span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.customerEmail}}</span>
+      </h2>
+      <p mat-line>
+        <span class="width_limit" [ngClass]="{'makebold':(chathead.readStatus===false)&&(chathead.lastMessage.From!=uid)}">{{chathead.lastMessage.message.substring(0,20)}}</span>
+        <span class="width_limit" style="float: right;">{{chathead.timestamp|date:'short'}}</span>
+      </p>
+    </mat-list-item>
+  
+
+</mat-list>
+</div>

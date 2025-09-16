@@ -1,0 +1,27 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow-x: hidden;
+}
+
+#pointer {
+  cursor: pointer;
+}
+
+#hoverColor:hover {
+  background-color: whitesmoke;
+  cursor: pointer;
+}
+#listrow{
+  align-items: center;padding-right: 20px;
+}
+#spancentre{
+  align-items: center;
+}

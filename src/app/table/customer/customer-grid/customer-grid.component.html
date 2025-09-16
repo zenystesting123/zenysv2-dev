@@ -1,0 +1,316 @@
+<!-- New material Toolbar ends here   -->
+<mat-progress-bar *ngIf="!progressBarStatus" mode="indeterminate">
+</mat-progress-bar>
+<!--Table-->
+<div [style.display]="
+          customerGridService.customerView =='table' &&
+          commonService.userPlan.contactTableViewEnabled && progressBarStatus  ? 'block' : 'none'"
+  class="container-fluid" style="margin-bottom: 10px">
+  <br />
+  <app-custom-report-table [userId]="userId" [(columns)]="columnsDispaly" [dataList]="CustomerTableDataArray.data"
+    [displayName]="displayName" [tableName]="tableName" [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray"
+    [actAgeing]="actCustAgeing" [statusAge]="custStatusAge" [(selection)]="selection" [accountType]="accountType"
+    [tableDefaultData]="tableDefaultData" [fieldCustomsettings]="contactSettings" [customFields]="customFieldContacts"
+    [disableDownload]="disableDownloadContact" [disableSale]="disableSale" [disableFoll]="disableFoll"
+    [disableCreateNote]="disableCreateNote" [disableEditContact]="disableEditContact" [disableService]="disableService"
+    [whatsAppTemplates]="whatsAppTemplates" [smsTemplates]="smsTemplates" [emailTemplates]="emailTemplates"
+    [emailEnabled]="emailEnabled" [inputFieldNameFollowup]="fieldNameFollowup"
+    [inputFieldNameNotes]="fieldNameContactNotes" [tableFrom]="'lite mode customer'"
+    (onTableSettingsEvent)="onTableSettings($event)"></app-custom-report-table>
+  <br />
+  <br />
+</div>
+<ng-container *ngIf="reload">
+  <!----------List View Start----------------------------------->
+  <div [style.display]="
+    customerGridService.customerView =='grid' && commonService.userPlan.contactGridViewEnabled && 
+    progressBarStatus  ? 'block' : 'none'" style="height: 100%">
+    <div class="wrapper d-flex flex-row bd-highlight justify-content-start" *ngIf="custLoaded" style="height: 100%">
+      <div *ngFor="let stage of custListStatus; let i = index">
+      </div>
+      <div class="p-2 bd-highlight" *ngFor="let stage of custListStatus; let i = index" style="height: 100%">
+        <div cdkDropList #stage="cdkDropList" id="{{ stage }}" style="height: 100%"
+          [cdkDropListData]="getFilteredData(customerData, stage)"
+          [cdkDropListConnectedTo]="getFilteredStatus(custListStatus, stage)" class="example-list bg-white"
+          [ngClass]="{ collapsed: stageCollapseArray[i] }" (cdkDropListDropped)="drop($event)">
+          <!--Collapsed header-->
+          <div class="d-flex flex-column bd-highlight justify-content-left border border-2 rounded"
+            *ngIf="stageCollapseArray[i]" [ngClass]="
+                  stageInPipeline(i).border + ' ' + stageInPipeline(i).background
+                ">
+            <div class="p-2 bd-highlight align-items-center">
+              <button mat-icon-button (click)="hideStage(i)" color="accent" title="Expand {{contactSettings.status.displayName}}">
+                <mat-icon>
+                  <span class="material-symbols-outlined">
+                    keyboard_double_arrow_right
+                  </span>
+                </mat-icon>
+              </button>
+            </div>
+            <div class="p-2 bd-highlight">
+              <h3 id="titleDesign" style="writing-mode: vertical-rl" [ngClass]="stageInPipeline(i).text">
+                {{ commonService.getStatusName('customers',
+                tableService.pipelineCustomerSelection,stage) }}
+                <span class="badge" [ngClass]="
+                        stageInPipeline(i).badge + ' ' + stageInPipeline(i).text
+                      " title="Number of {{ fieldNameContact }}s">{{ getFilteredData(customerData, stage).length
+                  }}</span>
+              </h3>
+            </div>
+          </div>
+          <div *ngIf="stageCollapseArray[i] == false">
+            <!--Expanded header-->
+            <div class="box">
+              <div class="row header">
+                <div class="d-flex flex-row bd-highlight justify-content-between border border-2 rounded" [ngClass]="
+                        stageInPipeline(i).border +
+                        ' ' +
+                        stageInPipeline(i).background
+                      ">
+                  <div class="bd-highlight">
+                    <h3 id="titleDesign" class="mat-h3 mat-subheading-2" [ngClass]="stageInPipeline(i).text">
+                      {{ commonService.getStatusName('customers',
+                      tableService.pipelineCustomerSelection,stage) }}
+                      <span class="badge" [ngClass]="
+                              stageInPipeline(i).badge +
+                              ' ' +
+                              stageInPipeline(i).text
+                            " title="Number of {{ fieldNameContact }}s">{{
+                        getFilteredData(customerData, stage).length
+                        }}</span>
+                    </h3>
+                  </div>
+                  <div class="bd-highlight">
+                    <button mat-icon-button (click)="hideStage(i)" color="accent" title="Collapse Status">
+                      <mat-icon>
+                        <span class="material-symbols-outlined">
+                          keyboard_double_arrow_left
+                        </span>
+                      </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row content">
+                <cdk-virtual-scroll-viewport itemSize="200" class="example-viewport">
+                  <div class="card" cdkDrag style="margin: 10px" [cdkDragData]="custFiltered"
+                    [cdkDragDisabled]="disableEditContact" *cdkVirtualFor="
+                          let custFiltered of getFilteredData(
+                            customerData,
+                            stage
+                          );
+                          let i = index;
+                          trackBy: trackbyCustList
+                        ">
+                    <div class="card-body">
+                      <div class="d-flex flex-column bd-highlight justify-content-between">
+                        <div class="bd-highlight">
+                          <h3 class="card-title truncate-cell">
+                            <a class="link-primary" [routerLink]="[
+                                    '/dash/contact/customerdetails/',
+                                    custFiltered.id
+                                  ]">{{ custFiltered.firstName }}
+                              {{ custFiltered.secondName }}
+                              {{ custFiltered.surname }}
+                            </a>
+                          </h3>
+                          <ul class="list-unstyled" style="margin-bottom: 5px">
+                            <li *ngFor="let field of displayFields">
+                              {{ field.header }}:
+                              {{ getFieldValue(field, custFiltered) }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div style="padding-bottom: 10px">
+                        <mat-chip-list aria-label="Tag">
+                          <mat-chip class="truncate-cell2" *ngIf="custFiltered.orgId"
+                            title="{{ fieldNameOrganization }}" style="
+                                  color: #2a6af6;
+                                  background-color: #f1f2f4;
+                                  height: 24px;
+                                  top: calc(50% - 24px / 2);
+                                  font-family: Roboto;
+                                  font-style: normal;
+                                  font-weight: 500;
+                                  font-size: 12px;
+                                  line-height: 24px;
+                                ">{{ custFiltered.companyName }}</mat-chip>
+                        </mat-chip-list>
+                      </div>
+                      <div class="d-flex flex-row bd-highlight justify-content-between">
+                        <div class="bd-highlight">
+                          <span class="badge bg-soft-danger text-danger" *ngIf="getAgedStatus(custFiltered)"
+                            title="Max allowed days in stage crossed">Aged</span>
+                        </div>
+
+                        <div class="d-flex flex-row">
+                          <!-- for initiating call if acllbridging is activated ,service provider is bonvoice and customer have a contatct number -->
+                          <button mat-icon-button color="primary" *ngIf="
+                                  custFiltered?.contactNo &&
+                                  enableOutboundCallsViaCallBridging
+                                ">
+                            <mat-icon style="
+                                    margin: 0px;
+                                    padding: 0px;
+                                    cursor: pointer;
+                                    float: right;
+                                  " class="sizes" mat-list-icon (click)="onCall(custFiltered)">
+                              phone_forwarded
+                            </mat-icon>
+                          </button>
+
+                          <!--  button to add sale, service etc -->
+                          <button mat-icon-button aria-label="add button" [matMenuTriggerFor]="menuAdd" *ngIf="
+                                commonService.userPlan.saleAccess ||
+                                commonService.userPlan.serviceAccess ||
+                                (commonService.userPlan.activitiesAccess &&
+                                  commonService.userPlan.tasksAccess) ||
+                                (commonService.userPlan.activitiesAccess &&
+                                  commonService.userPlan.followupsAccess)
+                              ">
+                            <mat-icon color="accent">add</mat-icon>
+                          </button>
+
+                          <button mat-icon-button aria-label="edit button" [disabled]="disableEditContact || !onCheckNetwork()"
+                            (click)="editCustomer(custFiltered)">
+                            <mat-icon color="accent" [ngClass]="{ isDisabled: disableEditContact || !onCheckNetwork() }">edit</mat-icon>
+                          </button>
+
+                          <!-- chat button to send email, message, whatsapp -->
+                          <button mat-icon-button class="material-icons-outlined" aria-label="add button"
+                            [matMenuTriggerFor]="menuChat">
+                            <mat-icon color="accent">chat_bubble</mat-icon>
+                          </button>
+
+                          <span style="margin-top: 5px">
+                            <ngx-avatar name="{{
+                                    commonService.getAssignedToName(custFiltered.assignedTo).split(' ')[0]
+                                  }}" textSizeRatio="2" size="30"
+                              title="Assigned to {{commonService.getAssignedToName(custFiltered.assignedTo)}}">
+                            </ngx-avatar>
+                          </span>
+
+                          <mat-menu #menuChat="matMenu">
+                            <button mat-menu-item [matMenuTriggerFor]="sendEmailCard"
+                              *ngIf="emailEnabled && custFiltered.email">
+                              Email
+                            </button>
+                            <button mat-menu-item [matMenuTriggerFor]="sendSMSCard" *ngIf="smsEnabled">
+                              SMS
+                            </button>
+                            <button mat-menu-item [matMenuTriggerFor]="sendWhatsappCard">
+                              Whatsapp
+                            </button>
+                          </mat-menu>
+
+                          <!-- send sms sub options -->
+                          <mat-menu #sendSMSCard="matMenu">
+                            <button mat-menu-item *ngFor="let smsTempltate of smsTemplates"
+                              (click)="triggerSms(smsTempltate, custFiltered)">
+                              {{ smsTempltate.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="smsTemplates.length === 0">
+                              No templates added!
+                            </button>
+                          </mat-menu>
+
+                          <!-- send email sub options -->
+                          <mat-menu #sendEmailCard="matMenu">
+                            <button mat-menu-item *ngFor="let emailTempltate of emailTemplates" (click)="
+                                    triggerEmail(emailTempltate, custFiltered)
+                                  ">
+                              {{ emailTempltate.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="emailTemplates.length === 0">
+                              No templates added!
+                            </button>
+                          </mat-menu>
+
+                          <!-- send whatsapp sub options -->
+                          <mat-menu #sendWhatsappCard="matMenu">
+                            <button mat-menu-item *ngFor="let waTempltates of whatsAppTemplates" (click)="
+                                    triggerWhatsapp(waTempltates, custFiltered)
+                                  ">
+                              {{ waTempltates.templateName }}
+                            </button>
+                            <button mat-menu-item *ngIf="
+                                    whatsAppTemplates.length === 0 &&
+                                    waEnabled === true
+                                  ">
+                              No templates added!
+                            </button>
+                            <button mat-menu-item *ngIf="waEnabled === false" (click)="
+                                    triggerWhatsapp('noTemplate', custFiltered)
+                                  ">
+                              --without template--
+                            </button>
+                          </mat-menu>
+
+                          <mat-menu #menuAdd="matMenu">
+                            <!-- add sale -->
+                            <button *ngIf="commonService.userPlan.saleAccess" mat-menu-item
+                              (click)="onAddSale(custFiltered.id)" [disabled]="
+                                    commonService.addDocLimitaion
+                                      .addSaleDisable || disableSale
+                                  ">
+                              <mat-icon [ngClass]="{
+                                      isDisabled:
+                                        commonService.addDocLimitaion
+                                          .addSaleDisable || disableSale
+                                    }" color="accent">work</mat-icon>{{ fieldNameSale }}
+                            </button>
+
+                            <!-- add service -->
+                            <button *ngIf="commonService.userPlan.serviceAccess" mat-menu-item
+                              (click)="onAddService(custFiltered.id)" [disabled]="disableService">
+                              <mat-icon color="accent" [ngClass]="{ isDisabled: disableService }">support_agent
+                              </mat-icon>{{ fieldNameService }}
+                            </button>
+
+                            <!-- add task -->
+                            <button
+                              *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess"
+                              mat-menu-item (click)="
+                                    addTask(
+                                      custFiltered
+                                    )
+                                  ">
+                              <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+                            </button>
+
+                            <!-- add followUp -->
+                            <button
+                              *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess"
+                              mat-menu-item (click)="
+                                    onCreateFollowUps(
+                                      custFiltered
+                                    )
+                                  " [ngClass]="{ isDisabled: disableFoll }">
+                              <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+                            </button>
+
+                            <!-- add note -->
+                            <button mat-menu-item (click)="
+                                  addNotes(custFiltered,'btn_create_note_web')
+                                  " [ngClass]="{ isDisabled: disableCreateNote }">
+                              <mat-icon color="accent">note_add</mat-icon>{{ fieldNameContactNotes }}
+                            </button>
+
+                          </mat-menu>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </cdk-virtual-scroll-viewport>
+              </div>
+              <div class="row footer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+    </div>
+  </div>
+</ng-container>
+<!-- view ends-->

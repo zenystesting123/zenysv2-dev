@@ -1,0 +1,59 @@
+<h2 mat-dialog-title *ngIf="!selectedService">Avail services to grow your bussiness through zenys</h2>
+<h2 mat-dialog-title *ngIf="selectedService"> Let us know your preferred time to call and understand your
+    requirement</h2>
+<form #serviceForm="ngForm">
+    <div mat-dialog-content>
+        <div class="row" style="align-items: center;text-align: center;justify-content: center;"
+            *ngIf="!selectedService">
+            <div class="col" (click)="OnSelectedService('Digital Marketing')">
+                <button mat-icon-button color="accent">
+                    <mat-icon>home</mat-icon>
+                </button><br>
+                Digital Marketing
+            </div>
+            <div class="col" (click)="OnSelectedService('Website Development')">
+                <button mat-icon-button color="accent">
+                    <mat-icon>home</mat-icon>
+                </button><br>
+                Website Development
+            </div>
+            <div class="col" (click)="OnSelectedService('Filing Tax')">
+                <button mat-icon-button color="accent">
+                    <mat-icon>home</mat-icon>
+                </button><br>
+                Filing Tax
+            </div>
+        </div>
+        <div class="row" *ngIf="selectedService">
+
+            <div class="row">
+                <div class="col-6">
+                    <mat-form-field>
+                        <mat-label>Contact Number</mat-label>
+                        <input matInput #contactNumbers="ngModel" [(ngModel)]="contactNumber" name="contactNumbers"
+                            type="text" required maxlength="15" />
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field>
+                        <mat-label>Preferred time to call</mat-label>
+                        <mat-select [(ngModel)]="preferredTime" name="preferredTimes" required>
+                            <mat-option value="9 AM to 11 AM">9 AM to 11 AM</mat-option>
+                            <mat-option value="11 AM to 1 PM">11 AM to 1 PM</mat-option>
+                            <mat-option value="1 PM to 3 PM"> 1 PM to 3 PM</mat-option>
+                            <mat-option value="3 PM to 5 PM">3 PM to 5 PM</mat-option>
+                            <mat-option value="5 PM to 7 PM">5 PM to 7 PM</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div mat-dialog-actions style="float: right;">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button *ngIf="selectedService" mat-button color="accent" [disabled]="!serviceForm.valid || !onCheckNetwork()"
+        (click)="onSubmit()" mat-button>
+        Submit
+    </button>
+</div>

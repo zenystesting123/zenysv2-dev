@@ -1,0 +1,29 @@
+
+<ul class="m-0 list-unstyled" id="j">
+   
+        <li [style.color]="previewService.docColor" *ngIf="!previewService.docData.cancel && previewService.docData.docTitle != ''"
+            style="padding-bottom: 10px;">
+            <span style="font-size: xx-large;">
+                {{ previewService.docData.docTitle }}
+            </span>
+        </li>
+        <li [style.color]="previewService.docColor" *ngIf="previewService.docData.docTitle != '' && previewService.docData.cancel" style="padding-bottom: 10px;">
+            <span style="font-size: xx-large;">
+                {{ previewService.docData.docTitle }} (Cancelled)
+            </span>
+        </li>
+        <li [style.color]="previewService.docColor"
+            *ngIf="previewService.docData.docTitle == '' && !previewService.docData.cancel "
+            style="padding-bottom: 10px;">
+            <span style="font-size: xx-large;">
+                {{ previewService.docType }}
+            </span>
+        </li>
+        <li [style.color]="previewService.docColor"
+            *ngIf="previewService.docData.docTitle == '' && previewService.docData.cancel "
+            style="padding-bottom: 10px;">
+            <span style="font-size: xx-large;">
+                {{ previewService.docType }} (Cancelled)
+            </span>
+        </li>
+</ul>

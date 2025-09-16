@@ -1,0 +1,698 @@
+<!-- TOOLBAR -->
+<mat-toolbar class="border-bottom"
+  style="flex: 0 0 64px;"
+
+  [ngStyle]="{ 'background-color': 'white' }"
+>
+  <button mat-icon-button title="back" (click)="onBack()">
+    <mat-icon color="accent"> arrow_back </mat-icon>
+  </button>
+  <span>Field Name Settings</span> &nbsp;&nbsp;&nbsp;&nbsp;
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
+<!-- PROGRESS BAR -->
+<mat-progress-bar
+  [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+  mode="indeterminate"
+>
+</mat-progress-bar>
+
+<!-- If access is restricted -->
+<div
+  *ngIf="progressBarStatus && disableSettView"
+  class="container"
+  style="text-align: center"
+>
+  <br />
+  <h3>No Access</h3>
+</div>
+
+<!-- Div if acssess permitted -->
+<div class="container mb-5" *ngIf="progressBarStatus && !disableSettView">
+  <br /><br /><br />
+
+  <div class="row">
+    <div class="col-3">
+      <h2>Contact and Sales</h2>
+      <!-- CONTACT -->
+      <mat-form-field appearance="fill">
+        <mat-label>Display Contact as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameContact"
+          name="fieldNameContact"
+          required
+          [disabled]="!editContact"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editContact"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editContactfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editContact"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearContact()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editContact"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameContact?.length < 3"
+          color="accent"
+          (click)="saveContact()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- SALE -->
+      <mat-form-field appearance="fill">
+        <mat-label>Display Sale as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameSale"
+          name="fieldNameSale"
+          required
+          [disabled]="!editSale"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editSale"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editSalefn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editSale"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearSale()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editSale"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameSale?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveSale()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- CONTACTNOTES -->
+      <mat-form-field appearance="fill">
+        <mat-label>Display Notes under Contact as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameContactNotes"
+          name="fieldNameContactNotes"
+          required
+          [disabled]="!editContactNotes"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editContactNotes"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editContactNotesfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editContactNotes"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearContactNotes()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editContactNotes"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameContactNotes?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveContactNotes()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- sALENOTES -->
+      <mat-form-field appearance="fill">
+        <mat-label>Display Notes under Sale as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameSaleNotes"
+          name="fieldNameSaleNotes"
+          required
+          [disabled]="!editSaleNotes"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editSaleNotes"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editSaleNotesfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editSaleNotes"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearSaleNotes()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editSaleNotes"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameSaleNotes?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveSaleNotes()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="col-3">
+      <h2>Sales Documents</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Display Estimate as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameEstimate"
+          name="fieldNameEstimate"
+          required
+          [disabled]="!editEstimate"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editEstimate"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editEstimatefn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editEstimate"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearEstimate()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editEstimate"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameEstimate?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveEstimate()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <br />
+      <mat-form-field appearance="fill">
+        <mat-label>Display Quotation as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameQuotation"
+          name="fieldNameQuotation"
+          required
+          [disabled]="!editQuotation"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editQuotation"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editQuotationfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editQuotation"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearQuotation()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editQuotation"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameQuotation?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveQuotation()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Display Invoice as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameInvoice"
+          name="fieldNameInvoice"
+          required
+          [disabled]="!editInvoice"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editInvoice"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editInvoicefn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editInvoice"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearInvoice()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editInvoice"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameInvoice?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveInvoice()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="col-3">
+      <h2>Activities</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Display FollowUp as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameFollowup"
+          name="fieldNameFollowup"
+          required
+          [disabled]="!editFollowUp"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editFollowUp"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editFollowUpfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editFollowUp"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearFollowUp()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editFollowUp"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameFollowup?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveFollowUp()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <br />
+      <mat-form-field appearance="fill">
+        <mat-label>Display Meeting as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameMeeting"
+          name="fieldNameMeeting"
+          required
+          [disabled]="!editMeeting"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editMeeting"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editMeetingfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editMeeting"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearMeeting()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editMeeting"
+          matSuffix
+          mat-icon-button
+          [disabled]="this.fieldNameMeeting?.length < 3"
+          aria-label="Save"
+          color="accent"
+          (click)="saveMeeting()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Display Task as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameTask"
+          name="fieldNameTask"
+          required
+          [disabled]="!editTask"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editTask"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editTaskfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editTask"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearTask()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editTask"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameTask?.length < 3"
+          color="accent"
+          (click)="saveTask()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="col-3">
+      <h2>Others</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Display Products and Services as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameItems"
+          name="fieldNameItems"
+          required
+          [disabled]="!editItems"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editItems"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editItemsfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editItems"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearItems()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editItems"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameItems?.length < 3"
+          color="accent"
+          (click)="saveItems()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Display Products and Services Category as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameItemsCategory"
+          name="fieldNameItemsCategory"
+          required
+          [disabled]="!editItemsCategory"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editItemsCategory"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editItemsCategoryfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editItemsCategory"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearItemsCategory()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editItemsCategory"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameItemsCategory?.length < 3"
+          color="accent"
+          (click)="saveItemsCategory()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Display Collection as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameCollection"
+          name="fieldNameCollection"
+          required
+          [disabled]="!editCollection"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editCollection"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editCollectionfn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editCollection"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearCollection()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editCollection"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameCollection?.length < 3"
+          color="accent"
+          (click)="saveCollection()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Display Expense as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameExpense"
+          name="fieldNameExpense"
+          required
+          [disabled]="!editExpense"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editExpense"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editExpensefn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editExpense"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearExpense()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editExpense"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameExpense?.length < 3"
+          color="accent"
+          (click)="saveExpense()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+      <!-- service -->
+      <mat-form-field appearance="fill">
+        <mat-label>Display Support as</mat-label>
+        <input
+          matInput
+          [(ngModel)]="this.fieldNameService"
+          name="fieldNameService"
+          required
+          [disabled]="!editService"
+          [maxLength]="maxLength"
+        />
+        <button
+          *ngIf="!editService"
+          matSuffix
+          mat-icon-button
+          aria-label="Edit"
+          color="accent"
+          (click)="editServicefn()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="editService"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          color="warn"
+          (click)="clearService()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editService"
+          matSuffix
+          mat-icon-button
+          aria-label="Save"
+          [disabled]="this.fieldNameExpense?.length < 3"
+          color="accent"
+          (click)="saveService()"
+        >
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <br />
+
+  <small>*Provide Singular values</small>
+</div>

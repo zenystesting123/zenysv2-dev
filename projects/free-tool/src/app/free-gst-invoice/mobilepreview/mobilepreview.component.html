@@ -1,0 +1,49 @@
+<nav class="navbar navbar-light bg-light">
+
+        
+        <button (click)="previous()" mat-icon-button color="primary"
+        aria-label="Example icon button with a home icon"
+        title="Previous print layout">
+        <mat-icon>navigate_before</mat-icon>
+        </button>
+        <button (click)="next()" mat-icon-button color="primary"
+        aria-label="Example icon button with a home icon" title="Next print layout">
+        <mat-icon>navigate_next</mat-icon>
+        </button>  
+        <button [(colorPicker)]="color" mat-icon-button color="primary"
+         aria-label="Example icon button with a home icon">
+        <mat-icon>palette</mat-icon>
+        </button> 
+        <button mat-icon-button color="primary" (click)="print()" #printButton id="printButton"
+        aria-label="Example icon button with a print icon" 
+        title="Save/ Print">
+        <mat-icon>print</mat-icon>
+        </button>
+  </nav>
+
+
+<div class="wrapper">
+    <div class="header" style="padding-top: 10px;">
+        <div class="container header-container">
+            
+    <div class="card">
+
+            <div *ngIf="layout==1"  class="container">
+                 <img style="width:400px;" src="https://binaries.templates.cdn.office.net/support/templates/en-us/lt16400961_quantized.png">
+                <app-preview1 [hidden]="true"></app-preview1>
+            </div>
+            <div *ngIf="layout==2" class="container">
+                <img style="width:400px;" src="https://cdn.www.zervant.com/wp-content/uploads/2019/01/invoice-template-sole-trader-nonvat-744x1052.jpg">
+
+                <app-preview2 [hidden]="true" ></app-preview2>
+            </div>
+            <div *ngIf="layout==3"  class="container">
+                <img style="width:400px;" src="https://www.freshbooks.com/wp-content/uploads/2018/12/sample-PDF-Invoice2-1.png">
+
+                <app-preview3 [hidden]="true"></app-preview3>
+            </div>
+        
+    </div>
+   </div>
+    </div>
+</div>

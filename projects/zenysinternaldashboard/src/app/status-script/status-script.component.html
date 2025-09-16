@@ -1,0 +1,34 @@
+<div class="center">
+  <!-- <p>
+    // 1. Add 2 branches-Calicut, Kochi under subusers
+    // 2. Configure branches to subusers
+    // 3. Then run script
+  </p> -->
+  <p>Enter userId: </p>
+  <input matInput type="text" name="userId1" ngModel #userId1="ngModel" style="width: 400px" />
+  <br>
+
+  <!-- profiles add fields -->
+  <button mat-button color="primary" (click)="updateAtUserCollection(userId1.value)">Step1: Update Pipelines And Stages
+    in SuperUser at user level and in COntact collection</button>
+  <br>
+  <button mat-button color="primary" (click)="updateAtSUbUsers(userId1.value)">Step2: Update Pipelines And Stages in
+    Subusers</button>
+  <br>
+  <button mat-button color="primary" (click)="updateServicePipelineAndStatus(userId1.value)">Step3: Service pipeline and
+    stage update</button>
+  <br>
+  <button mat-button color="primary" (click)="updateSalePipelineAndStatus(userId1.value)">Step 4: Update Sale pipeline
+    and stage</button>
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;If any error occured while updating in contacts, rerun for updating in contacts
+  <button mat-button color="primary" (click)="updateContacts(userId1.value)">Step5: Update Pipelines And Stages in Contacts </button>
+    <br>
+
+  <!-- <button mat-button color="primary" (click)="updateProducts(userId1.value)">Update Items Collection</button> -->
+  <!-- <button mat-button color="primary" (click)="updateStatus(userId1.value)">Update Status</button> -->
+  <!-- <button mat-button color="primary" (click)="updateFieldsInProfiles(userId1.value)">Update Fields in Profiles</button> -->
+  <!-- <button mat-button color="primary" (click)="updateReAssignAndDataAccessRule(userId1.value)">Update ReAssign and DataAccessRule fields </button> -->
+  <!-- <button mat-button color="primary" (click)="addAssociatedBranch(userId1.value)">Add AssociatedBranch</button> -->
+
+</div>

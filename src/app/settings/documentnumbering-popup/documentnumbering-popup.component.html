@@ -1,0 +1,15 @@
+<h3 mat-dialog-title>Configure Number and Prefix for {{data.docType}}</h3>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>{{data.docType}} Number Prefix</mat-label>
+    <input matInput [(ngModel)]="data.docPrefix"  type="text">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>Next {{data.docType}} Number</mat-label>
+    <input matInput [(ngModel)]="data.CurrentDocNumber" required type="number">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="accent" cdkFocusInitial (click)="onUpdate()">Save</button>
+</div>

@@ -1,0 +1,68 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar *ngIf="!disableViewExpense && commonService.userPlan.expenseAccess" class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }">
+    <!--
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+  -->
+    <mat-icon class="text-primary" mat-list-icon>article
+    </mat-icon>&nbsp;
+    <span class="text-primary-light">{{ fieldNameExpense }}s</span>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field appearance="outline" style="font-size: 14px; height:100%">
+      <mat-label>View</mat-label>
+      <mat-select placeholder="Select view" [(ngModel)]="viewSettingSelected" name="action">
+        <mat-option *ngFor="let view of viewSettingArray, let i = index" [value]="view" (click)="viewChanged(i)">
+          {{view.viewName}}
+        </mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option (click)="editView('Add')" [value]="0">
+          <mat-icon>add</mat-icon>Add view
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <button mat-icon-button title="Edit view" (click)="editView('Edit')">
+      <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+    </button>
+     <!-- delete view -->
+    <button mat-icon-button title="Delete view" (click)="deleteView()" *ngIf="viewSettingArray.length > 1">
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+
+
+    <!-- Add new expense button -->
+    <button [ngClass]="{ isDisabled: disableCreateExp }" mat-mini-fab color="accent" mat-icon-button
+      aria-aria-label="Add new expense icon" (click)="addExpense()" title="Add new {{fieldNameExpense}}"
+      [disabled]="!onCheckNetwork()">
+      <mat-icon [ngStyle]="{ color: 'white' }">add</mat-icon>
+    </button>
+  </mat-toolbar>
+  <!-- PROGRESSS BAR -->
+  <mat-progress-bar *ngIf="!progressBarStatus" mode="indeterminate">
+  </mat-progress-bar>
+
+  <!-- CONTENT -->
+  <div [style.visibility]="!progressBarStatus ? 'hidden' : 'visible'"
+    style=" overflow-y: auto;  height: 100%;" class="bg-soft-secondary">
+    <!-- IF NO ACCESS -->
+    <div *ngIf="disableViewExpense  || !commonService.userPlan.expenseAccess" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <!--Table-->
+    <div *ngIf="commonService.userPlan.expenseAccess" class="container-fluid" style="margin-bottom: 30px"
+      [style.display]="disableViewExpense ? 'none' : 'block' ">
+      <br />
+      <app-custom-report-table *ngIf="progressBarStatus" [userId]="userId" [columns]="columns"
+        [dataList]="documentsArray.data" [displayName]="displayName" [tableName]="tableName"
+        [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray" [pipelineNames]="pipelineNames"
+        [disableEdit]="disableEditExpense" [tableDefaultData]="tableDefaultData" [fieldCustomsettings]="expenseSettings"
+        [customFields]="customFields" [contactSettings]="contactSettings" [saleTitleSettings]="saleTitleSettings"
+        [serviceTitleSettings]="serviceTitleSettings" [disableDownload]="disableExpDownload"></app-custom-report-table>
+    </div>
+  </div>
+</div>

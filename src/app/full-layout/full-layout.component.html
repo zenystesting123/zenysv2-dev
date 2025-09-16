@@ -1,0 +1,2931 @@
+<!--View for large screens-->
+
+<div
+  #scrollContainer
+  *ngIf="!isMobilesize"
+  style="height: 100%; overflow-y: hidden"
+>
+  <mat-sidenav-container hasBackdrop="false" *ngIf="!this.logoutLoader && !loader">
+    <!-- LEFT SIDE SIDENAVIGATION -->
+    <mat-sidenav
+      class="border-start"
+      #sidenav
+      mode="side"
+      opened
+      [ngStyle]="{ 'width.px': contentMargin }"
+      style="overflow-x: hidden; min-width: 90px"
+    >
+      <!-- EXPANDED NAV LIST -->
+      <mat-nav-list *ngIf="sideNavexpanded" style="padding-right: 10px">
+        <a [routerLink]="'/dash/home'" class="navbar-brand">
+          <p style="font-size: 20px; color: 455A64; margin-left: 32px">
+            <img
+              border="0"
+              alt="Zenys"
+              class="center-2"
+              src="assets/icons/icon-72x72.png"
+            />ZENYS
+          </p>
+        </a>
+
+        <!-- Add icon -->
+        <div
+          class="d-flex justify-content-center"
+          style="
+            margin-top: calc(10% - 10px / 2);
+            margin-bottom: calc(10% - 10px / 2);
+          "
+        >
+          <!--
+                <div class="p-2 bd-highlight">
+                  <div mat-list-item class="mb-auto p-2 bd-highlight">
+                    <button
+                      mat-raised-button
+                      color="accent"
+                      style="
+                        height: 48px;
+                        width: 131px;
+                        color: #2a6af6;
+                        background-color: white;
+                        border-radius: 32px;
+                        padding: 10px, 20px, 10px, 12px;
+                      "
+                      aria-aria-label="Add new icon"
+                      title="Add new {{ fieldNameContact }}/{{ fieldNameSale }}"
+                      [matMenuTriggerFor]="addMenu"
+                      [disabled]="!networkCheck.onNetworkCheck()"
+                    >
+                      <mat-icon [ngStyle]="{ color: '#2A6AF6' }">add</mat-icon
+                      >&nbsp;ADD NEW
+                    </button>
+                    <mat-menu #addMenu="matMenu" yPosition="below">
+                      <button
+                        [disabled]="
+                          addDocumentDisable.addContactDisable || disableContact
+                        "
+                        mat-menu-item
+                        title="Add {{ fieldNameContact }}"
+                        (click)="addcontactfn()"
+                      >
+                        Add {{ fieldNameContact }}
+                      </button>
+                      <button
+                        [disabled]="addDocumentDisable.addSaleDisable || disableSale"
+                        mat-menu-item
+                        title="Add {{ fieldNameSale }}"
+                        (click)="addsalefn()"
+                      >
+                        Add {{ fieldNameSale }}
+                      </button>
+                      <button
+                        [disabled]="disableService"
+                        mat-menu-item
+                        title="Add Service"
+                        (click)="addservicefn()"
+                      >
+                        Add Service
+                      </button>
+                      <button
+                        mat-menu-item
+                        *ngIf="!disableCreateFollowUp"
+                        title="Add {{fieldNameFollowup}}"
+                        (click)="onCreateFollowUp()" [disabled]="!networkCheck.onNetworkCheck()">
+                        Add {{fieldNameFollowup}}
+                      </button>
+                      <button
+                      mat-menu-item
+                      title="Add {{fieldNameTask}}"
+                      (click)="addTask()" [disabled]="!networkCheck.onNetworkCheck()">
+                      Add {{fieldNameTask}}
+                      </button>
+
+                       <button
+                        mat-menu-item
+                        title="Add Document"
+                        [matMenuTriggerFor]="addDocuments"
+                      >
+                        Add Document
+                      </button>
+                      <mat-menu #addDocuments="matMenu" yPosition="below">
+                        <button
+                          mat-menu-item
+                          title="Add {{ fieldNameEstimate }}"
+                          [routerLink]="
+                            '/dash/document/documentmanagement/na/create/Estimate/na/na'
+                          "
+                          [disabled]="
+                            addDocumentDisable.addEstimateDisable ||
+                            disableDocCreateEst
+                          "
+                        >
+                          {{ fieldNameEstimate }}
+                        </button>
+                        <button
+                          mat-menu-item
+                          title="Add {{ fieldNameQuotation }}"
+                          [routerLink]="
+                            '/dash/document/documentquotationmanagement/na/create/Quotation/na/na'
+                          "
+                          [disabled]="
+                            addDocumentDisable.addQuotationDisable ||
+                            disableDocCreateQuot
+                          "
+                        >
+                          {{ fieldNameQuotation }}
+                        </button>
+                        <button
+                          mat-menu-item
+                          title="Add {{ fieldNameInvoice }}"
+                          [routerLink]="
+                            '/dash/document/documentinvoicemanagement/na/create/Invoice/na/na'
+                          "
+                          [disabled]="
+                            addDocumentDisable.addInvoiceDisable ||
+                            disableDocCreateInv
+                          "
+                        >
+                          {{ fieldNameInvoice }}
+                        </button>
+                      </mat-menu>
+                    </mat-menu>
+                  </div>
+                </div>
+              -->
+        </div>
+        <!--  HOME ICON
+              <a
+                mat-list-item
+                class="section-heading btnhoverX"
+                [routerLink]="'/dash/home'"
+              >
+                <mat-icon mat-list-icon [ngStyle]="{ color: 'white' }">home</mat-icon>
+                &nbsp;HOME
+              </a>
+      -->
+        <!-- Organization list -->
+        <a
+          *ngIf="commonService?.userPlan?.orgAccess"
+          [ngClass]="{
+            isDisabled: disableOrgView,
+            'text-primary': organSelected,
+            'text-primary-50': !organSelected
+          }"
+          mat-list-item
+          (click)="setNavOption('Organization')"
+          class="section-heading btnhoverX"
+          [routerLink]="'/dash/organisation/orglist'"
+        >
+          <mat-icon
+            [ngClass]="{
+              isDisabled: disableOrgView,
+              'text-primary': organSelected,
+              'text-primary-50': !organSelected
+            }"
+            mat-list-icon
+            >business</mat-icon
+          >
+          &nbsp;{{ fieldNameOrganization }}s
+        </a>
+
+        <!-- CONTACT LIST -->
+        <a
+          *ngIf="commonService?.userPlan?.contactAccess"
+          [ngClass]="{
+            isDisabled: disableViewContact,
+            'text-primary': contSelected,
+            'text-primary-50': !contSelected
+          }"
+          mat-list-item
+          class="section-heading btnhoverX"
+          (click)="onContactTableRoute(); setNavOption('Contact')"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              isDisabled: disableViewContact,
+              'text-primary': contSelected,
+              'text-primary-50': !contSelected
+            }"
+            >contacts</mat-icon
+          >
+          &nbsp;{{ fieldNameContact }}s
+        </a>
+
+        <!-- SALES LIST -->
+        <a
+          mat-list-item
+          *ngIf="commonService?.userPlan?.saleAccess"
+          class="section-heading btnhoverX"
+          (click)="toggleSaleView()"
+          [ngClass]="{
+            btnhoverX: !saleListView,
+            expanded: saleListView,
+            isDisabled: disableSaleView
+          }"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              'text-primary': saleSelected,
+              'text-primary-50': !saleSelected
+            }"
+            >work</mat-icon
+          >
+          &nbsp;
+          <span
+            class="section-heading"
+            [ngClass]="{
+              'text-primary': saleSelected,
+              'text-primary-50': !saleSelected
+            }"
+            >{{ fieldNameSale }}s</span
+          >
+          <span class="example-spacer"></span>
+          <mat-icon
+            [ngClass]="{
+              'text-primary': saleSelected,
+              'text-primary-50': !saleSelected
+            }"
+            *ngIf="saleListView"
+            class="material-icons-outlined"
+            >expand_less</mat-icon
+          >
+          <mat-icon
+            [ngClass]="{
+              'text-primary': saleSelected,
+              'text-primary-50': !saleSelected
+            }"
+            *ngIf="!saleListView"
+            class="material-icons-outlined"
+            >expand_more</mat-icon
+          >
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          *ngIf="saleListView && commonService?.userPlan?.saleListAccess"
+          [routerLink]="'/dash/sales/sale'"
+          [ngClass]="{
+            isDisabled: disableSaleView,
+            'text-primary': saleSelected,
+            'text-primary-50': !saleSelected
+          }"
+          (click)="setNavOption('Sale')"
+        >
+          {{ fieldNameSale }} LIST</a
+        >
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-radius: 0px 0px 8px 8px;
+          "
+          mat-list-item
+          *ngIf="saleListView && commonService?.userPlan?.productwiseSaleAccess"
+          [routerLink]="'/dash/sales/product'"
+          (click)="setNavOption('Sale')"
+          [ngClass]="{
+            isDisabled: disableSaleView,
+            'text-primary': saleSelected,
+            'text-primary-50': !saleSelected
+          }"
+        >
+          PRODUCT BY {{ fieldNameSale }}</a
+        >
+
+        <!-- services list -->
+        <a
+          mat-list-item
+          class="section-heading btnhoverX"
+          (click)="setNavOption('Service')"
+          [routerLink]="'/dash/service/service-list'"
+          *ngIf="commonService?.userPlan?.serviceAccess"
+          [ngClass]="{
+            isDisabled: disableServiceView,
+            'text-primary': supportSelected,
+            'text-primary-50': !supportSelected
+          }"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              isDisabled: disableServiceView,
+              'text-primary': supportSelected,
+              'text-primary-50': !supportSelected
+            }"
+            >support_agent</mat-icon
+          >
+          &nbsp;{{ fieldNameService }}
+        </a>
+
+        <!-- ACTIVITIES -->
+        <a
+          *ngIf="commonService?.userPlan?.activitiesAccess"
+          mat-list-item
+          [ngClass]="{ btnhoverX: !pendingsView, expanded: pendingsView }"
+          title="{{ fieldNameTask }}s, {{ fieldNameMeeting }} and {{
+            fieldNameFollowup
+          }}s"
+          (click)="pendingActionsView()"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              'text-primary': actSelected,
+              'text-primary-50': !actSelected
+            }"
+            >pending_actions</mat-icon
+          >
+          &nbsp;
+          <span
+            class="section-heading"
+            [ngClass]="{
+              'text-primary': actSelected,
+              'text-primary-50': !actSelected
+            }"
+            >ACTIVITIES</span
+          >
+          <span class="example-spacer"></span>
+          <mat-icon
+            *ngIf="pendingsView"
+            class="material-icons-outlined"
+            [ngClass]="{
+              'text-primary': actSelected,
+              'text-primary-50': !actSelected
+            }"
+            >expand_less</mat-icon
+          >
+          <mat-icon
+            *ngIf="!pendingsView"
+            class="material-icons-outlined"
+            [ngClass]="{
+              'text-primary': actSelected,
+              'text-primary-50': !actSelected
+            }"
+            >expand_more</mat-icon
+          >
+        </a>
+        <a
+          [@FlyIn]
+          [ngClass]="{
+            'text-primary': actSelected,
+            'text-primary-50': !actSelected
+          }"
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          *ngIf="pendingsView && commonService?.userPlan?.tasksAccess"
+          mat-list-item
+          (click)="setNavOption('Activities');onTaskTableRoute()"
+          >{{ fieldNameTask }}S
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          [ngClass]="{
+            isDisabled: !userPlan?.calendarIntegration,
+            'text-primary': actSelected,
+            'text-primary-50': !actSelected
+          }"
+          (click)="setNavOption('Activities')"
+          *ngIf="pendingsView"
+          mat-list-item
+          [routerLink]="'/dash/events'"
+          >{{ fieldNameMeeting }}S
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            border-radius: 0px 0px 8px 8px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          *ngIf="pendingsView && commonService?.userPlan?.followupsAccess"
+          mat-list-item
+          (click)="setNavOption('Activities');onFollowupTableRoute()"
+          title="{{ fieldNameFollowup }}s"
+          [ngClass]="{
+            isDisabled: disableFoll,
+            'text-primary': actSelected,
+            'text-primary-50': !actSelected
+          }"
+        >
+          {{ fieldNameFollowup }}S
+        </a>
+
+        <!-- DASHBOARD -->
+        <a
+          *ngIf="commonService?.userPlan?.dashboardAccess"
+          mat-list-item
+          [ngClass]="{
+            btnhoverX: !dashboardView,
+            expanded: dashboardView,
+            'text-primary': dashSelected,
+            'text-primary-50': !dashSelected
+          }"
+          title="Dashboard, Reports"
+          (click)="dashboardViewFn()"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              'text-primary': dashSelected,
+              'text-primary-50': !dashSelected
+            }"
+            >bar_chart</mat-icon
+          >
+          &nbsp;
+          <span
+            class="section-heading"
+            [ngClass]="{
+              'text-primary': dashSelected,
+              'text-primary-50': !dashSelected
+            }"
+            >DASHBOARD</span
+          >
+          <span class="example-spacer"></span>
+          <mat-icon
+            *ngIf="dashboardView"
+            [ngClass]="{
+              'text-primary': dashSelected,
+              'text-primary-50': !dashSelected
+            }"
+            class="material-icons-outlined"
+            >expand_less</mat-icon
+          >
+          <mat-icon
+            *ngIf="!dashboardView"
+            [ngClass]="{
+              'text-primary': dashSelected,
+              'text-primary-50': !dashSelected
+            }"
+            class="material-icons-outlined"
+            >expand_more</mat-icon
+          >
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+          "
+          *ngIf="dashboardView"
+          (click)="setNavOption('DB')"
+          [ngClass]="{
+            isDisabled: disableDB,
+            'text-primary': dashSelected,
+            'text-primary-50': !dashSelected
+          }"
+          mat-list-item
+          [routerLink]="'/dash/custom-report/grid'"
+          >DASHBOARDS
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            border-radius: 0px 0px 8px 8px;
+            background-color: #e6edf6;
+            font-size: 14px;
+          "
+          [ngClass]="{
+            isDisabled: disableDB,
+            'text-primary': dashSelected,
+            'text-primary-50': !dashSelected
+          }"
+          *ngIf="dashboardView"
+          (click)="setNavOption('DB')"
+          mat-list-item
+          [routerLink]="'/dash/custom-report/list'"
+          >REPORTS
+        </a>
+
+        <!--  DOCUMENTS  -->
+        <a
+          *ngIf="commonService?.userPlan?.documentsAccess"
+          mat-list-item
+          [ngClass]="{ btnhoverX: !docListView, expanded: docListView }"
+          (click)="toggleDocView()"
+          title="Documents, {{ fieldNameCollection }}s"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              'text-primary': documSelected,
+              'text-primary-50': !documSelected
+            }"
+            >article</mat-icon
+          >
+          &nbsp;
+          <span
+            class="section-heading"
+            [ngClass]="{
+              'text-primary': documSelected,
+              'text-primary-50': !documSelected
+            }"
+            >DOCUMENTS</span
+          >
+          <span class="example-spacer"></span>
+          <mat-icon
+            *ngIf="docListView"
+            [ngClass]="{
+              'text-primary': documSelected,
+              'text-primary-50': !documSelected
+            }"
+            class="material-icons-outlined"
+            >expand_less</mat-icon
+          >
+          <mat-icon
+            *ngIf="!docListView"
+            [ngClass]="{
+              'text-primary': documSelected,
+              'text-primary-50': !documSelected
+            }"
+            class="material-icons-outlined"
+            >expand_more</mat-icon
+          >
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          (click)="setNavOption('Docs');onEstimateTableRoute()"
+          *ngIf="docListView && commonService.userPlan.estimatesAccess"
+          [ngClass]="{
+            isDisabled: disableDocEst,
+            'text-primary': documSelected,
+            'text-primary-50': !documSelected
+          }"
+        >
+          {{ fieldNameEstimate }}S</a
+        >
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          (click)="setNavOption('Docs')"
+          *ngIf="docListView && commonService?.userPlan?.quotationsAccess"
+          [routerLink]="'/dash/documents-list/Quotationlist'"
+          [ngClass]="{
+            isDisabled: disableDocQuot,
+            'text-primary': documSelected,
+            'text-primary-50': !documSelected
+          }"
+        >
+          {{ fieldNameQuotation }}S</a
+        >
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          (click)="setNavOption('Docs')"
+          *ngIf="docListView && commonService?.userPlan?.invoicesAccess"
+          [routerLink]="'/dash/documents-list/Invoicelist'"
+          [ngClass]="{
+            isDisabled: disableDocInv,
+            'text-primary': documSelected,
+            'text-primary-50': !documSelected
+          }"
+        >
+          {{ fieldNameInvoice }}S</a
+        >
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            border-radius: 0px 0px 8px 8px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          (click)="setNavOption('Docs')"
+          *ngIf="docListView && commonService?.userPlan?.collectionsAccess"
+          [routerLink]="'/dash/documents-list/payment-receipt'"
+          [ngClass]="{
+            isDisabled: disableColl,
+            'text-primary': documSelected,
+            'text-primary-50': !documSelected
+          }"
+        >
+          {{ fieldNameCollection }}S</a
+        >
+
+        <!-- EXPENSES -->
+        <a
+          *ngIf="commonService?.userPlan?.expenseAccess"
+          [ngClass]="{
+            isDisabled: disableExp,
+            'text-primary': expSelected,
+            'text-primary-50': !expSelected
+          }"
+          mat-list-item
+          (click)="setNavOption('Exp')"
+          class="section-heading btnhoverX"
+          [routerLink]="'/dash/ExpensesList'"
+          style="text-transform: uppercase"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              isDisabled: disableExp,
+              'text-primary': expSelected,
+              'text-primary-50': !expSelected
+            }"
+            >account_balance_wallet</mat-icon
+          >
+          &nbsp;{{ fieldNameExpense }}S
+        </a>
+
+        <!-- PRODUCTS AND SERVICES -->
+        <a
+        *ngIf="commonService?.userPlan?.productsAccess"
+        mat-list-item
+        [ngClass]="{
+          btnhoverX: !itemsView,
+          expanded: itemsView,
+          'text-primary': itemsSelected,
+          'text-primary-50': !itemsSelected
+        }"
+        title="{{ fieldNameItems }}s,{{ fieldNameItemsCategory }}"
+        (click)="itemsViewFn()"
+      >
+        <mat-icon
+          mat-list-icon
+          [ngClass]="{
+            'text-primary': itemsSelected,
+            'text-primary-50': !itemsSelected
+          }"
+          >inventory_2</mat-icon
+        >
+        &nbsp;
+        <span
+          class="section-heading"
+          [ngClass]="{
+            'text-primary': dashSelected,
+            'text-primary-50': !dashSelected
+          }"
+          >{{ fieldNameItems }}s</span
+        >
+        <span class="example-spacer"></span>
+        <mat-icon
+          *ngIf="itemsView"
+          [ngClass]="{
+            'text-primary': itemsSelected,
+            'text-primary-50': !itemsSelected
+          }"
+          class="material-icons-outlined"
+          >expand_less</mat-icon
+        >
+        <mat-icon
+          *ngIf="!itemsView"
+          [ngClass]="{
+            'text-primary': itemsSelected,
+            'text-primary-50': !itemsSelected
+          }"
+          class="material-icons-outlined"
+          >expand_more</mat-icon
+        >
+      </a>
+      <a
+        [@FlyIn]
+        style="
+          padding-left: 40px;
+          width: 191px;
+          left: 12px;
+          background-color: #e6edf6;
+          font-size: 14px;
+          text-transform: uppercase;
+        "
+        *ngIf="itemsView"
+        (click)="setNavOption('Items')"
+        [ngClass]="{
+          isDisabled: disableItemsview,
+          'text-primary': itemsSelected,
+          'text-primary-50': !itemsSelected
+        }"
+        mat-list-item
+        [routerLink]="'/dash/products-and-services'"
+        >{{ fieldNameItems }}s
+      </a>
+      <a
+        [@FlyIn]
+        style="
+          padding-left: 40px;
+          width: 191px;
+          left: 12px;
+          border-radius: 0px 0px 8px 8px;
+          background-color: #e6edf6;
+          font-size: 14px;
+          text-transform: uppercase;
+        "
+        [ngClass]="{
+          isDisabled: disableItemsview,
+          'text-primary': itemsSelected,
+          'text-primary-50': !itemsSelected
+        }"
+        *ngIf="itemsView"
+        (click)="setNavOption('Items')"
+        mat-list-item
+        [routerLink]="'/dash/products-categories'"
+        >{{ fieldNameItemsCategory }}
+      </a>
+
+        <!-- UPLOAD FILES -->
+        <a
+          *ngIf="commonService?.userPlan?.uploadFilesAccess"
+          [ngClass]="{
+            isDisabled: disableAttView,
+            'text-primary': fileSelected,
+            'text-primary-50': !fileSelected
+          }"
+          mat-list-item
+          class="section-heading btnhoverX"
+          [routerLink]="'/dash/upload-files'"
+          (click)="setNavOption('Files')"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              isDisabled: disableAttView,
+              'text-primary': fileSelected,
+              'text-primary-50': !fileSelected
+            }"
+            >drive_folder_upload</mat-icon
+          >
+          &nbsp;UPLOAD FILES
+        </a>
+
+        <!-- EMPLOYEE LIST -->
+        <a
+          mat-list-item
+          *ngIf="isSuperUser && attmgmtEnabled"
+          [ngClass]="{ btnhoverX: !employeesView, expanded: employeesView }"
+          title="Employees List, Employees Monthly Attendance and Employees Daily Attendance"
+          (click)="employeeActionsView()"
+        >
+          <mat-icon
+            mat-list-icon
+            [ngClass]="{
+              'text-primary': employeeSelected,
+              'text-primary-50': !employeeSelected
+            }"
+            >group</mat-icon
+          >
+          &nbsp;
+          <span
+            class="section-heading"
+            [ngClass]="{
+              'text-primary': employeeSelected,
+              'text-primary-50': !employeeSelected
+            }"
+            >EMPLOYEES</span
+          >
+          <span class="example-spacer"></span>
+          <mat-icon
+            *ngIf="employeesView"
+            [ngClass]="{
+              'text-primary': employeeSelected,
+              'text-primary-50': !employeeSelected
+            }"
+            class="material-icons-outlined"
+            >expand_less</mat-icon
+          >
+          <mat-icon
+            *ngIf="!employeesView"
+            [ngClass]="{
+              'text-primary': employeeSelected,
+              'text-primary-50': !employeeSelected
+            }"
+            class="material-icons-outlined"
+            >expand_more</mat-icon
+          >
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          *ngIf="employeesView"
+          [ngClass]="{
+            'text-primary': employeeSelected,
+            'text-primary-50': !employeeSelected
+          }"
+          (click)="setNavOption('Emp')"
+          mat-list-item
+          [routerLink]="'/dash/employee-list'"
+          >EMPLOYEE LIST
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          mat-list-item
+          *ngIf="employeesView"
+          (click)="setNavOption('Emp')"
+          [ngClass]="{
+            'text-primary': employeeSelected,
+            'text-primary-50': !employeeSelected
+          }"
+          [routerLink]="'/dash/employee-monthly-report'"
+          >MONTHLY ATTENDANCE
+        </a>
+        <a
+          [@FlyIn]
+          style="
+            padding-left: 40px;
+            width: 191px;
+            left: 12px;
+            border-radius: 0px 0px 8px 8px;
+            background-color: #e6edf6;
+            font-size: 14px;
+            text-transform: uppercase;
+          "
+          *ngIf="employeesView"
+          (click)="setNavOption('Emp')"
+          [ngClass]="{
+            'text-primary': employeeSelected,
+            'text-primary-50': !employeeSelected
+          }"
+          mat-list-item
+          [routerLink]="'/dash/employee-todays-report'"
+        >
+          DAILY ATTENDANCE
+        </a>
+
+        <a
+          *ngIf="isEmployee"
+          mat-list-item
+          (click)="setNavOption('Employee')"
+          class="section-heading btnhoverX"
+          [ngClass]="{
+            'text-primary': empSelected,
+            'text-primary-50': !empSelected
+          }"
+          [routerLink]="'/dash/attendancemanagement/attendance-marking'"
+        >
+          <mat-icon mat-list-icon color="accent"> checklist_rtl </mat-icon>
+          &nbsp;ATTENDANCE
+        </a>
+      </mat-nav-list>
+
+      <!-- SHRINKED NAVLIST -->
+      <mat-nav-list
+        *ngIf="sideNavshrinked"
+        style="overflow-x: hidden; height: calc(100% - 10px); overflow-y: auto"
+      >
+        <!-- Z -->
+        <a [routerLink]="'/dash/home'" class="navbar-brand2">
+          <img
+            border="0"
+            alt="Zenys"
+            src="assets/icons/icon-72x72.png"
+            class="center1"
+          />
+        </a>
+        <!-- Add icon -->
+        <div class="d-flex justify-content-center" style="height: 30px"></div>
+
+        <!-- Navigation -->
+        <!-- Home
+        <button class="mleft"
+          [ngClass]="navSelected == 'Info' ? 'text-primary  border-left   border-primary border-5 bg-soft-primary' : 'border-0'"
+           (click)="setNavOption('Info')" mat-icon-button [routerLink]="'/dash/home'">
+          <mat-icon
+            title="Home"
+            class="material-icons-outlined"
+            [ngStyle]="{ color: 'white' }"
+            mat-list-icon
+            >home
+          </mat-icon>
+        </button>
+        -->
+        <!-- Organsation list -->
+        <button
+          *ngIf="commonService?.userPlan?.orgAccess"
+          mat-button
+          title="{{ fieldNameOrganization }} List"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Organization'
+              ? 'text-primary   border-5 bg-soft-primary'
+              : 'text-primary-50 border-0'
+          "
+          (click)="setNavOption('Organization')"
+          [routerLink]="'/dash/organisation/orglist'"
+          [disabled]="disableOrgView"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'Organization'
+                  ? 'text-primary'
+                  : 'text-primary-50'
+              "
+              mat-list-icon
+              >business
+            </mat-icon>
+          </div>
+          <div class="toolbar-icon-text truncate-cell text-center">
+            {{ fieldNameOrganization }}s
+          </div>
+        </button>
+        <!-- Contact List -->
+        <button
+          *ngIf="commonService?.userPlan?.contactAccess"
+          mat-button
+          title="{{ fieldNameContact }} List"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Contact'
+              ? 'text-primary   border-5 bg-soft-primary'
+              : 'text-primary-50 border-0'
+          "
+          (click)="setNavOption('Contact')"
+          (click)="onContactTableRoute()"
+          [disabled]="disableViewContact"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'Contact' ? 'text-primary' : 'text-primary-50'
+              "
+              mat-list-icon
+              >contacts
+            </mat-icon>
+          </div>
+          <div class="toolbar-icon-text truncate-cell text-center">
+            {{ fieldNameContact }}s
+          </div>
+        </button>
+
+        <!-- Sale -->
+        <button
+          *ngIf="commonService?.userPlan?.saleAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Sale'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'text-primary-50 border-0'
+          "
+          [disabled]="disableSaleView"
+          mat-button
+          title="{{ fieldNameSale }}"
+          [matMenuTriggerFor]="salesMenu"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Sale' ? 'text-primary' : 'text-primary-50'
+              "
+              >work</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell text-center">
+            {{ fieldNameSale }}s
+          </div>
+        </button>
+        <mat-menu #salesMenu="matMenu" yPosition="below">
+          <button
+            *ngIf="commonService?.userPlan?.saleListAccess"
+            mat-menu-item
+            title="{{ fieldNameSale }} List"
+            [routerLink]="'/dash/sales/sale'"
+            (click)="setNavOption('Sale')"
+            [disabled]="disableSaleView"
+          >
+            {{ fieldNameSale }} List
+          </button>
+          <button
+            *ngIf="commonService?.userPlan?.productwiseSaleAccess"
+            mat-menu-item
+            title="Product by {{ fieldNameSale }}"
+            [routerLink]="'/dash/sales/product'"
+            (click)="setNavOption('Sale')"
+            [disabled]="disableSaleView"
+          >
+            {{ fieldNameItems }} wise {{ fieldNameSale }}
+          </button>
+        </mat-menu>
+
+        <!-- services list -->
+        <button
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Service'
+              ? 'text-primary  border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('Service')"
+          mat-button
+          title="{{ fieldNameService }}"
+          [routerLink]="'/dash/service/service-list'"
+          *ngIf="commonService?.userPlan?.serviceAccess"
+          [disabled]="disableServiceView"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'Service' ? 'text-primary' : 'text-primary-50'
+              "
+              mat-list-icon
+              >support_agent
+            </mat-icon>
+          </div>
+          <div class="toolbar-icon-text truncate-cell">
+            {{ fieldNameService }}
+          </div>
+        </button>
+
+        <!-- Tasks, Meetings and Followups-->
+        <button
+          *ngIf="commonService?.userPlan?.activitiesAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Activities'
+              ? 'text-primary   border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          mat-button
+          title="{{ fieldNameTask }}s, {{ fieldNameMeeting }}s and {{
+            fieldNameFollowup
+          }}s"
+          [matMenuTriggerFor]="pendingActionsMenu"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Activities' ? 'text-primary' : 'text-primary-50'
+              "
+              >pending_actions</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Activities</div>
+        </button>
+        <mat-menu #pendingActionsMenu="matMenu" yPosition="below">
+          <button
+            *ngIf="commonService?.userPlan?.tasksAccess"
+            mat-menu-item
+            (click)="setNavOption('Activities');onTaskTableRoute()"
+          >
+            {{ fieldNameTask }}s
+          </button>
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/events'"
+            (click)="setNavOption('Activities')"
+            [disabled]="!userPlan?.calendarIntegration"
+          >
+            {{ fieldNameMeeting }}
+          </button>
+          <button
+            *ngIf="commonService?.userPlan?.followupsAccess"
+            mat-menu-item
+            title="{{ fieldNameFollowup }}"
+            (click)="setNavOption('Activities') ;onFollowupTableRoute()"
+            [disabled]="disableFoll"
+          >
+            {{ fieldNameFollowup }}
+          </button>
+        </mat-menu>
+
+        <!-- Dashboard -->
+        <button
+          *ngIf="commonService?.userPlan?.dashboardAccess"
+          class="mleft"
+          [matMenuTriggerFor]="dashboardMenu"
+          [ngClass]="
+            navSelected == 'DB'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('DB')"
+          mat-button
+          title="Reports"
+          [disabled]="disableDB"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'DB' ? 'text-primary' : 'text-primary-50'
+              "
+              >bar_chart</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Dashboard</div>
+        </button>
+        <mat-menu #dashboardMenu="matMenu" yPosition="below">
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/custom-report/grid'"
+            (click)="setNavOption('DB')"
+          >
+            Dashboards
+          </button>
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/custom-report/list'"
+            (click)="setNavOption('DB')"
+            [disabled]="disableDB"
+          >
+            Reports
+          </button>
+        </mat-menu>
+        <!-- Documents, Collections -->
+        <button
+          *ngIf="commonService?.userPlan?.documentsAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Docs'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          mat-button
+          title="Documents, {{ fieldNameCollection }}s"
+          [matMenuTriggerFor]="documentsMenu"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Docs' ? 'text-primary' : 'text-primary-50'
+              "
+              >article</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Documents</div>
+        </button>
+        <mat-menu #documentsMenu="matMenu" yPosition="below">
+          <button
+            *ngIf="commonService?.userPlan?.estimatesAccess"
+            mat-menu-item
+            title="{{ fieldNameEstimate }}s"
+            (click)="setNavOption('Docs');onEstimateTableRoute()"
+            [disabled]="disableDocEst"
+          >
+            {{ fieldNameEstimate }}s
+          </button>
+          <button
+            *ngIf="commonService?.userPlan?.quotationsAccess"
+            mat-menu-item
+            title="{{ fieldNameQuotation }}s"
+            [routerLink]="'/dash/documents-list/Quotationlist'"
+            (click)="setNavOption('Docs')"
+            [disabled]="disableDocQuot"
+          >
+            {{ fieldNameQuotation }}s
+          </button>
+          <button
+            *ngIf="commonService?.userPlan?.invoicesAccess"
+            mat-menu-item
+            title="{{ fieldNameInvoice }}s"
+            [routerLink]="'/dash/documents-list/Invoicelist'"
+            (click)="setNavOption('Docs')"
+            [disabled]="disableDocInv"
+          >
+            {{ fieldNameInvoice }}s
+          </button>
+          <button
+            *ngIf="commonService?.userPlan?.collectionsAccess"
+            mat-menu-item
+            title="{{ fieldNameCollection }}s"
+            [routerLink]="'/dash/documents-list/payment-receipt'"
+            (click)="setNavOption('Docs')"
+            [disabled]="disableColl"
+          >
+            {{ fieldNameCollection }}s
+          </button>
+        </mat-menu>
+
+        <!-- Expense list -->
+        <button
+          *ngIf="commonService?.userPlan?.expenseAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Exp'
+              ? 'text-primary  border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('Exp')"
+          mat-button
+          title="{{ fieldNameExpense }}s"
+          [routerLink]="'/dash/ExpensesList'"
+          [disabled]="disableExp"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'Exp' ? 'text-primary' : 'text-primary-50'
+              "
+              mat-list-icon
+            >
+              account_balance_wallet</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">
+            {{ fieldNameExpense }}s
+          </div>
+        </button>
+
+        <!-- Products and Services -->
+        <button
+          *ngIf="commonService?.userPlan?.productsAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Items'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          mat-button
+          title="{{ fieldNameItems }}s,{{ fieldNameItemsCategory }}"
+          [disabled]="disableItemsview"
+          [matMenuTriggerFor]="productsMenu"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              [ngClass]="
+                navSelected == 'Items' ? 'text-primary' : 'text-primary-50'
+              "
+              mat-list-icon
+              >inventory_2</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">
+            {{ fieldNameItems }}s
+          </div>
+        </button>
+        <mat-menu #productsMenu="matMenu" yPosition="below">
+          <button
+            mat-menu-item
+            title="{{ fieldNameItems }}s"
+            [routerLink]="'/dash/products-and-services'"
+            (click)="setNavOption('Items')"
+          >
+            {{ fieldNameItems }}s
+          </button>
+          <button
+            mat-menu-item
+            title="{{ fieldNameItemsCategory }}"
+            [routerLink]="'/dash/products-categories'"
+            (click)="setNavOption('Docs ')"
+          >
+            {{ fieldNameItemsCategory }}
+          </button>
+        </mat-menu>
+        <!-- <button
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Items'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('Items')"
+          mat-button
+          title="{{ fieldNameItems }}s,Category"
+          [routerLink]="'/dash/products-and-services'"
+          [disabled]="disableItemsview"
+        >
+          <div class="toolbar-icon">
+            <mat-icon [ngClass]="
+            navSelected == 'Items'
+              ? 'text-primary'
+              : 'text-primary-50'" mat-list-icon
+              >inventory_2</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">
+            {{
+              fieldNameItems
+            }}s
+          </div>
+        </button> -->
+
+        <!-- Upload Files -->
+        <button
+          *ngIf="commonService?.userPlan?.uploadFilesAccess"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Files'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('Files')"
+          mat-button
+          title="Upload Files"
+          [routerLink]="'/dash/upload-files'"
+          [disabled]="disableAttView"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Activities' ? 'text-primary' : 'text-primary-50'
+              "
+              >drive_folder_upload
+            </mat-icon>
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Upload files</div>
+        </button>
+
+        <!-- Employee List -->
+        <button
+          *ngIf="isSuperUser && attmgmtEnabled"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Emp'
+              ? 'text-primary  border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          mat-button
+          title="Employees & attendance"
+          [matMenuTriggerFor]="employeeActionsMenu"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Emp' ? 'text-primary' : 'text-primary-50'
+              "
+              >group</mat-icon
+            >
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Employees</div>
+        </button>
+        <mat-menu #employeeActionsMenu="matMenu" yPosition="below">
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/employee-list'"
+            (click)="setNavOption('Emp')"
+          >
+            Employee List
+          </button>
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/employee-monthly-report'"
+            (click)="setNavOption('Emp')"
+          >
+            Monthly Attendance
+          </button>
+          <button
+            mat-menu-item
+            [routerLink]="'/dash/employee-todays-report'"
+            (click)="setNavOption('Emp')"
+          >
+            Daily Attendance
+          </button>
+        </mat-menu>
+
+        <button
+          *ngIf="isEmployee"
+          class="mleft"
+          [ngClass]="
+            navSelected == 'Employee'
+              ? 'text-primary border-5 bg-soft-primary'
+              : 'border-0 text-primary-50'
+          "
+          (click)="setNavOption('Employee')"
+          mat-button
+          title="Attendance"
+          [routerLink]="'/dash/attendancemanagement/attendance-marking'"
+        >
+          <div class="toolbar-icon">
+            <mat-icon
+              mat-list-icon
+              [ngClass]="
+                navSelected == 'Employee' ? 'text-primary' : 'text-primary-50'
+              "
+            >
+              checklist_rtl
+            </mat-icon>
+          </div>
+          <div class="toolbar-icon-text truncate-cell">Attendance</div>
+        </button>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- RIGHT SIDE HELP DRAWER -->
+    <mat-sidenav class="mat-elevation-z1 drawer" #drawer mode="over" position="end"
+      style="background-color: white; width: 30%; z-index: 4">
+
+      <!-- help starts -->
+      <!-- div of backbutton, help title, clear button -->
+      <div class="d-flex justify-content-between pad16" *ngIf="sideNavShow == 'help'">
+        <div>
+          <button style="margin-top: 8px; color: #2a6af6; padding: 0 8px 0 0" mat-button *ngIf="!defaultHelp"
+            (click)="helpBack()">
+            <mat-icon> arrow_back </mat-icon>
+            BACK
+          </button>
+        </div>
+        <div>
+          <h2 class="h2Help">Help</h2>
+        </div>
+        <div class="butHelp">
+          <button mat-icon-button style="float: right" (click)="drawer.toggle(); onClear()">
+            <mat-icon color="warn">clear</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- DIV OPENING WHILE HELP IS CLICKED STARTS HERE:DEFAULT DIV -->
+      <div *ngIf="defaultHelp && sideNavShow == 'help'" [@FlyfromRt]>
+        <div class="centre" *ngIf="!snippetsArray">
+          <mat-spinner [diameter]="24"></mat-spinner>
+        </div>
+        <br />
+        <!-- YOUTUBE VIDEO -->
+        <iframe *ngIf="safeURL" width="100%" height="315" [src]="safeURL" title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+
+        <!-- SNIPPETS -->
+        <br />
+        <div *ngIf="snippetsArray && snippetsArray?.length != 0"
+          style="width: 100%; word-wrap: break-word; margin-top: 20px">
+          <div *ngFor="
+                  let snippet of showAllTopicFlag
+                    ? snippetsArray
+                    : snippetsArray?.length >= 5
+                    ? snippetsArray.slice(0, 5)
+                    : snippetsArray
+                " (click)="snippetClick(snippet)" class="helpSnippet" style="
+                  margin-right: 16px;
+                  margin-left: 16px;
+                  padding: 8px 4px 2px 8px;
+                ">
+            <h3 style="font-weight: 500; color: black; margin-bottom: 6px">
+              {{ snippet.title }}
+            </h3>
+            <p>{{ snippet.snippet }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="snippetsArray && snippetsArray?.length == 0" style="text-align: center">
+          <h3>No supporting documents found</h3>
+        </div>
+
+        <!-- REMAINING ARTICLES -->
+
+        <a class="showMore" style="color: #2a6af6; margin-left: 24px; cursor: pointer"
+          *ngIf="!showAllTopicFlag && snippetsArray?.length > 5" (click)="showAll()">
+          Show {{ +snippetsArray?.length - 5 }} more articles
+        </a>
+        <a class="showMore" style="color: #2a6af6; margin-left: 24px; cursor: pointer"
+          *ngIf="showAllTopicFlag && snippetsArray?.length > 5" (click)="showLess()">
+          Show less
+        </a>
+        <br /><br /><br />
+      </div>
+      <!-- DIV OPENING WHILE HELP IS CLICKED ENDS HERE:DEFAULT DIV -->
+      <!-- READ MORE DIV STARTS HERE -->
+      <div *ngIf="!defaultHelp && sideNavShow == 'help' && !uploadShow" id="readMore">
+        <div [@wait4Rt]>
+          <br />
+          <h2>{{ titleofSelectedSnippet }}</h2>
+          <pre>{{ contentOfSelectedSnippet }}</pre>
+
+          <button mat-raised-button style="color: #2a6af6" (click)="goToUrl()" *ngIf="this.linkofSelectedSnippet">
+            Read more
+          </button>
+        </div>
+      </div>
+      <!-- READ MORE DIV ENDS HERE -->
+      <!-- help ends -->
+
+      <!-- Notification starts here -->
+
+      <!-- div of notification and clear button  -->
+      <div class="d-flex justify-content-between pad16" *ngIf="sideNavShow == 'notification'"
+        style="overflow-x: hidden; overflow-y: hidden">
+        <div>
+          <h2 class="h2Help">Notifications</h2>
+        </div>
+        <div class="butHelp">
+          <button mat-icon-button style="float: right" (click)="drawer.toggle(); heplCalled()">
+            <mat-icon color="warn">clear</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- chips and buttons starts -->
+      <div class="d-flex justify-content-between" *ngIf="sideNavShow == 'notification'"
+        style="overflow-x: hidden; overflow-y: hidden; padding-top: 8px;">
+        <!-- chips:recent, unread -->
+        <div style="padding-left: 16px; padding-top: 6px;">
+          <mat-chip-list aria-label="Notification">
+            <mat-chip (click)="loadItems_recent(); recentNot()" color="primary" [ngStyle]="
+                                      selectedNotifn == 'recent'
+                                        ? { color: 'blue' }
+                                        : { color: 'black' }
+                                    " style="cursor: pointer">
+              Recent</mat-chip>
+
+            <mat-chip (click)="loadItemsUnRead(); unreadNot()" color="primary" [ngStyle]="
+                                      selectedNotifn == 'unread'
+                                        ? { color: 'blue' }
+                                        : { color: 'black' }
+                                    " style="cursor: pointer">
+              Unread</mat-chip>
+          </mat-chip-list>
+        </div>
+        <!-- recent notification previous and next buttons -->
+        <div *ngIf="
+                        sideNavShow == 'notification' && this.selectedNotifn === 'recent' && (notificationData_recent_new.length > 0 ||
+                        notificationData_recent_old.length > 0)
+                      ">
+
+
+          <button class="float-right" mat-icon-button title="Next" (click)="nextPage_recent()"
+            [disabled]="disable_next_recent">
+            <mat-icon color="primary">navigate_next</mat-icon>
+          </button>
+          <button class="float-right" mat-icon-button title="Previous" (click)="prevPage_recent()" [disabled]="
+                    disable_prev_recent || !(pagination_clicked_count_recent > 0)
+                  ">
+            <mat-icon color="primary">navigate_before</mat-icon>
+          </button>
+        </div>
+
+        <!-- unread previous and next buttons -->
+        <div *ngIf="
+                  sideNavShow == 'notification' && this.selectedNotifn === 'unread' && (notificationData_unRead_new.length > 0 ||
+                  notificationData_unRead_old.length > 0)
+                  ">
+
+          <button class="float-right" mat-icon-button title="Next" (click)="nextPageUnread()"
+            [disabled]="disable_next_unRead">
+            <mat-icon color="primary">navigate_next</mat-icon>
+          </button>
+          <button class="float-right" mat-icon-button title="Previous" (click)="prevPageUnRead()" [disabled]="
+                    disable_prev_unRead || !(pagination_clicked_count_unRead > 0)
+                  ">
+            <mat-icon color="primary">navigate_before</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- chips and buttons ends -->
+
+      <!-- notification-cont, sale, support, task, foll -->
+      <div *ngIf="sideNavShow == 'notification'" [@FlyfromRt]
+        style="height: 80%; width: 100%; margin-top: 20px; overflow-y: scroll;">
+        <!-- recent notification div -->
+        <div *ngIf="this.selectedNotifn === 'recent'">
+          <div *ngIf="
+                                    notificationData_recent_new.length == 0 &&
+                                    notificationData_recent_old.length == 0
+                                  " style="padding: 16px">
+            No Notifications Found
+          </div>
+
+          <mat-list>
+            <div mat-subheader *ngIf="notificationData_recent_new.length > 0">
+              New
+            </div>
+            <mat-list-item *ngFor="
+                                      let notification of notificationData_recent_new;
+                                      let i = index
+                                    " style="height: auto; padding-top: 16px" (click)="notificationCLicked(notification)"
+              [ngClass]="{
+                                      changeCursor: notification.docId,
+                                      'bg-soft-primary': !notification.viewStatus
+                                    }">
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Task'">task</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'FollowUp'">call</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Contact'">contacts</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Sale'">work</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Service'">support_agent</mat-icon>
+              <mat-icon mat-list-icon *ngIf="!notification.type">report</mat-icon>
+              <div mat-line>{{ notification.message }}</div>
+              <div mat-line style="padding-bottom: 16px">
+                <mat-chip-list aria-label="notification">
+                  <mat-chip *ngIf="!notification.viewStatus" (click)="
+                                            onReadNotification(
+                                              notification.id,
+                                              i,
+                                              'notificationData_recent_new'
+                                            )
+                                          " style="cursor: pointer">Mark as read</mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+
+            <div mat-subheader *ngIf="notificationData_recent_old.length > 0">
+              Earlier
+            </div>
+            <mat-list-item *ngFor="
+                                      let notification of notificationData_recent_old;
+                                      let i = index
+                                    " style="height: auto; padding-top: 16px" (click)="notificationCLicked(notification)"
+              [ngClass]="{
+                                      changeCursor: notification.docId,
+                                      'bg-soft-primary': !notification.viewStatus
+                                    }">
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Task'">task</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'FollowUp'">call</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Contact'">contacts</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Sale'">work</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Service'">support_agent</mat-icon>
+              <mat-icon mat-list-icon *ngIf="!notification.type">report</mat-icon>
+              <div mat-line>{{ notification.message }}</div>
+              <div mat-line style="padding-bottom: 16px">
+                <mat-chip-list aria-label="notification">
+                  <mat-chip *ngIf="!notification.viewStatus" (click)="
+                                            onReadNotification(
+                                              notification.id,
+                                              i,
+                                              'notificationData_recent_old'
+                                            )
+                                          " style="cursor: pointer">Mark as read</mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </div>
+
+        <!-- unread notification div -->
+        <div *ngIf="this.selectedNotifn === 'unread'">
+          <div *ngIf="
+                                    notificationData_unRead_new.length == 0 &&
+                                    notificationData_unRead_old.length == 0
+                                  " style="padding: 16px">
+            No Notifications Found
+          </div>
+
+          <!-- Mark ALl as read button in case of Unread -->
+          <button mat-button color="primary" style="padding-bottom: 0px; float: right" *ngIf="
+                                    selectedNotifn == 'unread' &&
+                                    (notificationData_unRead_new.length > 0 ||
+                                      notificationData_unRead_old.length > 0)
+                                  " (click)="markAllNotificationAsRead()">
+            Mark all as read
+          </button>
+          <mat-list>
+            <div mat-subheader *ngIf="notificationData_unRead_new.length > 0">
+              New
+            </div>
+            <mat-list-item *ngFor="
+                                      let notification of notificationData_unRead_new;
+                                      let i = index
+                                    " style="height: auto; padding-top: 16px" (click)="notificationCLicked(notification)"
+              [ngClass]="{
+                                      changeCursor: notification.docId,
+                                      'bg-soft-primary': !notification.viewStatus
+                                    }">
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Task'">task</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'FollowUp'">call</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Contact'">contacts</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Sale'">work</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Service'">support_agent</mat-icon>
+              <mat-icon mat-list-icon *ngIf="!notification.type">report</mat-icon>
+              <div mat-line>{{ notification.message }}</div>
+              <div mat-line style="padding-bottom: 16px">
+                <mat-chip-list aria-label="notification">
+                  <mat-chip *ngIf="!notification.viewStatus" (click)="
+                                            onReadNotification(
+                                              notification.id,
+                                              i,
+                                              'notificationData_unRead_new'
+                                            )
+                                          " style="cursor: pointer">Mark as read</mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+
+            <div mat-subheader *ngIf="notificationData_unRead_old.length > 0">
+              Earlier
+            </div>
+            <mat-list-item *ngFor="
+                                      let notification of notificationData_unRead_old;
+                                      let i = index
+                                    " style="height: auto; padding-top: 16px" (click)="notificationCLicked(notification)"
+              [ngClass]="{
+                                      changeCursor: notification.docId,
+                                      'bg-soft-primary': !notification.viewStatus
+                                    }">
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Task'">task</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'FollowUp'">call</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Contact'">contacts</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Sale'">work</mat-icon>
+              <mat-icon mat-list-icon *ngIf="notification.type && notification.type == 'Service'">support_agent</mat-icon>
+              <mat-icon mat-list-icon *ngIf="!notification.type">report</mat-icon>
+              <div mat-line>{{ notification.message }}</div>
+              <div mat-line style="padding-bottom: 16px">
+                <mat-chip-list aria-label="notification">
+                  <mat-chip *ngIf="!notification.viewStatus" (click)="
+                                            onReadNotification(
+                                              notification.id,
+                                              i,
+                                              'notificationData_unRead_old'
+                                            )
+                                          " style="cursor: pointer">Mark as read</mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </div>
+      <!-- notification ends here -->
+      <!-- call starts here -->
+      <div class="d-flex justify-content-between pad16" style="overflow: hidden" *ngIf="sideNavShow == 'call'">
+        <div>
+          <h2 class="h2Help">{{ fieldNameFollowup }}</h2>
+        </div>
+        <div class="butHelp">
+          <button mat-icon-button style="float: right" (click)="drawer.toggle(); heplCalled()">
+            <mat-icon color="warn">clear</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div style="padding-left: 20px; overflow: hidden" *ngIf="sideNavShow == 'call'">
+        <app-call-view></app-call-view>
+      </div>
+      <!-- callends here -->
+
+      <!-- REMAINING ARTICLES -->
+
+      <!-- <a
+            class="showMore"
+            style="color: #2a6af6; margin-left: 24px; cursor: pointer"
+            *ngIf="!showAllTopicFlag && snippetsArray?.length > 5"
+            (click)="showAll()"
+          >
+            Show {{ +snippetsArray?.length - 5 }} more articles
+          </a>
+          <a
+            class="showMore"
+            style="color: #2a6af6; margin-left: 24px; cursor: pointer"
+            *ngIf="showAllTopicFlag && snippetsArray?.length > 5"
+            (click)="showLess()"
+          >
+            Show less
+          </a>
+          <br /><br /><br /> -->
+    </mat-sidenav>
+
+    <mat-sidenav-content [ngStyle]="{ 'margin-left.px': contentMargin }">
+      <mat-toolbar [ngStyle]="{ 'background-color': 'ghostwhite' }">
+        <mat-toolbar-row>
+          <button
+            mat-icon-button
+            (click)="toggleSideNav()"
+            title="Toggle Sidenav"
+          >
+            <mat-icon color="accent">menu_open</mat-icon></button
+          >&nbsp;
+          <!-- <span class="example-spacer2"></span> -->
+          <!--search button-->
+          <div
+            class="border"
+            style="
+              border-radius: 20px;
+              background-color: white;
+              color: gray;
+              font-size: medium;
+              min-width: 180px;
+            "
+            (click)="showSearch()"
+            *ngIf="!panelOpenState"
+          >
+            <button mat-icon-button title="Search">
+              <mat-icon class="material-icons-outlined" color="accent">
+                search
+              </mat-icon>
+            </button>
+            Search
+          </div>
+
+          <span
+            class="inputField"
+            style="flex: 1 1 auto; text-align: left"
+            *ngIf="search && panelOpenState"
+          >
+            <mat-accordion>
+              <mat-expansion-panel [(expanded)]="panelOpenState">
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="caption" style="opacity: 0.7">
+                    Search by {{ fieldNameContact }} name,
+                    {{
+                      commonService?.userPlan?.orgAccess
+                        ? fieldNameOrganization + ", "
+                        : ""
+                    }}Contact number or Email
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field
+                  style="width: 400px; font-size: 15px"
+                  appearance="fill"
+                >
+                  <input
+                    matInput
+                    [(ngModel)]="searchTerm"
+                    #query
+                    style="width: 100%"
+                    placeholder="Search by {{ searchSelected }}"
+                  />
+                  <button
+                    *ngIf="searchTerm"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="searchTerm = ''"
+                  >
+                    <mat-icon color="warn">close</mat-icon>
+                  </button>
+                </mat-form-field>
+                <button
+                  mat-button
+                  mat-icon-button
+                  color="primary"
+                  (click)="onSearch()"
+                  [disabled]="!searchTerm"
+                >
+                  <mat-icon color="accent">search</mat-icon>
+                </button>
+
+                <br />
+                <mat-chip-list aria-label="Search">
+                  <mat-chip
+                    (click)="onSearchTermChanges('Name')"
+                    color="primary"
+                    [ngStyle]="
+                      searchSelected == 'Name'
+                        ? { color: 'blue' }
+                        : { color: 'gray' }
+                    "
+                    style="
+                      color: #2a6af6;
+                      background-color: #f1f2f4;
+                      height: 24px;
+                      top: calc(50% - 24px / 2);
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 500;
+                      font-size: 12px;
+                      line-height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <mat-chip-avatar>
+                      <mat-icon color="primary">person</mat-icon>
+                    </mat-chip-avatar>
+                    {{ fieldNameContact }} Name
+                  </mat-chip>
+
+                  <mat-chip
+                    *ngIf="commonService?.userPlan?.orgAccess"
+                    (click)="onSearchTermChanges('Company Name')"
+                    color="primary"
+                    [ngStyle]="
+                      searchSelected == 'Company Name'
+                        ? { color: 'blue' }
+                        : { color: 'gray' }
+                    "
+                    style="
+                      color: #2a6af6;
+                      background-color: #f1f2f4;
+                      height: 24px;
+                      top: calc(50% - 24px / 2);
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 500;
+                      font-size: 12px;
+                      line-height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <mat-chip-avatar>
+                      <mat-icon color="primary">business</mat-icon>
+                    </mat-chip-avatar>
+                    {{ fieldNameOrganization }}
+                  </mat-chip>
+
+                  <mat-chip
+                    (click)="onSearchTermChanges('Contact Number')"
+                    color="primary"
+                    [ngStyle]="
+                      searchSelected == 'Contact Number'
+                        ? { color: 'blue' }
+                        : { color: 'gray' }
+                    "
+                    style="
+                      color: #2a6af6;
+                      background-color: #f1f2f4;
+                      height: 24px;
+                      top: calc(50% - 24px / 2);
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 500;
+                      font-size: 12px;
+                      line-height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <mat-chip-avatar>
+                      <mat-icon color="primary">phone</mat-icon>
+                    </mat-chip-avatar>
+                    Phone
+                  </mat-chip>
+                  <mat-chip
+                    (click)="onSearchTermChanges('Email')"
+                    color="primary"
+                    [ngStyle]="
+                      searchSelected == 'Email'
+                        ? { color: 'blue' }
+                        : { color: 'gray' }
+                    "
+                    style="
+                      color: #2a6af6;
+                      background-color: #f1f2f4;
+                      height: 24px;
+                      top: calc(50% - 24px / 2);
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 500;
+                      font-size: 12px;
+                      line-height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <mat-chip-avatar>
+                      <mat-icon color="primary">mail</mat-icon>
+                    </mat-chip-avatar>
+                    Email
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </span>
+          <span style="flex: 1 1 auto; text-align: right">
+            <mat-slide-toggle *ngIf="!!showLiteModeBtn" (toggleChange)="enableLiteModeUpdate()" [(ngModel)]="enableLiteMode" [disabled]="!networkCheck.onNetworkCheck() || !userId">Lite Mode</mat-slide-toggle>
+          </span>
+
+          <span class="example-spacer"></span>
+
+          <div
+            *ngIf="plan == 'free' && !addDocumentDisable.balanceCustomerFlag"
+          >
+            <button
+              color="primary"
+              mat-button
+              aria-label="Upgrade"
+              (click)="pay()"
+            >
+              Upgrade
+            </button>
+          </div>
+
+          <!-- changing color to blue since toolbar color is changing to white 05/07 -->
+
+          <mat-icon
+            color="accent"
+            class="material-icons-outlined"
+            *ngIf="!onCheckNetwork()"
+            >wifi_off icon</mat-icon
+          >
+
+          <!-- Inquiries -->
+          <button
+            mat-icon-button
+            title="Inquiries"
+            [routerLink]="'/dash/Inquireslist'"
+            routerLinkActive="active-menu-item"
+            *ngIf="checkDataAccessRuleAll"
+          >
+            <mat-icon
+              color="accent"
+              class="material-icons-outlined"
+              *ngIf="badgeNo != 0"
+              [matBadge]="badgeNo"
+              matBadgeColor="warn"
+              >rate_review
+            </mat-icon>
+            <mat-icon
+              color="accent"
+              class="material-icons-outlined"
+              *ngIf="badgeNo == 0"
+              >rate_review</mat-icon
+            >
+          </button>
+
+          <!-- Chat -->
+          <button mat-icon-button title="Chat" [routerLink]="'/dash/chat'">
+            <mat-icon
+              class="material-icons-outlined"
+              color="accent"
+              matBadge="{{ unreadChatCount + unreadChatCount2 }}"
+              matBadgeColor="warn"
+              [matBadgeHidden]="!(unreadChatCount + unreadChatCount2 > 0)"
+            >
+              question_answer
+            </mat-icon>
+          </button>
+
+          <!-- Help -->
+          <button
+            mat-icon-button
+            title="Help"
+            (click)="drawer.toggle(); helpCalled()"
+          >
+            <mat-icon
+              class="material-icons-outlined"
+              style="font-size: 28px"
+              color="accent"
+            >
+              help_center
+            </mat-icon>
+          </button>
+
+          <!-- Notification -->
+          <button
+            mat-icon-button
+            title="Notifications"
+            (click)="drawer.toggle(); notificationCalled()"
+          >
+            <mat-icon
+              class="material-icons-outlined"
+              style="font-size: 28px"
+              color="accent"
+              matBadge="{{ unreadLength < 20 ? unreadLength : getString() }}"
+              matBadgeColor="warn"
+              [matBadgeHidden]="unreadLength <= 0"
+            >
+              notifications_active
+            </mat-icon>
+          </button>
+          <!-- Call -->
+          <button
+            mat-icon-button
+            title="{{ fieldNameFollowup }}"
+            *ngIf="ivrIntegrationEnable"
+            (click)="drawer.toggle(); CallClicked()"
+          >
+            <mat-icon
+              class="material-icons-outlined"
+              style="font-size: 28px"
+              color="accent"
+            >
+              call
+            </mat-icon>
+          </button>
+
+          <!-- Settings
+          <button mat-icon-button [ngClass]="{ isDisabled: disableSett }">
+            <mat-icon class="material-icons-outlined"
+              mat-list-icon
+              style="font-size: 28px"
+              color="accent"
+
+              title="Settings"
+              >settings
+            </mat-icon>
+          </button>
+-->
+
+          &nbsp;
+          <button
+            mat-icon-button
+            color="primary"
+            aria-aria-label="Add new icon"
+            title="Add new"
+            [matMenuTriggerFor]="addMenu"
+            [disabled]="!networkCheck.onNetworkCheck()"
+          >
+            <mat-icon class="material-icons-outlined icon-display"
+              >add_circle</mat-icon
+            >
+          </button>
+          <mat-menu #addMenu="matMenu" yPosition="below">
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.contactAccess"
+              title="Add {{ fieldNameContact }}"
+              (click)="addcontactfn()"
+              [disabled]="addDocumentDisable.addContactDisable"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >contacts</mat-icon
+              >
+              {{ fieldNameContact }}
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.orgAccess"
+              title="Add {{ fieldNameOrganization }}"
+              (click)="addOrgfn()"
+              [disabled]="disableOrg"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >business</mat-icon
+              >
+              {{ fieldNameOrganization }}
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.saleAccess"
+              title="Add {{ fieldNameSale }}"
+              (click)="addsalefn()"
+              [disabled]="addDocumentDisable.addSaleDisable"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >work</mat-icon
+              >
+              {{ fieldNameSale }}
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.serviceAccess"
+              title="Add {{ fieldNameService }}"
+              (click)="addservicefn()"
+              [disabled]="disableService"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >support_agent</mat-icon
+              >
+              {{ fieldNameService }}
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="
+                !disableCreateFollowUp && commonService?.userPlan?.followupsAccess
+              "
+              title="Add {{ fieldNameFollowup }}"
+              (click)="onCreateFollowUp()"
+              [disabled]="!networkCheck.onNetworkCheck()"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >call</mat-icon
+              >
+              {{ fieldNameFollowup }}
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.tasksAccess"
+              title="Add {{ fieldNameTask }}"
+              (click)="addTask()"
+              [disabled]="!networkCheck.onNetworkCheck()"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >task</mat-icon
+              >
+              {{ fieldNameTask }}
+            </button>
+
+            <button
+              mat-menu-item
+              *ngIf="commonService?.userPlan?.documentsAccess"
+              matTooltip="Add Document"
+              [matMenuTriggerFor]="addDocumnt"
+            >
+              <mat-icon color="accent" class="material-icons-outlined"
+                >article</mat-icon
+              >
+              Add Document
+            </button>
+            <mat-menu #addDocumnt="matMenu" yPosition="below">
+              <button
+                mat-menu-item
+                *ngIf="commonService?.userPlan?.estimatesAccess"
+                matTooltip="Add {{ fieldNameEstimate }}"
+                [routerLink]="
+                  '/dash/document/documentmanagement/none/create/Estimate/none/none/none'
+                "
+                [disabled]="
+                  addDocumentDisable.addEstimateDisable ||
+                  disableDocCreateEst ||
+                  !networkCheck.onNetworkCheck()
+                "
+              >
+                {{ fieldNameEstimate }}
+              </button>
+              <button
+                mat-menu-item
+                *ngIf="commonService?.userPlan?.quotationsAccess"
+                matTooltip="Add {{ fieldNameQuotation }}"
+                [routerLink]="
+                  '/dash/document/documentquotationmanagement/none/create/Quotation/none/none/none'
+                "
+                [disabled]="
+                  addDocumentDisable.addQuotationDisable ||
+                  disableDocCreateQuot ||
+                  !networkCheck.onNetworkCheck()
+                "
+              >
+                {{ fieldNameQuotation }}
+              </button>
+              <button
+                mat-menu-item
+                *ngIf="commonService?.userPlan?.invoicesAccess"
+                matTooltip="Add {{ fieldNameInvoice }}"
+                [routerLink]="
+                  '/dash/document/documentinvoicemanagement/none/create/Invoice/none/none/none'
+                "
+                [disabled]="
+                  addDocumentDisable.addInvoiceDisable ||
+                  disableDocCreateInv ||
+                  !networkCheck.onNetworkCheck()
+                "
+              >
+                {{ fieldNameInvoice }}
+              </button>
+            </mat-menu>
+
+            <!-- <button
+            mat-menu-item
+            title="Add Document"
+            [matMenuTriggerFor]="addDocument"
+          >
+            Add Document
+          </button> -->
+            <!-- <mat-menu #addDocument="matMenu" yPosition="below">
+            <button
+              mat-menu-item
+              title="Add {{ fieldNameEstimate }}"
+              [routerLink]="
+                '/dash/document/documentmanagement/na/create/Estimate/na/na'
+              "
+              [disabled]="
+                addDocumentDisable.addEstimateDisable ||
+                disableDocCreateEst
+              "
+            >
+              {{ fieldNameEstimate }}
+            </button>
+            <button
+              mat-menu-item
+              title="Add {{ fieldNameQuotation }}"
+              [routerLink]="
+                '/dash/document/documentquotationmanagement/na/create/Quotation/na/na'
+              "
+              [disabled]="
+                addDocumentDisable.addQuotationDisable ||
+                disableDocCreateQuot
+              "
+            >
+              {{ fieldNameQuotation }}
+            </button>
+            <button
+              mat-menu-item
+              title="Add {{ fieldNameInvoice }}"
+              [routerLink]="
+                '/dash/document/documentinvoicemanagement/na/create/Invoice/na/na'
+              "
+              [disabled]="
+                addDocumentDisable.addInvoiceDisable ||
+                disableDocCreateInv
+              "
+            >
+              {{ fieldNameInvoice }}
+            </button>
+          </mat-menu> -->
+          </mat-menu>
+
+          <!-- Logout -->
+          <span>
+            &nbsp;
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Example icon-button with a menu"
+            >
+              <span *ngIf="user?.photoURL; else avatar">
+                <img
+                  src="{{ user?.photoURL }}"
+                  alt="avatar"
+                  class="mat-card-avatar"
+                  height="35"
+                  width="35"
+                />
+              </span>
+              <ng-template #avatar>
+                <ngx-avatar
+                  name="{{ this.userNamesplit }}"
+                  size="35"
+                  textSizeRatio="1.75"
+                ></ngx-avatar>
+              </ng-template>
+            </button>
+            <mat-menu #menu="matMenu">
+              <!--
+              <button
+                *ngIf="profileVisiblity"
+                mat-menu-item
+                (click)="profile()"
+              >
+                <mat-icon>person</mat-icon>
+                <span>Public Profile</span>
+              </button>
+            -->
+              <button
+                mat-menu-item
+                *ngIf="commonService?.userPlan?.settingsAccess"
+                [routerLink]="['/dash/settings']"
+              >
+                <mat-icon class="material-icons-outlined" color="accent"
+                  >settings</mat-icon
+                >
+                <span>Settings</span>
+              </button>
+              <!-- <button mat-menu-item [matMenuTriggerFor]="settingsMenu">
+              <mat-icon class="material-icons-outlined" color="accent" [matMenuTriggerFor]="settingsMenu">settings</mat-icon>
+              <span [routerLink]="['/dash/settings/settingsnew']">Settings</span>
+            </button> -->
+              <!-- <mat-menu #settingsMenu="matMenu" >
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/custsettings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon class="material-icons-outlined"
+                  mat-list-icon
+                  color="accent"
+                  title="{{ fieldNameContact }} Settings"
+                  >contacts</mat-icon
+                >{{ fieldNameContact }} Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/salessettings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon class="material-icons-outlined"
+                  mat-list-icon
+                  color="accent"
+                  title="{{ fieldNameSale }} Settings"
+                  >work</mat-icon
+                >{{ fieldNameSale }} Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/service-settings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon class="material-icons-outlined"
+                  mat-list-icon
+                  color="accent"
+                  title="{{fieldNameService}} Settings"
+                  >support_agent</mat-icon
+                >{{fieldNameService}} Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/tasksettings'"
+                [disabled]="disableSett"
+              >
+
+                <mat-icon class="material-icons-outlined"
+                  mat-list-icon
+                  color="accent"
+                  title="{{fieldNameTask}} Settings"
+                  >task</mat-icon
+                >{{fieldNameTask}} Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/expensesettings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon mat-list-icon color="accent" title="User Profile" class="material-icons-outlined"
+                  >account_balance_wallet</mat-icon
+                >{{ fieldNameExpense }} Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/profilesettings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon mat-list-icon color="accent" title="User Profile" class="material-icons-outlined"
+                  >person</mat-icon
+                >Profile
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/subusersettings'"
+                [disabled]="disableSett"
+                *ngIf="userPlan.multiUser"
+              >
+                <mat-icon
+                  mat-list-icon
+                  color="accent" class="material-icons-outlined"
+                  title="Settings/subusersettings Details"
+                  >supervisor_account </mat-icon
+                >Sub-users
+              </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/docsettings'"
+                  [disabled]="disableSett"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    class="material-icons-outlined"
+                    color="accent"
+                    title="Document Settings"
+                    >style</mat-icon
+                  >Document Settings
+                </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/emailsettings'"
+                  [disabled]="disableSett"
+                  *ngIf="userPlan.emailTemplates"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    color="accent"
+                    title="Email Settings"
+                    class="material-icons-outlined"
+                    >email</mat-icon
+                  >Email Settings
+                </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/messagetemplate'"
+                  [disabled]="disableSett"
+                  *ngIf="userPlan.messageTemplates"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    class="material-icons-outlined"
+                    color="accent"
+                    title="Message Template"
+                    >message</mat-icon
+                  >Message Templates
+                </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/field-name-settings'"
+                  [disabled]="disableSett"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    class="material-icons-outlined"
+                    color="accent"
+                    title="Field name Settings"
+                    >settings_suggest</mat-icon
+                  >Module Names
+                </button>
+
+                <button
+                  mat-menu-item
+                  *ngIf="attmgmtEnabled"
+                  [routerLink]="'/dash/settings/employee-settings'"
+                  [disabled]="disableSett"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    class="material-icons-outlined"
+                    color="accent"
+                    title="Employee Settings"
+                    >engineering</mat-icon
+                  >Employee Settings
+                </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/product-settings'"
+                  [disabled]="disableSett"
+                >
+                  <mat-icon
+                    class="material-icons-outlined"
+                    mat-list-icon
+                    color="accent"
+                    title="{{
+                      fieldNameItems == 'Products and Service'
+                        ? 'Product'
+                        : fieldNameItems
+                    }} Settings"
+                    >inventory_2</mat-icon
+                  >{{
+                    fieldNameItems == "Products and Service"
+                      ? "Product"
+                      : fieldNameItems
+                  }}
+                  Settings
+                </button>
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/generalsettings'"
+                  [disabled]="disableSett"
+                  *ngIf="accountType == 'SuperUser'"
+                >
+                  <mat-icon
+                    class="material-icons-outlined"
+                    mat-list-icon
+                    color="accent"
+                    title="General Settings"
+                    >settings_applications</mat-icon
+                  >
+                  General Settings
+                </button>
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/settings/followupsettings'"
+                  [disabled]="disableSett"
+                >
+
+                  <mat-icon
+                    mat-list-icon
+                    class="material-icons-outlined"
+                    color="accent"
+                    title="{{ fieldNameFollowup }} Settings"
+                    >call</mat-icon
+                  >
+                  {{ fieldNameFollowup }} Settings
+                </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/paymentsettings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon
+                  mat-list-icon class="material-icons-outlined"
+                  color="accent"
+                  title="Payment Settings"
+                  >paid</mat-icon
+                >
+                Payment Settings
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="'/dash/settings/organisation-settings'"
+                [disabled]="disableSett"
+              >
+                <mat-icon
+                  mat-list-icon class="material-icons-outlined"
+                  color="accent"
+                  title="Organization Settings"
+                  >business</mat-icon
+                >
+               Organization Settings
+              </button>
+
+
+                <button
+                  mat-menu-item
+                  [routerLink]="'/dash/automation-list'"
+                  [disabled]="disableSett"
+                  *ngIf="userPlan.automation"
+                >
+                  <mat-icon
+                    mat-list-icon
+                    color="accent"
+                    title="Automation"
+                    class="material-icons-outlined"
+                    >account_tree</mat-icon
+                  >Automations
+                </button>
+              </mat-menu> -->
+              <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div style="overflow-y: scroll" class="content-area">
+        <div
+          *ngIf="
+            plan == 'free' &&
+            !addDocumentDisable.balanceCustomerFlag &&
+            !isSuperUser
+          "
+          style="background-color: rgb(178, 221, 245)"
+        >
+          <span
+            >&nbsp;&nbsp;You are using Zenys Free trial version.Inform your
+            admin to upgrade to premium to access all features!</span
+          >
+        </div>
+        <div
+          *ngIf="
+            plan == 'free' &&
+            addDocumentDisable.balanceCustomerFlag &&
+            isSuperUser &&
+            !addDocumentDisable.customerOverFlag
+          "
+        >
+          <span
+            >&nbsp;&nbsp;&nbsp;You are using Zenys Free trial
+            version.&nbsp;&nbsp;&nbsp;Only
+            {{ addDocumentDisable.balanceCustomers }} contacts can be added in
+            your free package this month. Upgrade now!</span
+          >
+          <button
+            mat-icon-button
+            color="accent"
+            aria-label="Upgrade"
+            (click)="pay()"
+          >
+            <mat-icon color="accent">vertical_align_top </mat-icon>
+          </button>
+        </div>
+        <div
+          *ngIf="
+            plan == 'free' &&
+            addDocumentDisable.balanceCustomerFlag &&
+            !isSuperUser &&
+            !addDocumentDisable.customerOverFlag
+          "
+        >
+          <span
+            >&nbsp;&nbsp;&nbsp;You are using Zenys Free trial
+            version.&nbsp;&nbsp;&nbsp;Inform your admin that only
+            {{ addDocumentDisable.balanceCustomers }} contacts can be added in
+            your free package this month to Upgrade now!</span
+          >
+        </div>
+        <div
+          *ngIf="
+            plan == 'free' &&
+            addDocumentDisable.balanceCustomerFlag &&
+            isSuperUser &&
+            addDocumentDisable.customerOverFlag
+          "
+        >
+          <span
+            >&nbsp;&nbsp;&nbsp;You are using Zenys Free trial
+            version.&nbsp;&nbsp;&nbsp;No more contacts can be added in your free
+            package this month. Upgrade now!</span
+          >
+          <button
+            mat-icon-button
+            color="accent"
+            aria-label="Upgrade"
+            (click)="pay()"
+          >
+            <mat-icon color="accent">vertical_align_top</mat-icon>
+          </button>
+        </div>
+        <div
+          *ngIf="
+            plan == 'free' &&
+            addDocumentDisable.balanceCustomerFlag &&
+            !isSuperUser &&
+            addDocumentDisable.customerOverFlag
+          "
+        >
+          <span
+            >&nbsp;&nbsp;&nbsp;You are using Zenys Free trial
+            version.&nbsp;&nbsp;&nbsp;Inform your admin that no more contacts
+            can be added in your free package to Upgrade now!</span
+          >
+        </div>
+        <div *ngIf="plan != 'free' && balanceDaysFlag && isSuperUser">
+          <span color="accent"
+            >&nbsp;&nbsp;&nbsp;Your subscription is ending on
+            {{ activeSubscriptionDateEnd * 1000 | date : "MMM d, y" }}.Renew
+            Now!</span
+          >
+          <button
+            mat-icon-button
+            color="accent"
+            aria-label="Upgrade"
+            (click)="pay()"
+          >
+            <mat-icon color="accent">upgrade</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="plan != 'free' && expiryFlag && isSuperUser">
+          <span color="accent"
+            >&nbsp;&nbsp;&nbsp;Your subscription has ended on
+            {{ activeSubscriptionDateEnd * 1000 | date : "MMM d, y" }}.Renew
+            Now!
+          </span>
+          <button
+            mat-icon-button
+            color="accent"
+            aria-label="Upgrade"
+            (click)="pay()"
+          >
+            <mat-icon color="accent">upgrade</mat-icon>
+          </button>
+        </div>
+
+        <div *ngIf="plan != 'free' && balanceDaysFlag && !isSuperUser">
+          <span color="accent"
+            >&nbsp;&nbsp;&nbsp;Inform your admin that subscription is ending on
+            {{ activeSubscriptionDateEnd * 1000 | date : "MMM d, y" }}
+          </span>
+        </div>
+
+        <div *ngIf="plan != 'free' && expiryFlag && !isSuperUser">
+          <span color="accent"
+            >&nbsp;&nbsp;&nbsp;Subscription has ended on
+            {{ activeSubscriptionDateEnd * 1000 | date : "MMM d, y" }}. Inform
+            your admin to renew now!</span
+          >
+          <button
+            mat-icon-button
+            color="accent"
+            aria-label="Upgrade"
+            (click)="pay()"
+          >
+            <mat-icon color="accent">upgrade </mat-icon>
+          </button>
+        </div>
+        <div class="uploadNotif" *ngIf="fileUploading">
+          <mat-icon
+            (click)="uploadComplete()"
+            style="float: right; font-size: medium; cursor: pointer"
+            >close</mat-icon
+          >
+          <h4>Upload in progress</h4>
+          <div class="progress" *ngIf="uploadProgress$ | async as progress">
+            <div
+              class="progress-bar progress-bar-animated"
+              *ngIf="progress != '100'"
+              [ngStyle]="{ width: progress + '%' }"
+            >
+              Uploading {{ progress | number : "1.0-0" }} %
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              *ngIf="progress == '100'"
+              [ngStyle]="{ width: progress + '%' }"
+            >
+              Completed
+            </div>
+          </div>
+        </div>
+        <!-- <div class="failedNotif" *ngIf="failedCsv">
+          <mat-icon
+            (click)="closeFailedCsv()"
+            style="float: right; font-size: medium; cursor: pointer"
+            >close</mat-icon
+          >
+          <h3>{{ rejectedCount }} Customer's Upload failed</h3>
+          <button
+            mat-button
+            color="accent"
+            type="submit"
+            (click)="downloadFailedCsv()"
+          >
+            Download
+          </button>
+        </div> -->
+        <div class="center" *ngIf="csvUploading">
+          <div class="d-flex flex-row">
+            <div style="padding-top: 5px" class="flex-grow-1">
+              <h1>Uploading CSV Data</h1>
+            </div>
+            <div>
+              <button
+                mat-icon-button
+                *ngIf="fulllayoutservice.showCloseBtn"
+                style="cursor: pointer"
+              >
+                <mat-icon (click)="closeCsvDiv()" color="warn">close</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <h3 *ngIf="totalRecExceeded">Only first 2000 {{fieldNameContact}}s will be uploaded </h3>
+          <h3>
+            <span *ngIf="fulllayoutservice.uploadedRec === 0">Upload in progress..</span>
+            <span *ngIf="fulllayoutservice.uploadedRec !==0">
+              Out of total {{ totalRec }} records,
+              {{ fulllayoutservice.uploadedRec | number : "1.0-0" }} records uploaded!
+            </span>
+          </h3>
+
+          <div
+            class="progress-bar progress-bar-animated"
+            *ngIf="progress != '100'"
+            [ngStyle]="{ width: fulllayoutservice.progressCSV + '%' }"
+          >
+            Uploading {{ fulllayoutservice.progressCSV | number : "1.0-0" }} % Completed
+          </div>
+
+          <!-- <mat-list role="list" *ngIf="failedCsv && fulllayoutservice.progressCSV === 100">
+            <mat-list-item role="listitem" *ngFor="let rejArrElem of rejectedArray">{{rejArrElem.count}}.
+              {{rejArrElem.reason}}</mat-list-item>
+          </mat-list> -->
+
+          <div
+            *ngIf="fulllayoutservice.failedCsv && fulllayoutservice.progressCSV === 100"
+            class="d-flex flex-row"
+            style="padding-top: 16px"
+          >
+            <div class="flex-grow-1">
+              <h3 style="padding-top: 4px">
+                {{ fulllayoutservice.rejCount }} invalid format records found!
+              </h3>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div>
+              <button
+                mat-button
+                color="primary"
+                type="submit"
+                (click)="downloadFailedCsv()"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+        <mat-spinner
+          color="primary"
+          *ngIf="!isLoaded"
+          [diameter]="24"
+        ></mat-spinner>
+        <div
+          style="overflow: overlay; height: 100%"
+          *ngIf="isLoaded"
+          [@routeAnimations]="
+            o && o.activatedRouteData && o.activatedRouteData['animation']
+          "
+        >
+          <router-outlet #o="outlet"> </router-outlet>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <div *ngIf="this.logoutLoader">Logging out....</div>
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar
+  *ngIf="loader && !this.logoutLoader"
+  [style.visibility]="loader ? 'visible' : 'hidden'"
+  mode="indeterminate"
+>
+</mat-progress-bar>
+</div>

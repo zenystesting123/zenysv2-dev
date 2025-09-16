@@ -1,0 +1,70 @@
+<mat-toolbar class="mat-elevation-z2" >
+    <button mat-icon-button matTooltip="back" (click)="onBack()">
+        <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <h2 mat-line class="mat-h2 mat-title" >
+        &nbsp;&nbsp; &nbsp;
+        <span class="align-self-center">{{ previewService.toolbar.documentTypeFeildName}}&nbsp;:&nbsp;{{ previewService.toolbar.prefixAndDocNumber }}</span>
+    </h2>
+    <span class="example-spacer"></span>
+    <!-- WhatsApp messaging feature starts-->
+    <button *ngIf="previewService.customerData.contactNumber && this.previewService.docData.docType == 'Invoice'" mat-icon-button title="Chat with Whatsapp" [matMenuTriggerFor]="menuWat">
+        <mat-icon style="margin: 0px; padding: 0px; cursor: pointer;"
+          class="sizes text-success material-icons-outlined" mat-list-icon>
+          forum
+        </mat-icon>
+    </button>
+    <mat-menu #menuWat="matMenu" title="Select Template">
+    <button mat-menu-item (click)="selectTemplate('noTemplate')">
+        -- without template --
+    </button>
+    <button mat-menu-item *ngFor="let item of invoiceWaTemp" (click)="selectTemplate(item)">
+        {{ item.templateName }}
+    </button>
+    </mat-menu>
+    <!-- WhatsApp messaging feature ends-->
+    <button mat-raised-button color="accent" (click)="approveDoc()" *ngIf="previewService.toolbar.statusApproved"
+        [ngClass]="{ isDisabled: !onCheckNetwork() }">
+        Approve</button>&nbsp;&nbsp;
+    <button mat-raised-button color="accent" (click)="downloadAsPdf()"
+        [ngClass]="{ isDisabled: previewService.toolbar.disableDownload  }">
+        Download</button>
+    <button mat-icon-button aria-label="Document" [matMenuTriggerFor]="docmenu">
+        <mat-icon >more_vert</mat-icon>
+    </button>
+    <mat-menu #docmenu="matMenu">
+        <div *ngIf="previewService.toolbar.createQuotation">
+            <button mat-menu-item (click)="onCreateQuotation()" [ngClass]="{ isDisabled: !onCheckNetwork() }"
+                [disabled]="previewService.toolbar.disablCreateQuo">
+                Create {{previewService.toolbar.fieldNameQuotation}}
+            </button>
+        </div>
+        <div *ngIf="previewService.toolbar.createInvoice">
+            <button mat-menu-item (click)="onCreateInvoice()" [ngClass]="{ isDisabled: !onCheckNetwork() }"
+                [disabled]="previewService.toolbar.disableCreateInvoice">
+                Create {{previewService.toolbar.fieldNameInvoice}}
+            </button>
+        </div>
+        <button mat-menu-item (click)="onEdit()"   [disabled]="previewService.toolbar.disableEdit"
+        [ngClass]="{'isDisabled': !onCheckNetwork() }">
+            Edit
+        </button>
+        <button mat-menu-item *ngIf="previewService.toolbar.sendPaymentLink" (click)="invoicesend()"
+            [disabled]='previewService.toolbar.disableSendPaymentLink'  [ngClass]="{ isDisabled: !onCheckNetwork() }">
+            Send Payment Link</button>
+        <button *ngIf="previewService.toolbar.shareDocument" mat-menu-item (click)="invoiceshare()"
+            [disabled]='previewService.toolbar.disableShareDocument'  [ngClass]="{ isDisabled: !onCheckNetwork() }">
+            Share Document</button>
+        <button *ngIf="previewService.toolbar.shared" mat-menu-item (click)="invoiceshare()"  [ngClass]="{ isDisabled: !onCheckNetwork() }"
+         [disabled]="previewService.toolbar.disableShared">
+            Shared</button>
+
+        <button mat-menu-item [useExistingCss]="true" printSectionId="printsection"
+            ngxPrint (click)="onSendEvent()">
+            Print</button>
+        <button mat-menu-item (click)="onCancelDocument()" *ngIf="previewService.toolbar.cancelStatus"  [ngClass]="{ isDisabled: !onCheckNetwork() }"
+            [disabled]="previewService.toolbar.disableCancelStatus || !onCheckNetwork()">
+            Cancel Document
+        </button>
+    </mat-menu>
+</mat-toolbar>

@@ -1,0 +1,7 @@
+<h3 style="font-size: 18px;" *ngIf="data.scenario == 'delete'">Do you want to delete Inquiry from {{data.name}} ? </h3>
+<h3 style="font-size: 18px;" *ngIf="data.scenario == 'reject'">Do you want to reject Inquiry from {{data.name}} ? </h3>
+<div mat-dialog-actions style="float: right;">
+<button mat-button (click)="onNoClick()">CANCEL</button>
+<button mat-button color="warn" [mat-dialog-close]="data.id" *ngIf="data.scenario == 'delete'">DELETE</button>
+<button mat-button color="warn" [mat-dialog-close]="data.id" *ngIf="data.scenario == 'reject'">REJECT</button>
+</div>

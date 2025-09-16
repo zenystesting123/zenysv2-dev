@@ -1,0 +1,34 @@
+<div *ngFor="let field of previewService.filteredAdditionalField">
+    <div *ngIf="field.isActive">
+        <ul class="m-0 list-unstyled">
+            <li>
+                <span>{{ field.fieldName }}:</span>
+
+                <span *ngIf="field.fieldType == 'date'">
+                    <span *ngIf="field.datavalue != ' '">
+                        {{
+                        field?.datavalue
+                        ? (field?.datavalue.toDate()
+                        | date: "dd-MM-yyyy")
+                        : ""
+                        }}
+                    </span>
+                </span>
+                <span *ngIf="field.fieldType == 'date_time'">
+                    <span *ngIf="field.datavalue != ' '">
+                        {{
+                        field?.datavalue
+                        ? (field?.datavalue.toDate()
+                        | date: "dd-MM-yyyy hh:mm a")
+                        : ""
+                        }}
+                    </span>
+                </span>
+                <span *ngIf="field.fieldType != 'date' &&field.fieldType != 'textarea'&& field.fieldType != 'date_time'">{{ field.datavalue }}</span>
+                <span *ngIf="field.fieldType == 'textarea'">
+                    {{ field.datavalue }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>

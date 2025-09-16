@@ -1,0 +1,135 @@
+<!-- display table -->
+<div *ngIf="commonService.userPlan.serviceAccess
+" class="container-fluid" style="margin-bottom: 10px">
+    <br />
+    <div class="example-container border" style="border-radius: 5px;background-color: white;">
+        <!-- table toolbar -->
+        <mat-toolbar [ngStyle]="{'background-color':'white'}" [ngClass]="{isDisabled: isLoading}">
+            <span class="example-spacer"></span>
+            <button mat-icon-button color="accent" aria-label="Table settings" title="Customise table"
+                [ngClass]="{isDisabled:!onCheckNetwork()}" (click)="openDialog()">
+                <mat-icon class="material-icons-outlined">settings</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" aria-label="Download table" title="Download table"
+                [ngClass]="{isDisabled: disableDownloadService || !onCheckNetwork()}"
+                (click)="tableService.serviceList.data.length>0 ? exporter.exportTable('csv',{fileName:fieldNameService}): noDataMessage()">
+                <mat-icon class="material-icons-outlined">download</mat-icon>
+            </button>
+        </mat-toolbar>
+        <!-- spinner while data loading -->
+        <mat-spinner *ngIf="isLoading" color="accent" diameter="50"></mat-spinner>
+        <div class="border-top" [ngClass]="{ 'disabled': isLoading }">
+
+            <!-- table starts here -->
+            <table [ngClass]="{isDisabled: isLoading}" mat-table [dataSource]="tableService.serviceList"
+                class="mat-elevation-z1 demo-table" matTableExporter #exporter="matTableExporter">
+
+                <ng-container *ngFor="let column of columnsDispaly" [matColumnDef]="column.columnDef">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{column.header}}
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="truncate-cell">
+
+                        <span *ngIf="column.columnDef =='aged service'">
+                            <a class="link-primary">
+                                {{getAgedStatus(row,'service')}}
+                            </a>
+                        </span>
+
+                        <span *ngIf="column.fieldType =='service title' ">
+                            <a class="link-primary" [routerLink]="['/dash/service/service-details/',row.id]">
+                                {{findColumnValue(row,column)}}
+                            </a>
+                        </span>
+                        <span *ngIf="column.fieldType !='service title'
+                       && column.columnDef !='aged service' ">
+                            {{findColumnValue(row,column)}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Select Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions&nbsp;&nbsp;</th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <!-- service table Actions button -->
+                        <button *ngIf="this.tableName === 'Service'" [disabled]="!networkCheck.onNetworkCheck()"
+                            mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                            [matMenuTriggerFor]="menuServiceActions">
+                            <mat-icon color="accent">more_vert</mat-icon>
+                        </button>
+
+                        <!-- 3 dot icon mat menu service -->
+                        <mat-menu #menuServiceActions="matMenu">
+
+                            <!-- add button -->
+                            <button mat-menu-item [matMenuTriggerFor]="menuAddService" *ngIf="
+                                                (commonService.userPlan.activitiesAccess &&
+                                                  commonService.userPlan.tasksAccess) ||
+                                                (commonService.userPlan.activitiesAccess &&
+                                                  commonService.userPlan.followupsAccess)
+                                              ">Add</button>
+                            <!-- add button matmenu -->
+                            <mat-menu #menuAddService="matMenu">
+
+                                <!-- add task -->
+                                <button
+                                    *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess"
+                                    mat-menu-item (click)="
+                                                    addTask(row)
+                                                  ">
+                                    <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+                                </button>
+
+                                <!-- add followUp -->
+                                <button
+                                    *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess"
+                                    mat-menu-item (click)="
+                                                    onCreateFollowUps(row)
+                                                  " [ngClass]="{ isDisabled: disableFoll }">
+                                    <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+                                </button>
+
+                            </mat-menu>
+
+                            <!-- edit button -->
+                            <button mat-menu-item [disabled]="disableEditService"
+                                (click)="editService(row)">Edit</button>
+
+                        </mat-menu>
+
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; " (click)="onRowClick(row)"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">
+                        No data to display
+                    </td>
+                </tr>
+
+            </table>
+            <!-- table ends here -->
+            <!-- paginator -->
+            <mat-paginator [length]="totalItems" [pageSize]="tableService.pageSize" [pageIndex]="tableService.pageIndex"
+                [pageSizeOptions]="pageSizeOptions" (page)="onPageChanged($event)" [intl]="paginatorIntl"
+                [ngClass]="{isDisabled: isLoading || !onCheckNetwork()}">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

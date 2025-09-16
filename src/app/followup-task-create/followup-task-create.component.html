@@ -1,0 +1,922 @@
+<div *ngIf="isLoaded">
+  <!-- popup heading -->
+  <h2 mat-dialog-title id="heading">{{ titleName }} {{ fieldNameFollowup }}</h2>
+  <mat-dialog-content style="min-height: auto">
+    <form [formGroup]="form">
+      <div style="border-radius: 10px;margin-bottom: 5px;padding:10px;background-color: ghostwhite;">
+        <p class="caption h3-dialog">Tag {{fieldNameContact}}{{commonService.userPlan.saleAccess ? ', '+fieldNameSale : ''}}{{commonService.userPlan.serviceAccess ? ', '+fieldNameservice : ''}}</p>
+        <div class="form-row">
+          <div class="col-sm-12 col-md-12">
+            <app-common-org-tag
+              (orgNameEvent)="orgNameEventHander($event)"
+              (contSelectedEvent)="contSelectedEventHander($event)"
+              (orgIdEvent)="orgIdEventHander($event)"
+              [contactSelected]="contactSelected"
+              [companySelected]="companySelected"
+              [chipDisplay]="chipDisplay"
+            >
+            </app-common-org-tag>
+          </div>
+        </div>
+        <br />
+        <div class="form-row">
+          <!--Tags displayed as chip list-->
+          <div style="margin-bottom: 10px">
+            <mat-chip-list>
+              <mat-chip
+                *ngIf="custId"
+                class="chipStyling"
+                (click)="onViewCustomer()"
+              >
+                <mat-icon matChipAvatar color="primary"
+                  >account_circle
+                </mat-icon>
+                <span class="truncate-cell"> {{ customerNames }}</span>
+                <mat-icon matChipRemove (click)="onClearContact()"
+                  >cancel</mat-icon
+                >
+              </mat-chip>
+
+              <mat-chip *ngIf="orgId && commonService.userPlan.orgAccess" class="chipStyling" (click)="onViewOrg()">
+                <mat-icon matChipAvatar color="primary">apartment </mat-icon>
+                <span class="truncate-cell"> {{ companyNames }}</span>
+                <mat-icon matChipRemove (click)="onClearCompany()"
+                  >cancel</mat-icon
+                >
+              </mat-chip>
+
+              <mat-chip  *ngIf="saleId && commonService.userPlan.saleAccess" class="chipStyling" (click)="onViewSale()">
+                <mat-icon matChipAvatar color="primary">work
+                </mat-icon>
+                <span class="truncate-cell"> {{ saleTitle }}</span>
+                <mat-icon matChipRemove (click)="onClearSale()"
+                  >cancel</mat-icon
+                >
+              </mat-chip>
+              <mat-chip  *ngIf="serviceId && commonService.userPlan.serviceAccess" class="chipStyling" (click)="onViewSupport()">
+                <mat-icon matChipAvatar color="primary">
+                  featured_play_list
+                </mat-icon>
+                <span class="truncate-cell"> {{ serviceTitle }}</span>
+                <mat-icon matChipRemove (click)="onClearService()"
+                  >cancel</mat-icon
+                >
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6 col-sm-12" *ngIf=" custId && ! saleId && commonService.userPlan.saleAccess ">
+            <!-- sale search if its not selected -->
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Tag a {{ fieldNameSale }} </mat-label>
+              <input
+                type="text"
+                placeholder="Choose {{ fieldNameSale }} Title"
+                aria-label="{{ fieldNameSale }}"
+                matInput
+                [formControl]="saleControl"
+                [matAutocomplete]="auto"
+                (ngModelChange)="selectSale(saleControl.value)"
+              />
+              <button
+                mat-button
+                *ngIf="saleControl.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="onClearSale()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displaySale"
+              >
+                <mat-option
+                  *ngFor="let option of filteredSales | async"
+                  [value]="option"
+                >
+                  {{ option.saleTitle }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-error *ngIf="saleControl.value && !saleId"
+              >Select {{ fieldNameSale }} Title</mat-error
+            >
+          </div>
+          <div class="col-md-6 col-sm-12" *ngIf=" custId && ! serviceId && commonService.userPlan.serviceAccess">
+            <!-- sale search if its not selected -->
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Tag a {{ fieldNameservice }} </mat-label>
+              <input
+                type="text"
+                placeholder="Choose {{ fieldNameservice }} Title"
+                aria-label="{{ fieldNameservice }}"
+                matInput
+                [formControl]="serviceControl"
+                [matAutocomplete]="auto"
+                (ngModelChange)="selectService(serviceControl.value)"
+              />
+              <button
+                mat-button
+                *ngIf="serviceControl.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="onClearService()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayService"
+              >
+                <mat-option
+                  *ngFor="let option of filteredService | async"
+                  [value]="option"
+                >
+                  {{ option.serviceTitle }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-error *ngIf="serviceControl.value && !serviceId"
+              >Select {{ fieldNameservice }} Title</mat-error
+            >
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div
+          class="col-sm-12 col-md-4"
+          *ngIf="followUpSettings.callStartDate.display"
+        >
+          <!-- followup date -->
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label
+              >{{ followUpSettings.callStartDate.displayName }}&nbsp;</mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="picker"
+              name="callStartDate"
+              formControlName="callStartDate"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('callStartDate').invalid &&
+              (form.get('callStartDate').dirty ||
+                form.get('callStartDate').touched)
+            "
+          >
+            Date Required!
+          </mat-error>
+        </div>
+        <div
+          class="col-sm-12 col-md-4"
+          *ngIf="followUpSettings.callStartTime.display"
+        >
+          <!-- followup time -->
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{
+              followUpSettings.callStartTime.displayName
+            }}</mat-label>
+            <input
+              matInput
+              type="time"
+              name="callStartTime"
+              formControlName="callStartTime"
+            />
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('callStartTime').invalid &&
+              (form.get('callStartTime').dirty ||
+                form.get('callStartTime').touched)
+            "
+          >
+            Enter Valid {{ followUpSettings.callStartTime.display }}!
+          </mat-error>
+        </div>
+      </div>
+      <div class="form-row">
+        <div
+          class="col-sm-4 col-md-4"
+          *ngIf="followUpSettings.direction.display"
+        >
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{ followUpSettings.direction.displayName }}</mat-label>
+            <mat-select
+              matNativeControl
+              id="mySelectId1"
+              formControlName="direction"
+              name="direction"
+            >
+              <mat-option *ngFor="let data of directionArray" value="{{ data }}"
+                >{{ data }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('direction').invalid &&
+              (form.get('direction').dirty || form.get('direction').touched)
+            "
+          >
+            Required!</mat-error
+          >
+        </div>
+        <div class="col-sm-4 col-md-4" *ngIf="followUpSettings.status.display">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{ followUpSettings.status.displayName }}</mat-label>
+            <mat-select
+              matNativeControl
+              id="mySelectId3"
+              formControlName="status"
+              name="status"
+            >
+              <mat-option *ngIf="!followUpSettings?.status?.mandatory" value=""
+                >None</mat-option
+              >
+              <mat-option
+                *ngFor="let statusdata of followUpStatusArray"
+                value="{{ statusdata }}"
+                >{{ statusdata }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('status').invalid &&
+              (form.get('status').dirty || form.get('status').touched)
+            "
+          >
+            Required!</mat-error
+          >
+        </div>
+        <div class="col-sm-4 col-md-4" *ngIf="followUpSettings.outcome.display">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{ followUpSettings.outcome.displayName }}</mat-label>
+            <mat-select
+              matNativeControl
+              id="mySelectId2"
+              formControlName="outcome"
+              name="outcome"
+            >
+              <mat-option *ngIf="!followUpSettings?.outcome?.mandatory" value=""
+                >None</mat-option
+              >
+              <mat-option
+                *ngFor="let outcomedata of followUpOutcomeArray"
+                value="{{ outcomedata }}"
+                >{{ outcomedata }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('outcome').invalid &&
+              (form.get('outcome').dirty || form.get('outcome').touched)
+            "
+          >
+            Required!</mat-error
+          >
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-12" *ngIf="followUpSettings.notes.display">
+          <!-- Notes for followup -->
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>{{ followUpSettings.notes.displayName }}</mat-label>
+            <textarea
+              matInput
+              placeholder="Notes"
+              name="notes"
+              formControlName="notes"
+              minlength="1"
+              maxlength="250"
+            >
+            </textarea>
+          </mat-form-field>
+          <mat-error
+            class="form-text text-muted danger"
+            *ngIf="
+              form.get('notes').invalid &&
+              (form.get('notes').dirty || form.get('notes').touched)
+            "
+          >
+            Enter a valid note!</mat-error
+          >
+        </div>
+      </div>
+      <span class="caption" *ngIf="additionalFieldLength == 0">
+        Configure additional details in {{ fieldNameFollowup }} settings
+      </span>
+      <div class="form-row">
+        <ng-container
+          *ngFor="
+            let addFieldsGroup of this.form.get('additionalFields').controls;
+            let i = index;
+            trackBy: identify
+          "
+          [formGroup]="addFieldsGroup"
+        >
+          <div
+            *ngIf="additionalFields[i].isActive"
+            [ngClass]="
+              additionalFields[i].fieldType == 'textarea' ||
+              additionalFields[i].fieldType == 'date_time'
+                ? 'col-12'
+                : 'col-6'
+            "
+          >
+            <div *ngIf="additionalFields[i].fieldType == 'category'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <mat-select
+                  formControlName="fieldValue"
+                  name="additionalField"
+                  placeholder="Required"
+                >
+                  <mat-option
+                    *ngIf="additionalFields[i].mandatory == false"
+                    value=""
+                    >None</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let s of additionalFields[i].categories"
+                    value="{{ s }}"
+                    >{{ s }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input
+                  matInput
+                  formControlName="fieldValue"
+                  name="additionalField"
+                  type="text"
+                />
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div
+              *ngIf="additionalFields[i].fieldType == 'number'"
+              style="padding-bottom: 0px"
+            >
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input
+                  matInput
+                  formControlName="fieldValue"
+                  name="additionalField"
+                  type="number"
+                />
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div
+              *ngIf="additionalFields[i].fieldType == 'textarea'"
+              style="padding-bottom: 0px"
+            >
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <textarea
+                  matInput
+                  placeholder="Description"
+                  formControlName="fieldValue"
+                  name="additionalField"
+                ></textarea>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'date'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="addtfield_i"
+                  name="additionalField"
+                  formControlName="fieldValue"
+                />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="addtfield_i"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #addtfield_i></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.invalid
+                  "
+                >
+                  Enter a valid date
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--date_time starts here-->
+            <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+              <mat-form-field class="dateTime-wdith" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="addtfield_date_time"
+                  name="additionalField"
+                  formControlName="fieldValue"
+                />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="addtfield_date_time"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #addtfield_date_time></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').touched &&
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue').errors
+                      ?.invalid
+                  "
+                >
+                  Enter a valid date
+                </mat-error>
+              </mat-form-field>
+              <!--time-->
+              <mat-form-field class="dateTime-wdith" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} time </mat-label>
+                <input
+                  matInput
+                  type="time"
+                  formControlName="fieldValue2"
+                  name="defaultValue"
+                />
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue2').touched &&
+                    additionalField.controls[i].get('fieldValue2').errors
+                      ?.required
+                  "
+                  style="padding-top: 0px"
+                >
+                  {{ additionalField.controls[i].get("fieldName").value }} is
+                  required
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    additionalField.controls[i].get('fieldValue2').errors
+                      ?.invalid
+                  "
+                >
+                  Enter a valid date
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--date_time endss here-->
+          </div>
+        </ng-container>
+      </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-6">
+          <app-common-user-search
+            [allSubUsers]="allSubUsers"
+            [assignedToName]="assignedToName"
+            [assignedTo]="assignedTo"
+            (assignedToEvent)="assignedToEventHander($event)"
+            [disableReAssign]="disableReAssign"
+            (assignedToNameEvent)="assignedToNameEventHander($event)"
+          >
+          </app-common-user-search>
+        </div>
+        <div class="col-6" *ngIf="branches?.length > 0 && commonService.userPlan.branchEnabled">
+          <app-common-branch
+            [associatedBranch]="associatedBranch"
+            [branches]="branches"
+            [allSubUsers]="allSubUsers"
+            (branchEvent)="branchIdEventHandler($event)"
+          >
+          </app-common-branch>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-sm-12 col-md-6">
+          <mat-checkbox
+            class="example-margin"
+            name="completedStatus"
+            formControlName="completedStatus"
+            id="followup"
+          >
+            Mark As Completed</mat-checkbox
+          >
+        </div>
+      </div>
+      <div
+        style="
+          border-radius: 10px;
+          margin-bottom: 10px;
+          margin-top: 10px;
+          padding: 10px;
+          background-color: ghostwhite;
+        "
+        *ngIf="form.value.completedStatus"
+      >
+        <button
+          mat-button
+          color="accent"
+          (click)="onNextFollowupClicked()"
+          title="Close"
+          *ngIf="!nextFollowupClicked"
+        >
+          Schedule Next {{ fieldNameFollowup }}
+        </button>
+        <h4 class="caption" *ngIf="nextFollowupClicked">
+          Next {{ fieldNameFollowup }} Details
+        </h4>
+        <div class="form-row" *ngIf="nextFollowupClicked">
+          <div class="col-sm-4 col-md-4">
+            <!-- followup date -->
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Next {{ fieldNameFollowup }} Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickers"
+                name="nextFollowUpDate"
+                formControlName="nextFollowUpDate"
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="pickers"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickers></mat-datepicker>
+            </mat-form-field>
+            <mat-error
+              class="form-text text-muted danger"
+              *ngIf="
+                form.get('nextFollowUpDate').invalid &&
+                (form.get('nextFollowUpDate').dirty ||
+                  form.get('nextFollowUpDate').touched)
+              "
+            >
+              Enter a valid date
+            </mat-error>
+          </div>
+          <div class="col-sm-12 col-md-4">
+            <!-- followup time -->
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Next {{ fieldNameFollowup }} Time</mat-label>
+              <input
+                matInput
+                type="time"
+                name="nextFollowUpTime"
+                formControlName="nextFollowUpTime"
+              />
+            </mat-form-field>
+            <mat-error
+              class="form-text text-muted danger"
+              *ngIf="
+                form.get('nextFollowUpTime').invalid &&
+                (form.get('nextFollowUpTime').dirty ||
+                  form.get('nextFollowUpTime').touched)
+              "
+            >
+              Enter Valid Time!
+            </mat-error>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="nextFollowupClicked">
+          <div class="col-sm-12 col-md-12">
+            <!-- Notes for followup -->
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Next {{ fieldNameFollowup }} Notes</mat-label>
+              <textarea
+                matInput
+                placeholder="Next {{ fieldNameFollowup }} Notes"
+                name="nextFollowUpNotes"
+                formControlName="nextFollowUpNotes"
+                minlength="1"
+                maxlength="250"
+              >
+              </textarea>
+            </mat-form-field>
+            <mat-error
+              class="form-text text-muted danger"
+              *ngIf="
+                form.get('nextFollowUpNotes').invalid &&
+                (form.get('nextFollowUpNotes').dirty ||
+                  form.get('nextFollowUpNotes').touched)
+              "
+            >
+              Enter a valid note!</mat-error
+            >
+          </div>
+        </div>
+        <button
+          mat-button
+          color="warn"
+          (click)="onNextFollowupClicked()"
+          title="Close"
+          *ngIf="nextFollowupClicked"
+        >
+          Cancel
+        </button>
+      </div>
+      <div *ngIf="ivrIntegrationEnable && scenario == 'edit'">
+        <h3 class="h3-dialog">Call details</h3>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 text-left">
+            <p>Duration: {{followUpData.callDuration}}</p>
+          </div>
+          <div class="col-md-6 col-sm-12 text-left">
+            <p>{{fieldNameFollowup}} EndTime: {{followUpData.callEndTime}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 text-left">
+            <p>Destination Number: {{followUpData.destinationNumber}}</p>
+          </div>
+          
+          <div class="col-md-6 col-sm-12 text-left">
+            <p>Source Number: {{followUpData.sourceNumber}}</p>
+          </div>
+        </div>
+        <div class="row" *ngIf="followUpData.callDuration != null && followUpData.callDuration">
+          <div class="col-md-3 col-sm-12 text-left">
+            <h3>Play recording:</h3>
+          </div>
+          <div class="col-md-9 col-sm-12 text-left">
+            <audio controls>
+              <source src="{{followUpData.resourceURL}}" type="audio/mpeg">
+              Your browser does not support the audio element.
+          </audio>
+          </div>  
+        </div>
+      </div>
+      <!-- ChangeLog -->
+      <div class="row" *ngIf="scenario == 'edit' && changeLogLength > 0" style="height:200px;">
+        <h3 style="margin: 0px;"> CHANGE LOG</h3>
+          <div
+            style="
+              margin: 0;
+              padding: 0;
+              height: 200px;
+              overflow-y: scroll;
+            "
+          >
+            <!-- Display change log according to last modified date-->
+            <div
+              class="mb-3 border-bottom"
+              *ngFor="
+                let item of changeLog | keyvalue : customsort;
+                let i = index
+              "
+              style="padding: 20px 20px 0px 20px; margin: 0px !important;"
+            >
+              <div class="d-flex align-items-center mb-3">
+                <div class="flex-shrink-0">
+                  <img
+                    class="avatar avatar-sm avatar-circle"
+                    src="../assets/img/160x160/img1.jpg"
+                    alt="Image Description"
+                  />
+                </div>
+
+                <div class="flex-grow-1 ms-3">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <h4 class="mb-0">{{ item.value.changedByName }}</h4>
+                    <span class="d-block small text-muted">
+                      {{
+                        item.value.dateModified | date : "medium"
+                      }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                matLine
+                *ngIf="
+                  item.value.currentValues == '' &&
+                  item.value.previousValues == ''
+                "
+              >
+                <div>
+                  {{ fieldNameFollowup }} created by
+                  {{ item.value.changedByName }}
+                </div>
+              </div>
+
+              <div
+                matLine
+                *ngFor="
+                  let pelem of item.value.previousValues | keyvalue
+                "
+              >
+                <div
+                  *ngFor="
+                    let celem of item.value.currentValues | keyvalue
+                  "
+                >
+                  <div *ngIf="pelem.key == celem.key">
+                    <div
+                      *ngIf="
+                        pelem.key == 'additionalFields' &&
+                        celem.key == 'additionalFields'
+                      "
+                    >
+                      <div *ngFor="let j of pelem.value | keyvalue">
+                        <div *ngFor="let k of celem.value | keyvalue">
+                          <div *ngIf="j.key == k.key">
+                            <div>
+                              Modified {{ j.value.fieldName }} from
+                              {{
+                                j.value.fieldValue
+                                  ? j.value.fieldValue
+                                  : "None"
+                              }}
+                              to
+                              {{
+                                k.value.fieldValue
+                                  ? k.value.fieldValue
+                                  : "None"
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Completed Status -->
+                    <div
+                      *ngIf="
+                        pelem.key == 'completedStatus' &&
+                        celem.key == 'completedStatus' 
+                      "
+                    >
+                      <div *ngIf="pelem.value == true &&celem.value == false">
+                        {{ fieldNameFollowup }} unmarked as completed
+                      </div>
+                      <div *ngIf="pelem.value == false &&celem.value == true">
+                        {{ fieldNameFollowup }} marked as completed
+                      </div>
+                    
+                    </div>
+                    <div
+                      *ngIf="
+                        pelem.key != 'additionalFields' &&
+                        celem.key != 'additionalFields' &&
+                        pelem.key != 'completedStatus' &&
+                        celem.key != 'completedStatus' 
+                      "
+                    >
+                      <div
+                        *ngIf="
+                          pelem.key != 'assignedTo' &&
+                          celem.key != 'assignedTo' &&
+                          pelem.key != 'orgId' &&
+                          celem.key != 'orgId'
+                        "
+                      >
+                        Modified
+                        {{
+                          followUpSettings[pelem.key]?.displayName
+                            ? followUpSettings[pelem.key]?.displayName :
+                            pelem.key == "selectedCust" ? "Contact Name" :
+                            pelem.key == "companyName" ? "Organisation Name" :
+                            pelem.key == "saleTitle" ? fieldNameSale+" Title" :
+                            pelem.key == "serviceTitle" ? fieldNameservice+" Title" : pelem.key
+                        }}
+                        from {{ pelem.value ? pelem.value : "None" }} to
+                        {{ celem.value ? celem.value : "None" }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <!-- Cancel popup -->
+  <mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <!-- submit followup -->
+    <button
+      mat-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        form.invalid ||
+        !assignedTo ||
+        !contactSelected ||
+        !onCheckNetwork() ||
+        disbaleButton ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      "
+      *ngIf="scenario == 'customerSelectFollowUp'"
+      (click)="onSubmitTask('btn_create_flwup_web')"
+    >
+      {{ titleName }}
+    </button>
+    <button
+      mat-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        form.invalid ||
+        !assignedTo ||
+        !contactSelected ||
+        !onCheckNetwork() ||
+        disbaleButton ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      "
+      *ngIf="scenario != 'customerSelectFollowUp'"
+      (click)="onSubmitTask('btn_create_flwup_web')"
+    >
+      {{ titleName }}
+    </button>
+  </mat-dialog-actions>
+</div>
+<!-- Progressbar -->
+<mat-progress-bar
+  [style.visibility]="isLoaded ? 'hidden' : 'visible'"
+  mode="indeterminate"
+></mat-progress-bar>

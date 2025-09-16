@@ -1,0 +1,38 @@
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" >      
+                    <button class="btn btn-outline-dark"  (click)="previous()"> < </button> 
+            </a>
+            <a class="nav-item nav-link">
+                <button class="btn btn-outline-dark" (click)="next()"> > </button>       
+            </a>
+        </div>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <div class="header" style="padding-top: 10px;">
+            <div class="container header-container">
+                <input type="color" [(colorPicker)]="color" [style.background]="color"/>
+            
+            <button  class="btn btn-primary"> Print</button>
+        <div class="card">
+
+                <div *ngIf="layout==1" class="container" >
+                    preview1
+                </div>
+                <div *ngIf="layout==2" class="container" >
+                    preview2
+                </div>
+                <div *ngIf="layout==3" class="container" >
+                    preview3
+                </div>
+            
+        </div>
+       </div>
+        </div>
+    </div>

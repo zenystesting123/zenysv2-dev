@@ -1,0 +1,1474 @@
+<div class="container-xl" *ngIf="loading">
+  <mat-progress-spinner></mat-progress-spinner>
+</div>
+<!--Larg screen view-->
+<div style="min-height: 900px;" *ngIf="!loading && !isMobilesize" style="background-color: white;">
+  <!--Toolbar-->
+  <mat-toolbar>
+    <span>Customer View</span> &nbsp;&nbsp;
+    <button mat-raised-button (click)="onAddSale()">Add Sale</button>
+    &nbsp;&nbsp;
+    <button mat-raised-button *ngIf="salesList?.length!=0" [matMenuTriggerFor]="beforeMenu">Create
+      Document</button> &nbsp;&nbsp;
+    <mat-menu #beforeMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="createDoc('Estimate')">Estimate</button>
+      <button mat-menu-item (click)="createDoc('Quotation')">Quotation</button>
+      <button mat-menu-item (click)="createDoc('Invoice')">Invoice</button>
+    </mat-menu>
+    <button mat-raised-button  (click)="addPayment()"> Update Collection</button>
+    <button mat-icon-button class="example-icon favorite-icon" title="Add task" aria-label="Add task"
+      (click)="addTask()">
+      <mat-icon color="accent">add_task</mat-icon>
+    </button>
+    <!-- <button mat-icon-button class="example-icon favorite-icon" title="Add meeting" aria-label="Add meeting"
+      (click)="onMeetingAdd()">
+      <mat-icon color="accent">calendar_today</mat-icon>
+    </button> -->
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" title="Drop contact" (click)="openDialog()"
+      aria-label="Drop contact">
+      <mat-icon color="warn">person_off</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menu">
+      <mat-icon color="accent">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onViewCustomer()">View</button>
+      <button mat-menu-item (click)="onEditCustomer()">Edit</button>
+    </mat-menu>
+  </mat-toolbar>
+  <!--Toolbar ends-->
+
+  <!--  <div class="container-fluid" style="background:linear-gradient(to right, #303F9F 0%,RoyalBlue 100%); position: relative;">-->
+  <div class="container-fluid" style="background:linear-gradient(to right, #303F9F 0%,RoyalBlue 100%); position: relative;">
+    <div class="container-lg ">
+      <br>
+      <div class="d-flex">
+        <div class="mr-auto p-2">
+          <h2 style="color: white;font-size: 36px;">
+            <mat-icon [ngStyle]="{'color':'white'}">account_circle</mat-icon>&nbsp;{{(customerDetails |
+            async)?.firstName}}
+          </h2>
+        </div>
+        <div class="p-2">
+          <button mat-icon-button class="example-icon favorite-icon" title="Drop contact" (click)="openDialog()"
+            aria-label="Drop contact">
+            <mat-icon color="warn">person_off</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+            [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onViewCustomer()">View</button>
+            <button mat-menu-item (click)="onEditCustomer()">Edit</button>
+          </mat-menu>
+        </div>
+      </div>
+      <mat-divider [ngStyle]="{'border-color':'silver'}"></mat-divider>
+      <br>
+      <div class="row">
+        <div class="col-4">
+          <p style="color: rgb(48, 47, 47);">
+            <a *ngIf="(customerDetails | async)?.companyName">
+              <mat-icon *ngIf="(customerDetails | async)?.companyName">business</mat-icon>
+              &nbsp;{{(customerDetails | async)?.companyName}}
+            </a>
+            <br>
+            <mat-icon [ngStyle]="{'color':'white'}" *ngIf="(customerDetails | async)?.contactNo">call</mat-icon>
+            &nbsp;{{(customerDetails | async)?.contactNo}}
+            &nbsp;<br>
+            <mat-icon [ngStyle]="{'color':'white'}" *ngIf="(customerDetails | async)?.email">email</mat-icon>&nbsp;
+            {{(customerDetails | async)?.email}}
+          </p>
+          <!--Customer Address-->
+          <p style="color: white;"
+            *ngIf="(customerDetails|async)?.bpin || (customerDetails|async)?.billingaddress1 || (customerDetails|async)?.billingaddress2 || (customerDetails|async)?.district || (customerDetails|async)?.state || (customerDetails|async)?.country">
+            {{(customerDetails | async)?.billingaddress1}}<br>
+            {{(customerDetails | async)?.billingaddress2}}<br>
+            {{(customerDetails | async)?.district}}&nbsp;&nbsp;&nbsp;
+            <span *ngIf="customerDetails.bpin">PIN/ZIP: </span>{{(customerDetails | async)?.bpin}}<br>
+            {{(customerDetails | async)?.state}}&nbsp;&nbsp;&nbsp;{{(customerDetails | async)?.country}}<br>
+          </p>
+        </div>
+        <div class="col-4  bgi">
+          <div *ngIf="(customerDetails | async)?.custField1 && form?.custField1Check">
+            {{(customerDetails | async)?.custField1Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(customerDetails |
+            async)?.custField1}}<br>
+          </div>
+          <div *ngIf="(customerDetails | async)?.custField2 && form?.custField2Check">
+            {{(customerDetails | async)?.custField2Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(customerDetails |
+            async)?.custField2}}<br>
+          </div>
+          <div *ngIf="(customerDetails | async)?.custField3 && form?.custField3Check">
+            {{(customerDetails | async)?.custField3Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(customerDetails |
+            async)?.custField3}}<br>
+          </div>
+          <div *ngIf="(customerDetails | async)?.custField4 && form?.custField4Check">
+            {{(customerDetails | async)?.custField4Name}}&nbsp;&nbsp;:&nbsp;&nbsp;{{(customerDetails |
+            async)?.custField4}}<br>
+          </div>
+          <!-- Show additional category fields here <br>
+            Category Field 1<br>
+            Category Field 2<br> -->
+          <!-- </p> -->
+
+
+
+          &nbsp;
+        </div>
+        <div class="col-4">
+          <!--Customer life time value card-->
+          <div class="container-lg d-flex justify-content-center">
+            <mat-card class="example-card " style="width: 400px;">
+              <mat-card-header>
+                <mat-card-title>Total earnings</mat-card-title>
+                <mat-card-subtitle *ngIf="saleList?.length>0"> No. of sales: {{salesList?.length}}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-6" style="padding: 0px;">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon color="primary">article</mat-icon>
+                        <div mat-line>{{(customerDetails|async)?.invoicedAmount}}
+                        </div>
+                        <div mat-line>Invoiced </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-6" style="padding: 0px;">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon color="primary">money</mat-icon>
+                        <div mat-line>
+                          {{(customerDetails|async)?.totalAmountCollected}}
+                        </div>
+                        <div mat-line>Collected </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+      </div>
+      <div>
+        <button mat-raised-button [matMenuTriggerFor]="menu1" title="Customer status"
+          style="border-radius: 20px;">{{(customerDetails |
+          async)?.status}} </button>
+        <mat-menu #menu1="matMenu" title="Customer Status">
+          <button mat-menu-item (click)="updateCustomerstage('Lead')">Lead</button>
+          <button mat-menu-item (click)="updateCustomerstage('Prospect')">Prospect</button>
+          <button mat-menu-item (click)="updateCustomerstage('Opportunity')">Opportunity</button>
+          <button mat-menu-item (click)="updateCustomerstage('Customer')">Customer</button>
+          <button mat-menu-item (click)="openDialog()">Rejected</button>
+        </mat-menu>
+        &nbsp;
+        <button mat-raised-button title="Customer priority" [matMenuTriggerFor]="menu2"
+          style="border-radius: 20px;">{{(customerDetails |
+          async)?.priority}}&nbsp; Priority</button>
+        <mat-menu #menu2="matMenu">
+          <button mat-menu-item (click)="updateCustomerPriority('Low')">Low</button>
+          <button mat-menu-item (click)="updateCustomerPriority('Medium')">Medium</button>
+          <button mat-menu-item (click)="updateCustomerPriority('High')">High</button>
+        </mat-menu>
+        &nbsp;
+        <button *ngIf="(customerDetails | async)?.custCategory1Name!='' && form?.custCategory1Check" mat-raised-button
+          title="" [matMenuTriggerFor]="menu3" style="border-radius: 20px; margin-right: 4px; margin-bottom: 4px;">{{(customerDetails |
+          async)?.custCategory1Name}}:&nbsp; {{(customerDetails | async)?.custCategory1}} </button>
+        <mat-menu #menu3="matMenu">
+          <button *ngFor="let s of form?.custCategory1" mat-menu-item (click)="updateCustCategory1(s)">{{s}}</button>
+        </mat-menu>
+        
+        <button *ngIf="(customerDetails | async)?.custCategory2Name!='' && form?.custCategory2Check" mat-raised-button
+          title="" [matMenuTriggerFor]="menu4" style="border-radius: 20px;">{{(customerDetails |
+          async)?.custCategory2Name}}:&nbsp; {{(customerDetails | async)?.custCategory2}} </button>
+        <mat-menu #menu4="matMenu">
+          <button *ngFor="let s of form?.custCategory2" mat-menu-item (click)="updateCustCategory2(s)">{{s}}</button>
+        </mat-menu>
+        &nbsp;&nbsp;
+        <button mat-icon-button class="example-icon favorite-icon" [ngStyle]="{'color':'white'}"
+          aria-label="Example icon-button with heart icon" routerLink="/dash/tasks">
+          <mat-icon color = "accent" [matBadge]="tasks?.length" matBadgeColor="warn">task_alt</mat-icon>
+        </button>
+        &nbsp;&nbsp;
+        <!-- <button mat-icon-button class="example-icon favorite-icon" [ngStyle]="{'color':'white'}"
+          aria-label="Example icon-button with heart icon" routerLink="/dash/calendar">
+          <mat-icon color = "accent" [matBadge]="meetings?.length" matBadgeColor="warn">calendar_today
+          </mat-icon>
+        </button> -->
+
+      </div>
+    </div>
+    <br>
+  </div>
+  <br>
+
+  <!--Quick Actions card
+  <div class="container-lg d-flex justify-content-center" style="padding: 0px;">
+    <mat-card class="example-card " style="width: 600px;">
+      <mat-card-content>
+        <button mat-mini-fab color="accent" [matMenuTriggerFor]="beforeMenu">
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-menu #beforeMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="onAddSale()"> Sale</button>
+          <button mat-menu-item (click)="createDoc('Estimate')" *ngIf="salesList?.length!=0">Estimate</button>
+          <button mat-menu-item (click)="createDoc('Quotation')" *ngIf="salesList?.length!=0">Quotation</button>
+          <button mat-menu-item (click)="createDoc('Invoice')" *ngIf="salesList?.length!=0">Invoice</button>
+        </mat-menu>
+        <button title="Add payment received" mat-icon-button class="Payment received" (click)="addPayment()"
+          aria-label="Example icon-button with heart icon">
+          <mat-icon color="accent">money</mat-icon>
+        </button>
+        <button mat-icon-button class="example-icon favorite-icon" title="Add task" aria-label="Add task"
+          (click)="addTask()">
+          <mat-icon color="accent">add_task</mat-icon>
+        </button>
+        <button mat-icon-button class="example-icon favorite-icon" title="Add meeting" aria-label="Add meeting"
+          (click)="onMeetingAdd()">
+          <mat-icon color="accent">calendar_today</mat-icon>
+        </button>
+
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+  <br>-->
+  <!--Tabbed -->
+
+  <div class="container-xl" style="background-color: white;">
+    <mat-divider></mat-divider>
+    <mat-tab-group [color]="'primary'">
+      <mat-tab label="Sales">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>work</mat-icon>
+          &nbsp; Sales
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <!--Sales Cards-->
+          <div *ngFor="let sale of salesList">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>{{sale.saleTitle}}</mat-card-title>
+                    <mat-card-subtitle>Sale Status: {{sale.salesStage}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <button mat-icon-button aria-label="Navigate button" [routerLink]="['/dash/sales/saleview',sale.id]">
+                    <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <mat-card-content>
+
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">date_range</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.startDate.toDate()|date}}</span>
+                          <span class="mat-small mat-caption"> &nbsp; to &nbsp; </span>
+                          <span class="mat-h3 mat-subheading-2">{{sale.expCompletionDate.toDate()|date
+                            }}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Duration</span> </div>
+                      </mat-list-item>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">payments</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.collectedAmount}}</span><br></div>
+                        <div mat-line><span class="mat-small mat-caption">Payment Type</span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.invoicedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Invoiced</span> </div>
+                          </mat-list-item>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">money</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.collectedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Collected</span> </div>
+                          </mat-list-item>
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+        </div>
+        <br>
+      </mat-tab>
+      <mat-tab label="Documents">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+          &nbsp; Documents
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <h2 *ngIf="quotations?.length>0">Quotations</h2>
+          <div *ngFor="let quote of quotations">
+            <mat-card class="example-card">
+              <div class="container-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Quotation No: {{quote.docData.docNumber}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{quote.docData.docDate.toDate() | date}} </mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <!-- <button mat-icon-button aria-label="Navigate button"  
+                  [routerLink]="[
+                  '/dash/document/documentmanagement',
+                  quote.docData.saleID,
+                  'view',
+                  'Quotation',
+                  quote.customerData.custID,
+                  quote.id
+                ]">
+                      <mat-icon color="accent">more_vert</mat-icon>
+                    </button> -->
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'create',
+                      'Invoice',
+                      quote.customerData.custID,
+                      'na'
+                    ]">Create Invoice</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'view',
+                      'Quotation',
+                      quote.customerData.custID,
+                      quote.id
+                    ]">View Quote</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'edit',
+                      'Quotation',
+                      quote.customerData.custID,
+                      quote.id
+                    ]">Edit Quote</a>
+                  </mat-menu>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">date_range</mat-icon>
+                        <div mat-line *ngIf="quote.docData.docValidity != null"><span
+                            class="mat-h3 mat-subheading-2">{{quote.docData.docValidity.toDate()|date}}</span>
+                        </div>
+                        <div mat-line *ngIf="quote.docData.docValidity == null"><span
+                            class="mat-h3 mat-subheading-2">N/A</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Valid till</span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{quote.docData.totalInclTax}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Amount</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </mat-card-content>
+
+            </mat-card>
+            <br>
+          </div>
+          <br>
+          <h2 *ngIf="invoices?.length>0">Invoices</h2>
+          <div *ngFor="let invoice of invoices">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Invoice No: {{invoice.docData.docNumber}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{invoice.docData.docDate.toDate() | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <!-- <button mat-icon-button aria-label="Navigate button"   [routerLink]="[
+                    '/dash/document/documentmanagement',
+                    invoice.docData.saleID,
+                    'view',
+                    'Invoice',
+                    invoice.customerData.custID,
+                    invoice.id
+                  ]">
+                      <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                    </button> -->
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      invoice.docData.saleID,
+                      'view',
+                      'Invoice',
+                      invoice.customerData.custID,
+                      invoice.id
+                    ]">View</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      invoice.docData.saleID,
+                      'edit',
+                      'Invoice',
+                      invoice.customerData.custID,
+                      invoice.id
+                    ]">Edit</a>
+                  </mat-menu>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.docData.totalInclTax}}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Invoice amount </span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">money</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.collectedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Collected</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+          <br>
+          <h2 *ngIf="estimate?.length>0">Estimates</h2>
+          <div *ngFor="let est of estimate">
+            <mat-card class="example-card">
+              <div class="container-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Estimate No: {{est.docData.docNumber}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{est.docData.docDate.toDate() | date}} </mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a mat-menu-item [routerLink]="[
+                    '/dash/document/documentmanagement',
+                    est.docData.saleID,
+                    'create',
+                    'Quotation',
+                    est.customerData.custID,
+                    'na'
+                  ]">Create Quotation</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      est.docData.saleID,
+                      'create',
+                      'Invoice',
+                      est.customerData.custID,
+                      'na'
+                    ]">Create Invoice</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      est.docData.saleID,
+                      'view',
+                      'Estimate',
+                      est.customerData.custID,
+                      est.id
+                    ]">View Estimate</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      est.docData.saleID,
+                      'edit',
+                      'Estimate',
+                      est.customerData.custID,
+                      est.id
+                    ]">Edit Estimate</a>
+                  </mat-menu>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">date_range</mat-icon>
+                        <div mat-line *ngIf="est.docData.docValidity != null"><span
+                            class="mat-h3 mat-subheading-2">{{est.docData.docValidity.toDate()|date}}</span>
+                        </div>
+                        <div mat-line *ngIf="est.docData.docValidity == null"><span
+                            class="mat-h3 mat-subheading-2">N/A</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Valid till</span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{est.docData.totalInclTax}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Amount</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </mat-card-content>
+
+            </mat-card>
+            <br>
+          </div>
+          <br>
+
+
+        </div>
+      </mat-tab>
+      <mat-tab label="Collections">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>money</mat-icon>
+          &nbsp; Collection
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <div *ngFor="let payment of paymentReceipts">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Amount: {{payment.amountCollected}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{payment.paymentDate.toDate() | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <!-- <button mat-icon-button aria-label="Navigate button" (click)="viewPayment(payment.id,payment.saleId)">
+                    <mat-icon color="accent">visibility</mat-icon>
+                  </button> -->
+                  <!-- <button mat-icon-button aria-label="Navigate button" (click)="editPayment(payment.id,payment.saleId)">
+                    <mat-icon color="accent">mode</mat-icon>
+                  </button> -->
+
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.invoiceno}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Invoice No</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">payment</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.paymentMode}}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Payment Mode </span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+
+        </div>
+      </mat-tab>
+      <mat-tab label="Lead Followups">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>perm_contact_calendar</mat-icon>
+          &nbsp; Follow-Up
+        </ng-template>
+        <div class="container-fluid">
+          <br>
+          <button *ngIf="completedLength == 0" mat-raised-button color="accent" (click)="onCreateFollowUps()">Add
+            Follow-Up</button>
+          <br><br>
+          <!-- add the card for open follow up task here-->
+          <div *ngFor="let task of followUps">
+            <mat-card class="example-card" *ngIf="!task.completedStatus">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Next Follow-Up </mat-card-title>
+                  </mat-card-header>
+                </div>
+              </div>
+              <mat-card-content>
+                <mat-list>
+                  <mat-list-item>
+                    <div mat-line>{{task.notes}}</div>
+                    <div mat-line>Pending |&nbsp;{{task.callStartDate | date}}&nbsp;{{task.callStartTime}}
+                    </div>
+                  </mat-list-item>
+                </mat-list>
+
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button aria-label="Navigate button">
+                  <mat-icon color="accent" (click)="markasCompleted(task.id)">done_all</mat-icon>
+                </button>
+                <button mat-icon-button aria-label="Navigate button">
+                  <mat-icon color="accent" (click)="onEditFollowUps(task.id)">mode</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <br>
+
+          <mat-list>
+            <div mat-header>Past Followups</div>
+            <mat-list-item *ngFor="let task of followUps;let last = last">
+              <div mat-line *ngIf="task.completedStatus"><span class=width_limit>{{task.notes}}</span> </div>
+              <div mat-line *ngIf="task.completedStatus">Completed |&nbsp;{{task.callStartDate?.toDate() |
+                date}}&nbsp;{{task.callStartTime }}
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="Notes">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>notes</mat-icon>
+          &nbsp; Notes
+        </ng-template>
+        <!--Form to add notes-->
+        <div class="container-fluid">
+          <br>
+          <form #f="ngForm">
+            <div class="form-row">
+              <div class="col-sm-12 col-md-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Add a note</mat-label>
+                  <textarea matInput placeholder="Notes" name="notes" [(ngModel)]="this.customerNote" #notes="ngModel"
+                    [ngClass]="{
+                          'is-invalid': notes.touched && notes.invalid
+                        }" required minlength="1" maxlength="250">
+                      </textarea>
+                </mat-form-field>
+                <mat-error class="form-text text-muted danger" *ngIf="
+                        (submitted == true && !notes.valid) ||
+                        (!notes.valid && (notes.dirty || notes.touched))">
+                  Required!</mat-error>
+              </div>
+              <div class="col-md-2 col-sm-12">
+                <button mat-raised-button color="accent" type="submit" [disabled]="!f.valid" (click)="onSubmitNote(f)">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <br>
+        <mat-list>
+
+          <mat-list-item *ngFor="let note of customerNotes">
+
+            <div mat-line><span class=width_limit>{{note.notes}}</span> </div>
+            <div mat-line> {{note.cratedByName}}&nbsp;{{note.createdDate | date:'medium' }}
+            </div>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-tab>
+      <mat-tab label="Attachments">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>notes</mat-icon>
+          &nbsp; Attachments
+        </ng-template>
+        <button mat-mini-fab color="accent" (click)="openL()" title="attach files"> 
+          <mat-icon>add</mat-icon>
+         </button>
+         <br>
+         <input type="file" class="custom-file-input attachment-selector" (change)="uploadAttachment($event)" style="display: none" accept=".csv,.pdf,.doc,.xls">
+        <div class="container-fluid">
+          
+   
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <br>
+    <br>
+    <br>
+
+    <!--
+    <ngx-bottom-nav>
+      <button ngx-bottom-nav label="Home" routerLink="/" exact="true">
+        <mat-icon ngxBottomNavIcon>home</mat-icon>
+      </button>
+  
+      <button ngx-bottom-nav label="Search" routerLink="/search">
+        <mat-icon ngxBottomNavIcon>search</mat-icon>
+      </button>
+  
+      <button ngx-bottom-nav label="Forum" routerLink="/forum">
+        <mat-icon ngxBottomNavIcon>forum</mat-icon>
+      </button>
+    </ngx-bottom-nav>
+    -->
+
+  </div>
+
+</div>
+<!--Mobile View-->
+<div *ngIf="!loading && isMobilesize">
+
+  <div class="container-fluid" style="background:linear-gradient(to right, #303F9F 0%,RoyalBlue 100%);">
+    <div class="container-lg ">
+      <br>
+      <div class="d-flex">
+        <div class="mr-auto p-2">
+          <mat-card-title><span style="color: white;">{{(customerDetails | async)?.firstName}}</span></mat-card-title>
+          <mat-card-subtitle><span style="color: white;">{{(customerDetails | async)?.companyName}}</span>
+          </mat-card-subtitle>
+        </div>
+        <div class="p-2">
+          <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+            [matMenuTriggerFor]="menu">
+            <mat-icon [ngStyle]="{'color':'white'}">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onViewCustomer()">View</button>
+            <button mat-menu-item (click)="onEditCustomer()">Edit</button>
+          </mat-menu>
+        </div>
+      </div>
+
+      <mat-icon [ngStyle]="{'color':'white'}">call</mat-icon>&nbsp;<span style="color: white;">{{(customerDetails |
+        async)?.contactNo}}</span> &nbsp;<br>
+      <mat-icon [ngStyle]="{'color':'white'}">email</mat-icon>&nbsp;<span style="color: white;">{{(customerDetails |
+        async)?.email}}</span>
+      <br><br>
+
+      <!--Status and Priority Buttons-->
+
+      <button mat-raised-button [matMenuTriggerFor]="menu1" title="Customer status"
+        style="border-radius: 20px;">{{(customerDetails |
+        async)?.status}} </button>
+      <mat-menu #menu1="matMenu" title="Customer Status">
+        <button mat-menu-item (click)="updateCustomerstage('Lead')">Lead</button>
+        <button mat-menu-item (click)="updateCustomerstage('Prospect')">Prospect</button>
+        <button mat-menu-item (click)="updateCustomerstage('Opportunity')">Opportunity</button>
+        <button mat-menu-item (click)="updateCustomerstage('Customer')">Customer</button>
+        <button mat-menu-item (click)="openDialog()">Rejected</button>
+      </mat-menu>
+      &nbsp;
+      <button mat-raised-button title="Customer priority" [matMenuTriggerFor]="menu2"
+        style="border-radius: 20px;">{{(customerDetails |
+        async)?.priority}}&nbsp; Priority</button>
+      <mat-menu #menu2="matMenu">
+        <button mat-menu-item (click)="updateCustomerPriority('Low')">Low</button>
+        <button mat-menu-item (click)="updateCustomerPriority('Medium')">Medium</button>
+        <button mat-menu-item (click)="updateCustomerPriority('High')">High</button>
+      </mat-menu>
+      &nbsp;
+
+      <button *ngIf="(customerDetails | async)?.custCategory1Name!=''" mat-raised-button [matMenuTriggerFor]="menu3"
+        title="" style="border-radius: 20px;">{{(customerDetails |
+        async)?.custCategory1}}:&nbsp; {{(customerDetails | async)?.custCategory1Name}}</button>
+      <mat-menu #menu3="matMenu">
+        <button *ngFor="let s of form?.custCategory1" mat-menu-item (click)="updateCustCategory1(s)">{{s}}</button>
+
+      </mat-menu>
+      &nbsp;
+      <!--Task and Calendar-->
+
+      <button mat-icon-button class="example-icon favorite-icon" [ngStyle]="{'color':'white'}"
+        aria-label="Example icon-button with heart icon" routerLink="/dash/tasks">
+        <mat-icon [ngStyle]="{'color':'white'}" [matBadge]="tasks?.length" matBadgeColor="warn">task_alt</mat-icon>
+      </button>
+
+      <button *ngIf="(customerDetails | async)?.custCategory2Name!=''" mat-raised-button [matMenuTriggerFor]="menu4"
+        title="" style="border-radius: 20px;">{{(customerDetails |
+        async)?.custCategory2}}:&nbsp; {{(customerDetails | async)?.custCategory2Name}}</button>
+      <mat-menu #menu4="matMenu">
+        <button *ngFor="let s of form?.custCategory2" mat-menu-item (click)="updateCustCategory2(s)">{{s}}</button>
+
+      </mat-menu>
+      &nbsp;
+
+      <br><br>
+      <!--Quick Action buttons-->
+      <mat-divider [ngStyle]="{'border-color':'silver'}"></mat-divider>
+      <br>
+      <button mat-mini-fab color="accent" [matMenuTriggerFor]="beforeMenu">
+        <mat-icon>add</mat-icon>
+      </button>
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="onAddSale()"> Sale</button>
+        <button mat-menu-item (click)="createDoc('Estimate')">Estimate</button>
+        <button mat-menu-item (click)="createDoc('Quotation')">Quotation</button>
+        <button mat-menu-item (click)="createDoc('Invoice')">Invoice</button>
+      </mat-menu>
+      <button title="Add payment received" mat-icon-button class="Payment received" (click)="addPayment()"
+        aria-label="Example icon-button with heart icon">
+        <mat-icon [ngStyle]="{'color':'white'}">money</mat-icon>
+      </button>
+      <button mat-icon-button class="example-icon favorite-icon" title="Add task" aria-label="Add task"
+        (click)="addTask()">
+        <mat-icon [ngStyle]="{'color':'white'}">add_task</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <!-- <button mat-icon-button class="example-icon favorite-icon" [ngStyle]="{'color':'white'}"
+        aria-label="Example icon-button with heart icon" routerLink="/dash/calendar">
+        <mat-icon [ngStyle]="{'color':'white'}" [matBadge]="meetings?.length" matBadgeColor="warn">calendar_today
+        </mat-icon>
+      </button> -->
+
+      <br>
+
+    </div>
+    <br>
+    <!--Quick Actions card-->
+    <div class="container-lg d-flex justify-content-center" style="padding: 0px;">
+      <mat-card class="example-card " style="width: 600px;">
+
+        <mat-card-content>
+
+          <button mat-mini-fab color="accent" [matMenuTriggerFor]="beforeMenu">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #beforeMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="onAddSale()"> Sale</button>
+            <button mat-menu-item (click)="createDoc('Estimate')">Estimate</button>
+            <button mat-menu-item (click)="createDoc('Quotation')">Quotation</button>
+            <button mat-menu-item (click)="createDoc('Invoice')">Invoice</button>
+          </mat-menu>
+          <button title="Add payment received" mat-icon-button class="Payment received" (click)="addPayment()"
+            aria-label="Example icon-button with heart icon">
+            <mat-icon color="accent">money</mat-icon>
+          </button>
+          <button mat-icon-button class="example-icon favorite-icon" title="Add task" aria-label="Add task"
+            (click)="addTask()">
+            <mat-icon color="accent">add_task</mat-icon>
+          </button>
+          <!-- <button mat-icon-button class="example-icon favorite-icon" title="Add meeting" aria-label="Add meeting"
+            (click)="onMeetingAdd()">
+            <mat-icon color="accent">calendar_today</mat-icon>
+          </button> -->
+
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+    <br>
+  </div>
+
+  <br>
+
+
+  <!--Customer life time value card-->
+  <div class="container-lg d-flex justify-content-center">
+    <mat-card class="example-card " style="width: 600px;">
+      <mat-card-header>
+        <mat-card-title>Customer lifetime value</mat-card-title>
+        <mat-card-subtitle *ngIf="salesList?.length>0">No. of sales: {{salesList?.length}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-6" style="padding: 0px;">
+            <mat-list>
+              <mat-list-item>
+                <mat-icon mat-list-icon color="primary">article</mat-icon>
+                <div mat-line>{{(customerDetails|async)?.invoicedAmount}}
+                </div>
+                <div mat-line>Invoiced </div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+          <div class="col-6" style="padding: 0px;">
+            <mat-list>
+              <mat-list-item>
+                <mat-icon mat-list-icon color="primary">money</mat-icon>
+                <div mat-line>
+                  {{(customerDetails|async)?.totalAmountCollected}}
+                </div>
+                <div mat-line>Collected </div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </div>
+
+
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+  <br>
+
+  <!--Expansion Panel-->
+  <mat-accordion>
+    <!--Sales list-->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon mat-list-icon color="primary">work</mat-icon>&nbsp;Sales
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <mat-list-item *ngFor="let sale of salesList " [routerLink]="['/dash/sales/saleview',sale.id]">
+          <div mat-line><span class="width_limit">{{sale.saleTitle}}</span></div>
+          <div mat-line>
+            <span
+              class="width_limit">{{sale.salesStage}}&nbsp;|&nbsp;{{sale.startDate.toDate()|date}}&nbsp;to&nbsp;{{sale.expCompletionDate.toDate()|date
+              }}</span><span class="mat-h3 mat-subheading-2"></span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+    <!--Documents List-->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon mat-list-icon color="primary">article</mat-icon>&nbsp;Documents
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <!--Estimates-->
+        <div mat-subheader>Estimates</div>
+        <mat-list-item *ngFor="let sale of salesList " [routerLink]="['/dash/sales/saleview',sale.id]">
+          <div mat-line><span class="width_limit">{{sale.saleTitle}}</span></div>
+          <div mat-line>
+            <span
+              class="width_limit">{{sale.salesStage}}&nbsp;|&nbsp;{{sale.startDate.toDate()|date}}&nbsp;to&nbsp;{{sale.expCompletionDate.toDate()|date
+              }}</span><span class="mat-h3 mat-subheading-2"></span>
+          </div>
+        </mat-list-item>
+        <!--Quotations-->
+        <div mat-subheader>Quotations</div>
+        <mat-list-item *ngFor="let quote of quotations">
+          <div mat-line><span class="width_limit">Quotation No: {{quote.docData.docNumber}}</span></div>
+          <div mat-line>Date: {{quote.docData.docDate.toDate() | date}}
+          </div>
+        </mat-list-item>
+        <!--Invoices-->
+        <div mat-subheader>Invoices</div>
+        <mat-list-item *ngFor="let invoice of invoices">
+          <div mat-line><span class="width_limit">Invoice No: {{invoice.docData.docNumber}}</span></div>
+          <div mat-line><span class="width_limit">{{invoice.docData.docDate.toDate() |
+              date}}&nbsp;|&nbsp;Amount:&nbsp;{{invoice.docData.totalInclTax}}&nbsp;|&nbsp;Collected:
+              {{invoice.collectedAmount}}</span></div>
+        </mat-list-item>
+
+      </mat-list>
+    </mat-expansion-panel>
+    <!--Documents List-->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon mat-list-icon color="primary">money</mat-icon>&nbsp;Collections
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <!--Payments received-->
+        <mat-list-item *ngFor="let payment of paymentReceipts ">
+          <div mat-line><span class="width_limit">Amount: {{payment.amountCollected}} </span></div>
+          <div mat-line><span class="width_limit">Date: {{payment.paymentDate.toDate() | date}}&nbsp;|&nbsp;Inv No:
+              {{payment.invoiceno}}</span></div>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+    <!--Follow Up Tasks-->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon mat-list-icon color="primary">perm_contact_calendar</mat-icon>&nbsp;Follow-up tasks
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="container" style="max-width:720px">
+        <br>
+        <button *ngIf="completedLength == 0" mat-raised-button color="accent" (click)="onCreateFollowUps()">Create
+          Task</button>
+        <!-- add the card for open follow up task here-->
+        <div *ngFor="let task of followUps">
+          <mat-card class="example-card" *ngIf="!task.completedStatus">
+            <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+              <div class="p-2  flex-grow-1 bd-highlight">
+                <mat-card-header>
+                  <mat-card-title>Next Followup Task </mat-card-title>
+                </mat-card-header>
+              </div>
+            </div>
+            <mat-card-content>
+              <mat-list>
+                <mat-list-item>
+                  <div mat-line>{{task.notes}}</div>
+                  <div mat-line>Pending |&nbsp;{{task.callStartDate?.toDate() | date}}&nbsp;{{task.callStartTime}}
+                  </div>
+                </mat-list-item>
+              </mat-list>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-icon-button aria-label="Navigate button">
+                <mat-icon color="accent" (click)="markasCompleted(task.id)">done_all</mat-icon>
+              </button>
+              <button mat-icon-button aria-label="Navigate button">
+                <mat-icon color="accent" (click)="onEditFollowUps(task.id)">mode</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <br>
+
+        <mat-list>
+          <div mat-header>Past Followups</div>
+          <mat-list-item *ngFor="let task of followUps;let last = last">
+            <div mat-line *ngIf="task.completedStatus"><span class=width_limit>{{task.notes}}</span> </div>
+            <div mat-line *ngIf="task.completedStatus">Completed |&nbsp;{{task.callStartDate?.toDate() |
+              date}}&nbsp;{{task.callStartTime }}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <!--Tabs -->
+  <!--
+      <div class="container-xl" style="max-width:720px">
+    <mat-tab-group [color]="'primary'">
+      <mat-tab label="Sales">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>work</mat-icon>
+          &nbsp; Sales
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+
+          <div *ngFor="let sale of salesList">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>{{sale.title}}</mat-card-title>
+                    <mat-card-subtitle>Sale Status: {{sale.salesStage}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <button mat-icon-button aria-label="Navigate button" [routerLink]="['/dash/sales/saleview',sale.id]">
+                    <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <mat-card-content>
+
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">date_range</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.startDate.toDate()|date}}</span>
+                          <span class="mat-small mat-caption"> &nbsp; to &nbsp; </span>
+                          <span class="mat-h3 mat-subheading-2">{{sale.expCompletionDate.toDate()|date
+                            }}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Duration</span> </div>
+                      </mat-list-item>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">payments</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.payment}}</span><br></div>
+                        <div mat-line><span class="mat-small mat-caption">Payment Type</span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.invoicedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Invoiced</span> </div>
+                          </mat-list-item>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">money</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{sale.collectedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Collected</span> </div>
+                          </mat-list-item>
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+        </div>
+        <br>
+      </mat-tab>
+      <mat-tab label="Documents">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>article</mat-icon>
+          &nbsp; Documents
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <h2>Quotations</h2>
+          <div *ngFor="let quote of quotations">
+            <mat-card class="example-card">
+              <div class="container-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Quotation No: {{quote.docData.docNumber}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{quote.docData.docDate.toDate() | date}} </mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                   <button mat-icon-button aria-label="Navigate button"  
+                  [routerLink]="[
+                  '/dash/document/documentmanagement',
+                  quote.docData.saleID,
+                  'view',
+                  'Quotation',
+                  quote.customerData.custID,
+                  quote.id
+                ]">
+                      <mat-icon color="accent">more_vert</mat-icon>
+                    </button> 
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'create',
+                      'Invoice',
+                      quote.customerData.custID,
+                      'na'
+                    ]">Invoice</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'view',
+                      'Quotation',
+                      quote.customerData.custID,
+                      quote.id
+                    ]">View</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      quote.docData.saleID,
+                      'edit',
+                      'Quotation',
+                      quote.customerData.custID,
+                      quote.id
+                    ]">Edit</a>
+                  </mat-menu>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">date_range</mat-icon>
+                        <div mat-line *ngIf="quote.docData.docValidity != null"><span
+                            class="mat-h3 mat-subheading-2">{{quote.docData.docValidity.toDate()|date}}</span>
+                        </div>
+                        <div mat-line *ngIf="quote.docData.docValidity == null"><span
+                            class="mat-h3 mat-subheading-2">N/A</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Valid till</span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{quote.docData.totalInclTax}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Amount</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </mat-card-content>
+
+            </mat-card>
+            <br>
+          </div>
+          <br>
+          <h2>Invoices</h2>
+          <div *ngFor="let invoice of invoices">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Invoice No: {{invoice.docData.docNumber}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{invoice.docData.docDate.toDate() | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                   <button mat-icon-button aria-label="Navigate button"   [routerLink]="[
+                    '/dash/document/documentmanagement',
+                    invoice.docData.saleID,
+                    'view',
+                    'Invoice',
+                    invoice.customerData.custID,
+                    invoice.id
+                  ]">
+                      <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                    </button>
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                    [matMenuTriggerFor]="menu">
+                    <mat-icon [ngStyle]="{'color':'RoyalBlue'}">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      invoice.docData.saleID,
+                      'view',
+                      'Invoice',
+                      invoice.customerData.custID,
+                      invoice.id
+                    ]">View</a>
+                    <a mat-menu-item [routerLink]="[
+                      '/dash/document/documentmanagement',
+                      invoice.docData.saleID,
+                      'edit',
+                      'Invoice',
+                      invoice.customerData.custID,
+                      invoice.id
+                    ]">Edit</a>
+                  </mat-menu>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.docData.totalInclTax}}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Invoice amount </span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">money</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{invoice.collectedAmount}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Collected</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Collections">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>money</mat-icon>
+          &nbsp; Collection
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <div *ngFor="let payment of paymentReceipts">
+            <mat-card class="example-card">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Amount: {{payment.amount}} </mat-card-title>
+                    <mat-card-subtitle>Date: {{payment.paymentdate.toDate() | date}}</mat-card-subtitle>
+                  </mat-card-header>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <button mat-icon-button aria-label="Navigate button" (click)="editPayment(payment.id,payment.saleid)">
+                    <mat-icon color="accent">mode</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <mat-list>
+                          <mat-list-item>
+                            <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">article</mat-icon>
+                            <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.invoiceno}}</span>
+                            </div>
+                            <div mat-line><span class="mat-small mat-caption">Invoice No</span> </div>
+                          </mat-list-item>
+
+                        </mat-list>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <mat-list>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color':'RoyalBlue'}">payment</mat-icon>
+                        <div mat-line><span class="mat-h3 mat-subheading-2">{{payment.paymentmode}}</span>
+                        </div>
+                        <div mat-line><span class="mat-small mat-caption">Payment Mode </span> </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <br>
+          </div>
+
+        </div>
+      </mat-tab>
+      <mat-tab label="Lead Followups">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon" color=primary>perm_contact_calendar</mat-icon>
+          &nbsp; Follow Up
+        </ng-template>
+        <div class="container" style="max-width:720px">
+          <br>
+          <button *ngIf="completedLength == 0" mat-raised-button color="accent" (click)="onCreateFollowUps()">Create
+            Task</button>
+          <br><br>
+
+          <div *ngFor="let task of followUps">
+            <mat-card class="example-card" *ngIf="!task.completed">
+              <div class="conatiner-fluid d-flex justify-content-between" style="width: 100%;">
+                <div class="p-2  flex-grow-1 bd-highlight">
+                  <mat-card-header>
+                    <mat-card-title>Next Followup Task </mat-card-title>
+                  </mat-card-header>
+                </div>
+              </div>
+              <mat-card-content>
+                <mat-list>
+                  <mat-list-item>
+                    <div mat-line>{{task.notes}}</div>
+                    <div mat-line>Pending |&nbsp;{{task.date.toDate() | date}}&nbsp;{{task.time}}
+                    </div>
+                  </mat-list-item>
+                </mat-list>
+
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button aria-label="Navigate button">
+                  <mat-icon color="accent" (click)="markasCompleted(task.id)">done_all</mat-icon>
+                </button>
+                <button mat-icon-button aria-label="Navigate button">
+                  <mat-icon color="accent" (click)="onEditFollowUps(task.id)">mode</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <br>
+
+          <mat-list>
+            <div mat-header>Past Followups</div>
+            <mat-list-item *ngFor="let task of followUps;let last = last">
+              <div mat-line *ngIf="task.completed"><span class=width_limit>{{task.notes}}</span> </div>
+              <div mat-line *ngIf="task.completed">Completed |&nbsp;{{task.date.toDate() | date}}&nbsp;{{task.time }}
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <br>
+    <br>
+    <br>
+
+  </div>
+  -->
+
+
+</div>

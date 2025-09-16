@@ -1,0 +1,87 @@
+<mat-toolbar color="foreground" *ngIf="!isMobilesize">
+    <mat-toolbar-row>
+        <a href="https:\\zenys.org">
+            <button mat-button color="accent">
+                <b style="font-size: x-large">Zenys</b>
+            </button>
+        </a>
+        <span class="example-spacer"></span>
+        <mat-toolbar-row>
+            <span class="example-spacer"></span>
+            <a [routerLink]="'free-invoice-generator'">
+                <button mat-button>INVOICE</button>
+            </a>
+            <a [routerLink]="['free-quotation-generator']">
+                <button mat-button>QUOTATION</button>
+            </a>
+            <a [routerLink]="['free-estimate-generator']">
+                <button mat-button>ESTIMATE</button>
+            </a>
+            <a [routerLink]="'/free-tool/create/Proforma Invoice'">
+                <button mat-button>PROFORMA INVOICE</button>
+            </a>
+            <a [routerLink]="'/free-tool/create/Purchase order'">
+                <button mat-button>PURCHASE ORDER</button>
+            </a>
+            <button [matMenuTriggerFor]="menu" mat-raised-button color="primary">DOWNLOAD TEMPLATES</button>
+            <mat-menu #menu="matMenu">
+                
+                <button mat-menu-item  (click)="goToInvDownloadPage()">INVOICE</button>
+                <button mat-menu-item (click) = "goToQuoteDownloadPage()">QUOTATION</button>
+                <button mat-menu-item routerLink="/free-tool/Free-Estimate-Template-Download">ESTIMATE</button>
+                <button mat-menu-item routerLink="/free-tool/Free-Proforma-Invoice-Template-Download">PROFORMA
+                    INVOICE</button>
+                <button mat-menu-item routerLink="/free-tool/Free-Purchase-Order-Template-Download">PURCHASE
+                    ORDER</button>
+            </mat-menu>
+        </mat-toolbar-row>
+    </mat-toolbar-row>
+</mat-toolbar>
+<!--Toolbar for mobile view-->
+<mat-toolbar *ngIf="isMobilesize" color="primary">
+    <mat-toolbar-row>
+        <button mat-icon-button class="example-icon" (click)="sidenav.toggle()"
+            aria-label="Example icon-button with menu icon">
+            <mat-icon>menu</mat-icon>
+        </button>
+        &nbsp;&nbsp;<span style="color: white;">Zenys</span>
+
+    </mat-toolbar-row>
+</mat-toolbar>
+<!--side nav and container-->
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over" style="width: 250px; ;">
+        <!--Change mode to top for mobile view so that the drawer comes on top of the content like an app-->
+        <mat-nav-list>
+            <a [routerLink]="'free-invoice-generator'" (click)="sidenav.close()">
+                <button mat-button>INVOICE</button>
+            </a>
+            <br>
+            <a [routerLink]="'free-quotation-generator'" (click)="sidenav.close()">
+                <button mat-button>QUOTATION</button>
+            </a>
+            <br>
+            <a [routerLink]="'free-estimate-generator'" (click)="sidenav.close()">
+                <button mat-button>ESTIMATE</button>
+            </a>
+            <br>
+            <a [routerLink]="'/free-toolfree/Free-Invoice-Template-Download'" (click)="sidenav.close()">
+                <button mat-button>INVOICE FORMAT</button>
+            </a>
+            <br>
+            <a [routerLink]="'/free-toolfree/Free-Quotation-Template-Download'" (click)="sidenav.close()">
+                <button mat-button>QUOTATION FORMAT</button>
+            </a>
+            <br>
+            <a [routerLink]="'/free-toolfree/Free-Estimate-Template-Download'" (click)="sidenav.close()">
+                <button mat-button>ESTIMATE FORMAT</button>
+            </a>
+            <br>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content-area">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,415 @@
+<div class="example-container border" style="border-radius: 5px;background-color: white;">
+  <mat-toolbar [ngStyle]="{'background-color':'white'}">
+    <mat-form-field appearance="fill" style="font-size: 14px; height:100%">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="searchFilter($event)" placeholder="Type to filter table data" #input>
+    </mat-form-field>
+    <span class="example-spacer"></span>
+    <button mat-icon-button color="accent" aria-label="Table settings" title="Customise table" (click)="onTableSettings()">
+      <mat-icon class="material-icons-outlined">settings</mat-icon>
+    </button>
+    <button mat-icon-button color="accent" aria-label="Download table" title="Download table"
+      [ngClass]="{isDisabled: disableDownload}"
+      (click)="dataListCopy.data.length>0 ? exporter.exportTable('csv',{fileName:tableName}): noDataMessage()">
+      <mat-icon class="material-icons-outlined">download</mat-icon>
+    </button>
+  </mat-toolbar>
+  <br>
+  <div class="border-top">
+    <!-- table starts here -->
+    <table mat-table [dataSource]="dataListCopy" class="mat-elevation-z1 demo-table" matTableExporter
+      #exporter="matTableExporter" matSort [style.visibility]="(isLoaded) ? 'visible' : 'hidden' ">
+
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{(column.columnDef === 'cgst' || column.columnDef === 'sgst' || column.columnDef === 'igst' || column.columnDef === 'discount' || column.columnDef === 'vatRate') ? (column.header+'(%)') : column.header}}
+        </th>
+        <td mat-cell *matCellDef="let row" class="truncate-cell">
+          <span *ngIf="column.columnDef =='aged contact'">
+            <a class="link-primary">
+              {{getAgedStatus(row,'customer')}}
+            </a>
+          </span>
+          <span *ngIf="column.columnDef =='aged sale'">
+            <a class="link-primary">
+              {{getAgedStatus(row,'sale')}}
+            </a>
+          </span>
+          <span *ngIf="column.columnDef =='aged service'">
+            <a class="link-primary">
+              {{getAgedStatus(row,'service')}}
+            </a>
+          </span>
+          <span *ngIf="column.fieldType =='contact name' ">
+            <a class="link-primary" [routerLink]="['/dash/contact/customerdetails/',row.id]">
+              {{findColumnValue(row,column)}}
+            </a>
+          </span>
+          <span *ngIf="column.fieldType =='sale title' ">
+            <a class="link-primary" [routerLink]="['/dash/sales/saleview/',row.id]">
+              {{findColumnValue(row,column)}}
+            </a>
+          </span>
+          <span *ngIf="column.fieldType =='service title'">
+            <a class="link-primary" [routerLink]="['/dash/service/service-details/',row.id]">
+              {{findColumnValue(row,column)}}
+            </a>
+          </span>
+          <span *ngIf="column.fieldType !='contact name'
+                            && column.fieldType !='sale title'
+                            && column.fieldType !='service title' && column.columnDef !='aged contact'
+                            && column.columnDef !='aged sale' && column.columnDef !='aged service' ">
+            {{findColumnValue(row,column)}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Select Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+          <mat-checkbox (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions&nbsp;&nbsp;</th>
+        <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+
+          <!-- sale table Actions button -->
+          <button *ngIf="this.tableName === 'Sale'" [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+            aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menuSaleActions">
+            <mat-icon color="accent">more_vert</mat-icon>
+          </button>
+
+          <!-- Service table Action button -->
+          <button *ngIf="this.tableName === 'Service'" [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+            aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menuServiceActions">
+            <mat-icon color="accent">more_vert</mat-icon>
+          </button>
+
+          <!-- contact table actions button -->
+          <button *ngIf="this.tableName === 'Customer'" [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+            aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menuCustActions">
+            <mat-icon color="accent">more_vert</mat-icon>
+          </button>
+
+          <!-- Products table Actions button -->
+          <button *ngIf="this.tableName === 'Products'" [disabled]="!networkCheck.onNetworkCheck()" mat-icon-button
+            aria-label="Example icon button with a vertical three dot icon" [matMenuTriggerFor]="menuProducts">
+            <mat-icon color="accent">more_vert</mat-icon>
+          </button>
+
+          <!-- 3 dot icon mat menu sale -->
+          <mat-menu #menuProducts="matMenu">
+            <button mat-menu-item (click)="editProduct(row)">Edit</button>
+            <button mat-menu-item (click)="deleteProduct(row)">Delete</button>
+          </mat-menu>
+
+          <!-- 3 dot icon mat menu sale -->
+          <mat-menu #menuSaleActions="matMenu">
+
+            <!-- add button -->
+            <button mat-menu-item [matMenuTriggerFor]="menuAddSale" *ngIf="
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.tasksAccess) ||
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.followupsAccess) ||
+                                                        (commonService.userPlan.documentsAccess &&
+                                                        commonService.userPlan.estimatesAccess) ||
+                                                        (commonService.userPlan.documentsAccess &&
+                                                        commonService.userPlan.quotationsAccess) ||
+                                                        (commonService.userPlan.documentsAccess &&
+                                                        commonService.userPlan.invoicesAccess)
+                                                    ">Add</button>
+            <!-- add button matmenu -->
+            <mat-menu #menuAddSale="matMenu">
+
+              <!-- add task -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess" mat-menu-item
+                (click)="
+                                                          addTask(
+                                                            row.customerId,
+                                                            row.orgId,
+                                                            row.companyName,
+                                                            row.firstName,
+                                                            row.secondName,
+                                                            row.surname, row.id, row.saleTitle, null, null
+                                                          )
+                                                        ">
+                <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+              </button>
+
+              <!-- add followUp -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess" mat-menu-item
+                (click)="
+                                                          onCreateFollowUps(
+                                                            row.customerId,
+                                                            row.companyName,
+                                                            row.firstName,
+                                                            row.secondName,
+                                                            row.assignedTo,
+                                                            row.assignedToName,
+                                                            row.orgId,
+                                                            row.surname, row.id, row.saleTitle, null, null,row
+                                                          )
+                                                        " [ngClass]="{ isDisabled: disableFoll }">
+                <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+              </button>
+
+              <!-- add sales document -->
+              <button mat-menu-item [matMenuTriggerFor]="addSalesDocMenu">
+                <mat-icon color="accent">article</mat-icon>
+                Document
+              </button>
+
+              <!-- add sales doc submenu -->
+              <mat-menu #addSalesDocMenu="matMenu">
+                <button mat-menu-item (click)="createEstimate(row.id, row.customerId,row.orgId)" [disabled]="
+                  commonService.addDocLimitaion.addEstimateDisable ||
+                  disableDocCreateEst
+                ">
+                  {{ fieldNameEstimate }}
+                </button>
+                <button mat-menu-item (click)="createQuote(row.id, row.customerId,row.orgId)" [disabled]="
+                  commonService.addDocLimitaion.addQuotationDisable ||
+                  disableDocCreateQuot
+                ">
+                  {{ fieldNameQuotation }}
+                </button>
+                <button mat-menu-item (click)="createInvoice(row.id, row.customerId,row.orgId)" [disabled]="
+                  commonService.addDocLimitaion.addInvoiceDisable ||
+                  disableDocCreateInv
+                ">
+                  {{ fieldNameInvoice }}
+                </button>
+              </mat-menu>
+
+            </mat-menu>
+
+            <!-- edit button -->
+            <button mat-menu-item [disabled]="disableEditSale" (click)="editSale(row)">Edit</button>
+
+          </mat-menu>
+
+          <!-- 3 dot icon mat menu service -->
+          <mat-menu #menuServiceActions="matMenu">
+
+            <!-- add button -->
+            <button mat-menu-item [matMenuTriggerFor]="menuAddService" *ngIf="
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.tasksAccess) ||
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.followupsAccess)
+                                                    ">Add</button>
+
+            <mat-menu #menuAddService="matMenu">
+
+              <!-- add task -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess" mat-menu-item
+                (click)="
+                                                                                addTask(
+                                                                                  row.customerId,
+                                                                                  row.orgId,
+                                                                                  row.companyName,
+                                                                                  row.firstName,
+                                                                                  row.secondName,
+                                                                                  row.surname, null, null, row.id, row.serviceTitle
+                                                                                )
+                                                                              ">
+                <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+              </button>
+
+              <!-- add followUp -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess" mat-menu-item
+                (click)="
+                                                                                onCreateFollowUps(
+                                                                                  row.customerId,
+                                                                                  row.companyName,
+                                                                                  row.firstName,
+                                                                                  row.secondName,
+                                                                                  row.assignedTo,
+                                                                                  row.assignedToName,
+                                                                                  row.orgId,
+                                                                                  row.surname, null, null, row.id, row.serviceTitle,row
+                                                                                )
+                                                                              " [ngClass]="{ isDisabled: disableFoll }">
+                <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+              </button>
+
+            </mat-menu>
+
+            <!-- edit button -->
+            <button mat-menu-item [disabled]="disableEditService" (click)="editService(row)">Edit</button>
+
+          </mat-menu>
+
+          <!-- 3 dot icon mat menu contact -->
+          <mat-menu #menuCustActions="matMenu">
+
+            <!-- call button -->
+            <button mat-menu-item (click)="onCall(row)" *ngIf="
+                                                        row?.contactNo &&
+                                                        enableOutboundCallsViaCallBridging
+                                                      ">Call</button>
+
+            <!-- add button -->
+            <button mat-menu-item [matMenuTriggerFor]="menuAdd" *ngIf="
+                                                      commonService.userPlan.saleAccess ||
+                                                      commonService.userPlan.serviceAccess ||
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.tasksAccess) ||
+                                                      (commonService.userPlan.activitiesAccess &&
+                                                        commonService.userPlan.followupsAccess)
+                                                    ">Add</button>
+
+            <!-- add button matmenu -->
+            <mat-menu #menuAdd="matMenu">
+              <!-- add sale -->
+              <button *ngIf="commonService.userPlan.saleAccess" mat-menu-item (click)="onAddSale(row.id)" [disabled]="
+                                                          commonService.addDocLimitaion
+                                                            .addSaleDisable || disableSale
+                                                        ">
+                <mat-icon [ngClass]="{
+                                                            isDisabled:
+                                                              commonService.addDocLimitaion
+                                                                .addSaleDisable || disableSale
+                                                          }" color="accent">work</mat-icon>{{ fieldNameSale }}
+              </button>
+
+              <!-- add service -->
+              <button *ngIf="commonService.userPlan.serviceAccess" mat-menu-item (click)="onAddService(row.id)"
+                [disabled]="disableService">
+                <mat-icon color="accent" [ngClass]="{ isDisabled: disableService }">support_agent </mat-icon>{{
+                fieldNameService }}
+              </button>
+
+              <!-- add task -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess" mat-menu-item
+                (click)="
+                                                          addTask(
+                                                            row.id,
+                                                            row.orgId,
+                                                            row.companyName,
+                                                            row.firstName,
+                                                            row.secondName,
+                                                            row.surname, null, null, null, null
+                                                          )
+                                                        ">
+                <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+              </button>
+
+              <!-- add followUp -->
+              <button *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess" mat-menu-item
+                (click)="
+                                                          onCreateFollowUps(
+                                                            row.id,
+                                                            row.companyName,
+                                                            row.firstName,
+                                                            row.secondName,
+                                                            row.assignedTo,
+                                                            row.assignedToName,
+                                                            row.orgId,
+                                                            row.surname, null, null, null, null,row
+                                                          )
+                                                        " [ngClass]="{ isDisabled: disableFoll }">
+                <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+              </button>
+
+              <!-- add note -->
+              <button mat-menu-item (click)="
+                                                        addNotes(row,'btn_create_note_web')
+                                                        " [ngClass]="{ isDisabled: disableCreateNote }">
+                <mat-icon color="accent">note_add</mat-icon>{{ fieldNameContactNotes }}
+              </button>
+
+            </mat-menu>
+
+            <!-- edit button -->
+            <button mat-menu-item [disabled]="disableEditContact" (click)="editCustomer(row)">Edit</button>
+
+            <!-- chat options -->
+            <button mat-menu-item [matMenuTriggerFor]="menuChat">Send</button>
+          </mat-menu>
+
+          <!-- chat sub options -->
+          <mat-menu #menuChat="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="sendEmailCard" *ngIf="emailEnabled && row.email">
+              Email
+            </button>
+            <button mat-menu-item [matMenuTriggerFor]="sendSMSCard" *ngIf="smsEnabled">
+              SMS
+            </button>
+            <button mat-menu-item [matMenuTriggerFor]="sendWhatsappCard">
+              Whatsapp
+            </button>
+          </mat-menu>
+
+          <!-- send sms sub options -->
+          <mat-menu #sendSMSCard="matMenu">
+            <button mat-menu-item *ngFor="let smsTempltate of smsTemplates" (click)="triggerSms(smsTempltate, row)">
+              {{ smsTempltate.templateName }}
+            </button>
+            <button mat-menu-item *ngIf="smsTemplates.length === 0">
+              No templates added!
+            </button>
+          </mat-menu>
+
+          <!-- send email sub options -->
+          <mat-menu #sendEmailCard="matMenu">
+            <button mat-menu-item *ngFor="let emailTempltate of emailTemplates" (click)="
+                                                            triggerEmail(emailTempltate, row)
+                                                          ">
+              {{ emailTempltate.templateName }}
+            </button>
+            <button mat-menu-item *ngIf="emailTemplates.length === 0">
+              No templates added!
+            </button>
+          </mat-menu>
+
+          <!-- send whatsapp sub options -->
+          <mat-menu #sendWhatsappCard="matMenu">
+            <button mat-menu-item *ngFor="let waTempltates of whatsAppTemplates" (click)="
+                                                            triggerWhatsapp(waTempltates, row)
+                                                          ">
+              {{ waTempltates.templateName }}
+            </button>
+            <!-- if api configured, and no templates are added, no option to send whatsapp message -->
+            <button mat-menu-item *ngIf="
+                                                            whatsAppTemplates.length === 0 &&
+                                                            waEnabled === true
+                                                          ">
+              No templates added!
+            </button>
+            <!-- if api is not configured, can send whatsapp via webwhatsapp, -->
+            <!-- then option to send whatsapp without template is given -->
+            <button mat-menu-item *ngIf="waEnabled === false" (click)="
+                                                            triggerWhatsapp('noTemplate', row)
+                                                          ">
+              --without template--
+            </button>
+          </mat-menu>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns; " (click)="onRowClick(row)"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data to display
+        </td>
+      </tr>
+
+    </table>
+    <!-- table ends here -->
+    <mat-paginator [pageSizeOptions]="[10, 20, 30]" aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<ul class="m-0 list-unstyled" id="j" *ngIf="previewService.customerData.isDeliveryAddressPresent">
+  <li [style.color]="previewService.docColor"><b>Delivery Address</b></li>
+
+  <li *ngIf="previewService.customerData.deliveryCompanyName">
+    {{ previewService.customerData.deliveryCompanyName }}
+  </li>
+  <li *ngIf="previewService.customerData.deliveryContactName">
+    {{ previewService.customerData.deliveryContactName }}
+  </li>
+  <li>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryAddressline1 === null || previewService.customerData.deliveryAddressline1 === '')">
+      {{previewService.customerData.deliveryAddressline1}},&nbsp;</span>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryAddressline2 === null || previewService.customerData.deliveryAddressline2 === '')">
+      {{previewService.customerData.deliveryAddressline2}}
+    </span>
+  </li>
+  <li>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryDistrict === null || previewService.customerData.deliveryDistrict === '')">
+      {{previewService.customerData.deliveryDistrict}},&nbsp; </span>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryState === null || previewService.customerData.deliveryState === '')">
+      {{previewService.customerData.deliveryState}}
+    </span>
+  </li>
+  <li>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryCountry === null || previewService.customerData.deliveryCountry === '')">
+      {{previewService.customerData.deliveryCountry}},&nbsp;</span>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryPinCode === null || previewService.customerData.deliveryPinCode === '')">
+      PIN/ZIP: {{previewService.customerData.deliveryPinCode}}
+    </span>
+  </li>
+  <li *ngIf="previewService.customerData.deliveryContactNumber">
+    <span>Contact:</span>
+    <span *ngIf="previewService.customerData.deliverycountryCode">
+      {{previewService.customerData.deliverycountryCode}} </span>
+    <span *ngIf=" previewService.customerData.deliveryContactNumber ">
+      {{previewService.customerData.deliveryContactNumber}}</span>
+  </li>
+  <li>
+    <span
+      *ngIf=" !(previewService.customerData.deliveryEmail === null || previewService.customerData.deliveryEmail === '')">
+      Email: {{previewService.customerData.deliveryEmail}}</span>
+  </li>
+</ul>

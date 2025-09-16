@@ -1,0 +1,452 @@
+<head>
+  <style type="text/css">
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<div *ngIf="previewService.previewLoaded && !isMobilesize">
+  <mat-toolbar>
+    <span class="example-spacer"></span>
+    <h2 mat-line class="mat-h2 mat-title" style="margin-bottom: 0px;">
+      &nbsp;&nbsp; &nbsp;
+      <span class="align-self-center">{{ previewService.documentTypeFeildName}}&nbsp;:&nbsp;{{
+        previewService.docData.prefixAndDocNumber
+        }}</span>
+    </h2>
+    &nbsp;&nbsp;
+    <button mat-button color="accent" (click)="downloadAsPdf()">Download </button>
+    &nbsp;&nbsp;
+    <button mat-button [useExistingCss]="true" printSectionId="printsection" ngxPrint (click)="onSendEvent()"
+      color="accent">
+      Print</button>
+  </mat-toolbar>
+  <div class="container-fluid" style="min-height: 900px" style="background-color: ghostwhite">
+    <br />
+    <div class="container-fluid" style="background-color: ghostwhite; min-height: 750px">
+      <div class="row">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div *ngIf="privewTemplateSelected =='template1'">
+                <app-preview-doc1></app-preview-doc1>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template2'">
+                <app-preview-doc2></app-preview-doc2>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template3'">
+                <app-preview-doc3></app-preview-doc3>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template4'">
+                <app-preview-doc4></app-preview-doc4>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template5'">
+                <app-preview-doc5></app-preview-doc5>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template6'">
+                <app-preview-doc6></app-preview-doc6>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template7'">
+                <app-preview-doc7></app-preview-doc7>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template8'">
+                <app-preview-doc8></app-preview-doc8>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template9'">
+                <app-preview-doc9></app-preview-doc9>
+              </div>
+              <div *ngIf="privewTemplateSelected =='template10'">
+                <app-preview-doc10></app-preview-doc10>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile size toolbar for docTitle not null-->
+<mat-toolbar class="mat-elevation-z2"
+  *ngIf="previewService.previewLoaded && isMobilesize && previewService.docData.docTitle != ''"
+  [ngStyle]="{ 'background-color': 'white' }">
+
+  <span *ngIf="!previewService.docData.cancel">
+    {{ previewService.docData.docTitle }}
+  </span>
+  <span *ngIf="previewService.docData.cancel">
+    {{ previewService.docData.docTitle }} (Cancelled)
+  </span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button aria-label="download" title="download" (click)="downloadAsPdf()">
+    <mat-icon style="color: #2a6af6">download</mat-icon>
+  </button>
+</mat-toolbar>
+<!-- Mobile size toolbar for docTitle  null-->
+<mat-toolbar class="mat-elevation-z2"
+  *ngIf="previewService.previewLoaded && isMobilesize && previewService.docData.docTitle == ''"
+  [ngStyle]="{ 'background-color': 'white' }">
+
+  <span *ngIf="!previewService.docData.cancel">
+    {{previewService.documentTypeFeildName}}
+  </span>
+  <span *ngIf="previewService.docData.cancel">
+    {{previewService.documentTypeFeildName}} (Cancelled)
+  </span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button aria-label="download" title="download" (click)="downloadAsPdf()">
+    <mat-icon style="color: #2a6af6">download</mat-icon>
+  </button>
+</mat-toolbar>
+<!-- Mobile size display details -->
+<div class="container-fluid" style="background-color: white; margin-bottom: 30px"
+  *ngIf="previewService.previewLoaded && isMobilesize">
+  <br />
+  <h3 class="mat-h3" style="font-weight: bold">Document Details</h3>
+
+  <div class="row mb-1">
+    <div class="col-5 text-left">
+      <span>{{previewService.fieldNameContact}} Name </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.customerData.fname1 }}&nbsp;{{ previewService.customerData.sname }}{{
+        previewService.customerData.surname }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="
+  !(
+    previewService.customerData.companyName === 'N/A' ||
+    previewService.customerData.companyName === 'Individual'
+  )
+">
+    <div class="col-5 text-left">
+      <span>{{previewService.fieldNameOrganization}} </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.customerData.companyName }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle != ''">
+    <div class="col-5 text-left">
+      <span>{{ previewService.docData.docTitle }} No </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.prefixAndDocNumber }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="previewService.docData.prefixAndDocNumber && previewService.docData.docTitle == ''">
+    <div class="col-5 text-left">
+      <span>{{ previewService.documentTypeFeildName }} No </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.prefixAndDocNumber }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="previewService.docData.docDate && previewService.docData.docTitle != ''">
+    <div class="col-5 text-left">
+      <span> {{ previewService.docData.docTitle }} Date </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.docDate | date }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="previewService.docData.docDate && previewService.docData.docTitle == ''">
+    <div class="col-5 text-left">
+      <span> {{ previewService.documentTypeFeildName }} Date </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.docDate | date }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="
+  (previewService.docData.dueDate && previewService.docData.docTitle == 'Invoice') ||
+  (previewService.docData.dueDate && previewService.docData.docType == 'Invoice')
+">
+    <div class="col-5 text-left">
+      <span> Due Date </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.dueDate | date }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="previewService.docData.docValidity && previewService.docData.docType == 'Quotation'">
+    <div class="col-5 text-left">
+      <span>Valid Till </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.docValidity | date }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="previewService.docData.docValidity && previewService.docData.docType == 'Estimate'">
+    <div class="col-5 text-left">
+      <span>Valid Till </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.docValidity | date }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="previewService.docData.quoteRef && previewService.docData.docType == 'Invoice'">
+    <div class="col-5 text-left">
+      <span>{{previewService.fieldNameQuotation}} Ref </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.quoteRef }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="
+  (previewService.docData.estRef && previewService.docData.docType == 'Invoice') ||
+  (previewService.docData.estRef && previewService.docData.docType == 'Quotation')
+">
+    <div class="col-5 text-left">
+      <span>{{previewService.fieldNameEstimate}} Ref </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.estRef }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="previewService.docData.poRef && previewService.docData.docType == 'Invoice'">
+    <div class="col-5 text-left">
+      <span>P.O. Ref</span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.poRef }}
+      </span>
+    </div>
+  </div>
+  <div class="row mb-1"  *ngIf="previewService.docData.paymentTerm && previewService.docData.docType == 'Invoice'">
+    <div class="col-5 text-left">
+      <span>Payment Terms </span>
+    </div>
+    <div class="col-7">
+      <span>
+        : {{ previewService.docData.paymentTerm }}
+      </span>
+    </div>
+  </div>
+  <br />
+  <h3 class="mat-h3" style="font-weight: bold">Item Details</h3>
+  <div *ngFor="let i of previewService.itemList">
+    <mat-card [ngStyle]="{ 'background-color': 'ghostwhite' }">
+      <h2 class="title" style="font-weight: bold">{{ i.item }}</h2>
+      <mat-card-content>
+        <div class="d-flex flex-row bd-highlight mb-1 justify-content-left">
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px">
+            Qty: {{ i.qty }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px"
+            *ngIf="previewService.docData.includeUnit == true">
+            Unit: {{ i.unit }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px">
+            Rate: {{ i.rate }}
+          </div>
+        </div>
+        <div class="d-flex flex-row bd-highlight mb-1 justify-content-left">
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px"
+            *ngIf="previewService.docData.includeDiscount">
+            Discount: {{ i.discountRate + "%" }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px" *ngIf="
+                previewService.docData.includeTax == true &&
+                previewService.docData.interState == true &&
+                previewService.docData.taxType == 'gst'
+              ">
+            Igst: {{ i.igstRate + "%" }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px"
+            *ngIf="previewService.docData.includeTax == true && previewService.docData.taxType == 'vat'">
+            VAT: {{ i.vatRate + "%" }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px" *ngIf="
+                previewService.docData.includeTax == true &&
+                previewService.docData.interState != true &&
+                previewService.docData.taxType == 'gst'
+              ">
+            Cgst: {{ i.cgstRate + "%" }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px" *ngIf="
+                previewService.docData.includeTax == true &&
+                previewService.docData.interState != true &&
+                previewService.docData.taxType == 'gst'
+              ">
+            Sgst: {{ i.sgstRate + "%" }}
+          </div>
+          <div class="p-1 flex-fill bd-highlight border" style="margin: 2px" *ngIf="
+                previewService.docData.includeTax == true &&
+                previewService.docData.includeCess == true &&
+                previewService.docData.taxType == 'gst'
+              ">
+            Cess: {{ i.cessRate + "%" }}
+          </div>
+        </div>
+        <div class="d-flex flex-row bd-highlight mb-1">
+          <div class="p-1 bd-highlight field-name" style="font-weight: bold">
+            Amount Incl Tax:
+          </div>
+          <div class="p-1 bd-highlight">{{ i.amountInclTax }}</div>
+        </div>
+        <div class="d-flex flex-row bd-highlight mb-1">
+          <div class="p-1 bd-highlight">{{ i.description }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <br />
+  </div>
+  <h3 class="mat-h3" style="font-weight: bold">Item Summary</h3>
+  <!--Amount Summary-->
+  <mat-list class="zeropad">
+    <mat-list-item>
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">Total amount:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.total }}
+        </div>
+      </div>
+    </mat-list-item>
+
+    <mat-list-item *ngIf="previewService.docData.includeDiscount">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">Discount total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.discountValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="previewService.docData.includeDiscount">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">Total after discounts:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.discountedAmount }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="
+          previewService.docData.includeTax == true &&
+          previewService.docData.interState != true &&
+          previewService.docData.taxType == 'gst'
+        ">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">SGST total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.sgstValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="
+          previewService.docData.includeTax == true &&
+          previewService.docData.interState != true &&
+          previewService.docData.taxType == 'gst'
+        ">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">CGST total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.cgstValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="previewService.docData.includeTax == true && previewService.docData.taxType == 'vat'">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">VAT total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.vatValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="
+          previewService.docData.includeTax == true &&
+          previewService.docData.interState == true &&
+          previewService.docData.taxType == 'gst'
+        ">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">IGST total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.igstValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="
+          previewService.docData.includeTax == true &&
+          previewService.docData.includeCess == true &&
+          previewService.docData.taxType == 'gst'
+        ">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">Cess Total:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.cessValue }}
+        </div>
+      </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="previewService.docData.includeTax == true">
+      <div class="d-flex flex-row bd-highlight">
+        <div class="bd-highlight field-name">Total including taxes:</div>
+        <div class="bd-highlight">
+          {{ previewService.docData.currency + " " }}{{ previewService.docData.totalInclTax }}
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+  <br /><br />
+  <!-- For download Preview -->
+  <div class="row" [ngStyle]="{ display: 'none' }">
+
+    <div class="col-12">
+      <div *ngIf="privewTemplateSelected =='template1'">
+        <app-preview-doc1></app-preview-doc1>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template2'">
+        <app-preview-doc2></app-preview-doc2>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template3'">
+        <app-preview-doc3></app-preview-doc3>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template4'">
+        <app-preview-doc4></app-preview-doc4>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template5'">
+        <app-preview-doc5></app-preview-doc5>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template6'">
+        <app-preview-doc6></app-preview-doc6>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template7'">
+        <app-preview-doc7></app-preview-doc7>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template8'">
+        <app-preview-doc8></app-preview-doc8>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template9'">
+        <app-preview-doc9></app-preview-doc9>
+      </div>
+      <div *ngIf="privewTemplateSelected =='template10'">
+        <app-preview-doc10></app-preview-doc10>
+      </div>
+
+    </div>
+  </div>
+</div>
+<mat-progress-bar *ngIf="!previewService.previewLoaded" mode="indeterminate"></mat-progress-bar>

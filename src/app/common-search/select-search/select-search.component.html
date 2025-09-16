@@ -1,0 +1,16 @@
+<div class="mainclass">
+    <mat-form-field appearance="outline" style="width: 180px;">
+        <input matInput [formControl]="myControl" placeholder="Search {{placeHolderText}}" />
+        <button *ngIf="myControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+            <mat-icon color="warn">close</mat-icon>
+        </button>
+        <button *ngIf="!myControl.value" matSuffix mat-icon-button aria-label="Search {{placeHolderText}}">
+            <mat-icon color="accent">search</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let option of filteredOptions | async" >
+           <div  mat-line class="cursor" (click)="select(option?.userId)">{{option?.firstname}}</div> 
+        </mat-list-item>
+    </mat-list>
+</div>

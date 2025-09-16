@@ -1,0 +1,30 @@
+<mat-expansion-panel [expanded]="invoicesService.billingDetailspanel" (opened)="updatePanleState(true)"
+    (closed)="updatePanleState(false)">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Billing Addresses And Document Details
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-12">
+            <app-bill-from-invoice  [superUserDetails]="superUserDetails" [userData]="userData"></app-bill-from-invoice>
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <app-doc-details-invoice [docData]="docData"></app-doc-details-invoice>
+            <app-additionalfields-invoice ></app-additionalfields-invoice>
+        </div>
+    </div>
+    <hr class="hr-highlight" />
+    <div class="form-row">
+        <div class="col-md-5 col-lg-5 col-sm-12">
+            <app-bill-to-invoice [custID]="custID" [orgID]="orgID" [saleID]="saleID" [customerData]="customerData"></app-bill-to-invoice>
+        </div>
+        <div class="col-md-2 col-lg-2 col-sm-0">
+
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-12">
+            <app-delivery-address-invoice [customerData]="customerData"></app-delivery-address-invoice>
+        </div>
+
+    </div>
+</mat-expansion-panel>

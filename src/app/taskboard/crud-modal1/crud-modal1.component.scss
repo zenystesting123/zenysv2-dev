@@ -1,0 +1,112 @@
+.col1{
+    float:left;
+}
+.col2{
+    float:left;
+}
+// -----------------------search box--------------------------
+// .mat-dialog-content {
+//   overflow-y:auto hidden !important;
+// }
+.mat-form-field{
+    width:100% !important;
+ }
+ .text{
+    width: 100% !important;
+    height: 70px  !important  ;
+ }
+ .example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 500px;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+ .footer{
+   padding-left: 5%;
+  float:left;
+ }
+ .rig{
+   float: right;
+ }
+ .commentsborder{
+   border: 0.4px solid rgba(0, 0, 0, 0.452);
+   padding: 8px 8px 8px 16px;
+   border-radius: 5px;
+ }
+ ::ng-deep.zeropad .mat-list-item-content {
+  padding: 0 !important;
+}
+pre{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: black;
+  border: none;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+#heading {
+height: 28px;
+position: static;
+height: 28px;
+left: 0px;
+right: 0px;
+top: 0px;
+
+/* Header 3 (20 28) */
+
+font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 28px;
+/* identical to box height, or 140% */
+
+/* Black/87% */
+
+color: rgba(0, 0, 0, 0.87);
+
+/* Inside Auto Layout */
+
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+margin: 0px 0px;
+}
+
+.padding-top-15 {
+  padding-top: 15px;
+}
+
+.chipStyling {
+  color: #2a6af6;
+  background-color: #f1f2f4;
+  height: 24px;
+  top: calc(50% - 24px / 2);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+}  
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}

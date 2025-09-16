@@ -1,0 +1,686 @@
+
+  <div >
+    <!-- <form #form="ngForm" class ="example-form"> -->
+      <div class="d-flex flex-row bd-highlight ">
+        <!--Field-->
+        <div class="p-2 bd-highlight">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Field Name</mat-label>
+            <mat-select matNativeControl [(ngModel)]="primaryQueryItem.queryName" #queryName="ngModel" name="queryName"
+              required>
+              <mat-option *ngFor="let fieldData of groupByOptionsPrimary" [value]="fieldData.name"
+                (click)="onFieldSelectFilter(fieldData)">
+                  {{fieldData.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--Condition-->
+        <div class="p-2 bd-highlight"
+          *ngIf="primaryQueryItem.queryName && (primaryQueryItem.queryType =='date' || primaryQueryItem.queryType == 'timestamp')">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label> Condition</mat-label>
+            <mat-select placeholder="operator" #operator="ngModel" [(ngModel)]="primaryQueryItem.operator"
+              name="operator" required>
+              <mat-option *ngFor="let fieldData of selectedDataForDate" [value]="fieldData" 
+              (click)="onOptionPrimary()">
+                {{fieldData}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="p-2 bd-highlight"
+        *ngIf="primaryQueryItem.queryName && (primaryQueryItem.queryType =='boolean' )">
+        <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label> Condition</mat-label>
+          <mat-select placeholder="operator" #operator="ngModel" [(ngModel)]="primaryQueryItem.operator"
+            name="operator" required>
+            <mat-option *ngFor="let fieldData of booleanOptions" [value]="fieldData" (click) = "selectedPrimaryBoolean(fieldData)">
+              {{fieldData}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+        <div class="p-2 bd-highlight" *ngIf="primaryQueryItem.queryName && primaryQueryItem.queryType =='option'">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label> Condition</mat-label>
+            <mat-select placeholder="operator" #operator="ngModel" [(ngModel)]="primaryQueryItem.operator"
+              name="operator" required>
+              <mat-option *ngFor="let fieldData of selectedDataForCategory" [value]="fieldData.operator">
+                {{fieldData.operatorText}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="p-2 bd-highlight" *ngIf="primaryQueryItem.queryName && primaryQueryItem.queryType =='number'">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label> Condition</mat-label>
+            <mat-select placeholder="operator" #operator="ngModel" [(ngModel)]="primaryQueryItem.operator"
+              name="operator" required>
+              <mat-option *ngFor="let fieldData of selectedDataForValue" [value]="fieldData.operator">
+                {{fieldData.operatorText}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!--Comparion value-->
+        <!--Number-->
+        <div  class="p-2 bd-highlight" *ngIf="primaryQueryItem.operator">
+          <mat-form-field class="example-full-width" appearance="fill" *ngIf="primaryQueryItem.queryType =='number'">
+            <mat-label>Field Value</mat-label>
+            <input matInput placeholder="Field Value" required (ngModelChange)="valueChangedPrimary($event)"
+              [ngModel]="primaryQueryItem.comparisonValue" #comparisonValue="ngModel" name="comparisonValue" />
+          </mat-form-field>
+          <!--Customer status/ sales  or service pipeline-->
+          <mat-form-field class="example-chip-list" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='selectedContactPipeline' || primaryQueryItem.queryField =='selectedSalePipeline' || primaryQueryItem.queryField =='selectedServPipeline') ">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsPipeline | async; let ind = index" [value]="selctList.pipelineId">
+                {{selctList.pipelineName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <!--status-->
+          <mat-form-field class="example-chip-list" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='status' && (module !='customers')) ">
+            <mat-label>Select*</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsStatus | async;" [value]="selctList">
+                {{selctList}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!--Customer or sales or  service stage-->
+          <mat-form-field class="example-chip-list" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && ((primaryQueryItem.queryField =='status' && module =='customers') 
+            || (primaryQueryItem.queryField =='salesStage' && (module =='sales' || module =='products')) || (primaryQueryItem.queryField =='servicesStage' && module =='services')) ">
+            <mat-label>Select*</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsStage | async;" [value]="selctList.stageId">
+                {{selctList.name}} - {{selctList.pipelineName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!-- sales prod category-->
+          <mat-form-field class="example-chip-list" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && primaryQueryItem.queryField =='prodCategory' ">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsCategory | async;" [value]="selctList">
+                {{selctList}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+            <!-- additional field of category type -->
+            <mat-form-field class="example-chip-list" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.fieldType =='Additional')">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl"
+                [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue"
+                name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete"
+              (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsStatus | async;"[value]="selctList">
+                {{selctList}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <!--Categories-->
+          <mat-form-field class="example-chip-list" appearance="fill"  *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='createdBy' || primaryQueryItem.queryField =='createdById' || primaryQueryItem.queryField =='assignedTo')">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsUser | async" [value]="selctList.userId">
+                {{selctList.firstname}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!--product-->
+          <mat-form-field class="example-chip-list" appearance="fill"  *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='productId')">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsProduct | async" [value]="selctList.id">
+                {{selctList.prodName}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!-- lead soure -->
+          <mat-form-field class="example-chip-list" appearance="fill"  *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='custLeadValue')">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsCustLeadValue | async" [value]="selctList">
+                {{selctList}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!-- associated branch -->
+          <mat-form-field class="example-chip-list" appearance="fill"  *ngIf="primaryQueryItem.queryType =='option' && (primaryQueryItem.queryField =='associatedBranch')">
+            <mat-label>Select *</mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <mat-chip *ngFor="let selctList of primaryQueryItem.selectionArray" (removed)="removePrimary(selctList)">
+                {{selctList}}
+                <mat-icon-button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </mat-icon-button>
+              </mat-chip>
+              <input placeholder="Add ..." #selctListInput [formControl]="selctListCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                (matChipInputTokenEnd)="addPrimary($event)" name="comparisonValue">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedPrimary($event)">
+              <mat-option *ngFor="let selctList of filteredselctListsBranch | async" [value]="selctList.id">
+                {{selctList.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+
+
+          <!--Dates-->
+          <mat-form-field class="example-full-width" appearance="fill"
+            *ngIf="(primaryQueryItem.queryType=='date' || primaryQueryItem.queryType == 'timestamp')  && primaryQueryItem.operator =='During'">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="pickerOne">
+              <input matStartDate formControlName="start" placeholder="Start date"
+                [ngModel]="primaryQueryItem.selectionArray[0]" required (dateChange)="onDateChangeStartPrimary($event)">
+              <input matEndDate formControlName="end" placeholder="End date"
+                [ngModel]="primaryQueryItem.selectionArray[1]" required (dateChange)="onDateChangeEndPrimary($event)">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerOne"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerOne></mat-date-range-picker>
+
+          </mat-form-field>
+
+          <!-- before or after date -->
+          <mat-form-field class="example-full-width" appearance="fill"
+          *ngIf="(primaryQueryItem.queryType=='date' || primaryQueryItem.queryType == 'timestamp')  && ( primaryQueryItem.operator =='Before Date' || primaryQueryItem.operator =='After Date')">
+            <mat-label>Choose a date&nbsp;</mat-label>
+            <input matInput [matDatepicker]="picker" name="selectionArray"
+            [ngModel]="primaryQueryItem.selectionArray[0]" required (dateChange)="onDateChangePrimary($event)" />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+
+          <!--Priority-->
+          <mat-form-field class="example-full-width" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && primaryQueryItem.queryField =='priority' ">
+            <mat-label>Priority</mat-label>
+            <mat-select [(ngModel)]="primaryQueryItem.comparisonValue[0]" name="comparisonValue"
+              #comparisonValue="ngModel" required>
+              <mat-option *ngFor="let priority of priorityArray" [value]="priority">
+                {{priority}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--Call Direction-->
+          <mat-form-field class="example-full-width" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && primaryQueryItem.queryField =='direction' ">
+            <mat-label>Direction</mat-label>
+            <mat-select [(ngModel)]="primaryQueryItem.comparisonValue[0]" name="comparisonValue"
+              #comparisonValue="ngModel" required>
+              <mat-option *ngFor="let direction of directionArray" [value]="direction">
+                {{direction}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--Call outcome-->
+          <mat-form-field class="example-full-width" appearance="fill"
+            *ngIf="primaryQueryItem.queryType =='option' && primaryQueryItem.queryField =='outcome' ">
+            <mat-label>Outcome</mat-label>
+            <mat-select [(ngModel)]="primaryQueryItem.comparisonValue[0]" name="comparisonValue"
+              #comparisonValue="ngModel" required>
+              <mat-option *ngFor="let outcome of outcomeArray" [value]="outcome">
+                {{outcome}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    <!-- </form> -->
+  </div>
+
+  <!--Filter section-->
+  <div  *ngFor="let line of lineItemForm.get('itemList')['controls'];let i = index;">
+    <div class="d-flex flex-row bd-highlight ">
+      <!--Comparison Field-->
+      <div class="p-2 bd-highlight">
+        <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label> Field Name</mat-label>
+          <mat-select placeholder="Select Field Name" [formControl]="line.controls.queryName"
+            [(ngModel)]="itemList[i].queryName" name="queryName" required>
+            <mat-option *ngFor="let fieldData of groupByOptions" [value]="fieldData.name"
+              (click)="onFieldSelectPrimary(fieldData,i,line.controls.comparisonValue)">
+              {{fieldData.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!--Condition field-->
+      <div class="p-2 bd-highlight"
+        *ngIf="itemList[i].queryName &&( itemList[i].queryType =='date' ||  itemList[i].queryType =='timestamp')">
+        <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label> Condition</mat-label>
+          <mat-select placeholder="operator" [formControl]="line.controls.operator" [(ngModel)]="itemList[i].operator"
+            name="operator" required>
+            <mat-option *ngFor="let fieldData of selectedDataForDate" [value]="fieldData"
+              (click)="onOption(fieldData,i)">
+              {{fieldData}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="p-2 bd-highlight"
+      *ngIf="itemList[i].queryName &&( itemList[i].queryType =='boolean')">
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label> Condition</mat-label>
+        <mat-select placeholder="operator" [formControl]="line.controls.operator" [(ngModel)]="itemList[i].operator"
+          name="operator" required>
+          <mat-option *ngFor="let fieldData of booleanOptions" [value]="fieldData"
+            (click)="onOption(fieldData,i)">
+            {{fieldData}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+      <div class="p-2 bd-highlight" *ngIf="itemList[i].queryName && itemList[i].queryType =='option'">
+        <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label> Condition</mat-label>
+          <mat-select placeholder="operator" [formControl]="line.controls.operator" [(ngModel)]="itemList[i].operator"
+            name="operator" required>
+            <mat-option *ngFor="let fieldData of selectedDataForCategory" [value]="fieldData.operator">
+              {{fieldData.operatorText}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="p-2 bd-highlight" *ngIf="itemList[i].queryName && itemList[i].queryType =='number'">
+        <mat-form-field appearance="fill" class="example-full-width">
+          <mat-label> Condition</mat-label>
+          <mat-select placeholder="operator" [formControl]="line.controls.operator" [(ngModel)]="itemList[i].operator"
+            name="operator" required>
+            <mat-option *ngFor="let fieldData of selectedDataForValue" [value]="fieldData.operator">
+              {{fieldData.operatorText}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!--Value field-->
+      <div class="p-2 bd-highlight" *ngIf="itemList[i].operator">
+        <!-- number operator value -->
+        <mat-form-field class="example-full-width" appearance="fill" *ngIf="itemList[i].queryType =='number'">
+          <mat-label>Field Value</mat-label>
+          <input matInput placeholder="Field Value" required (ngModelChange)="valueChangedFilter($event,i)"
+            [formControl]="line.controls.comparisonValue" [ngModel]="itemList[i].comparisonValue"
+            name="comparisonValue" />
+        </mat-form-field>
+        <!-- status value -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='status' && (module !='customers' )) ">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsStatus | async" [value]="selctList">
+              {{selctList}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!-- customer/ sales/ service stage -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && ((itemList[i].queryField =='status' && module =='customers') || (itemList[i].queryField =='salesStage' && (module =='sales' || module =='products')) 
+          || (itemList[i].queryField =='servicesStage' && module =='services')) ">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsStage | async" [value]="selctList.stageId">
+              {{selctList.name}} - {{selctList.pipelineName}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='prodCategory') ">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsCategory | async" [value]="selctList">
+              {{selctList}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+              <!-- pipeline value -->
+              
+              <mat-form-field class="example-chip-list" appearance="fill"
+                *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='selectedContactPipeline' || itemList[i].queryField =='selectedSalePipeline' || itemList[i].queryField =='selectedServPipeline') ">
+              
+                <mat-label>Select *</mat-label>
+                <mat-chip-list #chipList aria-label="Select">
+                  <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+                    {{selctList}}
+                    <mat-icon-button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </mat-icon-button>
+                  </mat-chip>
+                  <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+                    [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)" name="comparisonValue">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+                  <mat-option *ngFor="let selctList of filteredselctListsPipeline| async; let ind = index "
+                    [value]="selctList.pipelineId">
+                    {{selctList.pipelineName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+        <!-- assigned to value -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='createdBy' || itemList[i].queryField =='createdById' || itemList[i].queryField =='assignedTo')">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsUser | async" [value]="selctList.userId">
+              {{selctList.firstname}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!-- product -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='productId')">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsProduct | async" [value]="selctList.id">
+              {{selctList.prodName}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!-- lead source -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='custLeadValue')">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+              name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsCustLeadValue | async" [value]="selctList">
+              {{selctList}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!--associated branch -->
+        <mat-form-field class="example-chip-list" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && (itemList[i].queryField =='associatedBranch')">
+          <mat-label>Select *</mat-label>
+          <mat-chip-list #chipList aria-label="Select">
+            <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+              {{selctList}}
+              <mat-icon-button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </mat-icon-button>
+            </mat-chip>
+            <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+              [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)" name="comparisonValue">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+            <mat-option *ngFor="let selctList of filteredselctListsBranch | async" [value]="selctList.id">
+              {{selctList.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+                <!-- additional field of category type -->
+                <mat-form-field class="example-chip-list" appearance="fill"
+                *ngIf="itemList[i].queryType =='option' && (itemList[i].fieldType =='Additional')">
+                <mat-label>Select *</mat-label>
+                <mat-chip-list #chipList aria-label="Select">
+                  <mat-chip *ngFor="let selctList of itemList[i].selectionArray" (removed)="removeFilter(selctList,i)">
+                    {{selctList}}
+                    <mat-icon-button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </mat-icon-button>
+                  </mat-chip>
+                  <input placeholder="Add ..." #selctListInputFilter [formControl]="line.controls.comparisonValue"
+                    [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addFilter($event,line.controls.comparisonValue,i)"
+                    name="comparisonValue">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete"
+                  (optionSelected)="selectedFilter($event,i,line.controls.comparisonValue)">
+                  <mat-option *ngFor="let selctList of filteredselctListsStatus | async" [value]="selctList">
+                    {{selctList}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+        <!-- created during value -->
+        <mat-form-field appearance="fill"
+          *ngIf="( itemList[i].queryType =='date' ||  itemList[i].queryType =='timestamp') && itemList[i].operator == 'During'">
+          <mat-label>Enter a date range </mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Start date" [ngModel]="itemList[i].selectionArray[0]" required
+              (dateChange)="onDateChangeStart($event,i)" name="comparisonValueFirst">
+            <input matEndDate placeholder="End date" [ngModel]="itemList[i].selectionArray[1]" required
+              (dateChange)="onDateChangeEnd($event,i)" name="comparisonValueSecond">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+         <!-- before or after date -->
+         <mat-form-field class="example-full-width" appearance="fill"
+         *ngIf="( itemList[i].queryType =='date' ||  itemList[i].queryType =='timestamp') && (itemList[i].operator =='Before Date' || itemList[i].operator =='After Date')">
+           <mat-label>Choose a date&nbsp;</mat-label>
+           <input matInput [matDatepicker]="picker" [ngModel]="itemList[i].selectionArray[0]" required
+           (dateChange)="onDateChange($event,i)" [formControl]="line.controls.comparisonValue" />
+           <mat-hint>DD/MM/YYYY</mat-hint>
+           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+           <mat-datepicker #picker></mat-datepicker>
+         </mat-form-field>
+
+        <!--Priority-->
+        <mat-form-field class="example-full-width" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && itemList[i].queryField =='priority' ">
+          <mat-label>Priority</mat-label>
+          <mat-select [(ngModel)]="itemList[i].comparisonValue[0]" name="comparisonValue"
+            [formControl]="line.controls.comparisonValue" required>
+            <mat-option *ngFor="let priority of priorityArray" [value]="priority">
+              {{priority}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!--Call direction-->
+        <mat-form-field class="example-full-width" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && itemList[i].queryField =='direction' ">
+          <mat-label>Direction</mat-label>
+          <mat-select [(ngModel)]="itemList[i].comparisonValue[0]" name="comparisonValue"
+            [formControl]="line.controls.comparisonValue" required>
+            <mat-option *ngFor="let direction of directionArray" [value]="direction">
+              {{direction}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!--Call Outcome-->
+        <mat-form-field class="example-full-width" appearance="fill"
+          *ngIf="itemList[i].queryType =='option' && itemList[i].queryField =='outcome' ">
+          <mat-label>Outcome</mat-label>
+          <mat-select [(ngModel)]="itemList[i].comparisonValue[0]" name="comparisonValue"
+            [formControl]="line.controls.comparisonValue" required>
+            <mat-option *ngFor="let outcome of outcomeArray" [value]="outcome">
+              {{outcome}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="p-2 bd-highlight">
+        <button mat-icon-button (click)="deleteFieldValue(i)">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button mat-mini-fab color="primary">
+    <mat-icon style="float: right" (click)="addFieldValue()" [ngStyle]="{ color: 'white' }">add</mat-icon>
+  </button>
+  <!-- <button mat-button color="accent" (click)="onSaveQuery()" >
+        Save
+    </button> -->
+
+

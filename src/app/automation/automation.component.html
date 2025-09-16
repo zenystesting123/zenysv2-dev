@@ -1,0 +1,714 @@
+
+<div *ngIf="userPlan.automation">
+<div class="container-fluid spinner" *ngIf="!loadComplete">
+<mat-spinner [diameter] ="24"></mat-spinner>
+</div>
+<mat-toolbar class="border-bottom"
+  *ngIf="loadComplete"
+  style="flex: 0 0 64px;"
+  [ngStyle]="{ 'background-color': 'white' }"
+>
+  <button mat-icon-button title="back" (click)="onBack()">
+    <mat-icon [ngStyle]="{ color: '#2A6AF6' }"> arrow_back </mat-icon>
+  </button>
+  <span style="color: rgba(0, 0, 0, 0.87)"
+    ><span style="text-transform: capitalize">{{ mode }}</span> Automation</span
+  >
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</mat-toolbar>
+<div>
+  <br />
+  <mat-horizontal-stepper
+    class="container-xl"
+    [linear]="true"
+    #stepper
+    *ngIf="loadComplete"
+  >
+    <mat-step [stepControl]="zeroFormGroup">
+      <ng-template matStepLabel>Title</ng-template>
+      <br />
+      <br />
+      <form [formGroup]="zeroFormGroup" class="alignmiddle">
+        <mat-form-field class="alignmiddle">
+          <mat-label>Automation Title</mat-label>
+          <input matInput formControlName="name" />
+          <mat-hint style="text-align: center"
+            >Provide a name for your automation</mat-hint
+          >
+        </mat-form-field>
+        <div>
+          <button style="float: right" color="accent" mat-button matStepperNext>
+            Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="firstFormGroup">
+      <br />
+      <ng-template matStepLabel>Define the trigger</ng-template>
+      <form
+        [formGroup]="firstFormGroup"
+        class="alignmiddle"
+        *ngIf="firstFormGroup"
+      >
+        <!-- <div class="container"> -->
+        When a
+        <mat-form-field>
+          <mat-label>Trigger</mat-label>
+          <mat-select [compareWith]="compareFn" formControlName="trigger">
+            <mat-option
+              *ngFor="let trigger of triggers"
+              [value]="trigger"
+              (click)="triggerableActions(trigger)"
+              >{{ trigger.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        is&nbsp;
+        <mat-form-field>
+          <mat-label>Operation</mat-label>
+          <mat-select [compareWith]="compareFn" formControlName="operation">
+            <mat-option
+              *ngFor="let operation of operationsPerTrigger[firstFormGroup.value.trigger.value]"
+              [value]="operation"
+              >{{ operation.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        , then
+        <mat-form-field>
+          <mat-label>Action</mat-label>
+          <mat-select [compareWith]="compareFn" formControlName="action">
+            <mat-option
+              *ngFor="let action of triggeredAction"
+              [value]="action"
+              (click)="createthirdFormGroup(action.value)"
+              >{{ action.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <div style="float: right">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext  color="accent">Next</button>
+        </div>
+        <!-- </div> -->
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup">
+      <ng-template matStepLabel>Conditions</ng-template>
+      <br />
+      <div class="container-xl">
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [(ngModel)]="alwaysorCondition"
+        >
+          <mat-radio-button class="example-radio-button" [value]="true">
+            Always trigger automation
+          </mat-radio-button>
+          <br />
+          <mat-radio-button class="example-radio-button" [value]="false">
+            Conditionally trigger automation
+          </mat-radio-button>
+        </mat-radio-group>
+        <form
+          [formGroup]="secondFormGroup"
+          *ngIf="secondFormGroup"
+          [hidden]="alwaysorCondition"
+          class="alignmiddle"
+        >
+          <br />
+          <div formArrayName="conditions">
+            When {{ firstFormGroup.value.trigger.name }} is
+            {{ firstFormGroup.value.operation.name }},{{
+              firstFormGroup.value.action.name
+            }}
+            if
+            <br />
+            <br />
+            <div
+              *ngFor="
+                let conditions of secondFormGroup.controls.conditions[
+                  'controls'
+                ];
+                let i = index
+              "
+            >
+              <div [formGroupName]="i">
+                <mat-form-field style="margin-left: 10px">
+                  <mat-label>Field</mat-label>
+                  <mat-select
+                    [compareWith]="compareFn"
+                    formControlName="field"
+                    [required]="!alwaysorCondition"
+                  >
+                    <mat-option
+                      *ngFor="
+                        let fields of fieldList[
+                          firstFormGroup.value.trigger.value
+                        ]
+                      "
+                      [value]="fields"
+                      >{{ fields.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field style="margin-left: 10px"
+                *ngIf="!!firstFormGroup.value.operation.value"
+                >
+                  <mat-label>Condition</mat-label>
+                  <mat-select
+                    [compareWith]="compareFn"
+                    formControlName="condition"
+                    [required]="!alwaysorCondition"
+                  >
+                    <mat-option
+                      *ngFor="
+                        let condition of conditioncreator[
+                          firstFormGroup.value.operation.value[0]+''+secondFormGroup.value.conditions[i].field.type
+                        ]
+                      "
+                      [value]="condition"
+                      >{{ condition.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field
+                  style="margin-left: 10px"
+                  *ngIf="
+                    !(
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!' ||
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!!' ||
+                        secondFormGroup.value.conditions[i].condition.value ==
+                        'specialValue2'
+                    ) &&
+                    secondFormGroup.value.conditions[i].field.valueType ==
+                      'String'
+                  "
+                >
+                  <mat-label>Value 1</mat-label>
+                  <input
+                    matInput
+                    formControlName="value"
+                    [required]="
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!' ||
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!!'||
+                        secondFormGroup.value.conditions[i].condition.value ==
+                        'specialValue2'
+                    "
+                  />
+                </mat-form-field>
+                <mat-form-field
+                  style="margin-left: 10px"
+                  *ngIf="
+                    !(
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!' ||
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!!' ||
+                        secondFormGroup.value.conditions[i].condition.value ==
+                        'specialValue2'
+                    ) &&
+                    secondFormGroup.value.conditions[i].field.valueType ==
+                      'List'
+                  "
+                >
+                  <mat-label>Value2</mat-label>
+                  <!-- <input matInput formControlName="value"> -->
+                  <mat-select
+                    formControlName="value"
+                    *ngIf="
+                      secondFormGroup.value.conditions[i].field.valueType ==
+                      'List'
+                    "
+                    [required]="secondFormGroup.value.conditions[i].condition.value ==
+                    '!' ||
+                  secondFormGroup.value.conditions[i].condition.value ==
+                    '!!'||
+                    secondFormGroup.value.conditions[i].condition.value ==
+                    'specialValue2'"
+                  >
+                    <!-- <mat-option>--</mat-option> -->
+                    <mat-option
+                      *ngFor="
+                        let values of valueList[
+                          valueInputSwitch(
+                            firstFormGroup.value.trigger.value,
+                            secondFormGroup.value.conditions[i].field.value
+                          )
+                        ]
+                      "
+                      [value]="
+                      (secondFormGroup.value.conditions[i].field.value ==
+                      'code')||(secondFormGroup.value.conditions[i].field.value ==
+                      'currency')
+                        ? (secondFormGroup.value.conditions[i].field.value=='code'?values.dial_code:values.isoCode)
+                        : secondFormGroup.value.conditions[i].field.value.includes('additionalFieldsArr[')
+                        ? values: values.value
+                      "
+                    >
+                      {{
+                        (secondFormGroup.value.conditions[i].field.value ==
+                        'code')||(secondFormGroup.value.conditions[i].field.value ==
+                        'currency')
+                          ? (secondFormGroup.value.conditions[i].field.value=='code'?values.dial_code:values.isoCode)
+                          : values.name
+                      }}
+                      {{
+                        secondFormGroup.value.conditions[i].field.value ==
+                        "code"
+                          ? values.name
+                          : ""
+                      }}
+                      {{
+                        secondFormGroup.value.conditions[i].field.value ==
+                        "currency"
+                          ? values.currencyName
+                          : ""
+                      }}
+                      {{
+                        secondFormGroup.value.conditions[i].field.value.includes('additionalFieldsArr[')
+                          ? values
+                          : ""
+                      }}
+
+
+
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                  style="margin-left: 10px"
+                  *ngIf="
+                    !(
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!' ||
+                      secondFormGroup.value.conditions[i].condition.value ==
+                        '!!'||
+                        secondFormGroup.value.conditions[i].condition.value ==
+                        'specialValue2'
+
+                    ) &&
+                    secondFormGroup.value.conditions[i].field.valueType ==
+                      'assignedTo'
+                  "
+                >
+                  <mat-label>Value3</mat-label>
+                  <!-- <input matInput formControlName="value"> -->
+                  <mat-select
+                    formControlName="value"
+                    *ngIf="
+                      secondFormGroup.value.conditions[i].field.valueType ==
+                      'assignedTo'
+                    "
+
+                  >
+                    <!-- <mat-option>--</mat-option> -->
+                    <mat-option
+                      *ngFor="let subUser of assignedToSelection"
+                      [value]="subUser.Id"
+                    >
+                      {{ subUser.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <span *ngIf="i > 0"
+                  ><button mat-button (click)="removeAddress(i)">Delete</button>
+                </span>
+
+                <div *ngIf="conditionAdder.length > 0 && !!conditionAdder[i]">
+                  <b>{{ conditionAdder[i] == "||" ? "OR" : "AND" }}</b>
+                </div>
+              </div>
+              <br />
+            </div>
+            <button mat-button color="accent" [matMenuTriggerFor]="menu">
+              Add Condition
+            </button>
+          </div>
+
+          <mat-menu #menu="matMenu">
+            <button (click)="addCondition('||', '', '', '')" mat-menu-item>
+              OR
+            </button>
+            <button (click)="addCondition('&&', '', '', '')" mat-menu-item>
+              AND
+            </button>
+          </mat-menu>
+          <br />
+        </form>
+        <br />
+        <div style="float: right">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button color="accent" matStepperNext>Next</button>
+        </div>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Action </ng-template>
+      <div class="row">
+        <form
+          class="col-5"
+          class="alignmiddle"
+          [formGroup]="thirdFormGroup"
+          *ngIf="
+            firstFormGroup.value.action.value == 'createfollowupTask' &&
+            !!thirdFormGroup
+          "
+        >
+          <div class="container-xl row alignmiddle">
+            <ng-template matStepLabel>{{
+              firstFormGroup.value.action.name
+            }}</ng-template>
+            <mat-form-field class="col-4">
+              <mat-label>Due date field type</mat-label>
+              <mat-select
+                [compareWith]="compareFn"
+                formControlName="dateFieldType"
+              >
+              <mat-option
+                  *ngFor="let dateField of dateFields[firstFormGroup.value.trigger.value]"
+                  [value]="dateField"
+                  >{{ dateField.name }}</mat-option
+                >
+            </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-4">
+              <mat-label>Due date field type</mat-label>
+              <mat-select
+                [compareWith]="compareFn"
+                formControlName="afterorBefore"
+              >
+              <mat-option
+                  value="+"
+                  >after</mat-option
+                >
+                <mat-option
+                  value="-"
+                  >before</mat-option
+                >
+            </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-4">
+              <mat-label>Due Date</mat-label>
+              <input matInput formControlName="followUpDate" type="number" />
+              <mat-hint>
+                days from {{ firstFormGroup.value.trigger.name }} was
+                {{ firstFormGroup.value.operation.name }}</mat-hint
+              >
+            </mat-form-field>
+            <div class="row">
+              <!-- <mat-form-field class="col-6">
+                <mat-label>Follow Up Date</mat-label>
+                <input matInput formControlName="callStartDate" type="number" />
+                <mat-hint>
+                  days from {{ firstFormGroup.value.trigger.value }} was
+                  {{ firstFormGroup.value.operation.name }}</mat-hint
+                >
+              </mat-form-field> -->
+              <mat-form-field class="col-6">
+                <mat-label>Assigned To</mat-label>
+                <mat-select
+                  [compareWith]="compareFn"
+                  formControlName="assignedTo"
+                >
+                  <mat-option
+                    *ngFor="let assignedTo of assignedToSelection"
+                    [value]="assignedTo"
+                    >{{ assignedTo.name }}</mat-option
+                  >
+                  <mat-option [value]="firstFormGroup.value.trigger.name"
+                    >{{ firstFormGroup.value.trigger.name }} Owner</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <mat-form-field>
+              <mat-label>Notes</mat-label>
+              <textarea
+                matInput
+                formControlName="notes"
+                (keyup)="onKeyup($event)"
+              ></textarea>
+            </mat-form-field>
+            <br />
+          </div>
+        </form>
+        <form
+          class="col-5"
+          class="alignmiddle"
+          [formGroup]="thirdFormGroup"
+          *ngIf="
+            firstFormGroup.value.action.value == 'createTask' &&
+            !!thirdFormGroup
+          "
+        >
+          <div class="container-xl row alignmiddle">
+            <ng-template matStepLabel>{{
+              firstFormGroup.value.action.name
+            }}</ng-template>
+            <div class="row">
+              <mat-form-field class="col-4">
+                <mat-label>Due date field type</mat-label>
+                <mat-select
+                  [compareWith]="compareFn"
+                  formControlName="dateFieldType"
+                >
+                <mat-option
+                    *ngFor="let dateField of dateFields[firstFormGroup.value.trigger.value]"
+                    [value]="dateField"
+                    >{{ dateField.name }}</mat-option
+                  >
+              </mat-select>
+              </mat-form-field>
+              <mat-form-field class="col-4">
+                <mat-label>Due date field type</mat-label>
+                <mat-select
+                  [compareWith]="compareFn"
+                  formControlName="afterorBefore"
+                >
+                <mat-option
+                    value="+"
+                    >after</mat-option
+                  >
+                  <mat-option
+                    value="-"
+                    >before</mat-option
+                  >
+              </mat-select>
+              </mat-form-field>
+              <mat-form-field class="col-4">
+                <mat-label>Due Date</mat-label>
+                <input matInput formControlName="dueDate" type="number" />
+                <mat-hint>
+                  days from {{ firstFormGroup.value.trigger.value }} was
+                  {{ firstFormGroup.value.operation.name }}</mat-hint
+                >
+              </mat-form-field>
+              <mat-form-field class="col-4">
+                <mat-label>Assigned To</mat-label>
+                <mat-select
+                  [compareWith]="compareFn"
+                  formControlName="assignedTo"
+                >
+                  <mat-option
+                    *ngFor="let assignedTo of assignedToSelection"
+                    [value]="assignedTo"
+                    >{{ assignedTo.name }}</mat-option
+                  >
+                  <mat-option [value]="firstFormGroup.value.trigger.name">
+                    {{ firstFormGroup.value.trigger.name }} Owner</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="col-4">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority">
+                  <mat-option value="LOW">LOW</mat-option>
+                  <mat-option value="MEDIUM">MEDIUM</mat-option>
+                  <mat-option value="HIGH">HIGH</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br />
+            <br />
+            <mat-form-field>
+              <mat-label>Title</mat-label>
+              <input
+                matInput
+                formControlName="title"
+                (keyup)="onKeyup($event)"
+              />
+            </mat-form-field>
+            <br />
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                (keyup)="onKeyup($event)"
+              ></textarea>
+            </mat-form-field>
+            <br />
+          </div>
+        </form>
+        <form
+          class="col-5"
+          class="alignmiddle"
+          [formGroup]="thirdFormGroup"
+          *ngIf="firstFormGroup.value.action.name == 'Send Email'"
+        >
+          <div class="container-xl row alignmiddle">
+            <ng-template matStepLabel>{{
+              firstFormGroup.value.action.name
+            }}</ng-template>
+
+            <mat-form-field>
+              <mat-label>To</mat-label>
+              <input matInput formControlName="To" (keyup)="onKeyup($event)" />
+            </mat-form-field>
+            <br />
+            <mat-form-field>
+              <mat-label>cc</mat-label>
+              <input matInput formControlName="cc" />
+            </mat-form-field>
+            <br />
+            <mat-form-field>
+              <mat-label>template</mat-label>
+              <mat-select formControlName="template" [compareWith]="compareFn2">
+                <mat-option *ngIf="emailTemplates.length == 0"
+                  >You dont have saved templates</mat-option
+                >
+                <mat-option
+                  *ngFor="let template of emailTemplates"
+                  [value]="template"
+                  >{{ template.templateName }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
+        <!--SMS template selection-->
+        <!-- <form
+        class="col-5"
+        class="alignmiddle"
+        [formGroup]="thirdFormGroup"
+        *ngIf="firstFormGroup.value.action.name == 'Send SMS'"
+      >
+        <div class="container-xl row alignmiddle">
+          <ng-template matStepLabel>{{
+            firstFormGroup.value.action.name
+          }}</ng-template>
+
+          <mat-form-field>
+            <mat-label>To</mat-label>
+            <input matInput formControlName="To" (keyup)="onKeyup($event)" placeholder="Eg: +91-9999999999"/>
+          </mat-form-field>
+          <br />
+
+          <br />
+          <mat-form-field>
+            <mat-label>SMS template</mat-label>
+            <mat-select formControlName="SMSTemplate" [compareWith]="compareFn2">
+              <mat-option *ngIf="SMSTemplatesFiltered.length == 0"
+                >You dont have saved templates</mat-option
+              >
+              <mat-option
+                *ngFor="let template of SMSTemplatesFiltered"
+                [value]="template"
+                >{{ template.templateName }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form> -->
+
+              <!--Whatsapp template selection-->
+              <form
+              class="col-5"
+              class="alignmiddle"
+              [formGroup]="thirdFormGroup"
+              *ngIf="firstFormGroup.value.action.name == 'Send Whatsapp message'"
+            >
+              <div class="container-xl row alignmiddle">
+                <ng-template matStepLabel>{{
+                  firstFormGroup.value.action.name
+                }}</ng-template>
+
+                <mat-form-field>
+                  <mat-label>To</mat-label>
+                  <input matInput formControlName="To" (keyup)="onKeyup($event)" placeholder="Eg: +91-9999999999"/>
+                </mat-form-field>
+                <br />
+
+                <br />
+                <mat-form-field>
+                  <mat-label>Whatsapp template</mat-label>
+                  <mat-select formControlName="SMSTemplate" [compareWith]="compareFn2">
+                    <mat-option *ngIf="WaTemplatesFiltered.length == 0"
+                      >You dont have saved templates</mat-option
+                    >
+                    <mat-option
+                      *ngFor="let template of WaTemplatesFiltered"
+                      [value]="template"
+                      >{{ template.templateName }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </form>
+
+      </div>
+      <br />
+      <div style="float: right">
+        <button mat-button matStepperPrevious>Back</button>
+        <button
+          *ngIf="!!thirdFormGroup"
+          [disabled]="thirdFormGroup.invalid || buttonClicked || !onCheckNetwork()"
+          mat-button
+          color="accent"
+          (click)="addAutomation(thirdFormGroup)"
+        >
+          <span style="text-transform: capitalize">{{
+            mode == "edit" ? "Save" : mode
+          }}</span>
+        </button>
+      </div>
+      <br />
+      <br />
+      <div class="col-12" style="font-size: small">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-subtitle><b>Notes</b></mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              To use
+              <span>
+                <mat-form-field style="margin-left: 10px">
+                  <b
+                    ><mat-select
+                      [value]="fieldsToUse['contact'][0].value"
+                      [(ngModel)]="fieldToCopy"
+                      (selectionChange)="fieldsToUsechange($event.value)"
+                    >
+                      <mat-option
+                        *ngFor="
+                          let fields of fieldsToUse[
+                            firstFormGroup.value.trigger.value
+                              ? firstFormGroup.value.trigger.value
+                              : ''
+                          ]
+                        "
+                        [value]="fields.value"
+                      >
+                        <b> {{ fields.name }}</b>
+                      </mat-option>
+                    </mat-select>
+                  </b>
+                </mat-form-field>
+              </span>
+              from {{ firstFormGroup.value.trigger.value }}, you can copy and
+              paste <b> {{ fieldToCopy }} </b> to the desired input field.
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
+</div>
+<div *ngIf="!userPlan.automation">
+<h3>
+  Please upgrade to diamond plan to use the automation feature.
+</h3>
+</div>

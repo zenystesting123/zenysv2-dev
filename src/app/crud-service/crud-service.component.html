@@ -1,0 +1,350 @@
+<h1 mat-dialog-title *ngIf="!this.loader">{{ this.titleName }} {{ fieldNameService }}</h1>
+
+<div *ngIf="!this.loader">
+  <mat-dialog-content style="min-height: auto">
+    <!-- form starts here -->
+    <form [formGroup]="userForm">
+      <!-- tab for basic details starts here -->
+      <!-- customer selection -->
+
+      <!-- if service created from full layout component -->
+      <!--Select search input type-->
+      <!-- test starts here -->
+      <app-common-org-tag [scenario]="data.scenario" [customerId]="customerId" [orgId]="orgId"
+        (orgNameEvent)="orgNameEventHander($event)" (contSelectedEvent)="contSelectedEventHander($event)"
+        (orgIdEvent)="orgIdEventHander($event)" [contactSelected]="contactSelected" [companySelected]="orgSelected"
+        [compName]="orgName" [userName]="custData?.firstName"></app-common-org-tag>
+      <!-- test ends here -->
+      <br />
+
+      <!--Auto complete section-->
+
+      <!-- customer selection end -->
+      <!-- <mat-list class="nomargin" *ngIf="data.scenario == 'createfromCustomer' || data.scenario == 'edit' ">
+        <mat-list-item class="nomargin">
+          <div class="nomargin" mat-line>
+            <span class="nomargin" class="width_limit">
+              {{ this.custData.firstName }}&nbsp;{{
+                this.custData.secondName
+              }}</span
+            >
+          </div>
+        </mat-list-item>
+      </mat-list>
+
+      <mat-list class="nomargin" *ngIf="data.scenario == 'createfromOrg' ">
+        <mat-list-item class="nomargin">
+          <div class="nomargin" mat-line>
+            <span class="width_limit"
+              >&nbsp;{{ this.orgName }}</span
+            >
+          </div>
+        </mat-list-item>
+      </mat-list> -->
+      <!-- </div>
+            </div> -->
+
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>{{ serviceSettings.serviceTitle.displayName }}</mat-label>
+        <input matInput formControlName="serviceTitle" name="serviceTitle" type="text" required rows="1" />
+        <mat-error *ngIf="this.userForm.get('serviceTitle').errors?.required">
+          {{ serviceSettings.serviceTitle.displayName }} is required
+        </mat-error>
+        <mat-error *ngIf="this.userForm.get('serviceTitle').errors?.minlength">
+          Minimum 2 characters needed
+        </mat-error>
+        <mat-error *ngIf="this.userForm.get('serviceTitle').errors?.maxlength">
+          {{ serviceSettings.serviceTitle.displayName }} should be less than 100
+          characters
+        </mat-error>
+        <mat-error *ngIf="this.userForm.get('serviceTitle').hasError('onlySpace')">
+          Please provide a valid {{ serviceSettings.serviceTitle.displayName }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 48.5%">
+        <mat-label>{{ serviceSettings.startDate.displayName }}</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="startDate" name="startDate" required />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+        <mat-error *ngIf="this.userForm.get('startDate').hasError('requiredFromDate')">Please provide a valid
+          date</mat-error>
+
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 48.5%; margin-left: 3%">
+        <mat-label>{{
+          serviceSettings.expCompletionDate.displayName
+          }}</mat-label>
+        <input matInput [matDatepicker]="pickers" name="expCompletionDate" formControlName="expCompletionDate" />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="pickers"></mat-datepicker-toggle>
+        <mat-datepicker #pickers></mat-datepicker>
+        <mat-error *ngIf="this.userForm.get('expCompletionDate').required">
+          Exp Completion Date is required
+        </mat-error>
+        <mat-error *ngIf="this.userForm.get('expCompletionDate').invalid">
+          Enter a valid date
+        </mat-error>
+        <mat-error *ngIf="this.userForm.get('expCompletionDate').hasError('requiredFromDate')">Please provide a valid
+          date</mat-error>
+        <small class="danger" *ngIf="this.dateError === true">
+          Please set an End Date that is after the Start Date
+        </small>
+      </mat-form-field>
+
+      <!-- priority -->
+      <mat-form-field appearance="fill" style="width: 32%" *ngIf="serviceSettings.priority.display">
+        <mat-label>{{ serviceSettings.priority.displayName }}</mat-label>
+        <mat-select matNativeControl id="mySelectId2" formControlName="priority" name="priority">
+          <mat-option value="dis" selected disabled>....</mat-option>
+          <mat-option value="High">High</mat-option>
+          <mat-option value="Medium">Medium</mat-option>
+          <mat-option value="Low">Low</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- pipeline -->
+      <mat-form-field appearance="fill" style="width: 32%; margin-left: 2%"
+      *ngIf="serviceSettings.selectedServPipeline.display &&
+      commonService.userPlan.servicePipelineAccess && commonService.userPlan.multiPipelineAccess">
+        <mat-label>{{
+          serviceSettings.selectedServPipeline.displayName
+          }}</mat-label>
+        <mat-select matNativeControl id="servicePipeline" name="servicePipeline" formControlName="selectedServPipeline"
+          (valueChange)="pipelineChangedEvent($event)">
+          <mat-option *ngFor="let t of servicePipelines; let i = index" [value]="t.pipelineId">{{ t.pipelineName }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- stages -->
+      <mat-form-field appearance="fill" style="width: 32%; margin-left: 2%"
+        *ngIf="serviceSettings.servicesStage.display">
+        <mat-label>{{ serviceSettings.servicesStage.displayName }}</mat-label>
+        <mat-select matNativeControl id="mySelectId" formControlName="servicesStage" name="servicesStage">
+          <mat-option *ngFor="let s of statusArray" value="{{ s.stageId }}">{{
+            s.name
+            }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <!-- reason for rejection -->
+      <mat-form-field
+        *ngIf="this.serviceSettings.rejectionReasonVal?.display === true &&
+         this.userForm.get('servicesStage').value === statusArray[statusArray.length - 1]?.stageId "
+        style="width: 100%;" appearance="fill">
+        <mat-label>{{(serviceSettings.rejectionReasonVal?.displayName)?(serviceSettings.rejectionReasonVal?.displayName):'Reason for rejection' }}</mat-label>
+        <mat-select formControlName="rejectionReasonVal" id="rejectionReasonValue" name="rejectionReasonValue"
+          placeholder="Required">
+          <mat-option *ngFor="let s of rejectionReasonArr" value="{{ s }}" [disabled]="!rejectionReasonArrPresent">{{
+            s
+            }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <!-- <mat-form-field appearance="fill" style="width: 23.5%; margin-left: 2%">
+              <mat-label>Assigned To</mat-label>
+              <mat-select
+                #assignedTo="ngModel"
+                [(ngModel)]="assignedToUser"
+                name="assignedTo"
+              >
+                <mat-option
+                  value="{{ superUserId }}"
+                  (click)="
+                    onAssignedToSelected(superUserFirstName, superUserSecondName)
+                  "
+                >
+                  {{ superUserFirstName }}
+                  {{ superUserSecondName }}</mat-option
+                >
+                <mat-option
+                  *ngFor="let s of subUsers"
+                  (click)="onAssignedToSelected(s.firstname, s.lastname)"
+                  value="{{ s.userId }}"
+                >
+                  {{ s.firstname }} {{ s.lastname }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field> -->
+
+      <mat-form-field appearance="fill" style="width: 100%" *ngIf="serviceSettings.description.display">
+        <mat-label>{{ serviceSettings.description.displayName }}</mat-label>
+        <textarea type="text" rows="2" formControlName="description" matInput
+          [required]="serviceSettings.description.mandatory">
+        </textarea>
+      </mat-form-field>
+
+      <!-- additional details -->
+      <br />
+
+      <h4 *ngIf="additionalFieldLength == 0">
+        Configure additional details in {{ fieldNameService }} settings
+      </h4>
+      <div class="form-row">
+        <ng-container *ngFor="
+            let addFieldsGroup of this.userForm.get('additionalFields')[
+              'controls'
+            ];
+            let i = index;
+            trackBy: identify
+          " [formGroup]="addFieldsGroup">
+          <div *ngIf="additionalFields[i].isActive"
+            [ngClass]="additionalFields[i].fieldType == 'textarea' || additionalFields[i].fieldType == 'date_time'? 'col-12': 'col-6'">
+            <div *ngIf="additionalFields[i].fieldType == 'category'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <mat-select formControlName="fieldValue" name="additionalField" placeholder="Required">
+                  <mat-option *ngIf="additionalFields[i].mandatory == false" value="">None</mat-option>
+                  <mat-option *ngFor="let s of additionalFields[i].categories" value="{{ s }}">{{ s }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input matInput formControlName="fieldValue" name="additionalField" type="text" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'number'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input matInput formControlName="fieldValue" name="additionalField" type="number" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'textarea'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <textarea matInput placeholder="Description" formControlName="fieldValue"
+                  name="additionalField"></textarea>
+              </mat-form-field>
+            </div>
+            <div *ngIf="additionalFields[i].fieldType == 'date'">
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                <input matInput [matDatepicker]="addtfield_i" name="additionalField" formControlName="fieldValue" />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="addtfield_i"></mat-datepicker-toggle>
+                <mat-datepicker #addtfield_i></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <!--Test starts here-->
+            <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+              <mat-form-field class="dateTime-wdith" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} Date</mat-label>
+                <input matInput [matDatepicker]="addtfield_date_time" name="additionalField"
+                  formControlName="fieldValue" />
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+                <mat-datepicker #addtfield_date_time></mat-datepicker>
+                <!-- <mat-error
+                *ngIf="
+                  additionalField.controls[i].get('fieldValue').touched &&
+                  additionalField.controls[i].get('fieldValue').errors
+                    ?.required
+                "
+                style="padding-top: 0px"
+              >
+                {{ additionalField.controls[i].get("fieldName").value }} is
+                required
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  additionalField.controls[i].get('fieldValue').errors
+                    ?.invalid
+                "
+              >
+                Enter a valid date
+              </mat-error> -->
+              </mat-form-field>
+              <!--time-->
+              <mat-form-field class="dateTime-wdith" appearance="fill">
+                <mat-label>{{ additionalFields[i].fieldName }} Time </mat-label>
+                <input matInput type="time" formControlName="fieldValue2" name="defaultValue">
+                <!-- <mat-error
+                *ngIf="
+                  additionalField.controls[i].get('fieldValue2').touched &&
+                  additionalField.controls[i].get('fieldValue2').errors
+                    ?.required
+                "
+                style="padding-top: 0px"
+              >
+                {{ additionalField.controls[i].get("fieldName").value }} is
+                required
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  additionalField.controls[i].get('fieldValue2').errors
+                    ?.invalid
+                "
+              >
+                Enter a valid date
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+            <!--Test endss here-->
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="form-row">
+        <app-common-user-search [allSubUsers]="allSubUsers" [assignedToName]="this.userData.assignedToName"
+          [assignedTo]="assignedTo" [disableReAssign]="disableReAssign"
+          (assignedToEvent)="assignedToEventHander($event)"
+          (assignedToNameEvent)="assignedToNameEventHander($event)"></app-common-user-search>
+      </div>
+      <div class="form-row" *ngIf="branches?.length > 0 && commonService.userPlan.branchEnabled">
+        <app-common-branch [associatedBranch]="associatedBranch" [branches]="branches" [allSubUsers]="allSubUsers"
+          (branchEvent)="branchIdEventHandler($event)">
+        </app-common-branch>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <div mat-dialog-actions style="float: right">
+    <button mat-button (click)="onNoClick1()">Cancel</button>
+    <button mat-button color="primary" *ngIf="this.data.scenario == 'create'" [disabled]="
+        !userForm.valid ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        !onCheckNetwork() ||
+        dateError ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " (click)="onSubmit(userForm, 'btn_create_service_web')" mat-button [mat-dialog-close]="data" cdkFocusInitial>
+      Add
+    </button>
+    <button mat-button color="primary" *ngIf="
+        this.data.scenario == 'createfromCustomer' ||
+        this.data.scenario === 'createfromOrg'
+      " [disabled]="
+        !userForm.valid ||
+        !onCheckNetwork() ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        dateError ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " (click)="onSubmit(userForm, 'btn_create_service_web')" mat-button>
+      Add
+    </button>
+    <button mat-button color="primary" *ngIf="this.data.scenario == 'edit'" [disabled]="
+        !userForm.valid ||
+        !onCheckNetwork() ||
+        !assignedTo ||
+        !this.custData?.firstName ||
+        dateError ||
+        (commonService.userPlan.branchEnabled && branches.length > 0 && !associatedBranch)
+      " (click)="onSubmit(userForm)" mat-button>
+      Update
+    </button>
+  </div>
+</div>
+<div *ngIf="this.loader" class="center">
+  <mat-spinner [diameter]="24"> </mat-spinner>
+  <span>Updating {{fieldNameService}} details..</span>
+</div>

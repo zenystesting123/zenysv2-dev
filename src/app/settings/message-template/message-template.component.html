@@ -1,0 +1,588 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar *ngIf="commonService.userPlan.settingsAccess" style="flex: 0 0 64px" [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Message Template</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div class="container-fluid" style="padding: 0%; margin: 0%; overflow-y: auto">
+    <mat-tab-group>
+      <mat-tab label="MESSAGE TEMPLATES">
+        <!-- PROGRESS BAR -->
+        <mat-progress-bar [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+        </mat-progress-bar>
+
+        <!-- ACCESSS CONTROL CHECK -->
+        <div *ngIf="(progressBarStatus && notEdit) || !commonService.userPlan.settingsAccess" class="container-xl"
+          style="text-align: center">
+          Access denied!
+        </div>
+
+        <!-- USER PLAN CHECK -->
+        <div
+          *ngIf="(!userPlan.messageTemplates || !userPlan.waTemplates) && progressBarStatus && commonService.userPlan.settingsAccess"
+          class="container-xl"
+        >
+          <mat-card> Upgrade to Diamond Plan </mat-card>
+        </div>
+
+        <!-- IF ACCESS AND PLAN ALLOWS -->
+        <div
+          class="container-fluid"
+          style="min-height: 900px"
+          *ngIf="progressBarStatus && !notEdit && userPlan.emailTemplates && commonService.userPlan.settingsAccess && (userPlan.messageTemplates || !userPlan.waTemplates)"
+        >
+          <div class="row" style="color: black">
+            <!-- LEFT SIDE COLUMN DISPLAYING ALREADY CREATED TEMPLATES -->
+            <div class="col-lg-3">
+              <br />
+              <mat-nav-list>
+                <h3 *ngIf="messageTemplateArray?.length == 0">
+                  Add your first message template!
+                </h3>
+                <a mat-list-item *ngFor="let s of messageTemplateArray" (click)="selectTemplate(s.id)">
+                  <div mat-line>{{ s.templateName }}</div>
+                  <div mat-line>
+                    <mat-chip-list>
+                      <mat-chip [ngStyle]="{ 'white-space': 'nowrap' }">
+                        {{ s.templateType }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </a>
+              </mat-nav-list>
+            </div>
+
+            <!-- RIGHT SIDE-WITH ACTION BUTTONS AND FORM FIELDS -->
+            <div
+              class="col-lg-9"
+              style="background-color: ghostwhite; padding-bottom: 10px"
+            >
+              <div style="color: black">
+                <br *ngIf="oninit || templateDisp" />
+                <button *ngIf="templateDisp" mat-raised-button color="warn" (click)="delete()"
+                  style="margin-left: 16px; float: right">
+                  Delete Template
+                </button>
+                <button *ngIf="templateDisp" mat-raised-button color="primary" (click)="edit()"
+                  style="float: right; margin-left: 16px">
+                  Edit Template
+                </button>
+                <button *ngIf="oninit || templateDisp" mat-raised-button color="primary" (click)="createTemplate()"
+                  style="float: right">
+                  Add New Template
+                </button>
+                <br *ngIf="oninit || templateDisp" /><br *ngIf="oninit || templateDisp" />
+
+                <div style="
+                    margin-top: 16px;
+                    padding: 16px;
+                    background-color: white;
+                  ">
+                  <!-- FORM-FIELDS : TEMPLATE NAME  -->
+                  <div class="row margLeft" *ngIf="!!tempType && !!smsTempForfieldName">
+                    <!-- SMS or Whatsapp, SMS temp for which record -->
+                      Template For: {{tempType}}, Record type: {{smsTempForfieldName}}
+                  </div>
+
+
+                    <div class="row">
+                      <!-- Template name -->
+                      <div class="col-3" style="padding-right: 0">
+                        <mat-label class="required">Template Name </mat-label>
+                        <mat-form-field appearance="fill" style="width: 95%">
+                          <input placeholder="Enter Template Name" [disabled]="(!editMode && templateDisp) || oninit"
+                            [(ngModel)]="templateName" matInput required name="templateName" />
+                        </mat-form-field>
+                      </div>
+
+                      <!-- sms api template id: display only if twmplate type is "SMS"-->
+                      <div
+                        class="col-5"
+                        style="padding-right: 0"
+                        *ngIf="tempType === 'SMS'"
+                      >
+                        <mat-label class="required"
+                          >Sms Api Template Id
+                        </mat-label>
+                        <mat-form-field appearance="fill" style="width: 95%">
+                          <input placeholder="Enter Template Id" [disabled]="(!editMode && templateDisp) || oninit"
+                            [(ngModel)]="smsApiTemplateId" matInput required name="smsApiTemplateId" />
+                        </mat-form-field>
+                      </div>
+
+                      <!-- template Name Space Whatsapp: display only if twmplate type is "Whatsapp"-->
+                      <div
+                        class="col-5"
+                        style="padding-right: 0"
+                        *ngIf="tempType === 'WhatsApp' && superUserData.waBusProvider === 'moplet' && !!superUserData.waBusURL"
+                      >
+                        <mat-label
+                          >Template Name Space
+                        </mat-label>
+                        <mat-form-field appearance="fill" style="width: 95%">
+                          <input
+                            placeholder="Enter Template Name Space"
+                            [disabled]="(!editMode && templateDisp) || oninit"
+                            [(ngModel)]="templateNameSpaceWa"
+                            matInput
+                            required
+                            name="templateNameSpaceWa"
+                          />
+                        </mat-form-field>
+                      </div>
+
+                      <!-- template Name Space Whatsapp: display only if twmplate type is "Whatsapp"-->
+                      <div
+                        class="col-5"
+                        style="padding-right: 0"
+                        *ngIf="tempType === 'WhatsApp' && superUserData.waBusProvider === 'gupshup' && !!superUserData.waBusURL"
+                      >
+                        <mat-label
+                          >Template Id
+                        </mat-label>
+                        <mat-form-field appearance="fill" style="width: 95%">
+                          <input
+                            placeholder="Enter Template Id"
+                            [disabled]="(!editMode && templateDisp) || oninit"
+                            [(ngModel)]="templateNameSpaceWa"
+                            matInput
+                            required
+                            name="templateNameSpaceWa"
+                          />
+                        </mat-form-field>
+                      </div>
+
+                      <!-- language code -->
+                      <div
+                        class="col-2"
+                        style="padding-right: 0"
+                        *ngIf="tempType === 'WhatsApp' && !!superUserData.waBusURL"
+                      >
+                        <mat-label>Language </mat-label>
+                        <mat-form-field appearance="fill" style="width: 95%">
+                          <mat-select
+                            [disabled]="(!editMode && templateDisp) || oninit"
+                            placeholder="Select language"
+                            [(ngModel)]="tLangCode"
+                            name="tLangCode"
+                            required
+                          >
+                            <mat-option
+                              value="{{ lang.code }}"
+                              *ngFor="let lang of languages"
+                              >{{ lang.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                    </div>
+
+
+                  <!-- ANGULAR-EDITOR -->
+                  <mat-dialog-content class="dialogue">
+                    <p *ngIf="(editMode || !oninit) && !templateDisp">
+                      Type # to insert data such as customer name, sale title,
+                      invoice amount etc
+                    </p>
+                    <angular-editor id="val" *ngIf="(editMode || !templateDisp) && !oninit"
+                      [placeholder]="'Enter text here...'" [(ngModel)]="body" [config]="editorConfig"
+                      (keyup)="onKeyup($event)"></angular-editor>
+
+                    <angular-editor *ngIf="(!editMode && templateDisp) || oninit" [placeholder]="'Enter text here...'"
+                      [(ngModel)]="body" [config]="editorConfig1"></angular-editor>
+                  </mat-dialog-content>
+
+                  <!-- image/video/doc links -->
+                  <br />
+                  <div
+                    *ngIf="
+                      tempType === 'WhatsApp' &&
+                      (editMode || !oninit) &&
+                      !templateDisp &&
+                      !document_link &&
+                      !image_link &&
+                      !video_link && !!superUserData.waBusURL
+                    "
+                  >
+                    <button
+                      mat-icon-button
+                      (click)="onUploadFile()"
+                      title="Upload File URL"
+                      color="accent"
+                    >
+                      <mat-icon>
+                        <span class="material-icons-outlined">
+                          drive_folder_upload
+                        </span>
+                      </mat-icon></button
+                    >or
+                    <button
+                      mat-button
+                      color="primary"
+                      [matMenuTriggerFor]="menuFiles"
+                    >
+                      Enter attachment details
+                    </button>
+                    <mat-menu #menuFiles="matMenu">
+                      <button mat-menu-item (click)="showIm()">
+                        Add image URL
+                      </button>
+                      <button mat-menu-item (click)="showVid()">
+                        Add video URL
+                      </button>
+                      <button mat-menu-item (click)="showDoc()">
+                        Add Document URL
+                      </button>
+                    </mat-menu>
+                  </div>
+
+                  <div
+                    *ngIf="
+                      tempType === 'WhatsApp' &&
+                      (!!showImageInp || !!image_link) && !!superUserData.waBusURL
+                    "
+                  >
+                    <mat-label class="required">Image URL </mat-label>
+                    <mat-form-field appearance="fill" style="width: 95%">
+                      <input
+                        placeholder="Image URL"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                        [(ngModel)]="image_link"
+                        matInput
+                        required
+                        name="image_link"
+                      />
+                      <button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="removeImage()"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+                  <div
+                    *ngIf="
+                      tempType === 'WhatsApp' &&
+                      (!!showVideoInp || !!video_link) && !!superUserData.waBusURL
+                    "
+                  >
+                    <mat-label class="required">Video URL </mat-label>
+                    <mat-form-field appearance="fill" style="width: 95%">
+                      <input
+                        placeholder="Video URL"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                        [(ngModel)]="video_link"
+                        matInput
+                        required
+                        name="video_link"
+                      />
+                      <button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="removeVideo()"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+                  <div
+                    *ngIf="
+                      tempType === 'WhatsApp' &&
+                      (!!showDocInp || !!document_link) && !!superUserData.waBusURL
+                    "
+                  >
+                    <mat-label class="required">Document URL </mat-label>
+                    <mat-form-field appearance="fill" style="width: 95%">
+                      <input
+                        placeholder="Document URL"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                        [(ngModel)]="document_link"
+                        matInput
+                        required
+                        name="document_link"
+                      />
+                      <button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="removeDoc()"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                    &nbsp;&nbsp;
+                    <mat-label class="required">Document Name </mat-label>
+                    <mat-form-field appearance="fill" style="width: 95%">
+                      <input
+                        placeholder="Document Name"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                        [(ngModel)]="document_name"
+                        matInput
+                        required
+                        name="document_name"
+                      />
+                      <button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="removeDoc()"
+                        [disabled]="(!editMode && templateDisp) || oninit"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- SAVE AND CANCEL BUTTONS -->
+                  <div mat-dialog-actions style="margin-top: 16px; padding-left: 2%; float: right">
+                    <br />
+                    <!-- <button mat-raised-button *ngIf="(editMode || !oninit) && !templateDisp" (click)="cancel()" style="margin-left: 16px;">Clear Fields</button> -->
+
+                    <button mat-raised-button *ngIf="(editMode || !oninit) && !templateDisp" (click)="onCancel()">
+                      Cancel
+                    </button>
+
+                    <button *ngIf="!oninit && !templateDisp && !editMode" mat-raised-button color="primary"
+                      (click)="addTemplate()" [disabled]="!onCheckNetwork()">
+                      Save Template
+                    </button>
+                    <button *ngIf="editMode" mat-raised-button color="primary" (click)="updateTemplate()"
+                      [disabled]="!onCheckNetwork()">
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="SMS SETTINGS" *ngIf="false">
+        <!-- USER PLAN CHECK -->
+        <div
+          *ngIf="!userPlan.bulkSmsEnabled && progressBarStatus"
+          class="container-xl"
+        >
+          <mat-card> Upgrade to Diamond Plan </mat-card>
+        </div>
+        <!-- IF ACCESS AND PLAN ALLOWS -->
+        <div
+          style="
+            overflow-y: auto;
+            padding-bottom: 30px;
+            min-height: 800px;
+            overflow-x: hidden;
+            background-color: #f8f9fb;
+          "
+          *ngIf="!notEdit && userPlan.bulkSmsEnabled"
+        >
+          <mat-card
+            class="container-xl"
+            style="background-color: white; margin-top: 20px"
+          >
+            <form [formGroup]="crudForm" *ngIf="crudForm" autocomplete="off">
+              <mat-form-field class="full-width" appearance="fill">
+                <!-- User name -->
+                <mat-label>Sms Api UserName</mat-label>
+                <input matInput #smsApiUserName formControlName="smsApiUserName" type="text" name="smsApiUserName"
+                  placeholder="Required" id="smsApiUserName" />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- Pwd -->
+              <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Sms Api Password</mat-label>
+                <input matInput #smsApiPwd formControlName="smsApiPwd" type="password" name="smsApiPwd"
+                  placeholder="Required" id="smsApiPwd" />
+                <mat-icon style="cursor: pointer" matSuffix (mousedown)="smsApiPwd.type = 'text'"
+                  (mouseup)="smsApiPwd.type = 'password'" [inline]="true">
+                  {{
+                  smsApiPwd.type == "password"
+                  ? "visibility_off"
+                  : "visibility"
+                  }}
+                </mat-icon>
+                <!-- <button
+                *ngIf="!hide"
+                matSuffix
+                mat-icon-button
+                aria-label="Visibility"
+                color="accent"
+                (click)="visibiltyfn()"
+              >
+                <mat-icon>visibilty</mat-icon>
+              </button> -->
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- SenderId -->
+              <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Sms Api Sender Id</mat-label>
+                <input matInput #smsApiSenderId formControlName="smsApiSenderId" type="text" name="smsApiSenderId"
+                  placeholder="Required" id="smsApiSenderId" />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- Entity Id -->
+              <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Sms Api Entity Id</mat-label>
+                <input matInput #smsApiEntityId formControlName="smsApiEntityId" type="text" name="smsApiEntityId"
+                  placeholder="Required" id="smsApiEntityId" />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <button mat-button color="primary" [disabled]="crudForm.invalid || !onCheckNetwork()" type="submit"
+                (click)="crudForm.valid ? smsForm() : TypeError()">
+                Save
+              </button>
+            </form>
+          </mat-card>
+        </div>
+      </mat-tab>
+      <!-- whatsapp settings -->
+      <mat-tab label="WHATSAPP SETTINGS">
+        <!-- USER PLAN CHECK -->
+        <div
+          *ngIf="!userPlan.bulkWaEnabled && progressBarStatus"
+          class="container-xl"
+        >
+          <mat-card> Upgrade to Diamond Plan </mat-card>
+        </div>
+        <!-- IF ACCESS AND PLAN ALLOWS -->
+        <div
+          style="
+            overflow-y: auto;
+            padding-bottom: 30px;
+            min-height: 800px;
+            overflow-x: hidden;
+            background-color: #f8f9fb;
+          "
+          *ngIf="!notEdit && userPlan.bulkWaEnabled"
+        >
+          <mat-card
+            style="
+              background-color: white;
+              margin-top: 20px;
+              width: 50%;
+              margin-left: 25%;
+            "
+          >
+            <form
+              [formGroup]="crudWaForm"
+              *ngIf="crudWaForm"
+              autocomplete="off"
+            >
+              <mat-form-field class="full-width" appearance="fill">
+                <!-- Provider -->
+                <mat-label>Whatsapp Business API Provider</mat-label>
+                <mat-select
+                  formControlName="waBusProvider" (valueChange)="providerSelected($event)"
+                  placeholder="Required"
+                >
+                  <mat-option value="gupshup">GUPSHUP</mat-option>
+                  <mat-option value="moplet">MOPLET</mat-option>
+                </mat-select>
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- URL -->
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>URL</mat-label>
+                <input
+                  matInput
+                  #waBusURL
+                  formControlName="waBusURL"
+                  type="text"
+                  name="waBusURL"
+                  placeholder="Required"
+                  id="waBusURL"
+                />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- App Id -->
+              <mat-form-field *ngIf="this.crudWaForm.get('waBusProvider').value === 'moplet' " class="example-full-width" appearance="fill">
+                <mat-label>App Id</mat-label>
+                <input
+                  matInput
+                  #waBusAppId
+                  formControlName="waBusAppId"
+                  type="text"
+                  name="waBusAppId"
+                  placeholder="Required"
+                  id="waBusAppId"
+                />
+              </mat-form-field>
+
+              <!-- Auth Key -->
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Authorization Token/API key</mat-label>
+                <textarea
+                  type="text"
+                  rows="2"
+                  matInput
+                  formControlName="waBusAuthKey"
+                >
+                </textarea>
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+
+              <!-- Integration Id -->
+              <mat-form-field *ngIf="this.crudWaForm.get('waBusProvider').value === 'moplet' " class="example-full-width" appearance="fill">
+                <mat-label>Integration Id</mat-label>
+                <input
+                  matInput
+                  #waBusIntId
+                  formControlName="waBusIntId"
+                  type="text"
+                  name="waBusIntId"
+                  placeholder="Required"
+                  id="waBusIntId"
+                />
+              </mat-form-field>
+
+              <!-- Source No -->
+              <mat-form-field *ngIf="this.crudWaForm.get('waBusProvider').value === 'gupshup' " class="example-full-width" appearance="fill">
+                <mat-label>Approved Business Number</mat-label>
+                <input
+                  matInput
+                  #waBusSourceNo
+                  formControlName="waBusSourceNo"
+                  type="text"
+                  name="waBusSourceNo"
+                  placeholder="eg: +91999999999"
+                  id="waBusSourceNo"
+                />
+              </mat-form-field>
+
+
+              <button
+                mat-button
+                color="primary"
+                [disabled]="crudWaForm.invalid || !onCheckNetwork()"
+                type="submit"
+                (click)="waForm()"
+              >
+                Save
+              </button>
+            </form>
+          </mat-card>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

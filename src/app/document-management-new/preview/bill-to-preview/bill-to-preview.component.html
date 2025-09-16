@@ -1,0 +1,122 @@
+<ul class="m-0 list-unstyled" id="j">
+    <li [style.color]="previewService.docColor"><b>Billed To</b></li>
+
+    <li *ngIf="
+                    !(
+                      previewService.customerData.companyName === 'N/A' ||
+                      previewService.customerData.companyName ===
+                        'Individual'
+                    )
+                  ">
+        {{ previewService.customerData.companyName }}
+    </li>
+
+
+    <li>
+        {{ previewService.customerData.fname1 }}
+        {{ previewService.customerData.sname }}
+        {{ previewService.customerData.surname }}
+    </li>
+
+
+    <li><span *ngIf="previewService.customerData.addressline1"> {{ previewService.customerData.addressline1 }},&nbsp;</span> {{
+        previewService.customerData.addressline2 }}</li>
+</ul>
+<ul class="
+                list-group list-group-horizontal
+                m-0
+                list-unstyled
+              ">
+    <li *ngIf="
+                  !(
+                    previewService.customerData.district === null ||
+                    previewService.customerData.district === ''
+                  ) &&
+                  !(
+                    previewService.customerData.state === null ||
+                    previewService.customerData.state === ''
+                  )
+                ">
+        {{ previewService.customerData.district }},&nbsp;
+    </li>
+    <li *ngIf="
+                  !(
+                    previewService.customerData.district === null ||
+                    previewService.customerData.district === ''
+                  ) &&
+                  (previewService.customerData.state === null ||
+                    previewService.customerData.state === '')
+                ">
+        {{ previewService.customerData.district }}
+    </li>
+    <li *ngIf="
+                  !(
+                    previewService.customerData.state === null ||
+                    previewService.customerData.state === ''
+                  )
+                ">
+        {{ previewService.customerData.state }}&nbsp;
+    </li>
+</ul>
+<!--Cpuntry-->
+<ul class="
+                list-group list-group-horizontal
+                m-0
+                list-unstyled
+              ">
+    <li *ngIf="
+                  !(
+                    previewService.customerData.country === null ||
+                    previewService.customerData.country === ''
+                  ) &&
+                  !(
+                    previewService.customerData.pinCode === null
+                  )
+                ">
+        {{ previewService.customerData.country }}&nbsp;
+    </li>
+    <li *ngIf="
+                  !(
+                    previewService.customerData.country === null ||
+                    previewService.customerData.country === ''
+                  ) &&
+                  (previewService.customerData.pinCode === null)
+                ">
+        {{ previewService.customerData.country }}
+    </li>
+    <li *ngIf="
+                  !(
+                    previewService.customerData.pinCode === null
+                  )
+                ">
+        PIN/ZIP: {{ previewService.customerData.pinCode }}
+    </li>
+
+</ul>
+<ul class="m-0 list-unstyled" id="j" *ngIf="previewService.customerData.contactNumber">
+    <li>
+      <span>Contact:</span>
+        <span *ngIf=" previewService.customerData.countryCode">
+              {{previewService.customerData.countryCode}}</span>
+        <span *ngIf=" previewService.customerData.countryCode">
+              {{previewService.customerData.contactNumber}}</span>
+    </li>
+   
+</ul>
+<ul class="m-0 list-unstyled" id="j">
+    <li>
+        <span *ngIf=" !(previewService.customerData.email === null || previewService.customerData.email === '')">
+            Email: {{previewService.customerData.email}}</span>
+    </li>
+</ul>
+
+<p *ngIf="
+                previewService.customerData.gst && previewService.docData.taxType == 'gst'
+              ">
+    GST No: {{ previewService.customerData.gst }}
+</p>
+<p *ngIf="
+                previewService.customerData.gst && previewService.docData.taxType != 'gst'
+              ">
+    VAT No: {{ previewService.customerData.gst }}
+</p>

@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-3 "><h3><b>Choose Payment Option</b></h3>
+<!-- <hr style="opacity:30%">
+<h1 color="primary" class="display-4"  style="text-align:center;text-transform:uppercase">
+<b>{{data?.plan}}</b>
+</h1>
+<hr style="opacity:30%"> -->
+<p  [ngClass]="[data.plan=='gold'?'gold':'diamond']" class="px-2">
+{{data.plan == 'leadManagement' ? 'SILVER' : data.plan}}
+</p>
+</div>
+<mat-divider></mat-divider>
+<div class="row mt-3">
+<mat-form-field appearance="fill" class="col-7">
+  <mat-label>Plan Duration</mat-label>
+  <mat-select [(ngModel)]="duration" >
+  <mat-option value="yearly">Annual</mat-option>
+  <mat-option *ngIf="data.plan!='leadManagement'" value="monthly">Monthly</mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field appearance="fill" class="col-5">
+  <mat-label>Number of Users</mat-label>
+  <input type="number" min="1" matInput [(ngModel)]="noofSubUsers">
+</mat-form-field><br>
+</div>
+How would you like to do the payment?
+<mat-radio-group [(ngModel)]="value"  aria-label="Select an option">
+   <br> 
+   <br>
+   <mat-radio-button value="sub"> Create subscription
+  <br>
+  <small>Your subscription will be renewed automatically</small>
+  </mat-radio-button>
+    <br>
+    <mat-radio-button *ngIf="data.currency=='INR'" value="payg">Pay manually <br> <small> Pay manually at the end of subscription period to continue using Zenys</small></mat-radio-button>
+    <br>   
+  </mat-radio-group>
+  <mat-divider></mat-divider>
+  <div class="d-flex justify-content-between align-items-center mt-3">
+  <div  *ngIf="!!duration">
+    {{currency}} {{data.plan=='leadManagement'? amountYearlySLV*noofSubUsers : data.plan=='gold'?(duration=='yearly'?amountYearlyGLD*noofSubUsers:amountMonthlyGLD*noofSubUsers):(duration=='yearly'?amountYearlyDMD*noofSubUsers:amountMonthlyDMD*noofSubUsers)}}<br><small>including taxes</small>
+  </div>
+  <div>
+    <button mat-button (click)="onClose()">Close</button>
+    <button mat-button color="accent" (click)="onSelect()" [disabled]="!onCheckNetwork()" cdkFocusInitial>Pay</button>
+  </div>
+</div>

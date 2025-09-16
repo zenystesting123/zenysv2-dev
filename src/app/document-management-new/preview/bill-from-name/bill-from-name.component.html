@@ -1,0 +1,14 @@
+<ul class="m-0 list-unstyled" id="j">
+<b>
+    <li [style.color]="previewService.docColor" *ngIf="previewService.userData.companyName" style="padding-bottom: 10px;">
+        <span style="font-size: large;">
+            {{ previewService.userData.companyName }}
+        </span>
+    </li>
+    <li [style.color]="previewService.docColor" *ngIf="!previewService.userData.companyName" style="padding-bottom: 10px;">
+        <span style="font-size: large;">
+            {{ previewService.userData.contactname }}
+        </span>
+    </li>
+</b>    
+</ul>

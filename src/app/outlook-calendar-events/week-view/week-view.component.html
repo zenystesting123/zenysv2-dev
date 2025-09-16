@@ -1,0 +1,100 @@
+<!----------------tool bar starts here----------------------->
+<mat-toolbar style="flex: 0 0 64px; z-index: 10;text-align: center;justify-content: center;align-items: center;"
+  class="border-bottom" [ngStyle]="{ 'background-color': 'white' }">
+  <button mat-icon-button n (click)="onDecrementWeek()" title="Previous">
+    <mat-icon color="accent">keyboard_arrow_left</mat-icon>
+  </button>
+  <h2 class="text-uppercase"> {{ outlookCalendarEventService.selectedWeekfirstDate |date :'MMMM d' }}- {{
+    outlookCalendarEventService.selectedWeekLastDate |date :'MMMM d, y'}}</h2>
+  <button mat-icon-button (click)="onIncrementWeek()" title="Next">
+    <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+  </button>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</mat-toolbar>
+<!----------------tool bar starts here----------------------->
+<!----------------check if week view----------------------->
+<div style="padding: 30px" *ngIf="outlookCalendarEventService.weekVisible">
+  <br />
+  <!----------------divide 24 rows and 7 column----------------------->
+  <div class="row">
+    <div class="column" style="width: 7%; height: 50px"></div>
+    <div class="column" *ngFor="let in of counterColumnTitle(7); let p = index" style="
+        width: 12.8%;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      ">
+      {{ getDayString(p) }}<br />
+      {{ getDateString(p) }}
+    </div>
+  </div>
+  <div class="row" *ngFor="let in of counter(24); let i = index">
+    <div class="column border" style="
+        width: 7%;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+      " *ngIf="i == 0">
+      12 AM
+    </div>
+    <div class="column border" style="
+        width: 7%;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+      " *ngIf="i != 0">
+      <div *ngIf="12 > i">{{ i }} AM</div>
+      <div *ngIf="12 == i">{{ i }} PM</div>
+      <div *ngIf="i > 12">{{ i % 12 }} PM</div>
+    </div>
+    <div class="column border" *ngFor="let in of counterColumn(7); let k = index" style="width: 12.8%; height: 100px">
+      <mat-list role="list" *ngFor="let item of getTask(i, k); let m = index" style="padding: 0px">
+        <mat-list-item id="truncate-cell" *ngIf="1 >= m" role="listitem" style="
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1; /* number of lines to show */
+            -webkit-box-orient: vertical;
+            height: 20px;
+          ">
+          <a [routerLink]="['/dash/outlookeventlist']" (click)="onViewDetails(item)">
+            {{ item.start.dateTime | date: "shortTime" }} {{ item.summary }}</a>
+        </mat-list-item>
+      </mat-list>
+      <div style="height: 20px; color: #000; font-weight: bold" *ngIf="eventLength >= 3">
+        <button mat-button [matMenuTriggerFor]="menu" #menuTrigger>
+          {{ moreEventLength }} More
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item style="height: auto">
+            <mat-list role="list" *ngFor="let item of getTask(i, k); let m = index" style="padding: 0px">
+              <mat-list-item *ngIf="m >= 2" id="truncate-cell" role="listitem" style="
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1; /* number of lines to show */
+                  -webkit-box-orient: vertical;
+                  height: 20px;
+                ">
+                <a [routerLink]="['/dash/outlookeventlist']" (click)="onViewDetails(item)">
+                  {{ item.start.dateTime | date: "shortTime" }}
+                  {{ item.summary }}</a>
+              </mat-list-item>
+            </mat-list>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+</div>

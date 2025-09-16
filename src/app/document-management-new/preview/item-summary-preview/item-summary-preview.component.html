@@ -1,0 +1,125 @@
+
+    <div class="row">
+      <div class="col-6 text-left">
+        <p style="font-weight: bold">Item Summary</p>
+      </div>
+      <div class="col-6"></div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-6 text-left">
+        <span>Total amount:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.total }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="previewService.docData.includeDiscount">
+      <div class="col-6 text-left">
+        <span>Discount total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.discountValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="previewService.docData.includeDiscount">
+      <div class="col-6 text-left">
+        <span>Total after discounts:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.discountedAmount }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="
+                    previewService.docData.includeTax == true &&
+                    previewService.docData.interState != true &&
+                    previewService.docData.taxType == 'gst'
+                  ">
+      <div class="col-6 text-left">
+        <span>SGST total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.sgstValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="
+                    previewService.docData.includeTax == true &&
+                    previewService.docData.taxType == 'vat'
+                  ">
+      <div class="col-6 text-left">
+        <span>VAT total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.vatValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="
+                    previewService.docData.includeTax == true &&
+                    previewService.docData.interState != true &&
+                    previewService.docData.taxType == 'gst'
+                  ">
+      <div class="col-6 text-left">
+        <span>CGST total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.cgstValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb1" *ngIf="
+                    previewService.docData.includeTax == true &&
+                    previewService.docData.interState == true &&
+                    previewService.docData.taxType == 'gst'
+                  ">
+      <div class="col-6 text-left">
+        <span>IGST total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.igstValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb1" *ngIf="
+                    previewService.docData.includeTax == true &&
+                    previewService.docData.includeCess == true &&
+                    previewService.docData.taxType == 'gst'
+                  ">
+      <div class="col-6 text-left">
+        <span>Cess Total:</span>
+      </div>
+      <div class="col-6">
+        <span>
+          {{ previewService.docData.currency + " "
+          }}{{ previewService.docData.cessValue }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-1" *ngIf="previewService.docData.includeTax == true">
+      <div class="col-6 text-left">
+        <span><b>Total including taxes:</b></span>
+      </div>
+      <div class="col-6">
+        <span><b> {{ previewService.docData.currency + " "
+            }}{{ previewService.docData.totalInclTax }}</b>
+
+        </span>
+      </div>
+    </div>

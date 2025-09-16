@@ -1,0 +1,25 @@
+.padding {
+  max-width: 300px;
+  padding: 5px 5px 5px 5px;
+}
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+.size {
+  width: 60px !important;
+  height: 60px !important;
+  color: red !important;
+}
+::ng-deep .mat-dialog-container {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  white-space: normal !important;
+}
+.rig {
+  float: right;
+}
+.example-full-width {
+  width: 100%;
+}

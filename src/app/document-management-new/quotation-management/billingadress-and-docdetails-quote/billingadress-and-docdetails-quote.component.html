@@ -1,0 +1,30 @@
+<mat-expansion-panel [expanded]="quotationService.billingDetailspanel" (opened)="updatePanleState(true)"
+    (closed)="updatePanleState(false)">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Billing Addresses And Document Details
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-12">
+            <app-bill-from-quote  [superUserDetails]="superUserDetails" [userData]="userData"></app-bill-from-quote>
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <app-doc-details-quote [docData]="docData"></app-doc-details-quote>
+            <app-additional-fields-quote ></app-additional-fields-quote>
+        </div>
+    </div>
+    <hr class="hr-highlight" />
+    <div class="form-row">
+        <div class="col-md-5 col-lg-5 col-sm-12">
+            <app-bill-to-quote [custID]="custID" [orgID]="orgID" [saleID]="saleID" [customerData]="customerData"></app-bill-to-quote>
+        </div>
+        <div class="col-md-2 col-lg-2 col-sm-0">
+
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-12">
+            <app-delivery-address-quote [customerData]="customerData"></app-delivery-address-quote>
+        </div>
+
+    </div>
+</mat-expansion-panel>

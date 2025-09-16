@@ -1,0 +1,80 @@
+.margLeft{
+  margin-left: 16px;
+  min-height: 900px;
+}
+
+.box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  line-height: 28px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+.card-container-right {
+  display: inline;
+  float: right;
+}
+
+.card-container-left {
+  display: inline;
+}
+.required::after{
+  content: "*";
+}
+::ng-deep .mat-tab-list .mat-tab-labels {
+  background-color: white;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+::ng-deep .mat-card-header-text {
+  width: 100% !important;
+}
+.custmMob {
+  position: relative;
+  // margin: 8px 0px 10px 10px;
+  border-radius: 4px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  width: 205px;
+  height: 320px;
+}
+.custm {
+  position: relative;
+  margin: 8px 0px 10px 20px;
+  border-radius: 4px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  width: 205px;
+  height: 320px;
+}
+.custm2 {
+  position: relative;
+  margin: 8px 0px 10px 20px;
+  border-radius: 4px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  width: 324px;
+  height: 204px;
+}
+.img {
+  margin: auto;
+  float: left;
+  border: 1px solid rgb(3, 3, 3);
+}
+.img:hover {
+  // outline: 4px solid rgb(45, 45, 247);
+  cursor: pointer;
+}
+::ng-deep .checkbox {
+  & .mat-checkbox-background,
+  .mat-checkbox-frame {
+    border-radius: 70% !important;
+    width: 26px !important;
+    height: 26px !important;
+  }
+}
+.checkbox {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+  z-index: 2;
+}

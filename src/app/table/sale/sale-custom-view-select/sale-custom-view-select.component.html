@@ -1,0 +1,63 @@
+<div class="popup-container">
+    <div class="default-view">
+        <h3>Default View</h3>
+        <ul>
+            <li (click)="viewSelected('To be converted')">To be converted</li>
+            <li [matMenuTriggerFor]="stagesAssigned" *ngIf="tableService.pipelineSaleSelection != 'All Pipelines'">
+                {{saleSettings.salesStage.displayName}}</li>
+            <li [matMenuTriggerFor]="startDateAssigned">
+                {{saleSettings.startDate.displayName}}</li>
+            <li [matMenuTriggerFor]="closingDateAssigned">
+                {{saleSettings.expCompletionDate.displayName}}</li>
+            <li [matMenuTriggerFor]="lastEditedAssigned">
+                Last Edited</li>
+            <li [matMenuTriggerFor]="lastNoteAssigned">
+                Last {{fieldNameSaleNotes}} Added</li>
+            <li (click)="viewSelected('All Sales')">All {{ fieldNameSale
+                }}s</li>
+            <mat-menu #stagesAssigned="matMenu">
+                <button mat-menu-item *ngFor="let status of tableService.statusArray"
+                    (click)="viewSelectedStatus('status',status)">{{status.name}}</button>
+            </mat-menu>
+            <mat-menu #startDateAssigned="matMenu">
+                <button mat-menu-item (click)="viewSelected('start today')">Today</button>
+                <button mat-menu-item (click)="viewSelected('start this week')">This week</button>
+                <button mat-menu-item (click)="viewSelected('start this month')">This month</button>
+            </mat-menu>
+            <mat-menu #closingDateAssigned="matMenu">
+                <button mat-menu-item (click)="viewSelected('closing today')">Today</button>
+                <button mat-menu-item (click)="viewSelected('closing this week')">This week</button>
+                <button mat-menu-item (click)="viewSelected('closing this month')">This month</button>
+            </mat-menu>
+            <mat-menu #lastEditedAssigned="matMenu">
+                <button mat-menu-item (click)="viewSelected('edited today')">Today</button>
+                <button mat-menu-item (click)="viewSelected('edited this week')">This week</button>
+                <button mat-menu-item (click)="viewSelected('edited this month')">This month</button>
+            </mat-menu>
+            <mat-menu #lastNoteAssigned="matMenu">
+                <button mat-menu-item (click)="viewSelected('note today')">Today</button>
+                <button mat-menu-item (click)="viewSelected('note this week')">This week</button>
+                <button mat-menu-item (click)="viewSelected('note this month')">This month</button>
+            </mat-menu>
+        </ul>
+        <h3 *ngIf="myViews.length >0">Created by me</h3>
+        <ul>
+            <li *ngFor="let view of myViews" (click)="viewChanged(view)"> {{ view.viewName
+                }}</li>
+        </ul>
+        <h3 *ngIf="publicViews.length>0">Public view</h3>
+        <ul>
+            <li *ngFor="let view of publicViews" (click)="viewChanged(view)"> {{ view.viewName
+                }}</li>
+        </ul>
+    </div>
+    <mat-menu #statusAssignedToMe="matMenu">
+        <button mat-menu-item *ngFor="let status of tableService.statusArray"
+            (click)="viewSelectedStatus('status',status)">{{status.name}}</button>
+    </mat-menu>
+
+    <div class="popup-footer" (click)="addView('Add')">
+        <mat-icon color="primary" class="iconclass">add</mat-icon>
+        <span>Create New</span>
+    </div>
+</div>

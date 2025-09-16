@@ -1,0 +1,652 @@
+<!-- title starts here -->
+<h2 mat-dialog-title *ngIf="scenario === 'create' && !loader">
+  Add {{ fieldNameOrganization }}
+</h2>
+<h2 mat-dialog-title *ngIf="scenario === 'edit' && !loader">
+  Update {{ fieldNameOrganization }}
+</h2>
+<!-- title ends here -->
+<mat-dialog-content *ngIf="!loader">
+  <form [formGroup]="crudOrgForm" *ngIf="crudOrgForm" autocomplete="off">
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>{{ orgSettings.companyName.displayName }}</mat-label>
+      <input
+        matInput
+        #companyName
+        formControlName="companyName"
+        type="text"
+        name="companyName"
+        placeholder="eg: Google"
+        id="companyName"
+      />
+      <mat-error *ngIf="this.crudOrgForm.get('companyName').errors?.required">
+        {{ orgSettings.companyName.displayName }} name is required
+      </mat-error>
+      <mat-error *ngIf="this.crudOrgForm.get('companyName').errors?.minlength">
+        Minimum 2 characters needed
+      </mat-error>
+      <mat-error *ngIf="this.crudOrgForm.get('companyName').errors?.maxlength">
+        {{ orgSettings.companyName.displayName }} name should be less than 60
+        characters
+      </mat-error>
+      <mat-error *ngIf="this.crudOrgForm.get('companyName').hasError('onlySpace')">
+        Please provide a valid {{ orgSettings.companyName.displayName }}
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-row" *ngIf="crudOrgForm.get('contactNo')">
+      <div class="col-5" *ngIf="orgSettings.contactNo.display">
+        <app-common-country-code
+          [contactNumber]="this.orgData.contactNo"
+          [code]="this.orgData.code"
+          (countryCodeEvent)="countryCodeEventHander($event)"
+        ></app-common-country-code>
+      </div>
+      <div class="col-7" *ngIf="orgSettings.contactNo.display">
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ orgSettings.contactNo.displayName }} </mat-label>
+          <input
+            matInput
+            formControlName="contactNo"
+            type="number"
+            name="contactNo"
+            placeholder="Contact Number"
+            id="contactNo"
+            onkeypress="return  event.charCode >= 48 && event.charCode <= 57"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-form-field
+      class="full-width"
+      appearance="fill"
+      *ngIf="orgSettings.website.display"
+    >
+      <mat-label>{{ orgSettings.website.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="website"
+        type="text"
+        name="website"
+        id="website"
+        placeholder="eg: www.example.com"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      class="full-width"
+      appearance="fill"
+      *ngIf="orgSettings.email.display"
+    >
+      <mat-label>{{ orgSettings.email.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="email"
+        type="text"
+        name="email"
+        id="email"
+        placeholder="eg: support@example.com"
+      />
+      <mat-error *ngIf="this.crudOrgForm.get('email').errors?.pattern">
+        Enter a valid {{ orgSettings.email.displayName }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      class="full-width"
+      appearance="fill"
+      *ngIf="orgSettings.details.display"
+    >
+      <mat-label>{{ orgSettings.details.displayName }}</mat-label>
+      <textarea
+        matInput
+        placeholder="About"
+        name="details"
+        formControlName="details"
+        minlength="1"
+        maxlength="250"
+      >
+      </textarea>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="fill" *ngIf="orgSettings.taxId.display">
+      <mat-label>{{ orgSettings.taxId.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="taxId"
+        type="text"
+        name="taxId"
+        id="taxId"
+        placeholder="taxId"
+      />
+    </mat-form-field>
+
+    <h3>Address</h3>
+
+    <mat-form-field
+      class="full-width"
+      appearance="fill"
+      *ngIf="orgSettings.billingaddress1.display"
+    >
+      <mat-label>{{ orgSettings.billingaddress1.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="billingaddress1"
+        type="text"
+        name="billingaddress1"
+        id="billingaddress1"
+        placeholder="billingaddress1"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      class="full-width"
+      appearance="fill"
+      *ngIf="orgSettings.billingaddress2.display"
+    >
+      <mat-label>{{ orgSettings.billingaddress2.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="billingaddress2"
+        type="text"
+        name="billingaddress2"
+        id="billingaddress2"
+        placeholder="billingaddress2"
+      />
+    </mat-form-field>
+    <br />
+    <mat-form-field
+      style="width: 49%; margin-right: 2%"
+      appearance="fill"
+      *ngIf="orgSettings.district.display"
+    >
+      <mat-label>{{ orgSettings.district.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="district"
+        type="text"
+        name="district"
+        id="district"
+        placeholder="district"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      style="width: 49%"
+      appearance="fill"
+      *ngIf="orgSettings.state.display"
+    >
+      <mat-label>{{ orgSettings.state.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="state"
+        type="text"
+        name="state"
+        id="state"
+        placeholder="state"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      style="width: 49%; margin-right: 2%"
+      appearance="fill"
+      *ngIf="orgSettings.country.display"
+    >
+      <mat-label>{{ orgSettings.country.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="country"
+        type="text"
+        name="country"
+        id="country"
+        placeholder="country"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      style="width: 49%"
+      appearance="fill"
+      *ngIf="orgSettings.bpin.display"
+    >
+      <mat-label>{{ orgSettings.bpin.displayName }}</mat-label>
+      <input
+        matInput
+        formControlName="bpin"
+        type="text"
+        name="bpin"
+        id="bpin"
+        placeholder="bpin"
+      />
+    </mat-form-field>
+
+    <!-- add starts here -->
+    <div
+      style="padding: 10px; background-color: ghostwhite; border-radius: 10px"
+      *ngIf="additionalFields?.length == 0"
+    >
+      <span class="caption">
+        You can add more fields from {{ fieldNameOrganization }} settings
+      </span>
+    </div>
+    <div
+      class="form-row"
+      *ngIf="
+        (this.scenario == 'create' || data.mode == 'create') &&
+        this.crudOrgForm?.get('additionalFields')?.controls
+      "
+    >
+      <div
+        *ngFor="
+          let addFieldsGroup of this.crudOrgForm?.get('additionalFields')
+            .controls;
+          let i = index;
+          trackBy: identify
+        "
+        [formGroup]="addFieldsGroup"
+        [ngClass]="
+          additionalFields[i].fieldType == 'textarea' || 'date_time'
+            ? 'col-12'
+            : 'col-6'
+        "
+      >
+        <!--[ngClass]="additionalFields[i].fieldType == 'textarea' ? 'col-12' : 'col-6'"-->
+        <div *ngIf="additionalFields[i].isActive">
+        <div *ngIf="additionalFields[i].fieldType == 'category'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>{{ additionalFields[i]?.fieldName }} </mat-label>
+            <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+
+            <mat-select
+              formControlName="fieldValue"
+              name="additionalField"
+              placeholder="Required"
+            >
+              <mat-option
+                *ngIf="this.additionalFields[i].mandatory == false"
+                value=""
+                >None</mat-option
+              >
+              <mat-option
+                *ngFor="let s of additionalFields[i].categories"
+                value="{{ s }}"
+                >{{ s }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              formControlName="fieldValue"
+              name="additionalField"
+              type="text"
+            />
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'number'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              formControlName="fieldValue"
+              name="additionalField"
+              type="number"
+            />
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'textarea'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <textarea
+              matInput
+              placeholder="Description"
+              formControlName="fieldValue"
+              name="additionalField"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'date'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              name="additionalField"
+              [matDatepicker]="addtfield_i"
+              formControlName="fieldValue"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="addtfield_i"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #addtfield_i></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+          <mat-form-field class="dateTime-wdith" appearance="fill">
+            <mat-label>{{ additionalFields[i].fieldName }} Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="addtfield_date_time"
+              name="additionalField"
+              formControlName="fieldValue"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="addtfield_date_time"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #addtfield_date_time></mat-datepicker>
+            <!-- <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue').touched &&
+                additionalField.controls[i].get('fieldValue').errors
+                  ?.required
+              "
+              style="padding-top: 0px"
+            >
+              {{ additionalField.controls[i].get("fieldName").value }} is
+              required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue').errors
+                  ?.invalid
+              "
+            >
+              Enter a valid date
+            </mat-error> -->
+          </mat-form-field>
+          <!--time-->
+          <mat-form-field class="dateTime-wdith" appearance="fill">
+            <mat-label>{{ additionalFields[i].fieldName }} Time </mat-label>
+            <input
+              matInput
+              type="time"
+              formControlName="fieldValue2"
+              name="defaultValue"
+            />
+            <!-- <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue2').touched &&
+                additionalField.controls[i].get('fieldValue2').errors
+                  ?.required
+              "
+              style="padding-top: 0px"
+            >
+              {{ additionalField.controls[i].get("fieldName").value }} is
+              required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue2').errors
+                  ?.invalid
+              "
+            >
+              Enter a valid time
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+        </div>
+      </div>
+    </div>
+    <!--Additional fields edit starts here-->
+    <div
+      class="form-row"
+      *ngIf="
+        this.scenario == 'edit' &&
+        this.crudOrgForm?.get('additionalFields')?.controls
+      "
+    >
+      <div
+        *ngFor="
+          let addFieldsGroup of this.crudOrgForm.get('additionalFields')
+            .controls;
+          let i = index;
+          trackBy: identify
+        "
+        [formGroup]="addFieldsGroup"
+        [ngClass]="
+          additionalFields[i].fieldType == 'textarea' || 'date_time'
+            ? 'col-12'
+            : 'col-6'
+        "
+      >
+        <div *ngIf="additionalFields[i].isActive">
+        <div *ngIf="additionalFields[i].fieldType == 'category'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <mat-select
+              formControlName="fieldValue"
+              name="additionalField"
+              placeholder="Required"
+            >
+              <mat-option
+                *ngIf="additionalFields[i].mandatory == false"
+                value=""
+                >None</mat-option
+              >
+              <mat-option
+                *ngFor="let s of additionalFields[i].categories"
+                value="{{ s }}"
+                >{{ s }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              formControlName="fieldValue"
+              name="additionalField"
+              type="text"
+            />
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'number'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              formControlName="fieldValue"
+              name="additionalField"
+              type="number"
+            />
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'textarea'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <textarea
+              matInput
+              placeholder="Description"
+              formControlName="fieldValue"
+              name="additionalField"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'date'">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label
+              >{{ additionalFields[i].fieldName }}
+              <!-- <span *ngIf="additionalFields[i].mandatory == true">*</span> -->
+            </mat-label>
+            <input
+              matInput
+              name="additionalField"
+              [matDatepicker]="addtfield_i"
+              formControlName="fieldValue"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="addtfield_i"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #addtfield_i></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+          <mat-form-field class="dateTime-wdith" appearance="fill">
+            <mat-label>{{ additionalFields[i].fieldName }} Date </mat-label>
+            <input
+              matInput
+              [matDatepicker]="addtfield_date_time"
+              name="additionalField"
+              formControlName="fieldValue"
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="addtfield_date_time"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #addtfield_date_time></mat-datepicker>
+            <!-- <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue').touched &&
+                additionalField.controls[i].get('fieldValue').errors
+                  ?.required
+              "
+              style="padding-top: 0px"
+            >
+              {{ additionalField.controls[i].get("fieldName").value }} is
+              required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue').errors
+                  ?.invalid
+              "
+            >
+              Enter a valid date
+            </mat-error> -->
+          </mat-form-field>
+          <!--time-->
+          <mat-form-field class="dateTime-wdith" appearance="fill">
+            <mat-label>{{ additionalFields[i].fieldName }} Time </mat-label>
+            <input
+              matInput
+              type="time"
+              formControlName="fieldValue2"
+              name="defaultValue"
+            />
+            <!-- <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue2').touched &&
+                additionalField.controls[i].get('fieldValue2').errors
+                  ?.required
+              "
+              style="padding-top: 0px"
+            >
+              {{ additionalField.controls[i].get("fieldName").value }} is
+              required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                additionalField.controls[i].get('fieldValue2').errors
+                  ?.invalid
+              "
+            >
+              Enter a valid time
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- add ends here -->
+
+    <div class="full-width">
+      <app-common-user-search
+        [allSubUsers]="allSubUsers"
+        [assignedToName]="this.orgData.assignedToName"
+        [assignedTo]="this.orgData.assignedTo"
+        (assignedToEvent)="assignedToEventHander($event)"
+        (assignedToNameEvent)="assignedToNameEventHander($event)"
+      ></app-common-user-search>
+
+      <div class="full-width" *ngIf="branches?.length > 0">
+        <app-common-branch
+          [associatedBranch]="associatedBranch"
+          [branches]="branches"
+          [allSubUsers]="allSubUsers"
+          (branchEvent)="branchIdEventHandler($event)"
+        >
+        </app-common-branch>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="crudOrgForm && !loader">
+  <button mat-button (click)="onCancel()" [disabled]="btnSubmitted">
+    Cancel
+  </button>
+  <button
+    *ngIf="scenario === 'create'"
+    mat-button
+    color="primary"
+    [disabled]="
+      crudOrgForm.invalid ||
+      btnSubmitted ||
+      !onCheckNetwork() ||
+      !this.orgData.assignedTo ||
+      (branches.length > 0 && !associatedBranch)
+    "
+    type="submit"
+    (click)="crudOrgForm.valid ? orgForm(crudOrgForm) : TypeError()"
+  >
+    Add
+  </button>
+  <button
+    *ngIf="scenario === 'edit'"
+    mat-button
+    color="primary"
+    [disabled]="
+      crudOrgForm.invalid ||
+      btnSubmitted ||
+      !onCheckNetwork() ||
+      !this.orgData.assignedTo ||
+      (branches.length > 0 && !associatedBranch)
+    "
+    type="submit"
+    (click)="crudOrgForm.valid ? orgForm(crudOrgForm) : TypeError()"
+  >
+    Update
+  </button>
+</mat-dialog-actions>
+
+<!-- loader -->
+<div *ngIf="loader" class="center">
+  <mat-spinner [diameter]="24"> </mat-spinner>
+
+  <span *ngIf="btnSubmitted === false">&nbsp;Loading..</span>
+  <span *ngIf="btnSubmitted === true">&nbsp;Updating..</span>
+</div>

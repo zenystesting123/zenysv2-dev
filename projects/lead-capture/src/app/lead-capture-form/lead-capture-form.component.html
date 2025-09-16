@@ -1,0 +1,197 @@
+<div class="container-fluid main-div">
+    <!-- Show message if form is not active -->
+    <div *ngIf="!this.loader && (!activeStatus[selectedFormId])">
+        <br>
+        <h5>This form is currently unavailable!</h5>
+    </div>
+    <!-- Title and logo -->
+    <div *ngIf="!this.loader && (noOfFields>0) && activeStatus[selectedFormId]">
+        <br>
+        <!--Temporary code added for ITCC need to remove-->
+        <!-- <img  *ngIf = "superUserId == '4nqDe1HlsHf9EBIKqEIf5GgsbB03'" src="assets/ITCC Logo.png" alt="logo" height="auto"
+                         width="50%"
+                         /> -->
+        <img *ngIf=logoStatusVal [src]="logoUrl" alt="logo" height="auto" width="50%" />
+        <h2 style="color:#2196f3">{{formTitle}}</h2>
+    </div>
+    <!-- form starts here -->
+    <form *ngIf="!this.loader && (noOfFields>0) && activeStatus[selectedFormId]" #leadCaptureForm="ngForm" autocomplete="off">
+        <div *ngFor="let elem of columns; let i = index;">
+            <!-- Input fields -->
+            <div *ngIf="elem.display == true && elem.fieldType == 'input_field' && (elem.customField ? (elem.isActive ? true : false) : true)">
+                <!-- Email field -->
+                <div *ngIf="elem.inputType=='inputField' && elem.columnDef =='email'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput email="true" #pEmail="ngModel" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                            [(ngModel)]="elem.defaultValue" [required]="elem.mandatory">
+
+                        <mat-error *ngIf="pEmail.errors?.email">Please enter a valid email</mat-error>
+                        <mat-error *ngIf="pEmail.errors?.required">This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- First Name-->
+                <div *ngIf="elem.inputType=='inputField' && elem.columnDef =='firstName'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput #fName="ngModel" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                            [(ngModel)]="elem.defaultValue" [required]="elem.mandatory" minlength="3">
+
+                        <mat-error *ngIf="fName.errors?.minlength ">Please enter a minimum of 3 characters</mat-error>
+                        <mat-error *ngIf="fName.errors?.required">This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- Contact No -->
+                <div *ngIf="elem.inputType=='inputField' && elem.columnDef =='contactNo'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput #CNo="ngModel" pattern="[- +()0-9]{10,13}" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                            [(ngModel)]="elem.defaultValue" [required]="elem.mandatory">
+
+                        <mat-error *ngIf="CNo.errors?.pattern">Please enter a valid phone number</mat-error>
+                        <mat-error *ngIf="CNo.errors?.required">This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- Other input fields -->
+                <div *ngIf="elem.inputType=='inputField' && elem.columnDef !='email' && elem.columnDef !='contactNo' && elem.columnDef !='firstName'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput name="{{elem.customField ? elem.custIndex : elem.columnDef}}" 
+                            [(ngModel)]="elem.defaultValue" [required]="elem.mandatory">
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- Input category field -->
+                <div *ngIf="elem.inputType=='category'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <mat-select name="{{elem.customField ? elem.custIndex : elem.columnDef}}" [(ngModel)]="elem.defaultValue" 
+                            [required]="elem.mandatory">
+                            <mat-option *ngFor="let s of elem.categories" value="{{ s }}">{{
+                                s }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- Input textarea field -->
+                <div *ngIf="elem.inputType=='textarea'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <textarea matInput name="{{elem.customField ? elem.custIndex : elem.columnDef}}" [(ngModel)]="elem.defaultValue"
+                            [required]="elem.mandatory"></textarea>
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- input date field -->
+                <div *ngIf="elem.inputType=='date'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="elem.defaultValue" #f="ngModel"
+                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}" 
+                            [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''"
+                            [required]="elem.mandatory">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+                <!--Date time picker-->
+                <div *ngIf="elem.inputType=='date_time'">
+                    <mat-form-field appearance="fill" style="width: 50%; padding-right: 5px;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [matDatepicker]="addtfield_date_time" [(ngModel)]="elem.defaultValue"
+                            #f1="ngModel" name="{{elem.customField ? elem.custIndex : elem.columnDef}}" 
+                            [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''"
+                            [required]="elem.mandatory">
+                        <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+                        <mat-datepicker #addtfield_date_time></mat-datepicker>
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>                    
+                    <!--time-->
+                    <mat-form-field style="width: 48%;">
+                        <mat-label>Time</mat-label>
+                        <input matInput type="time" [(ngModel)]="elem.defaultValue2" name="{{elem.customField ? elem.custIndex : elem.columnDef}}_time" [disabled]="!f1.value"/>
+                    </mat-form-field>
+                </div>
+                <!-- Input number field -->
+                <div *ngIf="elem.inputType=='number'">
+                    <mat-form-field appearance="fill" style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput type="number" [(ngModel)]="elem.defaultValue" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                            [required]="elem.mandatory">
+                        <mat-error>This field is required</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- Default Fields -->
+            <div *ngIf="elem.fieldType == 'default_field'" class="invisible">
+                <!-- Default input field -->
+                <div *ngIf="elem.inputType=='inputField'">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [(ngModel)]="elem.defaultValue" name="{{elem.customField ? elem.custIndex : elem.columnDef}}">
+                    </mat-form-field>
+                </div>
+                <!-- Default category field -->
+                <div *ngIf="elem.inputType=='category'">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [(ngModel)]="elem.defaultValue" name="{{elem.customField ? elem.custIndex : elem.columnDef}}">
+                    </mat-form-field>
+                </div>
+                <!-- Default text area field -->
+                <div *ngIf="elem.inputType=='textarea'">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <textarea matInput [(ngModel)]="elem.defaultValue" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"></textarea>
+                    </mat-form-field>
+                </div>
+                <!-- Default date field -->
+                <div *ngIf="elem.inputType=='date'">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="elem.defaultValue" #f="ngModel"
+                            [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''"
+                            name="{{elem.customField ? elem.custIndex : elem.columnDef}}">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>             
+                </div>
+                <!--Date time picker-->
+                <div *ngIf="elem.inputType=='date_time'">
+                    <mat-form-field style="width: 49%; padding-right: 5px;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput [matDatepicker]="addtfield_date_time" [(ngModel)]="elem.defaultValue"
+                            #f1="ngModel"
+                            [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''"
+                            name="{{elem.customField ? elem.custIndex : elem.columnDef}}">
+                        <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+                        <mat-datepicker #addtfield_date_time></mat-datepicker>
+                    </mat-form-field>                   
+                    <!--time-->
+                    <mat-form-field style="width: 48%;">
+                        <mat-label>Time</mat-label>
+                        <input matInput type="time" [(ngModel)]="elem.defaultValue2" name="{{elem.customField ? elem.custIndex : elem.columnDef}}_time" />
+                    </mat-form-field>
+                </div>
+                <!-- Default number field -->
+                <div *ngIf="elem.inputType=='number'">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ elem.header }}</mat-label>
+                        <input matInput type="number" [(ngModel)]="elem.defaultValue" name="{{elem.customField ? elem.custIndex : elem.columnDef}}">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <!-- Submit button -->
+        <button mat-raised-button type="submit" color="primary" [disabled]="leadCaptureForm.invalid"
+            (click)="onSubmit(leadCaptureForm)">SUBMIT</button>
+    </form>
+    
+    <!-- Loader -->
+    <div *ngIf="this.loader" class="center">
+        <mat-spinner [diameter]="24"> </mat-spinner>
+    </div>
+    
+</div>

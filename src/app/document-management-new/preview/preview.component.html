@@ -1,0 +1,64 @@
+
+<div *ngIf="previewService.disableDocView" class="container" style="text-align: center;">
+    <br><br>
+    <h3 style="text-align: center;">No Access</h3>
+</div>
+<div class="container-fluid" id="main" *ngIf="previewService.previewLoaded && !previewService.disableDocView">
+    <div class="container-fluid" id="sub">
+        <div class="row">
+            <div class="col-md-3" id="col3">
+                <app-side-bar></app-side-bar>
+            </div>
+            <div class="col-md-9" id="col9">
+                <app-tool-bar></app-tool-bar>
+                <div class="container-fluid" style="min-height: 900px" style="background-color: ghostwhite">
+                    <br />
+                    <div class="container-fluid" style="background-color: ghostwhite; min-height: 750px">
+                        <div class="row">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div *ngIf="privewTemplateSelected =='template1'">
+                                            <app-preview-doc1></app-preview-doc1>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template2'">
+                                            <app-preview-doc2></app-preview-doc2>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template3'">
+                                            <app-preview-doc3></app-preview-doc3>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template4'">
+                                            <app-preview-doc4></app-preview-doc4>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template5'">
+                                            <app-preview-doc5></app-preview-doc5>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template6'">
+                                            <app-preview-doc6></app-preview-doc6>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template7'">
+                                            <app-preview-doc7></app-preview-doc7>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template8'">
+                                            <app-preview-doc8></app-preview-doc8>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template9'">
+                                            <app-preview-doc9></app-preview-doc9>
+                                        </div>
+                                        <div *ngIf="privewTemplateSelected =='template10'">
+                                            <app-preview-doc10></app-preview-doc10>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="main">
+<mat-spinner [diameter]="70" *ngIf="!previewService.previewLoaded"></mat-spinner>
+</div>

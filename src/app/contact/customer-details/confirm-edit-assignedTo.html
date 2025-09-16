@@ -1,0 +1,40 @@
+<h2 mat-dialog-title *ngIf="this.data.scenario == 'assigned'">Re-Assign {{this.data.fieldNameContact}}</h2>
+<mat-dialog-content *ngIf="this.data.scenario == 'assigned'">
+    <h3>Do you want to re-assign this {{this.data.fieldNameContact}} under {{this.data.prevAssigned}} to {{this.data.currAssigned}}?</h3>
+    <mat-checkbox class="example-margin" [(ngModel)]="data.checked">
+      Re-Assign associated {{data.fieldNameSale}}s, {{data.fieldNameService}}s, {{data.fieldNameEstimate}}, {{data.fieldNameQuotation}}, {{data.fieldNameInvoice}}, open {{data.fieldNameTask}}s and open {{data.fieldNameFollowup}}s
+    </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'assigned'">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="primary" mat-button
+    [mat-dialog-close]="this.data"
+    >Re-Assign</button>
+</mat-dialog-actions>
+
+
+<h2 *ngIf="this.data.scenario == 'deletetask'">Delete {{this.data.fieldNameTask}} </h2>
+<mat-dialog-content *ngIf="this.data.scenario == 'deletetask'">
+    <h3>Do you want to delete the {{this.data.status}} {{this.data.fieldNameTask}} {{this.data.title}}&nbsp;?</h3>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="this.data.scenario == 'deletetask'">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="warn" mat-button
+    [mat-dialog-close]="this.data"
+    >Delete</button>
+</mat-dialog-actions>
+
+<!-- delete customer -->
+<h2 *ngIf="!btnClicked && this.data.scenario == 'deleteCust'">Delete {{this.data.fieldNameContact}} </h2>
+<mat-dialog-content class="mat-typography" *ngIf="!btnClicked && this.data.scenario == 'deleteCust'">
+    <h3>Do you want to delete the selected {{this.data.fieldNameContact}}&nbsp;?</h3>
+</mat-dialog-content>
+<div *ngIf="btnClicked && this.data.scenario == 'deleteCust'" class="centerPopup">
+  <mat-spinner [diameter]="24"> </mat-spinner>
+  <span>&nbsp;Deleting {{this.data.fieldNameContact}}..</span>
+</div>
+<mat-dialog-actions align="end" *ngIf="!btnClicked && this.data.scenario == 'deleteCust'">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="warn" mat-button (click)="deleteCust()"
+    >Delete</button>
+</mat-dialog-actions>

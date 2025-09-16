@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Delete item</h2>
+<mat-dialog-content class="mat-typography">
+  <h3>Do you want to delete item {{data.productName}} ?</h3>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="warn" mat-button [disabled]="!networkCheck.onNetworkCheck()"
+    [mat-dialog-close]="this.data"
+    >Delete</button>
+</mat-dialog-actions>

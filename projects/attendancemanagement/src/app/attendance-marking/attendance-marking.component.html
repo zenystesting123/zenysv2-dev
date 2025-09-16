@@ -1,0 +1,306 @@
+<!-- TOOLBAR WEB -->
+<mat-toolbar
+  style="position: sticky; top: 0; z-index: 10"
+  class="mat-elevation-z2"
+  [ngStyle]="{ 'background-color': 'white' }"
+>
+  <!-- <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button> -->
+
+  <img
+    src="assets/icons/icon-72x72.png"
+    alt="logo"
+    style="width: 56px; height: 56px"
+  />
+  &nbsp;&nbsp;
+  <span>Attendance management</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <span class="example-spacer"></span>
+  <button mat-button color="primary" (click)="logOut()">LOGOUT</button>
+</mat-toolbar>
+
+<!-- PROGRESS BAR -->
+<mat-progress-bar
+  *ngIf="!progressBarStatus"
+  [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+  mode="indeterminate"
+>
+</mat-progress-bar>
+<div style="text-align: center" *ngIf="progressBarStatus && !noAccess">
+  <br />
+  <br />
+  <br />
+  <h1 style="color: black">Hi {{ employeeName }}! Update your attendance</h1>
+
+  <br />
+
+  <!-- <mat-form-field
+    appearance="fill"
+    class="example-form-field"
+    style=" color: black; width: 120px;"
+  >
+    <mat-label>Today's Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datepicker3"
+      [(ngModel)]="this.todaysDate"
+      (ngModelChange)="dateChanged()"
+      [disabled]="true"
+    />
+    <mat-datepicker #datepicker3> </mat-datepicker>
+  </mat-form-field> -->
+  <!-- &nbsp;&nbsp;
+  <button mat-raised-button color="accent" (click)="datepicker3.open()">
+    Change Date
+  </button> -->
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <mat-form-field style="font-size: 14px; width: 120px">
+    <mat-label>Selected Year</mat-label>
+    <mat-select
+      [(ngModel)]="this.selectedYear"
+      name="selectedYear"
+      (ngModelChange)="yearChanged()"
+    >
+      <mat-option
+        *ngFor="let option of selectedYearArray"
+        [value]="option.name"
+        >{{ option.year }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <mat-form-field style="font-size: 14px; width: 120px">
+    <mat-label>Selected Month</mat-label>
+    <mat-select
+      [(ngModel)]="this.month"
+      name="month"
+      (ngModelChange)="monthChanged()"
+    >
+      <mat-option *ngFor="let option of selectedMonthArray" [value]="option">{{
+        option
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br /><br />
+
+  <div class="container-fluid" style="margin-bottom: 100px">
+    <div class="example-container mat-elevation-z8">
+      <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="index">
+          <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index">
+            {{ month }} {{ i + 1 }}, {{ year }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- attStatus Column -->
+        <ng-container matColumnDef="attStatus">
+          <mat-header-cell *matHeaderCellDef>
+            Attendance Status
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <!-- <mat-form-field floatLabel="never"> -->
+            <mat-form-field floatLabel="never">
+              <mat-label>Attendance Status</mat-label>
+              <mat-select
+                [(ngModel)]="element.attStatus"
+                name="attendanceStatus"
+                (ngModelChange)="
+                  attStatusChanged(element.id, element.attStatus)
+                "
+              >
+                <mat-option
+                  *ngFor="let option of attendanceStatusArray"
+                  [value]="option"
+                  >{{ option }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+
+            <!-- </mat-form-field> -->
+          </mat-cell>
+        </ng-container>
+
+        <!-- checkIn Column -->
+        <ng-container matColumnDef="checkIn">
+          <mat-header-cell *matHeaderCellDef> Check-In Time </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-form-field floatLabel="never">
+              <mat-label>Check-In Time</mat-label>
+              <input
+                matInput
+                class="input-in-class"
+                type="time"
+                name="checkInTime"
+                [(ngModel)]="element.checkIn"
+                #checkInTime="ngModel"
+                [disabled]="
+                  element.attStatus != 'Working' || element.inEditMode == false
+                "
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              class="form-text text-muted danger"
+              *ngIf="
+                !checkInTime.valid ||
+                (!checkInTime.valid &&
+                  (checkInTime.dirty || checkInTime.touched))
+              "
+            >
+              Time Required!
+            </mat-error> -->
+            <br />
+            <br />
+            <button
+              mat-icon-button
+              color="primary"
+              *ngIf="element.inEditMode == false"
+              [disabled]="element.attStatus != 'Working'"
+              (click)="editInClick(element.id)"
+            >
+              <mat-icon>
+                <span class="material-icons-outlined"> edit </span>
+              </mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              *ngIf="element.inEditMode == true"
+              (click)="
+                checkInTimeChanged(
+                  element.id,
+                  element.checkIn,
+                  element.checkOut
+                )
+              "
+            >
+              <mat-icon>
+                <span class="material-icons-outlined"> done </span>
+              </mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <!-- checkOut Column -->
+        <ng-container matColumnDef="checkOut">
+          <mat-header-cell *matHeaderCellDef>Check-Out Time </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-form-field floatLabel="never">
+              <mat-label>Check-Out Time</mat-label>
+              <input
+                matInput
+                type="time"
+                name="checkOutTime"
+                [(ngModel)]="element.checkOut"
+                #checkOutTime="ngModel"
+                [disabled]="
+                  element.attStatus != 'Working' || element.outEditMode == false
+                "
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              class="form-text text-muted danger"
+              *ngIf="
+                !checkOutTime.valid ||
+                (!checkOutTime.valid &&
+                  (checkOutTime.dirty || checkOutTime.touched))
+              "
+            >
+              Time Required!
+            </mat-error> -->
+
+            <button
+              mat-icon-button
+              color="primary"
+              *ngIf="element.outEditMode == false"
+              [disabled]="element.attStatus != 'Working'"
+              (click)="editOutClick(element.id)"
+            >
+              <mat-icon>
+                <span class="material-icons-outlined"> edit </span>
+              </mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="
+                checkOutTimeChanged(
+                  element.id,
+                  element.checkOut,
+                  element.checkIn
+                )
+              "
+              *ngIf="element.outEditMode == true"
+            >
+              <mat-icon>
+                <span class="material-icons-outlined"> done </span>
+              </mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <!-- logintime column -->
+        <ng-container matColumnDef="loginTime">
+          <mat-header-cell *matHeaderCellDef> Login Time </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{
+              element.loginTime
+                ? (element.loginTime
+                  | date: "HH:mm:ss"
+                  | convertFrom24To12Format)
+                : ""
+            }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- logoutTime -->
+        <ng-container matColumnDef="logoutTime">
+          <mat-header-cell *matHeaderCellDef> Logout Time </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{
+              element.logoutTime
+                ? (element.logoutTime
+                  | date: "HH:mm:ss"
+                  | convertFrom24To12Format)
+                : ""
+            }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- activeTime -->
+        <ng-container matColumnDef="activeTime">
+          <mat-header-cell *matHeaderCellDef>
+            Recorded Active Time
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.activeTime }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- autoLogouts -->
+        <ng-container matColumnDef="autoLogouts">
+          <mat-header-cell *matHeaderCellDef> Auto Logouts </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.autoLogouts }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="progressBarStatus && noAccess"
+  class="container"
+  style="text-align: center"
+>
+  <br />
+  <br />
+  <br />
+  <br />
+  No access
+</div>

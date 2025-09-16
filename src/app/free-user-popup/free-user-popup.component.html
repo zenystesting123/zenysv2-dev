@@ -1,0 +1,29 @@
+
+<h3 mat-dialog-title>
+  Hi {{ userName }}, Your free usage summary for this month:
+</h3>
+<div mat-dialog-content>
+  <p>
+    {{ commonService.addDocLimitaion.balanceCustomers }} /
+    {{ Contact_monthly_limit }} {{fieldNameContact}}s remaining
+  </p>
+  <p>
+    {{ commonService.addDocLimitaion.balanceSales }} /
+    {{ Sales_monthly_limit }} {{fieldNameSale}}s remaining
+  </p>
+  <p>
+    {{ commonService.addDocLimitaion.balanceEstimates }} /
+    {{ Est_monthly_limit }} {{fieldNameEstimate}}s remaining
+  </p>
+  <p>
+    {{ commonService.addDocLimitaion.balanceQuotations }} /
+    {{ Quote_monthly_limit }} {{fieldNameQuotation}}s remaining
+  </p>
+  <p>
+    {{ commonService.addDocLimitaion.balanceInvoices }} /
+    {{ Inv_monthly_limit }} {{fieldNameInvoice}}s remaining
+  </p>
+</div>
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()" color="accent">Close</button>
+</div>

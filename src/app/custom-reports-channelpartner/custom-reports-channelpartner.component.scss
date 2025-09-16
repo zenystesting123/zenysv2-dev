@@ -1,0 +1,117 @@
+.no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow-x: hidden;
+  }
+  table {
+    width: 100%;
+  }
+  p{
+    font-size: 15px;
+  }
+  mat-card:hover{
+    cursor: pointer;
+  }
+
+  #mobileview{
+    display: none;
+    }
+    .container{
+        display: block;
+    }
+    @media only screen and (min-width: 100px) and (max-width: 320px){
+        #mobileview{
+            display: block;
+            }
+           .container{
+                display: none;
+            }
+    input{
+        width: 90%;
+    }
+    .col{
+        width: 100%;
+    }
+    .container-xl{
+        width: 100%;
+    }
+    }
+    @media only screen and (min-width: 321px) and (max-width: 375px){
+        .container-xl{
+            width: 100%;
+        }
+        #mobileview{
+            display: block;
+            }
+           .container{
+                display: none;
+            }
+        input{
+            width: 90%;
+        }
+        .col{
+            width: 100%;
+        }
+    }
+    @media only screen and (min-width: 376px) and  (max-width: 425px){
+        .container-xl{
+            width: 100%;
+        }
+        #mobileview{
+            display: block;
+            }
+         .container{
+                display: none;
+            }
+        input{
+            width: 90%;
+        }
+        .col{
+            width: 100%;
+        }
+    }
+    section {
+        display: table;
+      }
+
+      .example-label {
+        display: table-cell;
+        font-size: 18px;
+        margin-left: 8px;
+        min-width: 80px;
+
+      }
+
+      .example-button-row {
+        display: table-cell;
+        width: 80px;
+      }
+
+      .example-button-row .mat-button-base {
+        margin: 8px 8px 8px 0;
+      }
+
+      .example-flex-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .example-button-container {
+        display: flex;
+        justify-content: center;
+        width: 40px;
+      }
+      .example-spacer {
+        flex: 1 1 auto;
+      }
+
+      .invisible{
+        display: block;
+        visibility: hidden;
+        height: 0;
+        width: 0;
+      }

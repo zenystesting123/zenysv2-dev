@@ -1,0 +1,94 @@
+<mat-expansion-panel (opened)="updatePanleState(true)" (closed)="updatePanleState(false)"
+    [expanded]="estimateService.bottomPanel">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Additional Notes & Signature
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="form">
+
+        <div class="row">
+            <!-- Additional Notes -->
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <div class="form-group mb-1">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Additional Notes</mat-label>
+                        <textarea matInput placeholder="Additional Notes" name="notes"
+                            formControlName="notes"></textarea>
+                    </mat-form-field>
+                </div>
+                <!-- bank details -->
+                <div class="form-group mb-1">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Bank Account Details</mat-label>
+                        <textarea matInput placeholder="Bank Account Details" name="bankDetails"
+                            formControlName="bankDetails"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- Signature name and designation -->
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="container justify-content-center">
+                    <div class="
+                  input-group
+                  mb-3
+                  justify-content-center
+                  align-middle
+                ">
+                        <div>
+                            <a>
+                                <img [src]="form.get('signature').value" alt="signature" height="150" width="150"
+                                    *ngIf="form.get('showSignature').value" />
+
+                                <img style="cursor: pointer" src="assets/img/icons/Signature.png" alt="signature"
+                                    height="150" [routerLink]="'/dash/settings/docsettings'" width="150"
+                                    *ngIf="!form.get('showSignature').value" matTooltip="Add Signature From Settings" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Name</mat-label>
+                            <input matInput placeholder="Name" name="signatoryName" formControlName="signatoryName" />
+                        </mat-form-field>
+                    </div>
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Designation</mat-label>
+                            <input matInput placeholder="Designation" name="designation"
+                                formControlName="designation" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div>
+            <!-- Inquiry Contact -->
+            <hr class="hr-highlight" />
+            <p>
+                In case of queries, please contact
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput placeholder="Name" name="contactname" id="centeralign" formControlName="signatoryContactname"
+                        (change)="onContactNameChange()" />
+                </mat-form-field>
+                at
+                <mat-form-field>
+                    <mat-label>Contact No</mat-label>
+                    <input matInput placeholder="Contact No" formControlName="signatoryContactno" id="centeralign" type="number"
+                        name="contactno" />
+                </mat-form-field>
+                or drop an email to
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Email" type="email" email name="email" id="centeralign"
+                        formControlName="signatoryEmail" />
+                </mat-form-field>
+            </p>
+        </div>
+
+    </form>
+
+</mat-expansion-panel>

@@ -1,0 +1,64 @@
+<mat-toolbar color="primary" class="toolbar">
+    <mat-toolbar-row>
+        <!-- <a routerLink="/" class="navbar-brand">Z</a> -->
+        <a  class="navbar-brand" style="color:#2A6AF6">Z</a><span
+        style="width: 87px; height: 64px; font-size: 20px; color: white; display: flex; align-items: center;">ZENYS</span>
+      <!-- <h1>SimpleCRM</h1> -->
+      <!-- <span class="menu-spacer"></span> -->
+      
+    </mat-toolbar-row>
+  
+    
+  </mat-toolbar>
+<div class="container">
+
+    <section id="cart"> 
+      <article class="product">
+        <!-- <header>
+          <a class="remove">
+            <img src="http://www.astudio.si/preview/blockedwp/wp-content/uploads/2012/08/1.jpg" alt="">
+
+            <h3>Remove product</h3>
+          </a>
+        </header> -->
+<div class="content">
+
+    <h1>{{docData?.docTitle}} {{docData?.docNumber}}</h1>
+
+    <p>Click on button below to complete payment</p>
+
+    <!-- <div title="You have selected this product to be shipped in the color yellow." style="top: 0" class="color yellow"></div>
+    <div style="top: 43px" class="type small">XXL</div> -->
+  </div>
+
+  <!-- <footer class="content"> -->
+
+    <h2 class="full-price">
+      {{docData?.currency}} {{docData?.totalInclTax}}
+    </h2>
+
+    
+  <!-- </footer> -->
+</article>
+
+
+
+
+
+</section>
+<footer id="site-footer">
+    <div class="container clearfix">
+
+      
+
+      <div class="right">
+        <h1 class="total" style="color: black;">Total including Taxes: <span>{{currency}} {{totalInclTax}}</span></h1>
+        <button mat-button class="btn" [disabled]="alreadyPaid||loader" (click)="checkout()">{{loader?"redirecting":(alreadyPaid?"Fully Paid":"Pay")}}<span *ngIf="loader"><mat-spinner [diameter]="30"></mat-spinner> </span></button>
+      </div>
+
+    </div>
+  </footer>
+</div>
+<!-- <button (click)="checkout()">
+    GO TO CHECKOUT
+</button> -->

@@ -1,0 +1,50 @@
+<form  #viewForm="ngForm">
+<h1 mat-dialog-title>Customize view</h1>
+
+<mat-dialog-content style="width: 1000px;height: 450px;">
+  <mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>View name</mat-label>
+    <input matInput type="text" maxLength = "50" [(ngModel)] = "viewName" name="viewTitle" placeholder="View name" required/>
+    <mat-hint align="end">{{viewName?.length || 0}}/50</mat-hint>
+  </mat-form-field>
+  <h2 class="title">Filters</h2>
+  <span class="caption">Set filters for the view </span>
+  <app-report-filter [module]="module" [(itemList)]="itemList"
+  [(primaryQueryItem)]="primaryQueryItem" [superUserId]="superUserId"
+  [allSubUsers]="allSubUsers" [superUserFullName]="superUserFullName"
+  [statusArray]="statusArray"
+  [pipelineArray] = "pipelineNames"
+  [outcomeArray]="outcomeArray"
+  [directionArray]="directionArray"
+  [groupByOptionsPrimary]="groupByOptions" ngModelGroup="child" (isChild1FormValid)="enableSubmitButton($event)"
+  [groupByOptions]="groupByOptions" [addnlFieldsArray] ="customFields" [leadCaptureArray]="leadCaptureArray"
+  [branches]="branches" [fieldNameNotes]="fieldNameNotes" [fieldNameFollowup]="fieldNameFollowup"></app-report-filter>
+  <br>
+  <h2 class="title">Sort data by</h2>
+  <div class="example-container">
+    <mat-form-field hintLabel="Choose field to sort by" appearance="fill">
+      <mat-label>Sort by field</mat-label>
+      <mat-select [(ngModel)] ="sortField"  [compareWith]="objectComparisonFunction" required name="sortField">
+        <mat-option  *ngFor = "let field of displayFields" [value]="field">{{field.header}}</mat-option>
+
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Sort order</mat-label>
+      <mat-select [(ngModel)] ="sortOrder" required name="sortOrder">
+        <mat-option value="Asc">Ascending</mat-option>
+        <mat-option value="Desc">Descending</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions style="float: right;">
+  <button mat-button mat-dialog-close >Cancel</button>
+  <button mat-button mat-dialog-close color="primary" (click)="saveView()" 
+  [disabled]="
+  disableSaveButton(viewForm.form.valid,isChild1FormValid) || !onCheckNetwork()
+  ">Save</button>
+
+</mat-dialog-actions>
+</form>

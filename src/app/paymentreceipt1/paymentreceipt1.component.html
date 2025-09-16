@@ -1,0 +1,581 @@
+<!--Create payment from sale page starts here-->
+<div
+  *ngIf="
+    data.mode == 'create' ||
+    data.mode == 'createCust' ||
+    data.mode == 'createCustSelect' ||
+    data.mode == 'createfromOrg' || 
+    data.mode == 'update'
+  "
+>
+  <h1 mat-dialog-title *ngIf="  data.mode != 'update'">&nbsp;Add {{ fieldNamePayment }}</h1>
+  <h1 mat-dialog-title *ngIf="  data.mode == 'update'">&nbsp;Update {{ fieldNamePayment }}</h1>
+
+  <div mat-dialog-content>
+    <form [formGroup]="userForm">
+      <div *ngIf="!this.loader">
+        <!-- tagging of contact and organization -->
+        <app-common-org-tag
+          [scenario]="scenario"
+          [customerId]="customerId"
+          [orgId]="orgId"
+          [contactSelected]="contactSelected"
+          [companySelected]="orgSelected"
+          [userName]="data?.customerName"
+          [compName]="data?.company"
+          (orgNameEvent)="orgNameEventHander($event)"
+          (contSelectedEvent)="contSelectedEventHander($event)"
+          (orgIdEvent)="orgIdEventHander($event)"
+        ></app-common-org-tag>
+        <br />
+        <!--tagging sale-->
+        <mat-chip
+          *ngIf="updatedSaleId && customerId"
+          class="chipStyling"
+          title="{{ fieldNameSale }} tagged"
+          [removable]="removable"
+          (removed)="onClearSale()"
+        >
+          <mat-chip-avatar>
+            <mat-icon>work</mat-icon>
+          </mat-chip-avatar>
+          {{ updatedSaleTitle }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+
+        <!-- test ends here -->
+
+        <div class="row" *ngIf="!updatedSaleId && commonService.userPlan.saleAccess && data.mode != 'createCustSelect'">
+          <div class="col-md-12 col-sm-12">
+            <mat-form-field appearance="fill" class="example-full-width text">
+              <mat-label>{{fieldNameSale}} Title</mat-label>
+              <mat-select
+                formControlName="saletitle"
+                [ngModelOptions]="{ standalone: true }"
+                (valueChange)="onSaleTitle($event)"
+              >
+                <mat-option *ngIf="sales?.length == 0"
+                  >No {{ fieldNameSale }} added to this {{ fieldNameContact }}
+                </mat-option>
+                <mat-option
+                  *ngFor="let s of sales"
+                  value="{{ s.saleTitle }},{{ s.id }}"
+                  >{{ s.saleTitle }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="row"
+          *ngIf="
+            customerId && !updatedSaleId && data.mode == 'createCustSelect'
+          "
+        >
+          <div class="col-md-12 col-sm-12">
+            <mat-form-field  appearance="fill" class="example-full-width text">
+              <mat-label>{{fieldNameSale}} Title </mat-label>
+              <mat-select
+                formControlName="saletitle"
+                [ngModelOptions]="{ standalone: true }"
+                (valueChange)="onSaleTitle($event)"
+              >
+                <mat-option *ngIf="sales?.length == 0"
+                  >No {{ fieldNameSale }} added to this {{ fieldNameContact }}
+                </mat-option>
+                <mat-option
+                  *ngFor="let s of sales"
+                  value="{{ s.saleTitle }},{{ s.id }}"
+                  >{{ s.saleTitle }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <!--Payment type-->
+        <div class="form-row">
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group mb-2">
+              <mat-form-field appearance="fill">
+                <mat-label>{{
+                  paymentSettings.paymentType.displayName
+                }}</mat-label>
+                <mat-select
+                  formControlName="paymentType"
+                  required
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <mat-option value="Against Invoice" default
+                    >Against Invoice</mat-option
+                  >
+                  <mat-option value="Against External Invoice"
+                    >Against External Invoice</mat-option
+                  >
+                  <mat-option value="Advance payment"
+                    >Advance payment</mat-option
+                  >
+                  
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group mb-2">
+              <mat-form-field appearance="fill"
+                *ngIf="
+                  this.userForm.get('paymentType').value == 'Against Invoice'
+                "
+              >
+                <mat-label>{{
+                  paymentSettings.invoiceprefixAndDocNumber.displayName
+                }}</mat-label>
+                <mat-select
+                  formControlName="invoiced"
+                  (valueChange)="onInvoice($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                  required
+                >
+                  <mat-option *ngIf="invoices?.length == 0">
+                    {{ paymentSettings.invoiceprefixAndDocNumber.displayName }}
+                    not found</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let s of invoices"
+                    (click)="invoiceDetails(s)"
+                    value="{{ s.id }}"
+                  >
+                    {{ s.docData.prefixAndDocNumber }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <!--Currency-->
+        <div class="form-row">
+          <div class="col-6">
+            <div class="form-group mb-2">
+              <mat-form-field appearance="fill">
+                <mat-label>{{
+                  paymentSettings.currency.displayName
+                }}</mat-label>
+                <mat-select formControlName="currency" required>
+                  <mat-option
+                    value="{{ currency.isoCode }}"
+                    *ngFor="let currency of currencyList"
+                  >
+                    {{ currency.currencyName }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="fill">
+              <mat-label>{{
+                paymentSettings.amountCollected.displayName
+              }}</mat-label>
+              <input
+                matInput
+                formControlName="amountCollected"
+                type="number"
+                required
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <!--Payment Date-->
+        <div class="form-row">
+          <div class="col-6">
+            <mat-form-field appearance="fill">
+              <mat-label>{{
+                paymentSettings.paymentDate.displayName
+              }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="paymentDate"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <div class="form-group mb-2">
+              <mat-form-field appearance="fill">
+                <mat-label>{{
+                  paymentSettings.paymentMode.displayName
+                }}</mat-label>
+                <mat-select
+                  formControlName="paymentMode"
+                  name="paymentMode"
+                  required
+                >
+                  <mat-option value="Cash">Cash</mat-option>
+                  <mat-option value="Account Transfer"
+                    >Account Transfer</mat-option
+                  >
+                  <mat-option value="Cheque">Cheque</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <!--Payment Mode-->
+        <div
+          class="form-row"
+          *ngIf="this.userForm.get('paymentMode').value == 'Cheque'"
+        >
+          <div class="col-md-6 col-sm-12">
+            <mat-form-field appearance="fill">
+              <mat-label>{{ paymentSettings.chequeNo.displayName }}</mat-label>
+              <input
+                matInput
+                formControlName="chequeNo"
+                name="chequeNo"
+                type="text"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <mat-form-field appearance="fill">
+              <mat-label>{{
+                paymentSettings.chequeBank.displayName
+              }}</mat-label>
+              <input
+                matInput
+                formControlName="chequeBank"
+                name="chequeBank"
+                type="text"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <!--Additional fields-->
+        <!-- <div label="Additional Details" style="
+        border-radius: 10px;"> -->
+          <div class="form-row">
+            <ng-container
+              [formGroup]="addFieldsGroup"
+              *ngFor="
+                let addFieldsGroup of this.userForm?.get('additionalFields')
+                  .controls;
+                let i = index;
+                trackBy: identify
+              "
+            >
+              <div
+                *ngIf="additionalFields[i].isActive"
+                [ngClass]="
+                  additionalFields[i].fieldType == 'textarea' ||
+                  additionalFields[i].fieldType == 'date_time'
+                    ? 'col-12'
+                    : 'col-6'
+                "
+              >
+                <div *ngIf="additionalFields[i].fieldType == 'category'">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i]?.fieldName }} </mat-label>
+
+                    <mat-select
+                      formControlName="fieldValue"
+                      name="additionalField"
+                      placeholder="Required"
+                    >
+                      <mat-option
+                        *ngIf="additionalFields[i].mandatory == false"
+                        value=""
+                        >None</mat-option
+                      >
+                      <mat-option
+                        *ngFor="let s of additionalFields[i].categories"
+                        value="{{ s }}"
+                        >{{ s }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input
+                      matInput
+                      formControlName="fieldValue"
+                      name="additionalField"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'number'">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input
+                      matInput
+                      formControlName="fieldValue"
+                      name="additionalField"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'textarea'">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <textarea
+                      matInput
+                      placeholder="Description"
+                      formControlName="fieldValue"
+                      name="additionalField"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'date'">
+                  <mat-form-field style="width: 100%" appearance="fill">
+                    <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                    <input
+                      matInput
+                      name="additionalField"
+                      [matDatepicker]="addtfield_i"
+                      formControlName="fieldValue"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="addtfield_i"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #addtfield_i></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+                  <mat-form-field class="dateTime-wdith" appearance="fill">
+                    <mat-label
+                      >{{ additionalFields[i].fieldName }} Date</mat-label
+                    >
+                    <input
+                      matInput
+                      [matDatepicker]="addtfield_date_time"
+                      name="additionalField"
+                      formControlName="fieldValue"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="addtfield_date_time"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #addtfield_date_time></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field class="dateTime-wdith" appearance="fill">
+                    <mat-label
+                      >{{ additionalFields[i].fieldName }} Time
+                    </mat-label>
+                    <input
+                      matInput
+                      type="time"
+                      formControlName="fieldValue2"
+                      name="defaultValue"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        <!-- </div> -->
+        <!-- ChangeLog -->
+        <div *ngIf="data.mode == 'update' && changeLogLength > 0" class="row" style="height:200px;">
+          <h3 style="margin: 0px;"> CHANGE LOG</h3>
+          <div
+            style="
+              margin: 0;
+              padding: 0;
+              height: 200px;
+              overflow-y: scroll;
+            ">
+            <!-- Display change log according to last modified date-->
+            <div
+              class="mb-3 border-bottom"
+              *ngFor="
+                let item of paymentChangeLog | keyvalue : customsort;
+                let i = index
+              "
+              style="padding: 20px 20px 0px 20px; margin: 0px !important;"
+            >
+              <div class="d-flex align-items-center mb-3">
+                <div class="flex-shrink-0">
+                  <img
+                    class="avatar avatar-sm avatar-circle"
+                    src="../assets/img/160x160/img1.jpg"
+                    alt="Image Description"
+                  />
+                </div>
+
+                <div class="flex-grow-1 ms-3">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <h4 class="mb-0">{{ item.value.changedByName }}</h4>
+                    <span class="d-block small text-muted">
+                      {{
+                        item.value.dateModified | date : "medium"
+                      }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                matLine
+                *ngIf="
+                  item.value.currentValues == '' &&
+                  item.value.previousValues == ''
+                "
+              >
+                <div>
+                  {{ fieldNamePayment }} created by
+                  {{ item.value.changedByName }}
+                </div>
+              </div>
+              <div
+                matLine
+                *ngFor="
+                  let pelem of item.value.previousValues | keyvalue
+                "
+              >
+                <div
+                  *ngFor="
+                    let celem of item.value.currentValues | keyvalue
+                  "
+                >
+                  <div *ngIf="pelem.key == celem.key">
+                    <div
+                      *ngIf="
+                        pelem.key == 'additionalFields' &&
+                        celem.key == 'additionalFields'
+                      "
+                    >
+                      <div *ngFor="let j of pelem.value | keyvalue">
+                        <div *ngFor="let k of celem.value | keyvalue">
+                          <div *ngIf="j.key == k.key">
+                            <div>
+                              Modified {{ j.value.fieldName }} from
+                              {{
+                                j.value.fieldValue
+                                  ? j.value.fieldValue
+                                  : "None"
+                              }}
+                              to
+                              {{
+                                k.value.fieldValue
+                                  ? k.value.fieldValue
+                                  : "None"
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        pelem.key != 'additionalFields' &&
+                        celem.key != 'additionalFields' && 
+                        pelem.key != 'orgId' &&
+                        celem.key != 'orgId'
+                      "
+                    >
+                      
+                        Modified
+                        {{this.paymentSettings[pelem.key]?.displayName}} from {{pelem.value ? pelem.value : "None"}} to {{celem.value ? celem.value : "None"}}
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="this.loader" class="center">
+        <mat-spinner [diameter]="70"> </mat-spinner>
+        <h4>Updating new details..</h4>
+      </div>
+    </form>
+    
+  </div>
+  <div mat-dialog-actions *ngIf="data.mode != 'update'" class="rig">
+    <button mat-button *ngIf="!submitClicked" (click)="closed()">
+      Cancel
+    </button>
+    &nbsp;
+    <div
+      *ngIf="this.userForm.get('paymentType').value == 'Against Invoice'"
+    >
+      <button
+        type="submit"
+        *ngIf="!submitClicked"
+        mat-button
+        (click)="onSubmit(userForm, 'btn_create_pmt_web')"
+        color="primary"
+        [disabled]="
+          !userForm?.valid ||
+          this.userForm.get('invoiced').value == undefined ||
+          !onCheckNetwork() ||
+          !customerId
+        "
+      >
+        <i class="ft-check-square mr-1"></i> Add
+      </button>
+    </div>
+    <div
+      *ngIf="this.userForm.get('paymentType').value != 'Against Invoice'"
+    >
+      <button
+        type="submit"
+        *ngIf="!submitClicked"
+        mat-button
+        (click)="onSubmit(userForm, 'btn_create_pmt_web')"
+        color="primary"
+        [disabled]="!userForm?.valid || !onCheckNetwork() || !customerId"
+      >
+        <i class="ft-check-square mr-1"></i> Add
+      </button>
+    </div>
+  </div>
+  <div mat-dialog-actions *ngIf="data.mode == 'update'" class="rig">
+    <button mat-button (click)="closed()">Cancel</button> &nbsp;
+    <div
+      *ngIf="this.userForm.get('paymentType').value == 'Against Invoice'"
+    >
+      <button
+        type="submit"
+        *ngIf="!submitClicked"
+        mat-button
+        color="primary"
+        [disabled]="
+          !userForm.valid ||
+          this.userForm.get('invoiced').value == undefined ||
+          !onCheckNetwork() ||
+          !customerId || !customerName
+        "
+        (click)="userForm.valid ? onUpdate(userForm) : TypeError()"
+      >
+        <i class="ft-check-square mr-1"></i> Update
+      </button>
+    </div>
+    <div
+      *ngIf="this.userForm.get('paymentType').value != 'Against Invoice'"
+    >
+      <button
+        type="submit"
+        *ngIf="!submitClicked"
+        mat-button
+        color="primary"
+        [disabled]="!userForm.valid || !onCheckNetwork() || !customerId || !customerName"
+        (click)="userForm.valid ? onUpdate(userForm) : TypeError()"
+      >
+        <i class="ft-check-square mr-1"></i> Update
+      </button>
+    </div>
+  </div>
+</div>

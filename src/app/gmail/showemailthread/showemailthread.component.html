@@ -1,0 +1,65 @@
+
+<div class="container-fluid spinner" >
+<mat-spinner *ngIf="loader"></mat-spinner>
+</div>
+<div *ngIf="!isMobilesize && !loader">
+
+<div *ngFor="let message of threadmessages">
+  <div class="card" id="web">
+    <div class="card-header">
+      <h3 class="card-header-title">From: {{message.from}} on {{message.date | date :'short'}}</h3>
+      <h4 class="text-muted">To: {{message.to}}</h4>
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">Subject: {{message.subject}}</h3>
+      <div [innerHTML]="message.body" class="GeeksForGeeks card-text">
+      </div>
+     <br>
+     <div *ngIf="message.attachments.length>0">
+         <div *ngFor="let attachment of message.attachments">
+             <div>
+                {{attachment.filename}}({{attachment.body.size}}) &ensp;<button mat-icon-button (click)="downloadattach(attachment.body.attachmentId,message.messageID,attachment.mimeType,attachment.filename)"><mat-icon>download</mat-icon></button>
+             </div>
+         </div>
+     </div>
+      <button mat-button color="primary" [disabled]="loggedInMailId != data.loggedInUser" (click)="sendemailpopup(message.from,message.subject,message.messageID) ">Reply</button>
+    </div>
+  </div>
+    <br>
+
+</div>
+</div>
+
+<div *ngIf="isMobilesize && !loader" class="formob">
+
+    <div *ngFor="let message of threadmessages">
+        <mat-card id="mob">
+
+              <strong>From: {{message.from}}</strong><br>
+              <strong>To: {{message.to}}</strong><br>
+              <br>
+            <mat-card-subtitle>{{message.date | date :'short'}}</mat-card-subtitle>
+            <mat-divider></mat-divider>
+            <br>
+           <strong>Subject: {{message.subject}}</strong>
+           <br>
+           <br>
+           <div class="innerHtml">
+        <div [innerHTML]="message.body" class="GeeksForGeeks">
+         </div>
+        </div>
+        <br>
+        <div *ngIf="message.attachments.length>0">
+            <div *ngFor="let attachment of message.attachments">
+                <div>
+                   {{attachment.filename}}({{attachment.body.size}}) &ensp;<button mat-icon-button (click)="downloadattach(attachment.body.attachmentId,message.messageID,attachment.mimeType,attachment.filename)"><mat-icon>download</mat-icon></button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <button mat-raised-button color="primary" (click)="gotocomposemob(message.from,message.subject,message.messageID) ">Reply</button>
+        </mat-card>
+        <br>
+
+    </div>
+    </div>

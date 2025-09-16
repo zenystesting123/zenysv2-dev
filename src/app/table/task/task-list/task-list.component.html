@@ -1,0 +1,123 @@
+<div class="no-v-scroll bg-soft-secondary">
+    <!-- Tool bar starts-->
+    <mat-toolbar *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess"
+        class="border-bottom" style="flex: 0 0 64px; z-index: 10" [ngStyle]="{ 'background-color': 'white' }">
+        <mat-icon class="text-primary" mat-list-icon>task </mat-icon>&nbsp;
+        <span class="text-primary-light">{{ fieldNameTask }}s</span>&nbsp;
+        &nbsp;
+        <!-- view selection -->
+        <button mat-button class="border" style="border-radius: 20px; margin: 4px" [matMenuTriggerFor]="filterOne"
+            [ngClass]="{isDisabled:!onCheckNetwork()}">{{tableService.viewSelected}}
+            &nbsp;
+            <mat-icon>expand_more</mat-icon></button>
+        <mat-menu #filterOne="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="assignedToMe">Assigned to me</button>
+            <button mat-menu-item [matMenuTriggerFor]="createdToMe">Created by me</button>
+        </mat-menu>
+        <!-- assigned to option -->
+        <mat-menu #assignedToMe="matMenu">
+            <button mat-menu-item (click)="viewSelected('Open task','Assigned to me')">Open
+                {{fieldNameTask}}</button>
+            <button mat-menu-item (click)="viewSelected('Completed task','Assigned to me')">Completed
+                {{fieldNameTask}}</button>
+            <button mat-menu-item (click)="viewSelected('Due today','Assigned to me')">Due today
+            </button>
+        </mat-menu>
+        <!-- created by option -->
+        <mat-menu #createdToMe="matMenu">
+            <button mat-menu-item (click)="viewSelected('Open task','Created by me')">Open
+                {{fieldNameTask}}</button>
+            <button mat-menu-item (click)="viewSelected('Completed task','Created by me')">Completed
+                {{fieldNameTask}}</button>
+            <button mat-menu-item (click)="viewSelected('Due today','Created by me')">Due today</button>
+        </mat-menu>
+        <span class="example-spacer"></span>
+        <!-- actions button starts here -->
+        <!-- Actions button for re-assigning -->
+        <button mat-button color="primary" [matMenuTriggerFor]="actions" *ngIf="selection.selected.length > 0">
+          Actions
+        </button>
+        &nbsp;
+        <mat-menu #actions="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="reassign" [disabled]="disableReAssign">
+            Assign to
+          </button>
+        </mat-menu>
+        <mat-menu #reassign="matMenu">
+
+          <button mat-menu-item *ngFor="let s of allSubUsers" (click)="
+                          onSubUserAssigned(
+                            selection.selected,
+                            s.userId,
+                            s.firstname,
+                            s.lastname,
+                            s.branchId
+                          )
+                        ">
+            {{ s.firstname }} {{ s.lastname }}
+          </button>
+        </mat-menu>
+        <!-- actions button ends here -->
+        <button mat-icon-button [ngClass]="{isDisabled:!onCheckNetwork()}" (click)="customizeCardContent()"
+          *ngIf="commonService.taskView == 'grid'" title="Customize view">
+          <mat-icon class="material-icons-outlined" color="accent">settings</mat-icon></button>
+        <!-- change to grid view -->
+        <button mat-icon-button (click)="onToggle()" *ngIf="commonService.taskView =='table' " title="Grid view">
+            <mat-icon class="material-icons-outlined" color="accent">table_chart</mat-icon>
+        </button>
+        <!-- change to table view -->
+        <button mat-icon-button (click)="onToggleTab()" *ngIf="commonService.taskView =='grid' " title="Table view">
+            <mat-icon class="material-icons-outlined" color="accent">table_rows</mat-icon>
+        </button>
+    </mat-toolbar>
+    <!-- Toolbar ends here -->
+    <!-- If Access is restricted -->
+    <div *ngIf="(!isLoading && (!commonService.userPlan.activitiesAccess || !commonService.userPlan.tasksAccess))"
+        class="container" style="text-align: center">
+        <br />
+        <h3>No Access</h3>
+    </div>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate">
+    </mat-progress-bar>
+    <div style="overflow-y: scroll" *ngIf="!isLoading">
+
+
+        <!-- display grid view -->
+        <div [style.display]="
+        commonService.userPlan.activitiesAccess  && commonService.userPlan.tasksAccess &&
+        commonService.taskView =='grid' ? 'block' : 'none'" class="p-2" style=" height: 100%">
+
+            <div class=" wrapper">
+
+                <div class="col-4" *ngFor="let taskType of taskTypes; let i = index">
+
+                    <app-task-grid-view [index]="i" [taskType]="taskType" [userId]="userId" [superUserId]="superUserId"
+                        [fieldNameTask]="fieldNameTask" [fieldNameOrganization]="fieldNameOrganization"
+                        [fieldNameContact]="fieldNameContact" [customFieldTask]="customFieldTask"
+                        [columnsDispaly]="columnsDispaly" [taskSettings]="taskSettings"
+                        [contactSettings]="contactSettings" [saleTitleSettings]="saleTitleSettings"
+                        [serviceTitleSettings]="serviceTitleSettings" [statusOption]="statusOption"
+                        [lastTaskStatusOpn]="lastTaskStatusOpn" [userIdsArray]="userIdsArray"
+                        [userNamesArray]="userNamesArray" [displayFields]="displayFields"
+                        (editTaskEvent)="onEditTask($event)" (updateTaskStatusEvent)="updatestatus($event)"
+                        (deleteTaskEvent)="deleteTask($event)" [reload]="reloadChildComponent"></app-task-grid-view>
+
+                </div>
+            </div>
+        </div>
+        <!-- display table -->
+        <div [style.display]="
+        commonService.userPlan.activitiesAccess  && commonService.userPlan.tasksAccess &&
+        commonService.taskView =='table' ? 'block' : 'none'" class="p-2" style=" height: 100%">
+            <br />
+            <app-task-table-view [userId]="userId" [superUserId]="superUserId" [fieldNameTask]="fieldNameTask"
+                [customFieldTask]="customFieldTask" [columnsDispaly]="columnsDispaly"
+                [tableDefaultData]="tableDefaultData" [taskSettings]="taskSettings" [contactSettings]="contactSettings"
+                [saleTitleSettings]="saleTitleSettings" [serviceTitleSettings]="serviceTitleSettings"
+                [statusOption]="statusOption" [lastTaskStatusOpn]="lastTaskStatusOpn" [userIdsArray]="userIdsArray"
+                [userNamesArray]="userNamesArray" (editTaskEvent)="onEditTask($event)"
+                (updateTaskStatusEvent)="updatestatus($event)"
+                (deleteTaskEvent)="deleteTask($event)" [(selection)]="selection"></app-task-table-view>
+        </div>
+    </div>
+</div>

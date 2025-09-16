@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Search item</h1>
+<mat-spinner [diameter]="70" *ngIf="productSearchService.isLoading"></mat-spinner>
+<div mat-dialog-content *ngIf="!productSearchService.isLoading">
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Search item</mat-label>
+            <input type="text" placeholder="Pick one" aria-label="Item" matInput [formControl]="myControl"
+                [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onItemSelection($event)">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.id">
+                    {{option.itemName}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+</div>

@@ -1,0 +1,112 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.danger{
+  color: #ff5100;;
+}
+table {
+  width: 100%;
+}
+.required::after{
+  content: "*";
+}
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+.mat-row:hover {
+  background-color: whitesmoke;
+  cursor:pointer
+}
+.margLeft{
+  width: 2%;
+}
+.box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  line-height: 28px;
+  // margin-bottom: 16px;
+}
+.address{
+  padding-bottom: 16px;
+}
+.printSection{
+  display: none;
+}
+.custom-container{
+  position: absolute;
+  left: 30%;
+  top: 5%;
+}
+.card{
+  height: 5.0625in;
+  width: 3.1875in;
+  box-shadow: 0 0 5px #b4b4b4;
+  position: relative;
+}
+.profile-img{
+  position: absolute;
+  top: 20%;
+  left: 28%;
+  width: 120px;
+  height: 120px;
+  border: 3px solid rgba($color: (#255255), $alpha: 0.2);
+}
+// .p-names{
+
+// }
+.pr-name{
+  position: absolute;
+  top: 68%;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+.profile-name{
+  position: absolute;
+  top: 60%;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  margin-top: .5rem;
+}
+#profilePhoto{
+    margin-top: 15px;
+    margin-left: 15px;
+  width: 240px;
+  height: 240px;
+}
+#logo{
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+}
+.card p{
+  margin-bottom: 0;
+}
+.card2{
+  width: 5.0625in;
+  height: 3.1875in;
+  box-shadow: 0 0 5px #b4b4b4;
+  position: relative;
+  border: 1px solid black;
+}
+#profilePhotoCard2{
+  width: 286px;
+  height: 286px;
+}
+.card2 p{
+  margin-bottom: 0;
+}
+#logo2{
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  margin-left: 4px;
+}

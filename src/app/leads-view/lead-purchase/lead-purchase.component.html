@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Do You Want To Purchase Lead!</h1>
+<div mat-dialog-content>
+  <h5>Purchase the Lead By using {{ data.leadScore }} Points</h5>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    mat-button
+    [mat-dialog-close]="data"
+    (click)="onSubmit()"
+    cdkFocusInitial
+  >
+    Ok
+  </button>
+</div>

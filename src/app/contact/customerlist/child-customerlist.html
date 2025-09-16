@@ -1,0 +1,52 @@
+<h2 mat-dialog-title *ngIf="!spinner && scenario === 'statusUpdate' ">
+  Update {{data.pipelineFieldName}} and {{data.statusFieldName}}
+</h2>
+
+<mat-dialog-content *ngIf="!spinner && scenario === 'statusUpdate'" class="mat-typography">
+  <p *ngIf="data.selected.length==1">
+    Update {{data.pipelineFieldName}} and {{data.statusFieldName}} of selected {{data.fieldNameContact}} to
+  </p>
+  <p *ngIf="data.selected.length>1">
+    Update {{data.pipelineFieldName}} and {{data.statusFieldName}} of selected {{data.selected.length}}
+    {{data.fieldNameContact}}s to
+  </p>
+
+
+  <form [formGroup]="form" style="padding-top: 16px;">
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>{{data.pipelineFieldName}}</mat-label>
+      <mat-select formControlName="pipeline" name="pipeline" (valueChange)="pipelineChangedEvent($event)">
+        <mat-option *ngFor="let pipeline of pipelines" [value]="pipeline.pipelineId">
+          {{pipeline.pipelineName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>{{data.statusFieldName}}</mat-label>
+      <mat-select formControlName="status" name="status" (valueChange)="statusSelectedEvent($event)">
+        <mat-option *ngFor="let status of statusArray" [value]="status.stageId">
+          {{status.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="fill"
+      *ngIf="data.rejectionReasonDisplay === true && this.form.get('status').value === this.statusArray[this.statusArray.length - 1]?.stageId ">
+      <mat-label>{{data.rejectionReasonName}}</mat-label>
+      <mat-select formControlName="rejectionReasonVal" name="rejectionReasonValue" placeholder="Required">
+        <mat-option *ngFor="let s of data.rejectionReasonArr" value="{{ s }}">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="!spinner && scenario === 'statusUpdate'" align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="primary" mat-button (click)="updateFn()" [disabled]="!form.valid">Update</button>
+</mat-dialog-actions>
+
+<mat-dialog-content *ngIf="spinner && scenario === 'statusUpdate'" class="center1">
+  <mat-spinner [diameter]="25"></mat-spinner>
+  <span>&nbsp;Updating {{count}} records out of {{data?.selected?.length}}..</span>
+</mat-dialog-content>

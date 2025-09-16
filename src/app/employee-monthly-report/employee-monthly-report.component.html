@@ -1,0 +1,220 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR WEB -->
+  <mat-toolbar
+    style="position: sticky; top: 0; z-index: 10"
+    class="mat-elevation-z2"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span> Monthly Attendance Report </span>
+    <span class="example-spacer"></span>
+    <form>
+      <mat-form-field style="font-size: 14px; width: 260px">
+        <mat-label>Select an Employee</mat-label>
+        <input
+          matInput
+          [formControl]="myControl"
+          [matAutocomplete]="auto"
+          [(ngModel)]="this.selectedEmployee"
+          name="selectedEmployee"
+          (ngModelChange)="employeeSelected()"
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option
+            *ngFor="let employee of filteredOptions | async"
+            [value]="employee"
+          >
+            {{ employee.employeeFirstName }}&nbsp;{{employee.employeeSecondName}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field  style="font-size: 14px; width: 120px;">
+      <mat-label>Selected Year</mat-label>
+      <mat-select
+        [(ngModel)]="this.selectedYear"
+        name="selectedYear"
+        (ngModelChange)="yearChanged()"
+      >
+        <mat-option
+          *ngFor="let option of selectedYearArray"
+          [value]="option.name"
+          >{{option.year}}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field  style="font-size: 14px; width: 120px;">
+      <mat-label>Selected Month</mat-label>
+      <mat-select
+        [(ngModel)]="this.selectedMonth"
+        name="selectedMonth"
+        (ngModelChange)="monthChanged()"
+      >
+        <mat-option
+          *ngFor="let option of selectedMonthArray"
+          [value]="option"
+          >{{option}}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button *ngIf="empSelected" mat-icon-button (click)="onDownloadAsCsv()" color="accent">
+      <mat-icon>
+        <span class="material-icons-outlined">
+          file_download
+          </span>
+      </mat-icon>
+    </button>
+  </mat-toolbar>
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+  <div
+    *ngIf="progressBarStatus"
+    style="background-color: ghostwhite; overflow-y: auto; height: 100%"
+  >
+
+
+    <div class="container-fluid" style="margin-bottom: 60px">
+      <br />
+      <br />
+
+      <h3 *ngIf="!selectedEmployee" style="text-align: center;">
+        Please select an Employee to view their Monthly Attendance
+      </h3>
+
+      <h3 *ngIf="selectedEmployee && !empSelected" style="text-align: center;">
+        No records present!
+      </h3>
+
+      <h2 *ngIf="empSelected && dataSource.data?.length > 0">
+        Showing Monthly Attendance report of
+        {{selectedEmployeeName}}
+        for {{ month }}&nbsp;{{ year }}
+      </h2>
+      <br>
+      <div class="mat-elevation-z8" *ngIf="empSelected">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- Date Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let row">
+              {{month}} {{ row.id }}, {{year}}
+            </td>
+          </ng-container>
+
+          <!-- attendance status -->
+          <ng-container matColumnDef="attStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.attStatus }}
+            </td>
+          </ng-container>
+
+          <!-- check in time -->
+          <ng-container matColumnDef="checkIn">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>In Time </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.checkIn ? (row.checkIn | convertFrom24To12Format) : "" }}
+            </td>
+          </ng-container>
+
+          <!-- check in updated -->
+          <ng-container matColumnDef="checkInUpdated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              In Time logged
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{
+                row.checkInUpdated
+                  ? (row.checkInUpdated.toDate() | date: "medium")
+                  : ""
+              }}
+            </td>
+          </ng-container>
+
+          <!-- checkout -->
+          <ng-container matColumnDef="checkOut">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Out Time</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.checkOut ? (row.checkOut | convertFrom24To12Format) : "" }}
+            </td>
+          </ng-container>
+
+          <!-- checkout updated -->
+          <ng-container matColumnDef="checkOutUpdated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Out Time logged
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{
+                row.checkOutUpdated
+                  ? (row.checkOutUpdated.toDate() | date: "medium")
+                  : ""
+              }}
+            </td>
+          </ng-container>
+
+        <!-- login time -->
+        <ng-container matColumnDef="loginTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Login Time
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.loginTime ? (row.loginTime | date: "HH:mm:ss" | convertFrom24To12Format ) : ''}}
+          </td>
+        </ng-container>
+
+        <!-- logout time -->
+        <ng-container matColumnDef="logoutTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Logout Time
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.logoutTime ? (row.logoutTime | date: "HH:mm:ss" | convertFrom24To12Format ) : '' }}
+          </td>
+        </ng-container>
+
+        <!-- active time -->
+        <ng-container matColumnDef="activeTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Active Time Recorded
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.activeTime }}
+          </td>
+        </ng-container>
+
+        <!-- auto logouts -->
+        <ng-container matColumnDef="autoLogouts">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Auto Logouts
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.autoLogouts?row.autoLogouts:'' }}
+          </td>
+        </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No records present!</td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

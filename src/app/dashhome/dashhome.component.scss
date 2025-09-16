@@ -1,0 +1,438 @@
+table {
+  width: 100%;
+}
+.example-viewport {
+  height: 300px; /* Set a specific height for the viewport */
+}
+.example-spacer {
+  flex: 1 1 auto;
+  width: 100%;
+}
+.width_limit {
+  display: block;
+  width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.profileU {
+  padding-left: 5%;
+}
+
+.mat-icon {
+  font-size: 36px;
+}
+
+.width_limit_long {
+  display: block;
+  width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pub-profile {
+  width: 100% !important;
+  background-color: rgb(255, 255, 255);
+}
+.material-icons.color_blue {
+  color: #536dfe;
+}
+.example-button-row {
+  display: table-cell;
+  width: 100%;
+}
+
+::ng-deep .mat-card {
+  border-radius: 10px !important;
+}
+
+.example-card {
+  max-width: 400px;
+}
+.card-nav:hover {
+  box-shadow: -1px 5px 15px 0px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+h4,
+h3,
+p,
+mat-card-header {
+  color: rgb(80, 79, 79);
+}
+
+.example-full-width {
+  width: 100%;
+}
+mat-sidenav-content::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; //make scrollbar transparent
+}
+// for bottomsidenav
+
+.mat-h2 {
+  color: rgb(92, 90, 90);
+}
+
+
+
+
+
+.inline-icon {
+  position: relative;
+  /* Adjust these values accordingly */
+  top: 5px;
+  left: 5px;
+}
+img {
+  padding: 0px;
+  display: block;
+  margin: 0 auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+.box {
+  display: flex;
+  flex-direction: row;
+  margin-right: 0px;
+  align-items: center;
+  border-radius: 4px !important;
+}
+
+
+
+
+.box1 {
+  width: 97px;
+  height: 68px;
+  background: #2a6af6;
+  border-radius: 4px;
+  align-self: center;
+  text-align: center; /* horizontal align */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+.box0 {
+  width: 97px;
+  height: 68px;
+  background: rgba(42, 106, 246, 0.4);
+  border-radius: 4px;
+  align-self: center;
+  text-align: center; /* horizontal align */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+
+.box2 {
+  width: 220px;
+  height: 68px;
+  background: #ffffff;
+  border-radius: 0px 4px 4px 0px;
+  align-self: center;
+  text-align: center; /* horizontal align */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 16px;
+  font-size: 16px;
+}
+.box:hover {
+  cursor: pointer;
+  box-shadow: -1px 5px 15px 0px rgba(0, 0, 0, 0.7);
+}
+.box2Mob {
+  width: 78px;
+  height: 30px;
+  background: #ffffff;
+  border-radius: 0px 0px 4px 4px;
+  align-self: center;
+  text-align: center; /* horizontal align */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 0px 5px 0px;
+  font-size: 14px;
+}
+.material-icons.md-48 {
+  margin-top: -1px;
+  font-size: 24px;
+}
+.material-icons.md-50 {
+  margin-top: -8px;
+  font-size: 30px;
+}
+::ng-deep.box.mat-card {
+  padding: 0 !important;
+}
+
+
+
+.blue {
+  background-color: #2a6af6;
+}
+.bluechip1 {
+  background-color: rgba(237, 237, 237, 0.25) !important;
+  color: white !important;
+  white-space: nowrap !important;
+  padding-left: 3px !important;
+  margin-bottom: 6px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+.bluechip2 {
+  background-color: rgba(237, 237, 237, 0.25) !important;
+  color: white !important;
+  white-space: nowrap !important;
+  margin-bottom: 6px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+.bluechip1b {
+  background-color: rgba(237, 237, 237, 0.25) !important;
+  color: white !important;
+  white-space: nowrap !important;
+  padding-left: 3px !important;
+  margin-top: 6px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+.bluechip2b {
+  background-color: rgba(237, 237, 237, 0.25) !important;
+  color: white !important;
+  white-space: nowrap !important;
+  margin-top: 6px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+.white {
+  background-color: white;
+  padding: 16px;
+}
+
+
+.whitechip1 {
+  background-color: #ededed !important;
+  color: black;
+  white-space: nowrap !important;
+  padding-left: 1px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  // margin-bottom: 12px !important;
+  margin-top: 12px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+.whitechip2 {
+  background-color: #ededed !important;
+  color: #607d8b;
+  white-space: nowrap !important;
+  padding-left: 1px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  // margin-bottom: 12px !important;
+  margin-top: 12px !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+}
+
+
+.bluetitle {
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+}
+.bluedate {
+  color: #c7dbfc;
+  line-height: 20px;
+}
+.chipList {
+  // max-height: 40px;
+  // min-height: 40px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  // flex-wrap: nowrap;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+}
+#cardMainTitle {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+}
+#cardTitleConatct {
+  color: #263238;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  padding-left: 30px;
+}
+#cardTitle {
+  color: #263238;
+  position: static;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+}
+.cardSubTitle {
+  color: #607d8b;
+  position: static;
+  height: 20px;
+  left: 0px;
+  right: 160px;
+  top: 24px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+}
+.cardSubTitleContact {
+  color: #607d8b;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  padding-left: 30px;
+}
+#cardStyle:nth-child(odd) {
+  background: #f8f9fb;
+}
+#singleLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+.truncate-cell {
+  max-width: 200px; /* feel free to include any other value */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.testtofront {
+  z-index: 1 !important;
+}
+app-footermobile {
+  z-index: 10000;
+  position: absolute;
+}
+
+// ::ng-deep .header mat-toolbar {
+//   position: absolute;
+//   z-index: 2;
+// }
+mat-sidenav-container {
+  position: relative;
+  top: 0px;
+}
+mat-sidenav {
+  z-index: 2;
+  background: #2a6af6;
+}
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+  text-decoration: none;
+}
+.toolbar-icon {
+  line-height: 0; // Set to zero or will affect spacing between icon and text
+}
+
+.toolbar-icon-text {
+  line-height: 1.8; // Proper spacing between icon and text
+  font-size: 70%; // Smaller text size for proper display under icon
+}
+
+.active-menu-item .mat-icon {
+  color: #448aff;
+}
+.active-menu-item span {
+  color: #448aff;
+}
+.grey-icon {
+  color: grey;
+}
+.firstTimeCard {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+  // color: #1565c0;
+}
+.firstTimeCard h3 {
+  font-weight: 500;
+}
+.firstTimeCard1 {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
+  // color: #1565c0;
+}
+.firstTimeCard1 h3 {
+  font-weight: 500;
+}
+.card-container-right {
+  display: inline;
+  float: right !important;
+}
+
+.card-container-left {
+  display: inline;
+}
+
+.pointer{
+  cursor: pointer;
+}

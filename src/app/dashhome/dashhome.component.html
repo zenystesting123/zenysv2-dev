@@ -1,0 +1,1011 @@
+<!--web view-->
+<section *ngIf="!isMobilesize">
+  <div class="container-fluid bg-soft-secondary" style="position: relative"
+    [style.display]="isLoaded && !isMobilesize ? 'block' : 'none'">
+    <div class="container-fluid" [style.display]="isLoaded && !isMobilesize ? 'block' : 'none'">
+
+      <div class="container-fluid">
+        <!--
+        <app-dashboardgrid [homeScreenMode] = false></app-dashboardgrid>
+        -->
+
+        <!--Info cards section-->
+        <div
+          *ngIf="pendingInvitation || (settingsCard && accountType == 'SuperUser') || (isFirstTimeUser && accountType == 'SuperUser')">
+          <!-- INVITATION PENDING ACTION -->
+
+          <!-- <mat-card *ngIf="pendingInvitation">
+                      <br>
+            <mat-card-content style="margin-bottom: 0;">
+              You're invited to join as a {{this.invitation.accountType}}
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button [disabled]="disableInvBtn" color="warn" (click)="onDeclineInv()">Decline</button>
+              <button mat-button [disabled]="disableInvBtn" color="accent" (click)="onConfirmedInv()">Confirm</button>
+            </mat-card-actions>
+          </mat-card>
+          <br />
+          <br /> -->
+          <!-- Commenting out the initial setting up guide - MK 1 Sep 2022
+          <mat-card *ngIf="settingsCard && accountType == 'SuperUser'">
+            <mat-card-header style="float: right">
+              <button mat-icon-button color="warn" (click)="onCloseCard2()" title="Close">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </mat-card-header>
+            <h2 class="mat-h1" style="padding-top: 8px;">
+              Configure your account
+            </h2>
+            <div class="d-flex justify-content-between">
+
+              <div class="bd-highlight firstTimeCard">
+                <div>
+                  <h3>Public Profile</h3>
+                </div>
+                <div>
+                  Create your public profile and start generating {{fieldNameContact}} inquiries
+                </div>
+                <div>
+                  <button color="accent" *ngIf="!isProfileCreated" mat-icon-button (click)="profile()"
+                    title="Public Profile">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                  <button color="accent" *ngIf="isProfileCreated" mat-icon-button title="Public Profile">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bd-highlight firstTimeCard">
+                <div>
+                  <h3>{{fieldNameSale}}s Documents</h3>
+                </div>
+                <div>
+                  Add your logo, signature and configure how you create and print {{fieldNameEstimate}}s,
+                  {{fieldNameQuotation}}s and {{fieldNameInvoice}}s
+                </div>
+                <div>
+                  <button color="accent" mat-icon-button (click)="docSettings()" title="Document Settings">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bd-highlight firstTimeCard">
+                <div>
+                  <h3>{{fieldNameContact}} Settings</h3>
+                </div>
+                <div>
+                  Add additional information that you want to capture for {{fieldNameContact}}s
+                </div>
+                <div>
+                  <button color="accent" mat-icon-button (click)="custSettings()"
+                    title="{{fieldNameContact}} Settings">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bd-highlight firstTimeCard">
+                <div>
+                  <h3>
+                    {{fieldNameSale}}s and Projects
+                  </h3>
+                </div>
+                <div>
+                  Add additional information that you want to capture for your {{fieldNameSale}}s or projects
+                </div>
+                <div>
+                  <button color="accent" mat-icon-button (click)="saleSettings()" title="Sale Settings">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bd-highlight firstTimeCard">
+                <div>
+                  <h3>Account Details</h3>
+                </div>
+                <div>
+                  Submit your bank account details to start collecting payments online from your {{fieldNameSale}}s
+                </div>
+                <div>
+                  <button color="accent" mat-icon-button (click)="profileSettings()" title="Profile Settings">
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+          -->
+          <!-- horizontal card for configure settings for first time superuser ends here -->
+
+          <!-- horizontal card for getting started starts here
+          <br>
+          <mat-card *ngIf="isFirstTimeUser && accountType == 'SuperUser'">
+            <mat-card-header style="float: right">
+              <button mat-icon-button color="warn" (click)="onCloseCard()" title="Close">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </mat-card-header>
+            <h2 class="mat-h1" style="padding-top: 8px;">
+              Get started with Zenys in 3 easy steps!
+            </h2>
+            <div class="d-flex justify-content-between">
+              // Add Contact
+              <div class="bd-highlight firstTimeCard1">
+                <div>
+                  <h3 *ngIf="recentCustomers?.length == 0">
+                    1. Add {{fieldNameContact}}
+                  </h3>
+                  <h3 *ngIf="recentCustomers?.length != 0">
+                    1. {{fieldNameContact}} Added
+                  </h3>
+                  <mat-icon *ngIf="recentCustomers?.length != 0" color="accent">done</mat-icon>
+                </div>
+                <div>
+                  <button *ngIf="recentCustomers?.length == 0" mat-button color="accent" [disabled]="
+                  !networkCheck.onNetworkCheck() || disableAddContact || commonService.addDocLimitaion.addSaleDisable
+                " (click)="onAddCustomer()" style="text-transform: uppercase;">
+                    ADD {{fieldNameContact}}
+                  </button>
+                </div>
+              </div>
+            //Add Sale
+              <div class="bd-highlight firstTimeCard1">
+                <div>
+                  <h3 *ngIf="recentSales?.length == 0">
+                    2. Create {{fieldNameSale}} for {{fieldNameContact}}
+                  </h3>
+                  <h3 *ngIf="recentSales?.length != 0">
+                    2. {{fieldNameSale}} Added
+                  </h3>
+                  <mat-icon color="accent" *ngIf="recentSales?.length != 0">done</mat-icon>
+                </div>
+                <div>
+                  <button *ngIf="recentSales?.length == 0" mat-button color="accent" [disabled]="
+                  !lengthOfCustomerFlag ||
+                  !networkCheck.onNetworkCheck() ||
+                  disableAddContact || commonService.addDocLimitaion.addSaleDisable
+                " (click)="onAddSale()" style="text-transform: uppercase;">
+                    ADD {{fieldNameSale}}
+                  </button>
+                </div>
+              </div>
+            <//Add Invoice
+              <div class="bd-highlight firstTimeCard1">
+                <div>
+                  <h3 *ngIf="invoices?.length == 0">
+                    3. Create {{fieldNameInvoice}}s & {{fieldNameCollection}}s
+                  </h3>
+                  <h3 *ngIf="invoices?.length != 0">
+                    3. {{fieldNameInvoice}} Added
+                  </h3>
+                  <mat-icon color="accent" *ngIf="invoices?.length != 0">done</mat-icon>
+                </div>
+                <div>
+                  <button *ngIf="invoices?.length == 0" mat-button color="accent" [disabled]="
+                  !lengthOfSaleFlag ||
+                  !networkCheck.onNetworkCheck() ||
+                  disableInvoices || disableDocCreateInv
+                " (click)="onCreateInvoice()" style="text-transform: uppercase;">
+                    ADD {{fieldNameInvoice}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+                    <br />
+           horizontal card for getting started ends here -->
+
+        </div>
+        <br>
+
+        <h2 *ngIf="commonService?.userPlan?.activitiesAccess" class="mat-h2 mat-title">
+          Hi {{ userName }}! Your activity list
+        </h2>
+        <h2 *ngIf="!commonService?.userPlan?.activitiesAccess" class="mat-h2 mat-title">
+          Hi {{ userName }}! 
+        </h2>
+        <div class="row" *ngIf="commonService?.userPlan?.activitiesAccess">
+          <!-- Meetings -->
+          <div class="col-4" *ngIf="commonService?.userPlan?.activitiesAccess && commonService?.userPlan?.calendarIntegration">
+            <mat-card>
+              <!-- Meetings header -->
+              <mat-card-header>
+                <div mat-card-avatar>
+                  <mat-icon color="accent" class="material-icons-outlined">event</mat-icon>
+                </div>
+                <mat-card-title>{{fieldNameMeeting}}s </mat-card-title>
+
+                <mat-card-subtitle *ngIf="!gmailConnected && !outlookConnected && commonService?.userPlan?.calendarIntegration"> Connect your gmail/outlook account</mat-card-subtitle>
+                
+                <mat-card-subtitle *ngIf="!connectGMailCalendarDisplay && googleCalendarEventService.todayMeetingVisible && commonService?.userPlan?.calendarIntegration">
+                  {{googleCalendarEventService.calendarListToday.length}} {{fieldNameMeeting}}s today
+                </mat-card-subtitle>
+
+                <mat-card-subtitle *ngIf="!connectOutlookCalendarDisplay && outlookCalendarEventService.todayMeetingVisible && commonService?.userPlan?.calendarIntegration">
+                  {{outlookCalendarEventService.calendarListToday.length}} {{fieldNameMeeting}}s today
+                </mat-card-subtitle>
+              </mat-card-header>
+              <!-- Meetings content -->
+              <mat-card-content style="height: 300px;">
+                <!-- If no calendars are connected-->
+                <div *ngIf="!gmailConnected && !outlookConnected" class="d-flex justify-content-center" 
+                  style="background-color: ghostwhite;height:95%;padding-top:120px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+                  <div class="d-flex flex-row bd-highlight justify-content-center"
+                    style="align-items: center;border-radius: 10px;">
+                    <!-- Connect GMail Calendar -->                     
+                    <div (click)="onGoogleLogin()" *ngIf="commonService?.userPlan?.gmailIntegration" class="p-1 bd-highlight pointer" style="padding-right:20px !important">
+                      <img src="https://img.icons8.com/color/90/000000/google-calendar--v2.png" title="Connect your gmail calendar"/>
+                    </div>
+                    <!-- Connect Outlook Calendar --> 
+                    <div (click)="onOutlookLogin()" *ngIf="commonService?.userPlan?.outlookIntegration" class="p-1 bd-highlight pointer">
+                      <img src="https://img.icons8.com/color/90/null/ms-outlook.png" title="Connect your outlook calendar"/>
+                    </div>
+                    <!-- <div class="p-1 bd-highlight" style="font-size:1.25rem; line-height: 1.5;">Connect</div> -->
+                  </div>
+                </div>
+                <!-- If no meetings available in GMail Calendar-->
+                <div class="container-fluid"
+                  *ngIf="!connectGMailCalendarDisplay && googleCalendarEventService.todayMeetingVisible && googleCalendarEventService.calendarListToday.length == 0  && commonService?.userPlan?.calendarIntegration"
+                  style="background-color: ghostwhite;height:95%;padding-top:140px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+                  <h3>No {{fieldNameMeeting}} scheduled</h3>
+                </div>
+                <!-- If no meetings available in Outlook Calendar-->
+                <div class="container-fluid"
+                  *ngIf="!connectOutlookCalendarDisplay && outlookCalendarEventService.todayMeetingVisible && outlookCalendarEventService.calendarListToday.length == 0  && commonService?.userPlan?.calendarIntegration"
+                  style="background-color: ghostwhite;height:95%;padding-top:140px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+                  <h3>No {{fieldNameMeeting}} scheduled</h3>
+                </div>
+                <!-- GMail Meeting details -->
+                <mat-action-list role="list"
+                  *ngIf="!connectGMailCalendarDisplay && googleCalendarEventService.todayMeetingVisible && commonService?.userPlan?.calendarIntegration">
+                  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+                    <ng-container *ngFor="let event of googleCalendarEventService.calendarListToday" >
+                  <mat-list-item role="listitem" style="height: auto; padding-top:15px"
+                    (click)="onViewEvent(event)">
+                    <div mat-line>{{event.summary}}</div>
+                    <div mat-line style="padding-bottom: 15px;">{{event.start.dateTime | date:'shortTime'}} to {{event.end.dateTime |
+                      date:'shortTime'}}</div>
+                    <mat-divider></mat-divider>
+                  </mat-list-item>
+                  </ng-container>
+                  </cdk-virtual-scroll-viewport>
+                </mat-action-list>
+               <!-- Outlook Meeting details -->
+                <mat-action-list role="list" 
+                  *ngIf="!connectOutlookCalendarDisplay && outlookCalendarEventService.todayMeetingVisible && commonService?.userPlan?.calendarIntegration">
+                  <mat-list-item role="listitem" *ngFor="let event of outlookCalendarEventService.calendarListToday" style="height: auto; padding-top:15px"
+                    (click)="onViewEventOutlook(event)">
+                    <div mat-line>{{event.summary}}</div>
+                    <div mat-line style="padding-bottom: 15px;">{{event.start.dateTime | date:'shortTime'}} to {{event.end.dateTime |
+                      date:'shortTime'}}</div>
+                    <mat-divider></mat-divider>
+                  </mat-list-item>
+                </mat-action-list>
+
+                <!----if user doesnt have calendar access----->
+                <div class="container-fluid" *ngIf="!commonService?.userPlan?.calendarIntegration || (!commonService?.userPlan?.outlookIntegration && !commonService?.userPlan?.gmailIntegration)"
+                style="background-color: ghostwhite;height:95%;padding-top:140px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+                  <h3>Upgrade To Diamond Plan To Access Calendar</h3>
+                </div>
+              </mat-card-content>
+              <!-- View All -->
+              <div class="example-button-row">
+                <button mat-button [routerLink]="outlookConnected ? '/dash/outlookeventlist' : (gmailConnected ? '/dash/eventlist' : '/dash/events')" color="primary" [ngClass]="{ isDisabled: !commonService?.userPlan?.calendarIntegration }">View all</button>
+              </div>
+            </mat-card>
+          
+          </div>
+          <!-- Tasks -->
+          <div class="col-4" *ngIf="commonService?.userPlan?.activitiesAccess && commonService?.userPlan?.tasksAccess">
+            <mat-card>
+              <mat-card-header>
+                <div mat-card-avatar>
+                  <mat-icon color="accent" class="material-icons-outlined">task</mat-icon>
+                </div>
+                <mat-card-title>{{fieldNameTask}}s</mat-card-title>
+                <mat-card-subtitle>{{openTasks.length}} open {{fieldNameTask}}s today</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content style="height: 300px;">
+                <div class="d-flex justify-content-center" *ngIf="openTasks.length == 0"
+                  style="background-color: ghostwhite;height:95%;padding-top:140px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+                  <h3>No {{fieldNameTask}} present today</h3>
+                </div>
+                <mat-action-list role="list">
+                  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+                    <ng-container *ngFor="let task of openTasks">
+                      <mat-list-item role="listitem" (click)="updateTask(task,task.id)">
+                        <div mat-line>{{task.title}}</div>
+                        <div mat-line>Due: {{task.dueDate.toDate() | date}}
+                          <span *ngIf="dateCheck(task.dueDate)=='Overdue'"
+                            style="border-radius: 10px;background-color: rgba(238, 68, 6, 0.789);color:white">&nbsp;Overdue&nbsp;</span>
+                          <span *ngIf="dateCheck(task.dueDate)=='Due today'"
+                            style="border-radius: 10px;background-color: rgb(33, 129, 238);color:white">&nbsp;Due
+                            today&nbsp;</span>
+                        </div>
+                        <mat-divider></mat-divider>
+                      </mat-list-item>
+                    </ng-container>
+                  </cdk-virtual-scroll-viewport>
+                </mat-action-list>
+              </mat-card-content>
+              <div class="example-button-row">
+                <button mat-button (click)="onTaskTableRoute()" color="primary">View all</button>
+              </div>
+            </mat-card>
+
+
+          </div>
+          <!-- FollowUps -->
+          <div class="col-4" *ngIf="commonService?.userPlan?.activitiesAccess && commonService?.userPlan?.followupsAccess">
+            <mat-card>
+              <mat-card-header>
+                <div mat-card-avatar>
+                  <mat-icon color="accent" class="material-icons-outlined">call</mat-icon>
+                </div>
+                <mat-card-title>{{fieldNameFollowup}}s</mat-card-title>
+                <mat-card-subtitle>{{openFollowUps.length}} {{fieldNameFollowup}}s scheduled today</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content style="height: 300px;">
+                <div class="d-flex justify-content-center" *ngIf="openFollowUps.length == 0"
+                  style="background-color: ghostwhite;height:95%;padding-top:140px;padding-bottom:140px;padding-left:auto;padding-right:auto;text-align: center;border-radius: 10px;">
+
+                  <h3>No {{fieldNameFollowup}} scheduled today</h3>
+                </div>
+                <mat-action-list role="list">
+                  <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+                    <ng-container *ngFor="let followUp of openFollowUps">
+                  <mat-list-item role="listitem" 
+                    (click)="onEditFollowUps(followUp)">
+                    <div mat-line><a
+                        [routerLink]="['/dash/contact/customerdetails',followUp.customerId]">{{followUp.customerName}}</a>
+                    </div>
+                    <div mat-line>Due: {{followUp.callStartDate?.toDate() | date}}&nbsp;<span *ngIf="followUp.callStartTime">{{followUp.callStartTime | convertFrom24To12Format}}&nbsp;</span>
+                      <span *ngIf="dateCheck(followUp.callStartDate)=='Overdue'"
+                        style="border-radius: 10px;background-color: rgba(238, 68, 6, 0.789);color:white">&nbsp;Overdue&nbsp;</span>
+                      <span *ngIf="dateCheck(followUp.callStartDate)=='Due today'"
+                        style="border-radius: 10px;background-color: rgb(33, 129, 238);color:white">&nbsp;Due
+                        today&nbsp;</span>
+                      <span class="example-spacer"></span>
+                    </div>
+                    <mat-divider></mat-divider>
+                  </mat-list-item>
+                  </ng-container>
+                  </cdk-virtual-scroll-viewport>
+
+                </mat-action-list>
+              </mat-card-content>
+              <div class="example-button-row">
+                <button mat-button (click)="onFollowupTableRoute()" color="primary">View all</button>
+              </div>
+            </mat-card>
+
+
+          </div>
+
+        </div>
+        <br *ngIf="commonService?.userPlan?.activitiesAccess"/><br *ngIf="commonService?.userPlan?.activitiesAccess"/>
+
+        <h2 class="mat-h2 mat-title" *ngIf="(dataAccessRule == 'All' || dataAccessRule == 'Own')">
+          Recently added
+        </h2>
+        <!---------- super user recent contact sales invoice and payment card----------->
+        <div class="row" *ngIf="(dataAccessRule == 'All' || dataAccessRule == 'Own')">
+          <!-- Contacts -->
+          <div class="col-md-3" *ngIf="commonService?.userPlan?.contactAccess">
+            <mat-card style="min-height: 230px">
+              <mat-header>
+                <mat-title id="cardMainTitle">
+                  Recent {{fieldNameContact}}s <span class="example-spacer"></span>
+                  <button mat-button style="float: right" [ngClass]="{ isDisabled: disableViewContact }"
+                     (click)="onContactTableRoute()" color="primary">
+                    View all
+                  </button>
+                </mat-title>
+              </mat-header><br /><br />
+              <mat-card-content>
+                <div *ngIf="recentCustomers?.length != 0">
+                  <div class="d-flex align-items-stretch" *ngFor="let customer of recentCustomers | slice: 0:2"
+                    id="cardStyle" [routerLink]="[
+                        '/dash/contact/customerdetails',
+                        customer.id
+                      ]" style="cursor: pointer" [ngClass]="{ isDisabled: disableViewContact }">
+                    <mat-icon matListAvatar>
+                      <ngx-avatar name="{{ customer.firstName.split(' ')[0] }}" textSizeRatio="2" size="35">
+                      </ngx-avatar>
+                    </mat-icon>
+                    <div class="align-self-start">
+                      <div>
+                        <div id="cardTitleConatct" class="truncate-cell">
+                          {{ customer.firstName }}<span *ngIf="customer.secondName">&nbsp;{{
+                          customer.secondName
+                          }}</span>
+                          <div style="
+                                color: #607d8b;
+                                font-family: Roboto;
+                                font-style: normal;
+                                height: 20px;
+                                right: 160px;
+                                top: 24px;
+                                font-weight: normal;
+
+                                font-size: 12px;
+                              ">
+                            {{ customer.companyName }}
+                          </div>
+                          <mat-chip-list aria-label="selection">
+                            <mat-chip style="
+                                  color: #2a6af6;
+                                  background-color: #f1f2f4;
+                                  height: 24px;
+                                  top: calc(50% - 24px / 2);
+                                  font-family: Roboto;
+                                  font-style: normal;
+                                  font-weight: 500;
+                                  font-size: 12px;
+                                  line-height: 24px;
+                                ">{{ commonService.getStatusName('customers',customer.selectedContactPipeline,customer.status) }}</mat-chip>
+                          </mat-chip-list>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="recentCustomers?.length == 0">
+                  <div mat-subheader>
+                    Get started by adding your first {{fieldNameContact}}!
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <!-- Sales -->
+          <div class="col-md-3" *ngIf="commonService?.userPlan?.saleAccess">
+            <mat-card style="min-height: 230px">
+              <mat-header>
+                <mat-title id="cardMainTitle">
+                  Recent {{fieldNameSale}}s<span class="example-spacer"></span>
+                  <button mat-button style="float: right" [ngClass]="{ isDisabled: disableSaleView }"
+                    [routerLink]="'/dash/sales/sale'" color="primary">
+                    View all
+                  </button>
+                </mat-title>
+              </mat-header><br /><br />
+              <mat-card-content>
+                <div *ngIf="recentSales?.length != 0">
+                  <mat-selection-list [multiple]="false">
+                    <mat-list-option [ngClass]="{ isDisabled: disableSaleView }"
+                      *ngFor="let sale of recentSales | slice: 0:2" id="cardStyle"
+                      [routerLink]="['/dash/sales/saleview', sale.id]">
+                      <br />
+                      <div mat-line>
+                        <div id="cardTitle" class="truncate-cell">
+                          {{ sale.saleTitle }}
+                          <span style="
+                                float: right;
+                                color: #607d8b;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 12px;
+                              "></span>
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <mat-card-subtitle id="cardSubTitle" class="truncate-cell">
+                          {{ sale.firstName }}<span *ngIf="sale.secondName">&nbsp;{{ sale.secondName }}</span>
+                          <span *ngIf="sale.firstName && sale.companyName">,</span> {{ sale.companyName }} <br />
+                          Stage: {{ commonService.getStatusName('sales', sale.selectedSalePipeline, sale.salesStage) }}
+                        </mat-card-subtitle>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+                <div *ngIf="recentSales?.length == 0 && recentCustomers?.length == 0">
+                  <div mat-subheader>
+                    Create {{fieldNameSale}} opportunities for {{fieldNameContact}}
+                  </div>
+                </div>
+                <div *ngIf="recentSales?.length == 0 && recentCustomers?.length != 0">
+                  <div mat-subheader>Add your first {{fieldNameSale}}</div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <!-- Invoices -->
+          <div class="col-md-3" *ngIf="dataAccessRule == 'All' && commonService?.userPlan?.documentsAccess && commonService?.userPlan?.invoicesAccess">
+            <mat-card style="min-height: 230px">
+              <mat-header>
+                <mat-title id="cardMainTitle">
+                  Recent {{fieldNameInvoice}}s<span class="example-spacer"></span>
+                  <button mat-button style="float: right" [routerLink]="'/dash/documents-list/Invoicelist'"
+                    color="primary" [ngClass]="{ isDisabled: disableDocInv }">
+                    View all
+                  </button>
+                </mat-title>
+              </mat-header><br /><br />
+              <mat-card-content>
+                <div *ngIf="invoices?.length != 0">
+                  <mat-selection-list [multiple]="false">
+                    <mat-list-option [ngClass]="{ isDisabled: disableDocInv }"
+                      *ngFor="let invoice of invoices | slice: 0:2" id="cardStyle" [routerLink]="[
+                          '/dash/document/Invoice',
+                          invoice.id
+                        ]">
+                      <br />
+
+                      <div mat-line>
+                        <div id="cardTitle">
+                          {{ invoice.docData.currency }}
+                          {{ invoice.docData.totalInclTax }}
+                          <span style="
+                                float: right;
+                                color: #607d8b;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 12px;
+                              ">
+                            {{
+                            invoice.docData.docDate.toDate() | date
+                            }}</span>
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <mat-card-subtitle id="cardSubTitle" class="truncate-cell">
+                          No: {{ invoice.docData.prefixAndDocNumber }} <br />
+                          {{ invoice.customerData.fname1 }}<span *ngIf="invoice.customerData.sname">&nbsp;{{ invoice.customerData.sname }}</span><span *ngIf="invoice.customerData.fname1 && invoice.customerData.companyName">,</span>
+                          {{ invoice.customerData.companyName }}
+                        </mat-card-subtitle>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+                
+                <div *ngIf="invoices?.length == 0">
+                  <div mat-subheader>Add your first {{fieldNameInvoice}}</div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <!-- Payments -->
+          <div class="col-md-3" *ngIf="dataAccessRule == 'All' && commonService?.userPlan?.collectionsAccess">
+            <mat-card style="min-height: 230px">
+              <mat-header>
+                <mat-title id="cardMainTitle">
+                  Recent Payments<span class="example-spacer"></span>
+                  <button mat-button style="float: right" [routerLink]="'/dash/documents-list/payment-receipt'"
+                    color="primary" [ngClass]="{ isDisabled: disableCollView }">
+                    View all
+                  </button>
+                </mat-title>
+              </mat-header><br /><br />
+              <mat-card-content>
+                <div *ngIf="recentPayment?.length != 0">
+                  <mat-selection-list [multiple]="false">
+                    <mat-list-option *ngFor="let payment of recentPayment | slice: 0:2" style="cursor: auto">
+                      <br />
+
+                      <div mat-line>
+                        <div id="cardTitle">
+                          {{payment.currency }}
+                          {{ payment.amountCollected }}
+                          <span style="
+                                float: right;
+                                color: #607d8b;
+                                font-family: Roboto;
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 12px;
+                              ">
+                            {{ payment.paymentDate.toDate() | date }}</span>
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <mat-card-subtitle id="cardSubTitle" class="truncate-cell">
+                          No: {{ payment.invoiceprefixAndDocNumber }} <br />
+                          {{ payment.customerName }}<span *ngIf="payment.customerSecondName">&nbsp;{{ payment.customerSecondName }}</span><span *ngIf="payment.customerName && payment.customerCompany">,</span>
+                          {{ payment.customerCompany }}
+                        </mat-card-subtitle>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+                <div *ngIf="recentPayment?.length == 0">
+                  <div mat-subheader>No Payments Received</div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <br /><br />
+        <!--------Super user chart--------->
+        <!-- <h2 class="mat-h2 mat-title">
+          Monthly progress
+        </h2>
+        <div class="row" *ngIf="dataAccessRule == 'All'" style="padding-bottom: 20px;">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-card style="min-height: 420px">
+                  <mat-card-header>
+                    <mat-card-title>{{fieldNameContact}}s added</mat-card-title>
+                    <mat-card-subtitle>
+                      {{ currentDate | date: "MMM, y" }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <div *ngFor="
+                            let c of customerList;
+                            let last = last;
+                            let i = index
+                          ">
+                        <div *ngIf="last">{{ i + 1 }} {{fieldNameContact}}s added in this month</div>
+                      </div>
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-divider></mat-divider>
+                  <div *ngIf="customerList?.length == 0" class="container-fluid text-center">
+                    <img src="assets/images/Contacts.png" alt="pic1" style="
+                          padding: auto;
+                          display: block;
+                          margin-left: auto;
+                          margin-right: auto;
+                          width: 65%;
+                          opacity: 1;
+                          background: transparent 0% 0% no-repeat padding-box;
+                        " />
+                    <br />
+                    <h2 class="mat-h2" style="color: #1565c0">
+                      No {{fieldNameContact}}s added this month
+                    </h2>
+                    <button mat-button color="accent"
+                      [disabled]="!networkCheck.onNetworkCheck() || commonService.addDocLimitaion.addContactDisable"
+                      (click)="onAddCustomer()" style="text-transform: uppercase;">
+                      ADD {{fieldNameContact}}
+                    </button>
+                  </div>
+                  <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                    <apx-chart [series]="customerfunnelOptions.series" *ngIf="customerList?.length != 0"
+                      [colors]="customerfunnelOptions.colors" [chart]="customerfunnelOptions.chart"
+                      [xaxis]="customerfunnelOptions.xaxis" [yaxis]="customerfunnelOptions.yaxis"
+                      [title]="customerfunnelOptions.title" [dataLabels]="customerfunnelOptions.dataLabels"
+                      [stroke]="customerfunnelOptions.stroke" [grid]="customerfunnelOptions.grid"
+                      [tooltip]="customerfunnelOptions.tooltip" [plotOptions]="customerfunnelOptions.plotOptions"
+                      [fill]="customerfunnelOptions.fill" [legend]="customerfunnelOptions.legend"
+                      [labels]="customerfunnelOptions.labels" [markers]="customerfunnelOptions.markers"
+                      [theme]="customerfunnelOptions.theme" [responsive]="customerfunnelOptions.responsive">
+                    </apx-chart>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div class="col-md-6">
+                <mat-card style="min-height: 420px">
+                  <mat-card-header>
+                    <mat-card-title>{{fieldNameSale}}s by value</mat-card-title>
+                    <mat-card-subtitle>
+                      {{ currentDate | date: "MMM, y" }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <div *ngFor="
+                            let sale of sales;
+                            let i = index;
+                            let last = last
+                          ">
+                        <div *ngIf="last">{{ i + 1 }} {{fieldNameSale}}s in progress this month</div>
+                      </div>
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-divider></mat-divider>
+                  <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                    <div class="container-fluid text-center" *ngIf="sales?.length == 0">
+                      <img src="assets/images/Sale.png" alt="pic1" style="
+                            padding: auto;
+                            display: block;
+                            margin-left: auto;
+                            margin-right: auto;
+                            width: 65%;
+                            opacity: 1;
+                            background: transparent 0% 0% no-repeat padding-box;
+                          " />
+                      <br />
+                      <h2 class="mat-h2" style="color: #1565c0">
+                        Created your first {{fieldNameContact}}?<br />
+                        Now let's add a {{fieldNameSale}} for this month!
+                      </h2>
+                      <button mat-button color="accent" (click)="onAddSale()" [disabled]="
+                            !lengthOfCustomerFlag ||
+                            !networkCheck.onNetworkCheck()|| commonService.addDocLimitaion.addSaleDisable
+                          " style="text-transform: uppercase;">
+                        ADD {{fieldNameSale}}
+                      </button>
+                    </div>
+                    <div class="row" *ngIf="sales?.length != 0">
+                      <div class="col-md-12">
+                        <div *ngIf="sales?.length != 0"></div>
+                        <apx-chart [series]="estimatefunnelOptions.series" [colors]="estimatefunnelOptions.colors"
+                          [chart]="estimatefunnelOptions.chart" [xaxis]="estimatefunnelOptions.xaxis"
+                          [yaxis]="estimatefunnelOptions.yaxis" [dataLabels]="estimatefunnelOptions.dataLabels"
+                          [stroke]="estimatefunnelOptions.stroke" [grid]="estimatefunnelOptions.grid"
+                          [tooltip]="estimatefunnelOptions.tooltip" [plotOptions]="estimatefunnelOptions.plotOptions"
+                          [fill]="estimatefunnelOptions.fill" [legend]="estimatefunnelOptions.legend"
+                          [labels]="estimatefunnelOptions.labels" [markers]="estimatefunnelOptions.markers"
+                          [theme]="estimatefunnelOptions.theme" [responsive]="estimatefunnelOptions.responsive">
+                        </apx-chart>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-card style="min-height: 420px">
+              <mat-card-header>
+                <mat-card-title> {{fieldNameInvoice}} and {{fieldNameCollection}} </mat-card-title>
+                <mat-card-subtitle>
+                  {{ currentDate | date: "MMM, y" }}
+                </mat-card-subtitle>
+                <mat-card-subtitle style="height: 20px;">
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-divider></mat-divider>
+              <mat-card-content>
+                <apx-chart [series]="invoiceChartOptions.series" [colors]="invoiceChartOptions.colors"
+                  [chart]="invoiceChartOptions.chart" [xaxis]="invoiceChartOptions.xaxis"
+                  [yaxis]="invoiceChartOptions.yaxis" [dataLabels]="invoiceChartOptions.dataLabels"
+                  [stroke]="invoiceChartOptions.stroke" [grid]="invoiceChartOptions.grid"
+                  [tooltip]="invoiceChartOptions.tooltip" [plotOptions]="invoiceChartOptions.plotOptions"
+                  [fill]="invoiceChartOptions.fill" [legend]="invoiceChartOptions.legend"
+                  [labels]="invoiceChartOptions.labels" [markers]="invoiceChartOptions.markers"
+                  [theme]="invoiceChartOptions.theme" [responsive]="invoiceChartOptions.responsive">
+                </apx-chart>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <div class="row" *ngIf="(dataAccessRule == 'Team')" style="padding-bottom: 20px;">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-card style="min-height: 420px">
+                  <mat-card-header>
+                    <mat-card-title>Month Wise {{fieldNameContact}}s</mat-card-title>
+                    <mat-card-subtitle>
+                      {{ currentDate | date: "MMM, y" }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <div *ngFor="
+                            let c of customerList;
+                            let last = last;
+                            let i = index
+                          ">
+                        <div *ngIf="last">{{ i + 1 }} {{fieldNameContact}}s added in this month</div>
+                      </div>
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-divider></mat-divider>
+                  <div *ngIf="customerList?.length == 0" class="container-fluid text-center">
+                    <img src="assets/images/Contacts.png" alt="pic1" style="
+                          padding: auto;
+                          display: block;
+                          margin-left: auto;
+                          margin-right: auto;
+                          width: 65%;
+                          opacity: 1;
+                          background: transparent 0% 0% no-repeat padding-box;
+                        " />
+                    <br />
+                    <h2 class="mat-h2" style="color: #1565c0">
+                      No {{fieldNameContact}}s added this month
+                    </h2>
+                    <button mat-button color="accent" [disabled]="!networkCheck.onNetworkCheck()"
+                      (click)="onAddCustomer()" style="text-transform: uppercase;">
+                      ADD {{fieldNameContact}}
+                    </button>
+                  </div>
+                  <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                    <apx-chart [series]="customerfunnelOptions.series" *ngIf="customerList?.length != 0"
+                      [colors]="customerfunnelOptions.colors" [chart]="customerfunnelOptions.chart"
+                      [xaxis]="customerfunnelOptions.xaxis" [yaxis]="customerfunnelOptions.yaxis"
+                      [title]="customerfunnelOptions.title" [dataLabels]="customerfunnelOptions.dataLabels"
+                      [stroke]="customerfunnelOptions.stroke" [grid]="customerfunnelOptions.grid"
+                      [tooltip]="customerfunnelOptions.tooltip" [plotOptions]="customerfunnelOptions.plotOptions"
+                      [fill]="customerfunnelOptions.fill" [legend]="customerfunnelOptions.legend"
+                      [labels]="customerfunnelOptions.labels" [markers]="customerfunnelOptions.markers"
+                      [theme]="customerfunnelOptions.theme" [responsive]="customerfunnelOptions.responsive">
+                    </apx-chart>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div class="col-md-6">
+                <mat-card style="min-height: 420px">
+                  <mat-card-header>
+                    <mat-card-title>Month Wise {{fieldNameSale}}s</mat-card-title>
+                    <mat-card-subtitle>
+                      {{ currentDate | date: "MMM, y" }}
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <div *ngFor="
+                            let sale of sales;
+                            let i = index;
+                            let last = last
+                          ">
+                        <div *ngIf="last">{{ i + 1 }} {{fieldNameSale}}s in progress this month</div>
+                      </div>
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-divider></mat-divider>
+                  <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                    <div class="container-fluid text-center" *ngIf="sales?.length == 0">
+                      <img src="assets/images/Sale.png" alt="pic1" style="
+                            padding: auto;
+                            display: block;
+                            margin-left: auto;
+                            margin-right: auto;
+                            width: 65%;
+                            opacity: 1;
+                            background: transparent 0% 0% no-repeat padding-box;
+                          " />
+                      <br />
+                      <h2 class="mat-h2" style="color: #1565c0">
+                        Created your first {{fieldNameContact}}?<br />
+                        Now let's add a {{fieldNameSale}} for this month!
+                      </h2>
+                      <button mat-button color="accent" (click)="onAddSale()" [disabled]="
+                            !lengthOfCustomerFlag ||
+                            !networkCheck.onNetworkCheck()
+                          " style="text-transform: uppercase;">
+                        ADD {{fieldNameSale}}
+                      </button>
+                    </div>
+                    <div class="row" *ngIf="sales?.length != 0">
+                      <div class="col-md-12">
+                        <div *ngIf="sales?.length != 0"></div>
+                        <apx-chart [series]="estimatefunnelOptions.series" [colors]="estimatefunnelOptions.colors"
+                          [chart]="estimatefunnelOptions.chart" [xaxis]="estimatefunnelOptions.xaxis"
+                          [yaxis]="estimatefunnelOptions.yaxis" [dataLabels]="estimatefunnelOptions.dataLabels"
+                          [stroke]="estimatefunnelOptions.stroke" [grid]="estimatefunnelOptions.grid"
+                          [tooltip]="estimatefunnelOptions.tooltip" [plotOptions]="estimatefunnelOptions.plotOptions"
+                          [fill]="estimatefunnelOptions.fill" [legend]="estimatefunnelOptions.legend"
+                          [labels]="estimatefunnelOptions.labels" [markers]="estimatefunnelOptions.markers"
+                          [theme]="estimatefunnelOptions.theme" [responsive]="estimatefunnelOptions.responsive">
+                        </apx-chart>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="(dataAccessRule == 'Own')" style="padding-bottom: 20px;">
+          <div class="col-md-6">
+            <mat-card style="min-height: 420px;">
+              <mat-card-header>
+                <mat-card-title>{{fieldNameContact}}s added</mat-card-title>
+                <mat-card-subtitle>
+                  {{ currentDate | date: "MMM, y" }}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  <div *ngFor="
+                            let c of customerList;
+                            let last = last;
+                            let i = index
+                          ">
+                    <div *ngIf="last">{{ i + 1 }} {{fieldNameContact}}s added in this month</div>
+                  </div>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-divider></mat-divider>
+              <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                <div *ngIf="customerList?.length == 0" class="container-fluid text-center">
+                  <img src="assets/images/Contacts.png" alt="pic1" style="
+                          padding: auto;
+                          display: block;
+                          margin-left: auto;
+                          margin-right: auto;
+                          width: 65%;
+                          opacity: 1;
+                          background: transparent 0% 0% no-repeat padding-box;
+                        " />
+                  <br />
+                  <h2 class="mat-h2" style="color: #1565c0">
+                    No {{fieldNameContact}}s added this month
+                  </h2>
+                  <button mat-button color="accent"
+                    [disabled]="!networkCheck.onNetworkCheck() || commonService.addDocLimitaion.addContactDisable"
+                    (click)="onAddCustomer()" style="text-transform: uppercase;">
+                    ADD {{fieldNameContact}}
+                  </button>
+                </div>
+
+                <apx-chart [series]="customerfunnelOptions.series" *ngIf="customerList?.length != 0"
+                  style="width: min-content;" [colors]="customerfunnelOptions.colors"
+                  [chart]="customerfunnelOptions.chart" [xaxis]="customerfunnelOptions.xaxis"
+                  [yaxis]="customerfunnelOptions.yaxis" [title]="customerfunnelOptions.title"
+                  [dataLabels]="customerfunnelOptions.dataLabels" [stroke]="customerfunnelOptions.stroke"
+                  [grid]="customerfunnelOptions.grid" [tooltip]="customerfunnelOptions.tooltip"
+                  [plotOptions]="customerfunnelOptions.plotOptions" [fill]="customerfunnelOptions.fill"
+                  [legend]="customerfunnelOptions.legend" [labels]="customerfunnelOptions.labels"
+                  [markers]="customerfunnelOptions.markers" [theme]="customerfunnelOptions.theme"
+                  [responsive]="customerfunnelOptions.responsive">
+                </apx-chart>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div class="col-md-6">
+            <mat-card style="min-height: 420px">
+              <mat-card-header>
+                <mat-card-title>{{fieldNameSale}}s by value</mat-card-title>
+                <mat-card-subtitle>
+                  {{ currentDate | date: "MMM, y" }}
+                </mat-card-subtitle>
+                <mat-card-subtitle>
+                  <div *ngFor="
+                            let sale of sales;
+                            let i = index;
+                            let last = last
+                          ">
+                    <div *ngIf="last">{{ i + 1 }} {{fieldNameSale}}s in progress this month</div>
+                  </div>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-divider></mat-divider>
+              <mat-card-content [ngStyle]="{ margin: '0px' }" style="padding-right: 20px;">
+                <div class="container-fluid text-center" *ngIf="sales?.length == 0">
+                  <img src="assets/images/Sale.png" alt="pic1" style="
+                            padding: auto;
+                            display: block;
+                            margin-left: auto;
+                            margin-right: auto;
+                            width: 65%;
+                            opacity: 1;
+                            background: transparent 0% 0% no-repeat padding-box;
+                          " />
+                  <br />
+                  <h2 class="mat-h2" style="color: #1565c0">
+                    Created your first {{fieldNameContact}}?<br />
+                    Now let's add a {{fieldNameSale}} for this month!
+                  </h2>
+                  <button mat-button color="accent" (click)="onAddSale()" [disabled]="
+                            !lengthOfCustomerFlag ||
+                            !networkCheck.onNetworkCheck()|| commonService.addDocLimitaion.addSaleDisable
+                          " style="text-transform: uppercase;">
+                    ADD {{fieldNameSale}}
+                  </button>
+                </div>
+                <div class="row" *ngIf="sales?.length != 0">
+                  <div class="col-md-12">
+                    <div *ngIf="sales?.length != 0"></div>
+                    <apx-chart [series]="estimatefunnelOptions.series" [colors]="estimatefunnelOptions.colors"
+                      [chart]="estimatefunnelOptions.chart" [xaxis]="estimatefunnelOptions.xaxis"
+                      [yaxis]="estimatefunnelOptions.yaxis" [dataLabels]="estimatefunnelOptions.dataLabels"
+                      [stroke]="estimatefunnelOptions.stroke" [grid]="estimatefunnelOptions.grid"
+                      [tooltip]="estimatefunnelOptions.tooltip" [plotOptions]="estimatefunnelOptions.plotOptions"
+                      [fill]="estimatefunnelOptions.fill" [legend]="estimatefunnelOptions.legend"
+                      [labels]="estimatefunnelOptions.labels" [markers]="estimatefunnelOptions.markers"
+                      [theme]="estimatefunnelOptions.theme" [responsive]="estimatefunnelOptions.responsive">
+                    </apx-chart>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div> -->
+
+
+      </div>
+
+
+    </div>
+    <br>
+
+  </div>
+
+</section>
+
+<mat-progress-bar [style.display]="isLoaded ? 'none' : 'block'" mode="indeterminate">
+</mat-progress-bar>
+

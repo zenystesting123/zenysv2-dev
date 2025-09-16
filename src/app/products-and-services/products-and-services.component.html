@@ -1,0 +1,77 @@
+<div class="no-v-scroll">
+  <!-- TOOLBAR -->
+  <mat-toolbar *ngIf="commonService.userPlan.productsAccess && commonService.userPlan.productsServicesAccess"
+  class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <mat-icon class="text-primary" mat-list-icon>inventory_2
+    </mat-icon>&nbsp;
+    <span>
+      <h2>
+
+        {{
+        fieldNameItems
+        }}s
+      </h2>
+    </span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="example-spacer"></span>
+
+
+
+    <!-- ADD ICON -->
+    <button mat-mini-fab (click)="addProd()" color="accent" [disabled]="!networkCheck.onNetworkCheck()"
+      [ngClass]="{ isDisabled: disableItemsCreate }" mat-icon-button aria-aria-label="Add new item icon" title="Add {{
+        fieldNameItems == 'Products and Service' ? 'Product' : fieldNameItems
+      }}s">
+      <mat-icon [ngStyle]="{ color: 'white' }">add</mat-icon>
+    </button>
+    &nbsp;&nbsp;
+
+    <!-- UPLOAD ICON -->
+    <button mat-icon-button [matMenuTriggerFor]="menu2" [disabled]="!networkCheck.onNetworkCheck()">
+      <mat-icon color="accent" title="Upload {{
+          fieldNameItems == 'Products and Service' ? 'Product' : fieldNameItems
+        }}s">upload</mat-icon></button>&nbsp;&nbsp;
+    <mat-menu #menu2="matMenu">
+      <button mat-menu-item (click)="downloadTemplate()">
+        <mat-icon>cloud_download</mat-icon>Download CSV template
+      </button>
+      <button mat-menu-item (click)="openL()" [disabled]="false">
+        <mat-icon [ngClass]="{ isDisabled: false }">cloud_upload</mat-icon>Upload
+        {{
+        fieldNameItems == "Products and Service" ? "Product" : fieldNameItems
+        }}s in CSV
+      </button>
+      <input type="file" class="custom-file-input csv-selector" (change)="csv2Array($event)" style="display: none"
+        accept=".csv" />
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- PROGRESS BAR -->
+  <mat-progress-bar *ngIf="!progressBarStatus" mode="indeterminate">
+  </mat-progress-bar>
+
+  <div class="bg-soft-secondary" style="overflow-y: auto; height: 100%;">
+    <br />
+    <!-- Check for access -->
+    <div *ngIf="disableItemsView || !(commonService.userPlan.productsAccess && commonService.userPlan.productsServicesAccess)" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+
+    <!-- Table starts here -->
+    <div *ngIf="commonService.userPlan.productsAccess && commonService.userPlan.productsServicesAccess && progressBarStatus"
+      class="container-fluid"
+      [style.visibility]="disableItemsView ? 'hidden' : 'visible'"
+      style="margin-bottom: 60px"
+    >
+    <app-custom-report-table [userId]="userId" [columns]="columnsDispaly"
+    [dataList]="tableDataArray.data" [displayName]="displayName" [tableName]="tableName"
+    [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray"
+    [tableDefaultData]="tableDefaultData" [fieldCustomsettings]="productSettings"
+    [customFields]="customFields"></app-custom-report-table>
+    </div>
+    <!-- Table ends here -->
+  </div>
+</div>
+

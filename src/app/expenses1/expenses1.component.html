@@ -1,0 +1,462 @@
+<!-- form made for popup starts here -->
+
+<!-- used for normal popup by option is whether update mode or create mode -->
+
+<h1 mat-dialog-title *ngIf="data.mode == 'create'">
+  &nbsp;Add {{ fieldNameExpense }}
+</h1>
+<h1 mat-dialog-title *ngIf="data.mode == 'update'">
+  &nbsp;Update {{ fieldNameExpense }}
+</h1>
+<h1 mat-dialog-title *ngIf="data.mode == 'createFromList'">
+  &nbsp;Add {{ fieldNameExpense }}
+</h1>
+<br />
+<!-- normal form starts here -->
+<mat-dialog-content style="overflow-x: hidden;">
+  <form [formGroup]="userForm" *ngIf="userForm">
+    <div class="row">
+      <div class="col-4 " *ngIf="expenseSettings.expenseDate.display">
+        <!-- date of the expenses field starts here-->
+        <mat-form-field class="form-fields" appearance="fill">
+          <mat-label>{{
+            expenseSettings.expenseDate.displayName
+            }}</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="expenseDate" required />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="
+                  !userFormControls?.expenseDate.valid &&
+                  (userFormControls?.expenseDate.dirty ||
+                    userFormControls?.expenseDate.touched)
+                ">
+          </mat-error>
+          <mat-error *ngIf="userFormControls?.expenseDate.errors?.required">Date is required!</mat-error>
+        </mat-form-field>
+        <!-- date of the expenses field ends here-->
+      </div>
+      <div class="col-4 " *ngIf="expenseSettings.currency.display">
+        <!-- currency type of the expenses selector currency is taken from common services starts here-->
+        <mat-form-field class="form-fields" appearance="fill">
+          <mat-label>{{
+            expenseSettings.currency.displayName
+            }}
+          </mat-label>
+          <mat-select formControlName="currency" required>
+            <mat-option value="{{ currency.isoCode }}" *ngFor="let currency of currencyList">
+              {{ currency.currencyName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="
+                    !userFormControls?.currency.valid &&
+                    (userFormControls?.currency.dirty ||
+                      userFormControls?.currency.touched)
+                  ">
+            <mat-error *ngIf="userFormControls?.currency.errors?.required">
+              Currency is required!
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+        <!-- currency type will ends here -->
+      </div>
+      <div class="col-4" *ngIf="expenseSettings.amount.display">
+        <!-- amount of the expenses in this field starts here-->
+        <mat-form-field class="form-fields" appearance="fill">
+          <mat-label>{{ expenseSettings.amount.displayName }}</mat-label>
+          <input matInput formControlName="amount" type="number" required />
+          <mat-error class="form-text text-muted danger" *ngIf="
+                  !userFormControls?.amount.valid &&
+                  (userFormControls?.amount.dirty ||
+                    userFormControls?.amount.touched)
+                ">
+          </mat-error>
+          <mat-error *ngIf="userFormControls?.amount.errors?.required">
+            Amount is required!</mat-error>
+        </mat-form-field>
+        <!-- amount of the expenses in this field ends here-->
+      </div>
+    </div>
+    <!-- <div *ngIf="data.mode == 'update'"> -->
+    <div class="form-row">
+      <!--Tags displayed as chip list-->
+      <div style="margin-bottom: 10px">
+        <mat-chip-list>
+          <!-- chip for customer -->
+          <mat-chip *ngIf="customerId" class="chipStyling" title="{{ fieldNameContact }} tagged"
+            (removed)="onClearContact()">
+            <mat-icon matChipAvatar color="primary">person </mat-icon>
+            <span color="primary" class="truncate-cell">
+              {{ customerFirstName }}
+            </span>
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <!-- chip for organization -->
+          <mat-chip *ngIf="orgId && commonService.userPlan.orgAccess" class="chipStyling"
+            title="{{ fieldNameOrganization }} tagged" (removed)="onClearCompany()">
+            <mat-chip-avatar>
+              <mat-icon color="primary">apartment</mat-icon>
+            </mat-chip-avatar>
+            <a color="primary" class="link-primary">
+              {{ customerCompany }}</a>
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <!-- chip for sale -->
+          <mat-chip *ngIf="customerId && saleId && commonService.userPlan.saleAccess" class="chipStyling"
+            (removed)="onClearSale()">
+            <mat-icon matChipAvatar color="primary">work </mat-icon>
+            <span color="primary" class="truncate-cell">
+              {{ saleTitle }}
+            </span>
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Customer and Organization dropdown from common component-->
+      <app-common-org-tag (orgNameEvent)="orgNameEventHander($event)"
+        (contSelectedEvent)="contSelectedEventHander($event)" (orgIdEvent)="orgIdEventHander($event)"
+        [contactSelected]="contactSelected" [companySelected]="companySelected" [chipDisplay]="chipDisplay"
+        [inpModule]="inpModule">
+      </app-common-org-tag>
+    </div>
+
+    <div *ngIf="
+              customerId && !saleId && commonService.userPlan.saleAccess" style="width: 100%">
+      <div>
+        <mat-form-field class="example-full-width" style="width: 100%">
+          <mat-label>{{ fieldNameSale }}</mat-label>
+          <mat-select formControlName="saleTitleValue">
+            <mat-option *ngIf="sales?.length == 0">No {{ fieldNameSale }} added to this {{ fieldNameContact
+              }}</mat-option>
+            <mat-option (onSelectionChange)="onSaleTitle($event.source.value)" *ngFor="let s of sales" [value]="s">
+              {{ s.saleTitle }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- </div> -->
+
+    <div class="row">
+      <div class="col-md-12 col-sm-12" *ngIf="expenseSettings.description.display">
+        <!-- description of the expenses in this textarea starts here-->
+        <mat-form-field appearance="fill" style="width: 100%">
+          <mat-label>{{
+            expenseSettings.description.displayName
+            }}</mat-label>
+          <textarea matInput formControlName="description" type="text">
+              </textarea>
+          <mat-error *ngIf="
+                  !userFormControls?.description.valid &&
+                  (userFormControls?.description.dirty ||
+                    userFormControls?.description.touched)
+                ">
+          </mat-error>
+          <mat-error *ngIf="userFormControls?.description.errors?.required">
+            Descriptions is required!</mat-error>
+        </mat-form-field>
+        <!-- description of the expenses in this textarea ends here-->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12" *ngIf="expenseSettings.category.display">
+        <!-- <div class="form-group mb-2"> -->
+        <!-- category type of ths expense option starts here -->
+        <mat-form-field appearance="fill" style="width: 100%">
+          <mat-label>{{
+            expenseSettings.category.displayName
+            }}</mat-label>
+          <mat-select formControlName="category" required>
+            <mat-option value="{{ category }}" *ngFor="let category of categoryList">{{ category }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="
+                    !userFormControls?.category.valid &&
+                    (userFormControls?.category.dirty ||
+                      userFormControls?.category.touched)
+                  ">
+          </mat-error>
+          <mat-error *ngIf="userFormControls?.category.errors?.required">Category is required!</mat-error>
+        </mat-form-field>
+        <!-- category type of ths expense option ends here -->
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="row">
+      <!--additional fields start here-->
+      <div style="
+              border-radius: 10px;
+            ">
+
+        <!--from here-->
+        <div class="form-row">
+          <ng-container *ngFor="
+                  let addFieldsGroup of this.userForm?.get('additionalFields')
+                    .controls;
+                  let i = index;
+                  trackBy: identify
+                " [formGroup]="addFieldsGroup">
+            <div *ngIf="additionalFields[i].isActive" [ngClass]="
+              additionalFields[i].fieldType == 'textarea' || additionalFields[i].fieldType == 'date_time'
+                ? 'col-12'
+                : 'col-6'
+            ">
+              <div *ngIf="additionalFields[i].fieldType == 'category'">
+                <mat-form-field style="width: 100%" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                  <mat-select formControlName="fieldValue" name="additionalField" placeholder="Required">
+                    <mat-option *ngIf="additionalFields[i].mandatory == false" value="">None</mat-option>
+                    <mat-option *ngFor="let s of additionalFields[i].categories" value="{{ s }}">{{ s }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div *ngIf="additionalFields[i].fieldType == 'inputField'">
+                <mat-form-field style="width: 100%" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                  <input matInput formControlName="fieldValue" name="additionalField" type="text" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="additionalFields[i].fieldType == 'number'">
+                <mat-form-field style="width: 100%" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                  <input matInput formControlName="fieldValue" name="additionalField" type="number" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="additionalFields[i].fieldType == 'textarea'">
+                <mat-form-field style="width: 100%" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                  <textarea matInput placeholder="Description" formControlName="fieldValue"
+                    name="additionalField"></textarea>
+                </mat-form-field>
+              </div>
+              <div *ngIf="additionalFields[i].fieldType == 'date'">
+                <mat-form-field style="width: 100%" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} </mat-label>
+                  <input matInput [matDatepicker]="addtfield_i" name="additionalField" formControlName="fieldValue" />
+                  <mat-datepicker-toggle matSuffix [for]="addtfield_i"></mat-datepicker-toggle>
+                  <mat-datepicker #addtfield_i></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!--Test starts here-->
+              <div *ngIf="additionalFields[i].fieldType == 'date_time'">
+                <mat-form-field class="dateTime-wdith" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} Date </mat-label>
+                  <input matInput [matDatepicker]="addtfield_date_time" name="additionalField"
+                    formControlName="fieldValue" />
+                  <mat-datepicker-toggle matSuffix [for]="addtfield_date_time"></mat-datepicker-toggle>
+                  <mat-datepicker #addtfield_date_time></mat-datepicker>
+
+                </mat-form-field>
+                <!--time-->
+                <mat-form-field class="dateTime-wdith" appearance="fill">
+                  <mat-label>{{ additionalFields[i].fieldName }} Time </mat-label>
+                  <input matInput type="time" formControlName="fieldValue2" name="defaultValue" />
+
+                </mat-form-field>
+              </div>
+            </div>
+            <!--Test endss here-->
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <!--additional field end here-->
+    <br />
+    <!--Attachments-->
+    <div class="row" style="padding-top: 10px;">
+      <div class="col-md-12 co-sm-l2">
+        <button mat-button color="accent" [disabled]="fileUploading" (click)="inputAttachment()">
+          Attach File
+          <mat-icon color="primary">attach_file</mat-icon>
+        </button>
+
+        <input type="file" #file class="custom-file-input" name="attachmentExp" (change)="uploadAttachmentExp($event)"
+          style="display: none" accept=".csv,.pdf,.doc,.xls" />
+        <div class="uploadNotif" *ngIf="fileUploading">
+          <mat-icon (click)="uploadComplete()" style="float: right; font-size: medium; cursor: pointer">close</mat-icon>
+          <h4>Upload in progress</h4>
+          <div class="progress" *ngIf="uploadProgress$ | async as progress">
+            <div class="progress-bar progress-bar-animated" *ngIf="progress != '100'"
+              [ngStyle]="{ width: progress + '%' }">
+              Uploading {{ progress | number: "1.0-0" }} %
+            </div>
+            <div class="progress-bar progress-bar-animated" *ngIf="progress == '100'"
+              [ngStyle]="{ width: progress + '%' }">
+              Completed
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row" *ngIf="attachments.length > 0">
+      <div *ngFor="let item of attachments" class="col-md-12 col-sm-12">
+        <div>
+          <mat-list>
+            <div class="parent">
+              <mat-list-item>
+                <div class="first">
+                  {{ item.fileName }}
+                </div>
+                <div class="second">
+                  <button mat-icon-button color="secondary" [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <a [href]="item.downloadURL" target="_blank" style="text-decoration: none">
+                      <button mat-menu-item>
+                        <mat-icon>download</mat-icon>
+                        <span>Download</span>
+                      </button>
+                    </a>
+                    <button mat-menu-item (click)="deleteAttach(item)">
+                      <mat-icon>delete_forever</mat-icon>
+                      <span>Delete</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </mat-list-item>
+            </div>
+          </mat-list>
+        </div>
+      </div>
+    </div>
+    <br/>
+     <!-- ChangeLog -->
+    <div class="row" *ngIf="changeLogLength > 0" style="height:200px;">
+      <h3 style="margin: 0px;"> CHANGE LOG</h3>
+      <div style="
+              margin: 0;
+              padding: 0;
+              height: 200px;
+              overflow-y: scroll;
+            ">
+        <!-- Display change log according to last modified date-->
+        <div class="mb-3 border-bottom" *ngFor="
+                let item of expenseChangeLog | keyvalue : customsort;
+                let i = index
+              " style="padding: 20px 20px 0px 20px; margin: 0px !important;">
+          <div class="d-flex align-items-center mb-3">
+            <div class="flex-shrink-0">
+              <img class="avatar avatar-sm avatar-circle" src="../assets/img/160x160/img1.jpg"
+                alt="Image Description" />
+            </div>
+
+            <div class="flex-grow-1 ms-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">{{ item.value.changedByName }}</h4>
+                <span class="d-block small text-muted">
+                  {{
+                  item.value.dateModified | date : "medium"
+                  }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div matLine *ngIf="
+                  item.value.currentValues == '' &&
+                  item.value.previousValues == ''
+                ">
+            <div>
+              {{ fieldNameExpense }} created by
+              {{ item.value.changedByName }}
+            </div>
+          </div>
+
+          <div *ngFor="
+                  let celem of item.value.currentValues | keyvalue
+                ">
+
+            <div *ngIf="celem.key == 'addedAttachments'">
+              <div *ngFor="let elem1 of celem.value | keyvalue : onCompare">
+                <p>Added attachment "{{ elem1.value.addedAttachment}}"</p>
+              </div>
+            </div>
+
+            <div *ngIf="celem.key == 'deletedAttachments'">
+              <div *ngFor="let elem1 of celem.value | keyvalue : onCompare">
+                <p>Deleted attachment "{{ elem1.value.deletedAttachment }}"</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div matLine *ngFor="
+                  let pelem of item.value.previousValues | keyvalue
+                ">
+            <div *ngFor="
+                    let celem of item.value.currentValues | keyvalue
+                  ">
+              <div *ngIf="pelem.key == celem.key">
+                <div *ngIf="
+                        pelem.key == 'additionalFields' &&
+                        celem.key == 'additionalFields'
+                      ">
+                  <div *ngFor="let j of pelem.value | keyvalue">
+                    <div *ngFor="let k of celem.value | keyvalue">
+                      <div *ngIf="j.key == k.key">
+                        <div>
+                          Modified {{ j.value.fieldName }} from
+                          {{
+                          j.value.fieldValue
+                          ? j.value.fieldValue
+                          : "None"
+                          }}
+                          to
+                          {{
+                          k.value.fieldValue
+                          ? k.value.fieldValue
+                          : "None"
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="
+                        pelem.key != 'additionalFields' &&
+                        celem.key != 'additionalFields' && 
+                        pelem.key != 'orgId' &&
+                        celem.key != 'orgId'
+                      ">
+
+                  Modified
+                  {{this.expenseSettings[pelem.key]?.displayName}} from {{pelem.value ? pelem.value : "None"}} to
+                  {{celem.value ? celem.value : "None"}}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<!-- actions part  having action button of create/update/close starts here -->
+<!-- checking data mode as create/update -->
+<mat-dialog-actions class="right">
+  <button [disabled]="this.fileUploading" mat-button (click)="closed()">
+    Cancel
+  </button>
+  &nbsp;
+  <button *ngIf="data.mode == 'create' || data.mode == 'createFromList'" type="submit" mat-button (click)="
+              userForm?.valid
+                ? onSubmit(userForm, 'btn_create_exp_web')
+                : TypeError()
+            " color="primary" [disabled]="!userForm?.valid || this.fileUploading">
+    <i class="ft-check-square mr-1"></i> Add
+  </button>
+  <!-- </div> -->
+  <!-- <div mat-dialog-actions *ngIf="data.mode == 'update'" class="right"> -->
+
+  <button *ngIf="data.mode == 'update'" type="submit" mat-button
+    (click)="userForm?.valid ? onUpdate(userForm) : TypeError()" color="primary"
+    [disabled]="!userForm?.valid || this.fileUploading">
+    <i class="ft-check-square mr-1"></i> Update
+  </button>
+</mat-dialog-actions>
+<!-- actions part  having action button of create/update/close ends here -->

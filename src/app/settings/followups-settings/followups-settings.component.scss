@@ -1,0 +1,95 @@
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+::ng-deep .mat-card-header-text {
+  width: 100% !important;
+}
+.card-container-left {
+  display: inline;
+}
+.frame {
+  width: 80%;
+  margin-left: auto;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0px 0.5px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+.box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.box :first-child {
+  align-self: center;
+}
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.fullcap {
+  text-transform: uppercase;
+}
+.container-xl {
+  margin-top: 4%;
+}
+.custom {
+  line-height: 28px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+}
+//customisation field styling
+.flex-container {
+  display: flex;
+}
+.custField{
+flex: .5 .5 auto;
+margin-top: auto;
+margin-bottom: auto;
+}
+.custFields{
+flex: 1;
+margin-top: auto;
+margin-bottom: auto;
+}
+
+.flex-width{
+  flex-basis: 25%;
+  margin-top: auto;
+margin-bottom: auto;
+}
+//customisation field styling
+.flex-container {
+  display: flex;
+}
+.custField{
+flex: .5 .5 auto;
+margin-top: auto;
+margin-bottom: auto;
+}
+
+.flex-width{
+  flex-basis: 25%;
+  margin-top: auto;
+margin-bottom: auto;
+}
+
+.fix-width{
+  width:200px;
+}
+
+.custom-width{
+  width: 83%;
+}

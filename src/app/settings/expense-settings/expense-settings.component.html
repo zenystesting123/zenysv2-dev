@@ -1,0 +1,438 @@
+<!-- desktop view starts here -->
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <!-- heading tool bar starts here -->
+  <mat-toolbar class="border-bottom"
+    *ngIf="commonService.userPlan.settingsAccess && commonService.userPlan.expenseAccess"
+    style="flex: 0 0 64px;"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Customize {{ fieldNameExpense }}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <!-- heading tool bar ends here -->
+  <!-- loader begins here -->
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+  <!-- loader ends here -->
+  <div class="container-fluid" style="overflow-y: auto;background-color: white">
+    <div
+      *ngIf="(disableSettingsView && progressBarStatus) || !(commonService.userPlan.settingsAccess && commonService.userPlan.expenseAccess)"
+      class="container-xl"
+      style="background-color: white"
+    >
+      <mat-card>
+        Access Denied. Please contact your SuperUser to make changes to
+        {{ fieldNameExpense }}
+        settings fields.
+      </mat-card>
+    </div>
+
+    <div
+      *ngIf="!disableSettingsView && progressBarStatus && commonService.userPlan.settingsAccess && commonService.userPlan.expenseAccess"
+      style="min-height: 800px"
+    >
+      <mat-tab-group [color]="'primary'">
+        <!-- <mat-tab label="Customer field Settings">
+          <ng-template mat-tab-label> &nbsp; FIELD SETTINGS </ng-template>
+          <div class="container-lg">
+            <br />
+
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <h2 class="text-center">Expense Field Names</h2>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display Expense as</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="this.fieldNameExpense"
+                        name="fieldNameExpense"
+                        required
+                        [disabled]="!editExpense"
+                        [maxLength]="maxLength"
+                      />
+                      <button
+                        *ngIf="!editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Edit"
+                        color="accent"
+                        (click)="editExpensefn()"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="clearExpense()"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Save"
+                        [disabled]="this.fieldNameExpense?.length < 3"
+                        color="accent"
+                        (click)="saveExpense()"
+                      >
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <br>
+
+        </mat-tab> -->
+        <mat-tab label="EXPENSE CATEGORY">
+          <mat-card>
+            <mat-card-content>
+              <div class="form-row container">
+                <br />
+                <!-- drag and drop component starts here -->
+                <div cdkDropListGroup class="center col-md-7 col-12">
+                  <div class="example-container">
+                    <!-- <div
+                      class="container-fluid"
+                      style="margin-bottom: 20px; padding-left: 0px"
+                    >
+                      <br />
+                      <h2>{{ fieldNameExpense }} Category</h2>
+                    </div> -->
+                    <div
+                      cdkDropList
+                      [cdkDropListData]="items"
+                      class="example-list"
+                      (cdkDropListDropped)="drop($event)"
+                    >
+                      <!-- listing of category starts here -->
+                      <div
+                        class="example-box"
+                        *ngFor="let item of items"
+                        cdkDrag
+                      >
+                        {{ item }}
+                        <!-- action for each category starts here -->
+                        <div class="rig">
+                          <button
+                            mat-icon-button
+                            aria-label="Edit"
+                            (click)="edit(item)"
+                            color="accent"
+                            title="Edit "
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            color="warn"
+                            aria-label="delete"
+                            title="Delete"
+                            (click)="delete(item)"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                        <!-- action for each category ends here -->
+                      </div>
+                      <!-- listing of category ends here -->
+                    </div>
+
+                    <br />
+                    <button
+                      (click)="add()"
+                      mat-raised-button
+                      color="accent"
+                      [disabled]="!onCheckNetwork()"
+                    >
+                      Add Category
+                    </button>
+
+                    <br /><br />
+                    <button
+                      *ngIf="changes"
+                      [disabled]="!onCheckNetwork()"
+                      (click)="saveChanges()"
+                      mat-raised-button
+                      color="accent"
+                    >
+                      Save changes
+                    </button>
+                  </div>
+                  <br />
+                </div>
+                <!-- drag and drop component ends here -->
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+        <!--Customisable fields-->
+        <mat-tab label="FIELD CUSTOMISATION">
+          <div class="container-lg">
+            <br />
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <h2 class="text-center">{{fieldNameExpense}} Field Names</h2>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display {{fieldNameExpense}} as</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="this.fieldNameExpense"
+                        name="fieldNameExpense"
+                        required
+                        [disabled]="!editExpense"
+                        [maxLength]="fieldMaxLength"
+                      />
+                      <button
+                        *ngIf="!editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Edit"
+                        color="accent"
+                        (click)="editExpensefn()"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        color="warn"
+                        (click)="clearExpense()"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <button
+                        *ngIf="editExpense"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Save"
+                        [disabled]="this.fieldNameExpense?.length < 3"
+                        color="accent"
+                        (click)="saveExpense()"
+                      >
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br/>
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <div class="text-center mb-7">
+                  <h1 class="card-title">Customize fields</h1>
+                  <p class="card-text">
+                    Change field names and configure which fields are to be
+                    displayed and which are mandatory.
+                  </p>
+                </div>
+          <form [formGroup]="fieldCustomisationForm">
+            <br />
+            <div class="flex-container" formGroupName="expenseDate">
+              <div class="text-center flex-width">
+                <h3>Expense Date</h3>
+              </div>
+              <div class="custField">
+                <mat-form-field appearance="fill" >
+                  <mat-label>Display name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="expenseDateName"
+                    formControlName="displayName"
+                    placeholder="Display name"
+                    maxLength="25"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="custField">
+                <mat-checkbox formControlName="display">Display</mat-checkbox>
+              </div>
+              <div class="custField">
+                <mat-checkbox
+                  formControlName="mandatory"
+                  >Mandatory
+                </mat-checkbox>
+              </div>
+            </div>
+         <div class="flex-container" formGroupName="currency">
+              <div class="text-center flex-width">
+                <h3>Currency</h3>
+              </div>
+              <div class="custField">
+                <mat-form-field appearance="fill">
+                  <mat-label>Display name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="currencydisplayName"
+                    formControlName="displayName"
+                    placeholder="Display name"
+                    maxLength="25"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="custField">
+                <mat-checkbox formControlName="display">Display</mat-checkbox>
+              </div>
+              <div class="custField">
+                <mat-checkbox
+                  formControlName="mandatory"
+                  (change)="disableCurrency()"
+                  >Mandatory</mat-checkbox
+                >
+              </div>
+            </div>
+              <div class="flex-container" formGroupName="category">
+              <div class="text-center flex-width">
+                <h3>Category</h3>
+              </div>
+              <div class="custField">
+                <mat-form-field appearance="fill">
+                  <mat-label>Display name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="categorydisplayName"
+                    formControlName="displayName"
+                    placeholder="Display name"
+                    maxLength="25"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="custField">
+                <mat-checkbox formControlName="display">Display</mat-checkbox>
+              </div>
+              <div class="custField">
+                <mat-checkbox
+                  formControlName="mandatory"
+                  >Mandatory</mat-checkbox
+                >
+              </div>
+            </div>
+             <div class="flex-container" formGroupName="amount">
+              <div class="text-center flex-width">
+                <h3>Amount</h3>
+              </div>
+              <div class="custField">
+                <mat-form-field appearance="fill">
+                  <mat-label>Display name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="amountdisplayName"
+                    formControlName="displayName"
+                    placeholder="Display name"
+                    maxLength="25"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="custField">
+                <mat-checkbox formControlName="display">Display</mat-checkbox>
+              </div>
+              <div class="custField">
+                <mat-checkbox
+                  formControlName="mandatory"
+                  >Mandatory</mat-checkbox
+                >
+              </div>
+            </div>
+          <div class="flex-container" formGroupName="description">
+              <div class="text-center flex-width">
+                <h3>Description</h3>
+              </div>
+              <div class="custField">
+                <mat-form-field appearance="fill">
+                  <mat-label>Display name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="descriptionDisplayName"
+                    formControlName="displayName"
+                    placeholder="Display name"
+                    maxLength="25"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="custField">
+                <mat-checkbox formControlName="display">Display</mat-checkbox>
+              </div>
+              <div class="custField">
+                <mat-checkbox
+                  formControlName="mandatory"
+                  (change)="disableDescription()"
+                  >Mandatory</mat-checkbox
+                >
+              </div>
+            </div>
+            <button
+            class="float-right mr-5"
+              mat-button
+              color="accent"
+              type="submit"
+              id="submitBTn"
+              (click)="onSubmit()"
+              [disabled]="!this.fieldCustomisationForm.valid || !onCheckNetwork()"
+            >
+              Save
+            </button>
+            <br />
+            <br />
+            <br />
+          </form>
+              </div>
+            </div>
+
+          </div>
+
+
+        </mat-tab>
+        <!--Tan for additional fields-->
+
+        <mat-tab label="ADDITIONAL FIELDS">
+          <app-additionalfield-common
+          [superUserId]="superUserId"
+          [superUserDetails]="superUserDetails"
+          [usrProfileData]="usrProfileData"
+          [customFieldName]="fieldNameExpense"
+          [customFieldUnique]="currentCustomField"
+          [customDeleteKey]="'deleteFieldExpense'"
+          [additionalFieldArrName]="'customFieldsExpense'"
+          [customFieldSettings]="expenseSettings"
+          ></app-additionalfield-common>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+    <!-- end of {{fieldNameExpense}} category tab -->
+    <br />
+  </div>
+  <!-- tab view definition ends here -->
+</div>
+<!-- desktop view ends here -->

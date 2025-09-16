@@ -1,0 +1,86 @@
+<ng-container *ngIf="reload">
+    <div class="example-list bg-white border" style="border-radius: 5px">
+        <h3 id="titleDesign"
+        class="mat-h3 mat-subheading-2"
+        [ngClass]="{
+          'text-info': taskType === 'Upcoming',
+          'text-danger': taskType === 'OverDue',
+          'text-success': taskType === 'Completed'
+        }">
+            {{taskType}} {{fieldNameTask}}s 
+        </h3>
+        <mat-divider></mat-divider>
+        <cdk-virtual-scroll-viewport itemSize="200" class="example-viewport" (scrolledIndexChange)="onScroll()">
+            <div class="data-item card" style="margin: 10px" *cdkVirtualFor="
+          let task of displayedData | async
+          let i = index;
+        ">
+                <div class="card-body" *ngIf="isLoaded">
+                    <h3 class="card-title text-primary"> {{ task?.title }}</h3>
+                    <span class="card-subtitle">Due date: {{task?.dueDate?.toDate() | date}}</span>
+
+                    <ul class="list-unstyled">
+                        <li *ngFor="let field of displayFields">{{field.header}}: {{getFieldValue(field, task)}}
+                        </li>
+                    </ul>
+                    <mat-chip-list>
+                        <mat-chip class="chipStyling" title="Priority">
+                            <mat-chip-avatar><mat-icon><span class="material-symbols-outlined">
+                                        label_important
+                                    </span></mat-icon></mat-chip-avatar>{{ task?.priority}}</mat-chip>
+                        <mat-chip *ngIf="task.orgId && commonService.userPlan.orgAccess" class="chipStyling"
+                            (click)="onViewOrg(task.orgId)" title="{{fieldNameOrganization}} tagged">
+                            <mat-chip-avatar>
+                                <mat-icon>business</mat-icon>
+                            </mat-chip-avatar>{{ task.company }}
+                        </mat-chip>
+                        <mat-chip *ngIf="task.customerId" class="chipStyling" title="{{fieldNameContact}} tagged"
+                            (click)="onViewCustomer(task.customerId)">
+                            <mat-chip-avatar><mat-icon>person</mat-icon></mat-chip-avatar>{{ task?.name
+                            }}</mat-chip>
+
+                        <mat-chip *ngIf="task.saleTitle && commonService.userPlan.saleAccess" class="chipStyling"
+                            title="{{fieldNameSale}} tagged" (click)="onViewSale(task.saleId)">
+                            <mat-chip-avatar><mat-icon>work</mat-icon></mat-chip-avatar>{{ task?.saleTitle
+                            }}</mat-chip>
+
+                        <mat-chip *ngIf="task.serviceTitle && commonService.userPlan.serviceAccess" class="chipStyling"
+                            title="{{fieldNameService}} tagged" (click)="onViewSupport(task.serviceId)">
+                            <mat-chip-avatar><mat-icon>support_agent</mat-icon></mat-chip-avatar>{{
+                            task?.serviceTitle }}</mat-chip>
+                    </mat-chip-list>
+                    <br>
+                    <div style="float:left">
+                        <ngx-avatar name="{{ commonService.getAssignedToName(task?.assignedTo).split(' ')[0] }}"
+                            textSizeRatio="2" size="30"
+                            title="Assigned to {{commonService.getAssignedToName(task?.assignedTo)}}">
+                        </ngx-avatar>
+                    </div>
+                    <div style="float: right; ">
+                        <div class="example-flex-container">
+                            <!-- mark as completed -->
+                            <button mat-icon-button *ngIf="task?.status != lastTaskStatusOpn" color="accent"
+                                title="Mark as completed" (click)="updatestatus(task)">
+                                <mat-icon>done</mat-icon>
+                            </button>
+                            <!-- edit task -->
+                            <button color="accent" mat-icon-button title="Edit {{fieldNameTask}}"
+                                (click)="onEditTask(task)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <!-- delete task -->
+                            <button color="warn" mat-icon-button title="Delete {{fieldNameTask}}"
+                                (click)="deleteTask(task.id)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="centre" *ngIf="loading">
+                <mat-spinner [diameter]="24"></mat-spinner>
+            </div>
+        </cdk-virtual-scroll-viewport>
+
+    </div>
+</ng-container>

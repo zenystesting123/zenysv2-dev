@@ -1,0 +1,13 @@
+<h3 style="font-size: 18px;">Template Type</h3>
+<mat-form-field style="width: 100%;" appearance="fill">
+    <mat-label>Choose Template For</mat-label>
+    <mat-select [(ngModel)]="templateType" name="templateType" required>
+      <mat-option value="{{tempType.value}}" *ngFor="let tempType of tempTypeList">{{tempType.display}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div mat-dialog-actions style="  padding-left: 2%; float: right;">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button color="accent" mat-button [mat-dialog-close]="templateType" [disabled]="!templateType">
+        Save
+    </button>
+  </div>

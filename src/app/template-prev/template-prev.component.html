@@ -1,0 +1,59 @@
+<div mat-dialog-content>
+    <!-- <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        x
+      </button> -->
+      <!-- <div *ngIf="data.id==1">
+          id=1
+          
+      </div> -->
+    <div>
+      <div class="card">
+        <img src="assets/images/template_images/prev-temp1.jpg" height="600" width="500" alt="preview1">
+    </div>
+    <div class="card col">
+        <button class="btn btn-primary" (click)="templateUpdate1()">select</button>
+    </div>
+</div>
+        <div *ngIf="id==1">
+            <div class="card">
+                <img src="assets/images/template_images/prev-temp1.jpg" height="600" width="500" alt="preview1">
+            </div>
+            <div class="card col">
+                <button class="btn btn-primary" (click)="templateUpdate1()">select</button>
+            </div>
+        </div>
+        <div *ngIf="id==2">
+            <div class="card">
+                <img src="assets/images/template_images/prev-temp2.png"  alt="preview2">
+            </div>
+            <div class="card col">
+                <button class="btn btn-primary"(click)="templateUpdate2()">select</button>
+            </div>
+        </div>
+        <div *ngIf="id==3">
+            <div class="card">
+                <img src="assets/images/template_images/prev-temp3.png" height="600" width="500" alt="preview3">
+            </div>
+            <div class="card col">
+                <button class="btn btn-primary" (click)="templateUpdate3()">select</button>
+            </div>
+        </div>
+        <div *ngIf="id==4">
+            <div class="card">
+                <img src="assets/images/template_images/prev-temp4.jpg" alt="preview4">
+            </div>
+            <div class="card col">
+                <button class="btn btn-primary" (click)="templateUpdate4()">select</button>
+            </div>
+        </div>
+        <div *ngIf="id==5">
+            <div class="card">
+                <img src="assets/images/template_images/prev-temp5.jpg" height="600" width="500"  alt="preview5">
+            </div>
+            <div class="card col">
+                <button class="btn btn-primary" (click)="templateUpdate5()">select</button>
+            </div>
+        </div>
+
+
+</div>

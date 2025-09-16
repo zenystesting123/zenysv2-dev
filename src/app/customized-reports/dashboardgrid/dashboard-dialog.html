@@ -1,0 +1,67 @@
+<div *ngIf="data.dialogType=='addReport'">
+  <h1 mat-dialog-title>Add report to dashboard</h1>
+  <mat-dialog-content>
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Module</mat-label>
+        <mat-select [(ngModel)]="data.moduleSelected">
+          <mat-option *ngFor="let module of data.moduleList" [value]="module.module" (click)="filterReport()">
+            {{module.dispName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <mat-select [(ngModel)]="selectedReport.reportId" placeholder="Report Title">
+          <mat-option *ngFor="let report of reportList" [value]="report.id">
+            {{ report.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions style="float: right;">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    <button mat-button (click)="confirm(selectedReport)" [disabled]="!!!selectedReport.reportId ||!onCheckNetwork()"
+      color="primary">Confirm</button>
+  </mat-dialog-actions>
+</div>
+<div *ngIf="data.dialogType=='addDashboard'">
+  <h1 mat-dialog-title>Add new dashboard</h1>
+  <mat-dialog-content>
+    <div class="row">
+      <mat-form-field>
+        <input matInput placeholder="Give name for dashboard" [(ngModel)]="newDashData.dashboardName">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Module</mat-label>
+        <mat-select [(ngModel)]="data.moduleSelected">
+          <mat-option *ngFor="let module of data.moduleList" [value]="module.module" (click)="filterReport()">
+            {{module.dispName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <br>
+    <span class="capiton">Select the report to add</span>
+    <div class="row">
+      <mat-form-field>
+        <mat-select [(ngModel)]="newDashData.reportId" placeholder="Report Title">
+          <mat-option *ngFor="let report of reportList;let i = index" [value]="report.id">
+            {{ report.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions style="float: right;">
+    <button mat-button (click)="onclose(newDashData)">Cancel</button>
+    <button mat-button [mat-dialog-close]="Add"
+      [disabled]="!!!newDashData.dashboardName||!!!newDashData.reportId ||!onCheckNetwork()" color="primary"
+      (click)="confirm(newDashData)">Add</button>
+  </mat-dialog-actions>
+</div>

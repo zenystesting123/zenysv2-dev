@@ -1,0 +1,84 @@
+<div class="container" style="min-width: 300px">
+  <h2 mat-dialog-title>Select {{fieldNameContact}} and {{fieldNameSale}}</h2>
+  <ng-container *ngIf="!!id">
+    <!-- <div>Hello</div> -->
+    <!-- {{selectedCust}}; -->
+    <div class="full-width">
+      <h2 mat-dialog-title>{{fieldNameContact}}</h2>
+      <div mat-dialog-content>
+        <span>
+          <strong>
+            {{ custData.firstName}}&nbsp;{{
+            custData.secondName}}</strong></span>
+        <br>
+        <span>
+          {{custData.companyName=='N/A'?"individual":custData.companyName}}
+        </span>
+      </div>
+    </div>
+    <br>
+  </ng-container>
+  <!-- for customer selection -->
+  <ng-container *ngIf="!id">
+    <div mat-dialog-content>
+      <form class="example-form">
+        <span class="caption">Search by {{fieldNameContact}} </span> &nbsp;&nbsp;
+        <mat-radio-group aria-label="Select an option"  [(ngModel)]="searchOrg" name="searchOrg">
+          <mat-radio-button value="Org" selected=true >Organization name </mat-radio-button> &nbsp;
+          <mat-radio-button value="Contact" >Contact person </mat-radio-button>
+        </mat-radio-group>
+        <br>
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{fieldNameContact}} Name</mat-label>
+          <input type="text" placeholder="Choose {{fieldNameContact}}" aria-label="{{fieldNameContact}}" matInput [formControl]="myControl1"
+            [matAutocomplete]="auto" [(ngModel)]="selectedCust" (ngModelChange)="customerselectionfunction()" />
+          <button mat-button *ngIf="selectedCust" matSuffix mat-icon-button aria-label="Clear"
+            (click)="selectedCust = '';selectedSale=''">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn1">
+            <mat-option *ngFor="let option of filteredOptions1 | async" [value]="option">
+              <span *ngIf="searchOrg == 'Org'"> <mat-icon color="accent">business</mat-icon>{{option.companyName}}</span>
+              <span *ngIf="searchOrg == 'Contact'">
+                <mat-icon color="accent">person</mat-icon> {{option.firstName}}&nbsp;{{option.secondName}}&nbsp;
+                <mat-chip style="vertical-align: middle;"><mat-icon color="accent">business</mat-icon>{{companycheck(option.companyName)}}</mat-chip></span>
+            </mat-option>
+          
+          </mat-autocomplete>
+          <mat-hint>Select {{fieldNameContact}} from List</mat-hint>
+        </mat-form-field>
+      </form>
+    </div>
+  </ng-container>
+  <br>
+  <!-- end of for customer selecton -->
+  <!-- <h2 mat-dialog-title>Select a sale</h2> -->
+  <div mat-dialog-content>
+    <form class="example-form">
+      <mat-form-field class="full-width">
+        <mat-label>{{fieldNameSale}} Title</mat-label>
+        <input class="full-width" type="text" placeholder="Select sale" aria-label="Contact" matInput
+          [formControl]="myControl" [matAutocomplete]="auto1" [(ngModel)]="selectedSale"
+          (ngModelChange)="saleselectionfunction()" />
+        <button mat-button *ngIf="selectedSale&&selectedCust!=null" matSuffix mat-icon-button aria-label="Clear"
+          (click)="selectedSale = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let option of sales" [value]="option">
+            {{ option.saleTitle }} &nbsp;
+            <!-- |&nbsp;{{ option.salutation }}{{ option.firstName }} {{ option.secondName }} -->
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint>Select {{fieldNameSale}} from list</mat-hint>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions class="buttons">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button [disabled]="!(saleinclude&&custinclude)||(!!!selectedCust)" color="primary" type="submit" (click)="onSubmit()"
+      cdkFocusInitial>
+      Next
+    </button>
+  </div>
+</div>

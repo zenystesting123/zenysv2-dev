@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Save report as</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Module</mat-label>
+    <mat-select [(ngModel)]="moduleSelected">
+      <mat-option *ngFor="let module of moduleList" [value]="module.module">
+        {{module.dispName}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Save report as</mat-label>
+    <input matInput placeholder="Report Name" [(ngModel)]="reportTitle" required>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button mat-dialog-close (click)="savetoDB()" color="primary" [disabled]="!onCheckNetwork()">Save</button>
+</div>

@@ -1,0 +1,77 @@
+<h2 mat-dialog-title *ngIf="data.scenario == 'remove user'">
+  Remove User
+</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'remove inv'">
+  Cancel Invitation
+</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'delete branch'">
+  Delete Branch
+</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'suspend user'">
+  Suspend User
+</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 're-Activate user'">
+  Re-Activate User
+</h2>
+
+<!-- add branch scenario -->
+<h2 mat-dialog-title *ngIf="data.scenario == 'add branch'">
+  Add Branch
+</h2>
+<h2 mat-dialog-title *ngIf="data.scenario == 'edit branch'">
+  Edit Branch
+</h2>
+
+<mat-dialog-content class="mat-typography">
+
+  <!-- delete scenarios -->
+<h3 *ngIf="data.scenario == 'remove user'">Do you want to remove {{data.name}} from Active Users list ? </h3>
+<h3 *ngIf="data.scenario == 'remove inv'">Do you want to cancel invitation send to {{data.name}} ? </h3>
+<h3 *ngIf="data.scenario == 'delete branch'">Do you want to delete branch {{data.branchName}} ? </h3>
+<h3 *ngIf="data.scenario == 'suspend user'">Do you want to suspend {{data.name}} from Active Users list ? </h3>
+<h3 *ngIf="data.scenario == 're-Activate user'">Do you want to add {{data.name}} to Active Users list ? </h3>
+
+<p
+  *ngIf="data.scenario == 'suspend user' && data.contactDataLength > 0 && data.saleDataLength > 0 && data.supportDataLength > 0">
+  {{data.contactDataLength}} {{data.fieldNameContact}}s, {{data.saleDataLength}} {{data.fieldNameSale}}s and
+  {{data.supportDataLength}} {{data.fieldNameService}}s are present under this User
+</p>
+<p
+  *ngIf="data.scenario == 'suspend user' && data.contactDataLength > 0 && data.saleDataLength > 0 && data.supportDataLength == 0">
+  {{data.contactDataLength}} {{data.fieldNameContact}}s and {{data.saleDataLength}} {{data.fieldNameSale}}s are present
+  under this User
+</p>
+<p
+  *ngIf="data.scenario == 'suspend user' && data.contactDataLength > 0 && data.saleDataLength == 0  && data.supportDataLength > 0">
+  {{data.contactDataLength}} {{data.fieldNameContact}}s and {{data.supportDataLength}} {{data.fieldNameService}}s are
+  present under this User
+</p>
+<p
+  *ngIf="data.scenario == 'suspend user' && data.contactDataLength == 0 && data.saleDataLength > 0 && data.supportDataLength > 0">
+  {{data.saleDataLength}} {{data.fieldNameSale}}s and {{data.supportDataLength}} {{data.fieldNameService}}s are present
+  under this User
+</p>
+
+  <br *ngIf="data.scenario == 'add branch' || data.scenario == 'edit branch'" />
+  <mat-form-field style="width: 90%" appearance="fill" *ngIf="data.scenario == 'add branch' || data.scenario == 'edit branch'">
+    <mat-label>Branch Name </mat-label>
+    <input type="text" matInput [(ngModel)]="data.branchName" required/>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<!-- action buttons -->
+<mat-dialog-actions align="end">
+
+<button mat-button (click)="onNoClick()">Close</button>
+<button mat-button color="warn" [mat-dialog-close]="delete" [disabled]="!networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'remove user'">Remove User</button>
+<button mat-button color="warn" [mat-dialog-close]="delete" [disabled]="!networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'suspend user'">Suspend User</button>
+<button mat-button color="warn" [mat-dialog-close]="delete" [disabled]="!networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'remove inv'">Cancel Invitation</button>
+<button mat-button color="warn" [mat-dialog-close]="delete" [disabled]=" !networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'delete branch'">Delete</button>
+<button mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.branchName || !networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'add branch'">Add</button>
+<button mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.branchName || !networkCheck.onNetworkCheck()" *ngIf="data.scenario == 'edit branch'">Update</button>
+<button mat-button color="primary" [mat-dialog-close]="delete" [disabled]="!networkCheck.onNetworkCheck()" *ngIf="data.scenario == 're-Activate user'">Add</button>
+
+</mat-dialog-actions>
+
+

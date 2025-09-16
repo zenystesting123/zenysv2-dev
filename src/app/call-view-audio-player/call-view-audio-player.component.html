@@ -1,0 +1,12 @@
+
+<h2 mat-dialog-title>Play recording</h2>
+<div mat-dialog-content>
+    <audio controls>
+        <source src="{{data}}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    <br>
+</div>
+<div mat-dialog-actions id="right">
+    <button mat-button (click)="onNoClick()">Close</button>
+</div>

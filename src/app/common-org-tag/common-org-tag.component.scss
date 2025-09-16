@@ -1,0 +1,14 @@
+.chipStyling {
+  color: #2a6af6;
+  background-color: #f1f2f4;
+  height: 24px;
+  top: calc(50% - 24px / 2);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+}
+mat-spinner {
+  float: right; margin-left: 8px
+}

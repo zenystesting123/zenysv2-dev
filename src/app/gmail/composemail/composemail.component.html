@@ -1,0 +1,108 @@
+<!-- Send mail popup-->
+<div class="row">
+    <h2>Send Mail</h2>
+    <div class="col-lg-12 all">
+      <!-- to mail -->
+      <mat-form-field appearance="fill">
+        <mat-label>To Address</mat-label>
+        <input [(ngModel)]="mailid" matInput required />
+      </mat-form-field>
+
+      <a [routerLink]="[]" *ngIf="!showcc" (click)="showccfn()">Add Cc</a>&nbsp;
+      <a [routerLink]="[]" *ngIf="!showbcc" (click)="showbccfn()">Add Bcc</a>
+    </div>
+    <!-- cc -->
+    <mat-form-field appearance="fill" *ngIf="!!showcc">
+      <mat-label>Cc</mat-label>
+      <input [(ngModel)]="mailcc" matInput />
+    </mat-form-field>
+    <!-- bcc -->
+    <mat-form-field appearance="fill" *ngIf="!!showbcc">
+      <mat-label>Bcc</mat-label>
+      <input [(ngModel)]="mailbcc" matInput />
+    </mat-form-field>
+    <br />
+    <!-- Subject -->
+    <div class="col-lg-12 all">
+      <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <input [(ngModel)]="mailsubject" matInput required />
+      </mat-form-field>
+      <br />
+    </div>
+  
+    <div class="col-lg-12 all"></div>
+  </div>
+  <!-- body editor -->
+  <mat-dialog-content class="dialogue">
+    <angular-editor
+      [placeholder]="'Enter text here...'"
+      [(ngModel)]="mailbody"
+      [config]="editorConfig"
+    ></angular-editor>
+    <br />
+    <div>
+      <mat-list *ngFor="let file of files2; let i = index">
+        <mat-list-item>
+          <h4>
+            {{ file.filename }} &nbsp;
+            <a
+              mat-icon-button
+              href=""
+              onClick="return false"
+              (click)="deleteFile(i)"
+              ><mat-icon>close</mat-icon></a
+            >
+          </h4>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-dialog-content>
+  <!-- Action buttons -->
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      [matMenuTriggerFor]="menu"
+      [disabled]="templates.length == 0"
+    >
+      Choose Template
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        *ngFor="let template of templates"
+        (click)="selectTemplate(template)"
+      >
+        {{ template.templateName }}
+      </button>
+    </mat-menu>
+    <button mat-icon-button (click)="files.click()" color="accent">
+      <mat-icon
+        ><span class="material-icons-outlined"> attach_file </span></mat-icon
+      >
+    </button>
+  
+    <!-- button to upload files from up;oad files component -->
+  <button *ngIf="commonService.userPlan.uploadFilesAccess" mat-icon-button (click)="onUploadFile()" title="Upload File URL" color="accent">
+      <mat-icon>
+        <span class="material-icons-outlined"> drive_folder_upload </span>
+      </mat-icon>
+    </button>
+  
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="mailid == '' || mailsubject == '' || mailbody == '' || submitDisable"
+      (click)="sndMail2('btn_send_email_web')"
+    >
+      Send
+    </button>
+  
+    <input
+      type="file"
+      (change)="fileChangeEvent($event)"
+      #files
+      [hidden]="true"
+    />
+  </mat-dialog-actions>
+  

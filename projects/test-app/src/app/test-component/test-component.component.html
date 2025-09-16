@@ -1,0 +1,140 @@
+<div class="container">
+  <mat-card class="grid-container-element">
+    <mat-card-content class="grid-child-element"
+      ><span class="course-title">Class X Certificate</span>
+      <div class="docName">
+        <span *ngIf="doc10" style="color: #78909c"> {{ doc10?.fileName }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-content class="grid-child-element">
+      <input
+        type="file"
+        #file
+        (change)="selectFile($event)"
+        class="attachment-selector-2"
+        [hidden]="true"
+      />
+      <button
+        mat-button
+        color="accent"
+        (click)="inputAttachment('class10')"
+        [disabled]="doc10?.verification == 'verified'"
+      >
+        Upload
+      </button>
+      <a target="_blank" [href]="doc10?.downloadURL">
+        <button mat-button color="primary">Download</button></a
+      >
+      <button
+        mat-button
+        color="warn"
+        (click)="openDialogX()"
+        [disabled]="!doc10"
+      >
+        Delete
+      </button>
+      <!-- <mat-select> -->
+      <mat-form-field appearance="fill" *ngIf="!!doc10">
+        <mat-label>Document Status</mat-label>
+        <mat-select
+          (selectionChange)="verificationChange($event.value, 'class10')"
+          [(ngModel)]="doc10.verification"
+        >
+          <mat-option value="pending"> Pending </mat-option>
+          <mat-option value="rejected"> Rejected </mat-option>
+          <mat-option value="verified"> Verified </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- </mat-select> -->
+
+      <!-- <span *ngIf="doc10?.verification == 'rejected'" class="material-icons " >unpublished</span> -->
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="grid-container-element">
+    <mat-card-content class="grid-child-element"
+      ><span class="course-title">Class XII Certificate</span>
+      <div class="docName">
+        <span *ngIf="doc12" style="color: #78909c"> {{ doc12?.fileName }}</span>
+      </div>
+    </mat-card-content>
+
+    <mat-card-content class="grid-child-element">
+      <button
+        mat-button
+        color="accent"
+        (click)="inputAttachment('class12')"
+        [disabled]="doc12?.verification == 'verified'"
+      >
+        Upload
+      </button>
+      <a target="_blank" [href]="doc12?.downloadURL">
+        <button mat-button color="primary">Download</button></a
+      >
+      <button
+        mat-button
+        color="warn"
+        (click)="openDialogXII()"
+        [disabled]="!doc12"
+      >
+        Delete
+      </button>
+
+      <mat-form-field appearance="fill" *ngIf="!!doc12">
+        <mat-label>Document Status</mat-label>
+        <mat-select
+          (selectionChange)="verificationChange($event.value, 'class12')"
+          [(ngModel)]="doc12.verification"
+        >
+          <mat-option value="pending"> Pending </mat-option>
+          <mat-option value="rejected"> Rejected </mat-option>
+          <mat-option value="verified"> Verified </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="grid-container-element">
+    <mat-card-content class="grid-child-element"
+      ><span class="course-title">Degree Semester Mark Lists</span>
+      <div class="docName">
+        <span *ngIf="docDegree" style="color: #78909c">
+          {{ docDegree?.fileName }}</span
+        >
+      </div>
+    </mat-card-content>
+    <mat-card-content class="grid-child-element">
+      <button
+        mat-button
+        color="accent"
+        (click)="inputAttachment('degree')"
+        [disabled]="docDegree?.verification == 'verified'"
+      >
+        Upload
+      </button>
+      <a target="_blank" [href]="docDegree?.downloadURL">
+        <button mat-button color="primary">Download</button></a
+      >
+      <button
+        mat-button
+        color="warn"
+        [disabled]="!docDegree"
+        (click)="openDialogDegree()"
+        [disabled]="!docDegree"
+      >
+        Delete
+      </button>
+      <mat-form-field appearance="fill" *ngIf="!!docDegree">
+        <mat-label>Document Status</mat-label>
+        <mat-select
+          (selectionChange)="verificationChange($event.value, 'degree')"
+          [(ngModel)]="docDegree.verification"
+        >
+          <mat-option value="pending"> Pending </mat-option>
+          <mat-option value="rejected"> Rejected </mat-option>
+          <mat-option value="verified"> Verified </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!--Test merge example-->

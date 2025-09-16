@@ -1,0 +1,35 @@
+.dropzone {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    // min-width: 80vw;
+    font-weight: 200;
+    height: 160px;
+    width: 96%;
+    border: 2px dashed  #6bcbff;
+    // border-radius: 5px;
+    background: rgb(226, 246, 255);
+    margin: 10px 0;
+    // width: auto;
+  
+    &.hovering {
+        border: 2px solid #0655ff;
+        color: #dadada !important;
+    }
+  
+    .file-label {
+        font-size: 1.2em;
+    }
+  }
+.drops{
+    display: flex;
+    width: 96%;
+    height: 160px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    border: 2px solid  #6bcbff;
+    background: rgb(226, 246, 255);
+}

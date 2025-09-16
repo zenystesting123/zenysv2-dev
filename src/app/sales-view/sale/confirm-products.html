@@ -1,0 +1,76 @@
+<h1 mat-dialog-title>
+  Confirm {{
+  data.fieldNameItems == "Products and Service"
+  ? "Product"
+  : data.fieldNameItems
+  }} details
+</h1>
+
+<mat-dialog-content class="mat-typography" *ngIf="!spinner">
+
+  <div class="row" *ngFor="let obj of prodArray; let i = index">
+    <span style="width: 18%; padding-top: 15px">{{ obj.prodName }}</span>
+
+    <mat-form-field appearance="outline" style="width: 24%; margin-right: 1%">
+      <mat-label>Quantity</mat-label>
+      <input matInput [(ngModel)]="obj.quantity" name="quantity_{{ i }}" required type="number" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 24%; margin-right: 1%">
+      <mat-label>Unit Price</mat-label>
+      <input matInput [(ngModel)]="obj.unitPrice" name="unitPrice_{{ i }}" required type="number" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 24%; margin-right: 1%">
+      <mat-label>Discount</mat-label>
+      <input matInput [(ngModel)]="obj.discount" name="discount_{{ i }}" required type="number" />
+    </mat-form-field>
+
+    <button mat-icon-button (click)="removeForm(i, obj)" title="Remove Item">
+      <mat-icon style="color: #f00f26">delete</mat-icon>
+    </button>
+  </div>
+
+  <button *ngIf="!showFormOpt" mat-raised-button color="accent" (click)="showForm()">
+    Add {{
+    data.fieldNameItems == "Products and Service"
+    ? "Product"
+    : data.fieldNameItems
+    }}s
+  </button>
+
+  <form #productForm="ngForm" *ngIf="showFormOpt">
+    <br />
+    <mat-form-field style="width: 89%; margin-right: 1%" appearance="outline">
+      <mat-label>Select a
+        {{
+        data.fieldNameItems == "Products and Service"
+        ? "Product"
+        : data.fieldNameItems
+        }}</mat-label>
+      <input matInput [formControl]="myControlProd" [matAutocomplete]="autoProduct" [(ngModel)]="this.selectedProduct"
+        name="selectedProduct" (ngModelChange)="productSelected()" />
+      <button color="accent" *ngIf="selectedProduct" matSuffix mat-icon-button aria-label="Clear"
+        (click)="clearSelection()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete #autoProduct="matAutocomplete" [displayWith]="displayFnProduct">
+        <mat-option *ngFor="let product of filteredOptionsProd | async" [value]="product">
+          {{ product.prodName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-raised-button *ngIf="addProdOption" (click)="addProduct()" color="accent">
+      Add
+    </button>
+  </form>
+</mat-dialog-content>
+<mat-dialog-content class="mat-typography" class="center" *ngIf="spinner">
+  Please wait...
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button color="accent" mat-button (click)="onUpdate()">
+    Update
+  </button>
+</mat-dialog-actions>

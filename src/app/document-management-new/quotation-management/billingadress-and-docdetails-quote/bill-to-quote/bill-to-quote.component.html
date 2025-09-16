@@ -1,0 +1,214 @@
+<form [formGroup]="form">
+    <div class="row ">
+        <h4 class="card-title">Billed To</h4>
+    </div>
+    <div class="example-full-width">
+        <!-- search org,customer and sale -->
+        <app-search-popup [superUserId]="quotationService.superUserId" [userId]="quotationService.userId"
+            [custID]="custID" [orgID]="orgID" [saleID]="saleID"
+            [contDataAccessRule]="quotationService.contDataAccessRule"
+            [orgDataAccessRule]="quotationService.orgDataAccessRule"
+            [saleDataAccessRule]="quotationService.saleDataAccessRule"
+            [fieldNameContact]="quotationService.billToForm.value.fieldNameContact"
+            [fieldNameSale]="quotationService.billToForm.value.fieldNameSale"
+            [fieldNameOrganization]="quotationService.billToForm.value.fieldNameOrganization"
+            [subUsers]="quotationService.subUsers" [superUserBranchId]="quotationService.superUserBranchId"
+            (orgSelect)="orgSelect($event)" (customerSelect)="customerSelect($event)" (saleSelect)="saleSelect($event)">
+        </app-search-popup>
+    </div>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>{{form.get('fieldNameOrganization').value}} Name</mat-label>
+            <input matInput placeholder="{{form.get('fieldNameOrganization').value}} Name" name="companyName"
+                formControlName="billToCompanyName" />
+        </mat-form-field>
+        <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToCompanyName').invalid && 
+            (form.get('billToCompanyName').dirty || 
+            form.get('billToCompanyName').touched))
+            ">
+            Please enter a valid company!</mat-error>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>{{form.get('fieldNameContact').value}} Name</mat-label>
+                    <input matInput placeholder="{{form.get('fieldNameContact').value}} Name" name="fname1"
+                        formControlName="billToFname1" />
+                </mat-form-field>
+                <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToFname1').invalid && 
+                    (form.get('billToFname1').dirty || 
+                    form.get('billToFname1').touched))
+                    ">
+                    Please enter a valid name!</mat-error>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Second Name</mat-label>
+                            <input matInput placeholder="Second Name" name="sname" formControlName="billToSname" />
+                        </mat-form-field>
+                        <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToSname').invalid && 
+                    (form.get('billToSname').dirty || 
+                    form.get('billToSname').touched))
+                    ">
+                            Please enter a valid second name!</mat-error>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group mb-1">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Surname</mat-label>
+                            <input matInput placeholder="Surname" name="surname" formControlName="billToSurname" />
+                        </mat-form-field>
+                        <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToSurname').invalid && 
+                    (form.get('billToSurname').dirty || 
+                    form.get('billToSurname').touched))
+                    ">
+                            Please enter a valid second name!</mat-error>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Address Line1</mat-label>
+            <input matInput placeholder="Address Line1" name="addressline1" formControlName="billToAddressline1" />
+        </mat-form-field>
+    </div>
+    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToAddressline1').invalid && 
+        (form.get('billToAddressline1').dirty || 
+        form.get('billToAddressline1').touched))
+        ">
+        Please enter a valid address!</mat-error>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Address Line2</mat-label>
+            <input matInput placeholder="Address Line2" name="addressline2" formControlName="billToAddressline2" />
+        </mat-form-field>
+    </div>
+    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToAddressline2').invalid && 
+        (form.get('billToAddressline2').dirty || 
+        form.get('billToAddressline2').touched))
+        ">
+        Please enter a valid address!</mat-error>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>District</mat-label>
+                    <input matInput placeholder="District" name="district" formControlName="billToDistrict" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToDistrict').invalid && 
+                (form.get('billToDistrict').dirty || 
+                form.get('billToDistrict').touched))
+                ">
+                Please enter a valid district!</mat-error>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>PIN/ ZIP</mat-label>
+                    <input matInput placeholder="PIN/ ZIP" name="pinCode" formControlName="billToPinCode" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToPinCode').invalid && 
+            (form.get('billToPinCode').dirty || 
+            form.get('billToPinCode').touched))
+            ">
+                Required!</mat-error>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>State</mat-label>
+                    <input matInput placeholder="State" name="state" formControlName="billToState" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToState').invalid && 
+                (form.get('billToState').dirty || 
+                form.get('billToState').touched))
+                ">
+                Please enter a valid state!</mat-error>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Country</mat-label>
+                    <input matInput placeholder="Country" name="country" formControlName="billToCountry" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToCountry').invalid && 
+                (form.get('billToCountry').dirty || 
+                form.get('billToCountry').touched))
+                ">
+                Please enter a valid country!</mat-error>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Country Code</mat-label>
+                    <mat-select name="countryCode" formControlName="billToCountryCode">
+                        <mat-option *ngFor="let countryCode of CountryCodes" [value]="countryCode.dial_code">
+                            {{ countryCode.code }}&nbsp;{{
+                            countryCode.dial_code
+                            }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToCountryCode').invalid && 
+                (form.get('billToCountryCode').dirty || 
+                form.get('billToCountryCode').touched))
+                ">
+                Please enter Country code</mat-error>
+        </div>
+        <div class="col-md-8">
+            <div class="input-group mb-1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Contact Number</mat-label>
+                    <input type="number" matInput placeholder="Contact Number" name="contactNumber"
+                        formControlName="billToContactNumber" />
+                </mat-form-field>
+            </div>
+            <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToContactNumber').invalid && 
+                (form.get('billToContactNumber').dirty || 
+                form.get('billToContactNumber').touched))
+                ">
+                Please enter contact number</mat-error>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" name="email" formControlName="billToEmail" />
+        </mat-form-field>
+    </div>
+    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToEmail').invalid && 
+        (form.get('billToEmail').dirty || 
+        form.get('billToEmail').touched))
+        ">
+        Please enter email</mat-error>
+    <div class="input-group mb-1">
+        <mat-form-field class="example-full-width">
+            <mat-label>Tax identification No - GST/ VAT</mat-label>
+            <input matInput placeholder="Tax identification No - GST/ VAT" name="gst" formControlName="billToGst" />
+        </mat-form-field>
+    </div>
+    <mat-error class="form-text text-muted danger" *ngIf=" (form.get('billToGst').invalid && 
+        (form.get('billToGst').dirty || 
+        form.get('billToGst').touched))
+        ">
+        Please provide tax identification no</mat-error>
+
+</form>

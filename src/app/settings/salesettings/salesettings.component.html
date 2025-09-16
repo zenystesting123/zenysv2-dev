@@ -1,0 +1,1901 @@
+<!-- desktop view starts here -->
+<div *ngIf="!isMobilesize" class="no-v-scroll">
+  <mat-toolbar class="border-bottom"
+    *ngIf="!notEdit && commonService.userPlan.settingsAccess && commonService.userPlan.saleAccess"
+    style="flex: 0 0 64px;"
+    [ngStyle]="{ 'background-color': 'white' }"
+  >
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <span>Customize {{ fieldNameSale }} Fields</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <mat-progress-bar
+    [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate"
+  >
+  </mat-progress-bar>
+  <div
+    class="container-fluid"
+    style="overflow-y: auto; background-color: white"
+  >
+    <!-- disabling view for non super users -->
+    <div
+      *ngIf="(notEdit && progressBarStatus) || !(commonService.userPlan.settingsAccess && commonService.userPlan.saleAccess)"
+      class="container-xl"
+      style="background-color: white"
+    >
+      <mat-card>
+        Access Denied. Please contact your SuperUser to make changes to
+        {{ fieldNameSale }}
+        settings fields.
+      </mat-card>
+    </div>
+    <div
+      *ngIf="!notEdit && progressBarStatus && commonService.userPlan.settingsAccess && commonService.userPlan.saleAccess"
+      class="container-fluid"
+      style="min-height: 800px"
+    >
+      <mat-tab-group [color]="'primary'">
+        <!-- tab for changing salefield starts here -->
+        <!-- <mat-tab label="Sale Field Settings">
+          <ng-template mat-tab-label> &nbsp;FIELD SETTINGS</ng-template>
+          <div class="container-lg">
+            <br />
+
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <h2 class="text-center">Sale Field Names</h2>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Sale as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameSale"
+                            name="fieldNameSale"
+                            required
+                            [disabled]="!editSale"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editSale"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editSalefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSale"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearSale()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSale"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameSale?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveSale()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Notes under Sale as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameSaleNotes"
+                            name="fieldNameSaleNotes"
+                            required
+                            [disabled]="!editSaleNotes"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editSaleNotesfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearSaleNotes()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameSaleNotes?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveSaleNotes()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Estimate as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameEstimate"
+                            name="fieldNameEstimate"
+                            required
+                            [disabled]="!editEstimate"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editEstimatefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearEstimate()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameEstimate?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveEstimate()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Quotation as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameQuotation"
+                            name="fieldNameQuotation"
+                            required
+                            [disabled]="!editQuotation"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editQuotationfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearQuotation()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameQuotation?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveQuotation()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Invoice as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameInvoice"
+                            name="fieldNameInvoice"
+                            required
+                            [disabled]="!editInvoice"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editInvoicefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearInvoice()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameInvoice?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveInvoice()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab> -->
+        <!-- tab for changing salefield ends here -->
+        <!-- tab for changing sale status starts here -->
+        <mat-tab *ngIf="commonService.userPlan.salePipelineAccess" label="{{saleSettings.selectedSalePipeline.displayName}} & {{saleSettings.salesStage.displayName}}">
+          <ng-template mat-tab-label>
+            <span style="text-transform: uppercase;">
+            {{saleSettings.selectedSalePipeline.displayName}} & {{saleSettings.salesStage.displayName}}
+            </span>
+          </ng-template>
+          <app-pipeline-and-stages [module]="'sales'" [superUserId]="superUserId" [superUserDetails]="superUserDetails"
+            [pipelines]="pipelines" [ageChecked]="ageChecked" [fieldName]="fieldNameSale"
+            [statusFieldName]="saleSettings.salesStage.displayName"
+            [multiPipelineAccess]="commonService.userPlan.multiPipelineAccess"
+            [pipelineFieldName]="saleSettings.selectedSalePipeline.displayName" [userId]="userId" [userName]="userName"
+            [rejectionReasonArr]="rejectionReasonArray" [mandatoryBoolean]="saleSettings.rejectionReasonVal.mandatory"
+            [displayBoolean]="saleSettings.rejectionReasonVal.display">
+          </app-pipeline-and-stages>
+        </mat-tab>
+        <!-- tab for changing sale status ends here -->
+        <!--tab for customisable fields starts here-->
+        <mat-tab label="FIELD CUSTOMISATION">
+          <div class="container-lg">
+            <br />
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <h2 class="text-center">{{ fieldNameSale }}Field Names</h2>
+                <div class="row">
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12">
+                        <!-- SALE -->
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display {{ fieldNameSale }} as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameSale"
+                            name="fieldNameSale"
+                            required
+                            [disabled]="!editSale"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editSale"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editSalefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSale"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearSale()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSale"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameSale?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveSale()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label
+                            >Display Notes under
+                            {{ fieldNameSale }} as</mat-label
+                          >
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameSaleNotes"
+                            name="fieldNameSaleNotes"
+                            required
+                            [disabled]="!editSaleNotes"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editSaleNotesfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearSaleNotes()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editSaleNotes"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameSaleNotes?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveSaleNotes()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Estimate as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameEstimate"
+                            name="fieldNameEstimate"
+                            required
+                            [disabled]="!editEstimate"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editEstimatefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearEstimate()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editEstimate"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameEstimate?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveEstimate()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Quotation as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameQuotation"
+                            name="fieldNameQuotation"
+                            required
+                            [disabled]="!editQuotation"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editQuotationfn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearQuotation()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editQuotation"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameQuotation?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveQuotation()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Display Invoice as</mat-label>
+                          <input
+                            matInput
+                            [(ngModel)]="this.fieldNameInvoice"
+                            name="fieldNameInvoice"
+                            required
+                            [disabled]="!editInvoice"
+                            [maxLength]="fieldMaxLength"
+                          />
+                          <button
+                            *ngIf="!editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Edit"
+                            color="accent"
+                            (click)="editInvoicefn()"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            color="warn"
+                            (click)="clearInvoice()"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <button
+                            *ngIf="editInvoice"
+                            matSuffix
+                            mat-icon-button
+                            [disabled]="this.fieldNameInvoice?.length < 3"
+                            aria-label="Save"
+                            color="accent"
+                            (click)="saveInvoice()"
+                          >
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="card card-bordered shadow-none">
+              <div class="card-body">
+                <div class="text-center mb-7">
+                  <h1 class="card-title">Customize fields</h1>
+                  <p class="card-text">
+                    Change field names and configure which fields are to be
+                    displayed and which are mandatory.
+                  </p>
+                </div>
+                <form [formGroup]="fieldCustomisationForm">
+                  <br />
+                  <!-- <div class="flex-container" formGroupName="selectedCust">
+                    <div class="flex-width text-center">
+                      <h3>Contact Name</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="pNamedisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div> -->
+                  <div class="flex-container" formGroupName="saleTitle">
+                    <div class="flex-width text-center">
+                      <h3>Sale Title</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="saleTitledisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+
+                  <div class="flex-container" formGroupName="salesStage">
+                    <div class="flex-width text-center">
+                      <h3>Sales Stage</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="salesStageDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- rejection reason field starts here -->
+                  <div class="flex-container" *ngIf="commonService.userPlan.contactStatusAccess" formGroupName="rejectionReasonVal">
+                    <div class="flex-width text-center">
+                      <h3>Reason for Rejection</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input matInput type="text" id="rejectionReasonValDisplayName" formControlName="displayName" maxLength="25"
+                          placeholder="Display name" />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory" (change)="disableReasonRejection()">Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- rejection reason field ends here -->
+                  <!--Reason for Rejection option starts here-->
+                  <div class="flex-container" formGroupName="rejectionReason">
+                    <div class="flex-width text-center">
+                      <h3>Reason for Rejection</h3>
+                    </div>
+                    <br />
+                    <div class="custFields">
+                      <mat-form-field class="custom-width" appearance="fill">
+                        <mat-label>Provide options seperated by commas</mat-label>
+                        <textarea rows="4" matInput formControlName="rejectionReason">
+                                                            </textarea>
+                      </mat-form-field>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                  </div>
+                  <br />
+                  <!--Reason for Rejection option ends here-->
+                  <div class="flex-container" formGroupName="priority">
+                    <div class="flex-width text-center">
+                      <h3>Priority</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="priorityDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div
+                    class="flex-container"
+                    *ngIf="customFieldPipeline"
+                    formGroupName="selectedSalePipeline"
+                  >
+                    <div class="flex-width text-center">
+                      <h3>Pipeline</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="salePipelineDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableSelecetedPipeline()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="estimatedValue">
+                    <div class="flex-width text-center">
+                      <h3>Estimated Value</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="estimatedValDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          (ngModelChange)="disableEstVal()"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableEstVal()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="flex-container" formGroupName="collectionMode">
+                    <div class="flex-width text-center">
+                      <h3>Collection Mode</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="collectionModeDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          (ngModelChange)="disableCollMode()"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableCollMode()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="startDate">
+                    <div class="flex-width text-center">
+                      <h3>Start Date</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="startDateDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          (ngModelChange)="disablestartDate()"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disablestartDate()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="expCompletionDate">
+                    <div class="flex-width text-center">
+                      <h3>Exp Completion Date</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="expDateisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- <div class="flex-container" formGroupName="selectedSalePipeline">
+                  <div class="flex-width text-center">
+                    <h3>Pipeline </h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="salePipelineDisplayName" formControlName="displayName"
+                        placeholder="Display name" >
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" >Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="flex-container" formGroupName="salesStage">
+                  <div class="flex-width text-center">
+                    <h3>Sales Stage </h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="salesStageDisplayName" formControlName="displayName"
+                        placeholder="Display name">
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" >Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="flex-container" formGroupName="priority">
+                  <div class="flex-width text-center">
+                    <h3>Priority</h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="priorityDisplayName" formControlName="displayName"
+                        placeholder="Display name" >
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" >Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div> -->
+                  <div class="flex-container" formGroupName="description">
+                    <div class="flex-width text-center">
+                      <h3>Description</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="descriptionDisplayName"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          (ngModelChange)="disableDescription()"
+                          maxLength="25"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox
+                        color="primary"
+                        formControlName="mandatory"
+                        (change)="disableDescription()"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- <div class="flex-container" formGroupName="selectedProduct">
+                  <div class="flex-width text-center">
+                    <h3>Product</h3>
+                  </div>
+                  <div class="custField"v>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="selProductDisplayName" formControlName="displayName"
+                        placeholder="Display name" (ngModelChange)="disableselectedProduct()">
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" (change)="disableselectedProduct()">Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="flex-container" formGroupName="selProdCat">
+                  <div class="flex-width text-center">
+                    <h3>Product Category</h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="selProdCatDisplayName" formControlName="displayName"
+                        placeholder="Display name"  (ngModelChange)="disableselProdCat()">
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" (change)="disableselProdCat()">Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div> -->
+                  <!-- <div class="flex-container" formGroupName="assignedTo">
+                  <div class="flex-width text-center">
+                    <h3>Assigned To</h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="assignedToDisplayName" formControlName="displayName"
+                        placeholder="Display name" (ngModelChange)="disableAssignedTo()">
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" (change)="disableAssignedTo()">Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div> -->
+                  <!-- <div class="flex-container" formGroupName="value">
+                    <div class="flex-width text-center">
+                      <h3>Value</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                          (ngModelChange)="disableAssignedTo()"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div> -->
+                  <!-- <div class="flex-container" formGroupName="expense">
+                    <div class="flex-width text-center">
+                      <h3>Expense</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="invoiced">
+                    <div class="flex-width text-center">
+                      <h3>Invoiced</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="flex-container" formGroupName="collected">
+                    <div class="flex-width text-center">
+                      <h3>Collected</h3>
+                    </div>
+                    <div class="custField">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Display name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="displayName"
+                          placeholder="Display name"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="display"
+                        >Display</mat-checkbox
+                      >
+                    </div>
+                    <div class="custField">
+                      <mat-checkbox color="primary" formControlName="mandatory"
+                        >Mandatory
+                      </mat-checkbox>
+                    </div>
+                  </div> -->
+                  <!-- <div class="flex-container" formGroupName="assignedToName">
+                  <div class="flex-width text-center">
+                    <h3>Assigned To Name</h3>
+                  </div>
+                  <div class="custField">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Display name</mat-label>
+                      <input matInput type="text" id="assignedToNameDisplayName" formControlName="displayName"
+                        placeholder="Display name" (ngModelChange)="disableAssignedToName()">
+                    </mat-form-field>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="display">Display</mat-checkbox>
+                  </div>
+                  <div class="custField">
+                    <mat-checkbox color="primary" formControlName="mandatory" (change)="disableAssignedToName()">Mandatory
+                    </mat-checkbox>
+                  </div>
+                </div> -->
+
+                  <button
+                    mat-raised-button
+                    class="float-right mr-5"
+                    color="primary"
+                    type="submit"
+                    id="submitBTn"
+                    (click)="onSubmitCustField()"
+                    [disabled]="!this.fieldCustomisationForm.valid || !onCheckNetwork()"
+                  >
+                    Save
+                  </button>
+                  <br />
+                  <br />
+                  <br />
+                </form>
+              </div>
+            </div>
+            <br />
+          </div>
+        </mat-tab>
+        <!--tab for customisable fields ends here-->
+        <!-- tab for adding custom fields starts here -->
+        <!-- <mat-tab label="Additional Field">
+          <ng-template mat-tab-label> &nbsp; ADDITIONAL FIELDS </ng-template>
+          <div class="container-fluid">
+            <br />
+            <span class="caption"
+              >Configure additional custom fields for {{ fieldNameSale }}. When
+              you add a new {{ fieldNameSale }}, these fields will appear in the
+              Additional details tab</span
+            >
+
+            <div class="container">
+              <br />
+              <button
+                type="submit"
+                style="
+                  margin-right: 25px;
+                  float: right;
+                  border: rgb(216, 216, 216) 0.5px solid;
+                "
+                mat-button
+                color="primary"
+                (click)="addField()"
+              >
+                <i class="ft-check-square mr-1"></i> Add field
+              </button>
+              <br /><br />
+            </div>
+            <br />
+            <mat-card *ngIf="addNewField">
+              <mat-card-header>
+                <mat-card-title> Add new field </mat-card-title>
+              </mat-card-header>
+
+              <mat-card-content style="padding: 2%; margin: 0px">
+                <div class="row">
+                  <div class="col-2">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Field Name</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="fieldName"
+                        name="fieldName"
+                        maxlength="20"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Field Type</mat-label>
+                      <mat-select
+                        #type="ngModel"
+                        [(ngModel)]="fieldType"
+                        ngModel
+                        name="type"
+                        (selectionChange)="clear()"
+                        required
+                        [ngModelOptions]="{ standalone: true }"
+                      >
+                        <mat-option value="textarea">Textarea</mat-option>
+                        <mat-option value="inputField">Input Field</mat-option>
+                        <mat-option value="category">Category</mat-option>
+                        <mat-option value="number">Number</mat-option>
+                        <mat-option value="date">Date</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3" *ngIf="fieldType == 'category'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Options seperated by commas</mat-label>
+                      <textarea
+                        matInput
+                        [(ngModel)]="categories"
+                        name="categories"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2" *ngIf="fieldType == 'inputField'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Default Value</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="defaultValue"
+                        name="defaultValue"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2" *ngIf="fieldType == 'category'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Default Value</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="defaultValue"
+                        name="defaultValue"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2" *ngIf="fieldType == 'textarea'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Default Value</mat-label>
+                      <textarea
+                        matInput
+                        [(ngModel)]="defaultValue"
+                        name="defaultValue"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2" *ngIf="fieldType == 'date'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Default Value</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        [(ngModel)]="defaultValue"
+                        name="defaultValue"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2" *ngIf="fieldType == 'number'">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Default Value</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="defaultValue"
+                        name="defaultValue"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-1">
+                    <mat-checkbox
+                      color="primary"
+                      #Checkbox1
+                      class="example-margin"
+                      [(ngModel)]="mandatory"
+                      (ngModelChange)="(mandatory)"
+                      name="mandatory"
+                      >Mandatory</mat-checkbox
+                    >&nbsp;
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <div class="row" style="margin-right: 20px">
+                  <button
+                    mat-icon-button
+                    aria-label="close"
+                    (click)="submitFieldClose()"
+                    title="Cancel "
+                  >
+                    Cancel
+                  </button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button
+                    mat-icon-button
+                    aria-label="Add"
+                    [disabled]="!fieldName || !fieldType"
+                    (click)="submitField()"
+                    color="primary"
+                    title="Add "
+                  >
+                    Add
+                  </button>
+                  &nbsp;&nbsp;
+                </div>
+              </mat-card-actions>
+            </mat-card>
+            <br />
+            <mat-accordion class="example-headers-align">
+              <mat-expansion-panel
+                *ngFor="let fields of currentCustomField; let i = index"
+              >
+                <mat-expansion-panel-header
+                  (click)="editField(i, container)"
+                  style="padding-left: 4%"
+                >
+                  <mat-panel-title>{{ fields.fieldName }}</mat-panel-title>
+                  <mat-panel-description>
+                    <span *ngIf="fields.fieldType == 'textarea'">
+                      Text Area
+                    </span>
+                    <span *ngIf="fields.fieldType == 'inputField'">
+                      Input Field
+                    </span>
+                    <span *ngIf="fields.fieldType == 'category'">
+                      Category
+                    </span>
+                    <span *ngIf="fields.fieldType == 'date'"> Date </span>
+                    <span *ngIf="fields.fieldType == 'number'"> Number </span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div #container *ngIf="editedField" style="padding: 2%">
+                  <div class="row">
+                    <div class="col-2">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Field Name</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="editFname"
+                          name="fieldName"
+                          required
+                          maxlength="20"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Field Type</mat-label>
+                        <mat-select
+                          #type="ngModel"
+                          [(ngModel)]="editFieldType"
+                          ngModel
+                          name="type"
+                          required
+                          disabled
+                          [ngModelOptions]="{ standalone: true }"
+                        >
+                          <mat-option value="textarea">Textarea</mat-option>
+                          <mat-option value="inputField"
+                            >Input Field</mat-option
+                          >
+                          <mat-option value="category">Category</mat-option>
+                          <mat-option value="number">Number</mat-option>
+                          <mat-option value="date">Date</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-3" *ngIf="editFieldType == 'category'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Options seperated by commas</mat-label>
+                        <textarea
+                          matInput
+                          [(ngModel)]="editCategoriesOpn"
+                          name="categories"
+                        ></textarea>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2" *ngIf="editFieldType == 'category'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Default Value</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          [(ngModel)]="editDefaultValue"
+                          name="defaultValue"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2" *ngIf="editFieldType == 'inputField'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Default Value</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          [(ngModel)]="editDefaultValue"
+                          name="defaultValue"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2" *ngIf="editFieldType == 'textarea'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Default Value</mat-label>
+                        <textarea
+                          matInput
+                          type="text"
+                          [(ngModel)]="editDefaultValue"
+                          name="defaultValue"
+                        ></textarea>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2" *ngIf="editFieldType == 'number'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Default Value</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          [(ngModel)]="editDefaultValue"
+                          name="defaultValue"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2" *ngIf="editFieldType == 'date'">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Default Value</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="additField_i"
+                          [(ngModel)]="editDefaultValue"
+                          name="defaultValue"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="additField_i"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #additField_i></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-1">
+                      <mat-checkbox
+                        color="primary"
+                        #Checkbox1
+                        class="example-margin"
+                        [(ngModel)]="editMandatory"
+                        (ngModelChange)="(mandatory)"
+                        name="mandatory"
+                        >Mandatory</mat-checkbox
+                      >&nbsp;
+                    </div>
+                  </div>
+
+                  <br />
+                  <div class="row" style="float: right">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      aria-label="delete"
+                      title="Delete "
+                      (click)="deleteField(i)"
+                    >
+                      Delete
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      aria-label="Edit"
+                      [disabled]="
+                        !editFname || !editFieldType || !onCheckNetwork()
+                      "
+                      (click)="submitEditField()"
+                      color="accent"
+                      title="save "
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <br />
+          </div>
+        </mat-tab> -->
+        <!-- tab for adding custom fields ends here -->
+        <mat-tab label="Product Settings">
+          <ng-template mat-tab-label>
+            <span style="text-transform: uppercase">
+              &nbsp;
+              {{
+                fieldNameItems == "Products and Service"
+                  ? "Product"
+                  : fieldNameItems
+              }}
+              SETTINGS
+            </span>
+          </ng-template>
+          <div class="container-fluid">
+            <br />
+            <div class="frame" style="background-color: white">
+              <div>
+                <mat-checkbox
+                  color="primary"
+                  (change)="qntyDisplay($event)"
+                  [(ngModel)]="displayQnty"
+                  [ngModelOptions]="{ standalone: true }"
+                  class="example-margin"
+                  >Display Quantity with
+                  {{
+                    fieldNameItems == "Products and Service"
+                      ? "Product"
+                      : fieldNameItems
+                  }}s while adding or editing a
+                  {{ fieldNameSale }}</mat-checkbox
+                >
+              </div>
+            </div>
+            <br />
+            <div class="frame" style="background-color: white">
+              <div class="box">
+                <div class="col-6 custom">
+                  Maximum no of
+                  {{
+                    fieldNameItems == "Products and Service"
+                      ? "Product"
+                      : fieldNameItems
+                  }}s that can be added along with a {{ fieldNameSale }}
+                </div>
+                <div
+                  class="col-6 custom"
+                  style="height: auto; word-wrap: break-word"
+                >
+                  <mat-form-field class="full-width">
+                    <!-- <mat-label>Choose a time</mat-label> -->
+                    <input
+                      matInput
+                      type="number"
+                      [(ngModel)]="this.maxItems"
+                      name="maxItems"
+                      #maxItemsAllowed="ngModel"
+                      required
+                    />
+                    <mat-error
+                      color="warn"
+                      *ngIf="
+                        !maxItemsAllowed.valid &&
+                        (maxItemsAllowed.dirty || maxItemsAllowed.touched)
+                      "
+                    >
+                      Valid data required!</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+              <button
+                style="float: right"
+                mat-button
+                color="primary"
+                (click)="saveProdSett()"
+              >
+                Save
+              </button>
+              <br />
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="ADDITIONAL FIELDS">
+          <app-additionalfield-common
+            [superUserId]="superUserId"
+            [superUserDetails]="superUserDetails"
+            [usrProfileData]="usrProfileData"
+            [customFieldName]="fieldNameSale"
+            [customFieldUnique]="currentCustomField"
+            [customDeleteKey]="'deleteFieldSale'"
+            [additionalFieldArrName]="'customFieldsSale'"
+            [componentName]="constructorName"
+            [customFieldSettings]="saleSettings"
+          ></app-additionalfield-common>
+        </mat-tab>
+        <mat-tab label="DOCUMENTS UPLOAD">
+          <div class="container-lg">
+            <div class="container">
+              <br />
+              <button
+                (click)="addNewDoc()"
+                mat-button
+                color="primary"
+                type="submit"
+                style="float: right"
+              >
+                <i class="ft-check-square mr-1"></i> Add Document
+              </button>
+              <br /><br />
+            </div>
+            <br><br>
+            <mat-card *ngIf="addDoc">
+              <mat-card-header>
+                <mat-card-title> Add new document </mat-card-title>
+              </mat-card-header>
+
+              <mat-card-content style="padding: 2%; margin: 0px">
+                <div class="row">
+                  <div class="col-8">
+                    <mat-form-field style="width: 100%" appearance="fill">
+                      <mat-label>Document Name</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="documentName"
+                        name="documentName"
+                        maxlength="100"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4"></div>
+
+                  
+                </div>
+                <div class="d-flex">
+                  <div class="flex-fill">
+                    <mat-checkbox
+                      color="primary"
+                      [(ngModel)]="docValidationCheck"
+                      class="example-margin"
+                      >Enable verification for document</mat-checkbox
+                    >
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <mat-label>Allowed document types </mat-label>
+                </div>
+                <div class="d-flex ">
+
+                  <br />
+                  <div class="flex-fill">
+                    <mat-checkbox
+                      color="primary"
+                      [(ngModel)]="pdf_type"
+                    >
+                      PDF
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="p-2"
+                      [(ngModel)]="msWord_type"
+                    >
+                      MS WORD
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="p-2"
+                      [(ngModel)]="csv_type"
+                    >
+                      CSV
+                    </mat-checkbox>
+                  <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="d-flex"> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="p-2"
+                      [(ngModel)]="png_type"
+                    >
+                      PNG
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="p-2"
+                      [(ngModel)]="jpeg_type"
+                    >
+                      JPEG
+                    </mat-checkbox>
+                  <!-- </div> -->
+                  <!-- <div class="flex-fill"> -->
+                    <mat-checkbox
+                      color="primary"
+                      class="p-2"
+                      [(ngModel)]="jpg_type"
+                    >
+                      JPG
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <div class="container">
+                  <div class="row" class="float-right mr-5">
+                    <button
+                      mat-icon-button
+                      aria-label="close"
+                      (click)="closeAddDoc()"
+                      title="Cancel "
+                    >
+                      Cancel
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button
+                      mat-icon-button
+                      aria-label="Add"
+                      color="primary"
+                      (click)="customDocUpload()"
+                      title="Add "
+                      [disabled]="!documentName"
+                    >
+                      Add
+                    </button>
+                    &nbsp;&nbsp;
+                  </div>
+                </div>
+              </mat-card-actions>
+            </mat-card>
+            <br>
+            <!-- accordian for showing current fields and its edit option starts here -->
+            <mat-accordion class="example-headers-align">
+              <mat-expansion-panel
+                *ngFor="let fields of saleDocs; let i = index"
+              >
+                <mat-expansion-panel-header
+                  (click)="editDoc(i, container)"
+                  style="padding-left: 4%"
+                >
+                  <mat-panel-title>{{ fields.documentName }}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div #container style="padding: 2%">
+                  <div class="row" >
+                    <div class="col-8">
+                      <mat-form-field style="width: 100%" appearance="fill">
+                        <mat-label>Document Name</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="edit_documentName"
+                          name="documentName"
+                          maxlength="100"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-4"></div>
+
+                    
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-fill">
+                      <mat-checkbox
+                        color="primary"
+                        [(ngModel)]="edit_docValidationCheck"
+                        class="p-2"
+                        >Enable verification for document</mat-checkbox
+                      >
+                    </div>
+                  </div>
+
+                  <div class="d-flex" style="margin-left: 8px;">
+                    <mat-label>Allowed document types </mat-label>
+                  </div>
+                  <div class="d-flex">
+                    <br />
+                    <div class="flex-fill p-2">
+                      <mat-checkbox
+                        color="primary"
+                        [(ngModel)]="edit_pdf_type"
+                      >
+                        PDF
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="p-2"
+                        [(ngModel)]="edit_msWord_type"
+                      >
+                        MS WORD
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="p-2"
+                        [(ngModel)]="edit_csv_type"
+                      >
+                        CSV
+                      </mat-checkbox>
+                    <!-- </div> -->
+                  <!-- </div> -->
+                  <!-- <div class="d-flex"> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="p-2"
+                        [(ngModel)]="edit_png_type"
+                      >
+                        PNG
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="p-2"
+                        [(ngModel)]="edit_jpeg_type"
+                      >
+                        JPEG
+                      </mat-checkbox>
+                    <!-- </div> -->
+                    <!-- <div class="flex-fill"> -->
+                      <mat-checkbox
+                        color="primary"
+                        class="p-2"
+                        [(ngModel)]="edit_jpg_type"
+                      >
+                        JPG
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row" style="float: right">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      aria-label="delete"
+                      title="Delete "
+                      [disabled]="!onCheckNetwork()"
+                      (click)="deleteDocument(i)"
+                    >
+                      Delete
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button
+                      mat-icon-button
+                      aria-label="Edit"
+                      [disabled]="!onCheckNetwork()"
+                      (click)="documentEdit()"
+                      color="primary"
+                      title="save "
+                      [disabled]="!edit_documentName"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <!-- accordian for showing current fields and its edit option ends here -->
+            <br />
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <br />
+    </div>
+  </div>
+</div>
+

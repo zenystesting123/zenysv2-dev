@@ -1,0 +1,22 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+table {
+  width: 100%;
+}
+.no-v-scroll {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow-x: hidden;
+}
+.dialogTable .mat-row:hover {
+  background-color: whitesmoke;
+  cursor:pointer
+}
+.progress{
+  height: 10px;
+  border: 0.25px solid blue;
+}

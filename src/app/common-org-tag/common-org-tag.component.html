@@ -1,0 +1,48 @@
+<form class="example-form">
+  <!-- <p *ngIf="!contactSelected && !contDisplay && !filteredOptionsCust">Fetching {{fieldNameContact}} data...</p> -->
+  <mat-form-field *ngIf="!contactSelected && !contDisplay" class="example-full-width" appearance="outline"
+    style="width: 100%">
+    <mat-label>Tag {{fieldNameContact}}</mat-label>
+    <input type="text" matInput [formControl]="myControlCust" [matAutocomplete]="autoCust"
+      placeholder="Type at least 3 characters" />
+    <mat-spinner matSuffix [diameter]="18" 
+      *ngIf="isContactLoading"></mat-spinner>
+    <mat-autocomplete #autoCust="matAutocomplete" [displayWith]="displayFnCust">
+      <div *ngIf="!isContactLoading">
+        <mat-option *ngFor="let option of customerList" [value]="option" (click)="contSelected(myControlCust.value)">
+          {{ option.firstName }}&nbsp;{{ option.secondName }}&nbsp;{{ option.surname }}
+        </mat-option>
+      </div>
+    </mat-autocomplete>
+  </mat-form-field>
+  <!-- <p *ngIf="!companySelected && !filteredOptions">Fetching Organisation data...</p> -->
+  <mat-form-field *ngIf="!companySelected && commonService.userPlan.orgAccess" class="example-full-width" appearance="outline" style="width: 100%">
+    <mat-label>Tag {{fieldNameOrganization}}</mat-label>
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" (click)="loadOrgData()" />
+    <mat-icon matSuffix color="accent">business</mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+        (click)="orgSelected(myControl.value)">
+        {{ option.companyName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+<mat-chip-list #chipList aria-label="Tags" *ngIf="chipDisplay">
+  <ng-container>
+    <mat-chip *ngIf="contactSelected" class="chipStyling">
+      <mat-chip-avatar>
+        <mat-icon>person</mat-icon>
+      </mat-chip-avatar>
+      {{ userName }}
+      <mat-icon matChipRemove (click)="onClearContact()">cancel</mat-icon>
+    </mat-chip>
+    <mat-chip *ngIf="companySelected  && commonService.userPlan.orgAccess" class="chipStyling">
+      <mat-chip-avatar>
+        <mat-icon>business</mat-icon>
+      </mat-chip-avatar>
+      {{ compName }}
+      <mat-icon matChipRemove (click)="onClearCompany()">cancel</mat-icon>
+    </mat-chip>
+  </ng-container>
+</mat-chip-list>

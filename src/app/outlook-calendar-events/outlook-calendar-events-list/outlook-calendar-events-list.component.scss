@@ -1,0 +1,40 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  .float {
+    position: fixed;
+    bottom: 4rem;
+    right: 2rem;
+  }
+  /* Create two equal columns that floats next to each other */
+  .column {
+    float: left;
+  
+    padding-left: 10px;
+  }
+  
+  .row {
+    display: table;
+    width: 100%;
+  }
+  
+  .wrapper {
+    display: flex;
+  }
+  .wrapper .col-item {
+    padding: 10px;
+    height: 100%;
+  }
+  .example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  

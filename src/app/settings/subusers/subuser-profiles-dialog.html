@@ -1,0 +1,1110 @@
+<h2 mat-dialog-title class="margin0" *ngIf="data.scenario == 'create'">
+  Add Profile
+</h2>
+<h2 mat-dialog-title class="margin0" *ngIf="data.scenario == 'edit'">
+  Edit Profile
+</h2>
+<mat-dialog-content class="mat-typography">
+  <br />
+  <mat-form-field style="width: 90%" appearance="fill">
+    <mat-label class="required">Profile Name </mat-label>
+    <input type="text" matInput [(ngModel)]="data.profileName" (ngModelChange)="fn(data.profileName)"
+      [disabled]="!isEdit" />
+  </mat-form-field>
+  <mat-form-field style="width: 90%; margin: 0" appearance="fill">
+    <mat-label class="required">Profile Description </mat-label>
+    <input type="text" matInput [(ngModel)]="data.profileDescription" />
+  </mat-form-field>
+
+  <div mat-line style="font-size: 18px">Permissions</div>
+
+  <mat-list class="zeropad">
+    <!-- organizations -->
+    <mat-list-item *ngIf="commonService.userPlan.orgAccess">
+      <div class="col-3 custclass">Organizations</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.orgDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedOrg"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedOrg" mat-button [matMenuTriggerFor]="menuOrg">
+          <span style="display: flex">
+            <p *ngIf="data.orgsView">View</p>
+            <p
+              *ngIf="data.orgsView && (data.orgsCreate || data.orgsEdit || data.orgsDelete || data.orgsDownload || data.orgReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.orgsCreate">Create</p>
+            <p
+              *ngIf="data.orgsCreate && (data.orgsEdit || data.orgsDelete || data.orgsDownload || data.orgReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.orgsEdit">Edit</p>
+            <p *ngIf="data.orgsEdit && (data.orgsDelete || data.orgsDownload || data.orgReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.orgsDelete">Delete</p>
+            <p *ngIf="data.orgsDelete && (data.orgsDownload || data.orgReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.orgsDownload">Download</p>
+            <p *ngIf="data.orgsDownload && (data.orgReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.orgReAssign">Re-Assign</p>
+            <p *ngIf="!data.orgsView && !data.orgsCreate && !data.orgsEdit && !data.orgsDelete && !data.orgsDownload && !data.orgReAssign"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuOrg="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgsView" (click)="contactsSett($event)"
+              name="org-low1" id="org-color-checkbox-1">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgsCreate" (click)="contactsSett($event)"
+              name="org-medium2" id="org-color-checkbox-2">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgsEdit" (click)="contactsSett($event)"
+              name="org-high3" id="org-color-checkbox-3">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgsDelete" (click)="contactsSett($event)"
+              name="org-high14" id="org-color-checkbox-4">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgsDownload" (click)="contactsSett($event)"
+              name="org-orgsDownload11" id="org-color-checkbox-4cd">Download</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.orgReAssign" (click)="contactsSett($event)"
+              name="org-sReAssign" id="org-color-checkbox-4cmd">ReAssign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- contacts -->
+    <mat-list-item *ngIf="commonService.userPlan.contactAccess">
+      <div class="col-3 custclass">{{data.fieldNameContact}}s</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.contactDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedCont"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedCont" mat-button [matMenuTriggerFor]="menuCont">
+          <span style="display: flex">
+            <p *ngIf="data.contactsView">View</p>
+            <p
+              *ngIf="data.contactsView && (data.contactsCreate || data.contactsEdit || data.contactsDelete || data.contactsDownload || data.contactReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contactsCreate">Create</p>
+            <p
+              *ngIf="data.contactsCreate && (data.contactsEdit || data.contactsDelete || data.contactsDownload || data.contactReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contactsEdit">Edit</p>
+            <p *ngIf="data.contactsEdit && (data.contactsDelete || data.contactsDownload || data.contactReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contactsDelete">Delete</p>
+            <p *ngIf="data.contactsDelete && (data.contactsDownload || data.contactReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contactsDownload">Download</p>
+            <p *ngIf="data.contactsDownload && (data.contactReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contactReAssign">Re-Assign</p>
+            <p *ngIf="!data.contactsView && !data.contactsCreate && !data.contactsEdit && !data.contactsDelete && !data.contactsDownload && !data.contactReAssign"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuCont="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactsView" (click)="contactsSett($event)"
+              name="low1" id="color-checkbox-1">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactsCreate" (click)="contactsSett($event)"
+              name="medium2" id="color-checkbox-2">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactsEdit" (click)="contactsSett($event)"
+              name="high3" id="color-checkbox-3">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactsDelete" (click)="contactsSett($event)"
+              name="high14" id="color-checkbox-4">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactsDownload" (click)="contactsSett($event)"
+              name="contactsDownload11" id="color-checkbox-4cd">Download</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contactReAssign" (click)="contactsSett($event)"
+              name="contactsReAssign" id="color-checkbox-4cmd">ReAssign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- sales -->
+    <mat-list-item *ngIf="commonService.userPlan.saleAccess">
+      <div class="col-3 custclass">{{data.fieldNameSale}}s</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.saleDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSale"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedSale" mat-button [matMenuTriggerFor]="menuSales">
+          <span style="display: flex">
+            <p *ngIf="data.salesView">View</p>
+            <p
+              *ngIf="data.salesView && (data.salesCreate || data.salesEdit || data.salesDelete || data.salesDownload || data.saleReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesCreate">Create</p>
+            <p
+              *ngIf="data.salesCreate && (data.salesEdit || data.salesDelete || data.salesDownload || data.saleReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesEdit">Edit</p>
+            <p *ngIf="data.salesEdit && (data.salesDelete || data.salesDownload || data.saleReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDelete">Delete</p>
+            <p *ngIf="data.salesDelete && (data.salesDownload || data.saleReAssign)">,&nbsp;</p>
+            <p *ngIf="data.salesDownload">Download</p>
+            <p *ngIf="data.saleReAssign && (data.salesDownload)">,&nbsp;</p>
+            <p *ngIf="data.saleReAssign">Re-Assign</p>
+            <p *ngIf="!data.salesView && !data.salesCreate && !data.salesEdit && !data.salesDelete && !data.salesDownload && !data.saleReAssign"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuSales="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesView" (click)="contactsSett($event)" name="low5"
+              id="color-checkbox-5">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesCreate" (click)="contactsSett($event)"
+              name="medium6" id="color-checkbox-6">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesEdit" (click)="contactsSett($event)"
+              name="high7" id="color-checkbox-7">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDelete" (click)="contactsSett($event)"
+              name="high28" id="color-checkbox-8">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDownload" (click)="contactsSett($event)"
+              name="salesDownloadhigh28" id="color-checkbox-8sd">Download</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.saleReAssign" (click)="contactsSett($event)"
+              name="saleReAssign" id="saleReAssign-uii">Re-Assign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- services -->
+    <mat-list-item *ngIf="commonService.userPlan.serviceAccess">
+      <div class="col-3 custclass">{{data.fieldNameService}}s</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.serviceDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedService"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedService" mat-button [matMenuTriggerFor]="menuServices">
+          <span style="display: flex">
+            <p *ngIf="data.servicesView">View</p>
+            <p
+              *ngIf="data.servicesView && (data.servicesCreate || data.servicesEdit || data.servicesDelete || data.servicesDownload || data.serviceReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.servicesCreate">Create</p>
+            <p
+              *ngIf="data.servicesCreate && (data.servicesEdit || data.servicesDelete || data.servicesDownload || data.serviceReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.servicesEdit">Edit</p>
+            <p *ngIf="data.servicesEdit && (data.servicesDelete || data.servicesDownload || data.serviceReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.servicesDelete">Delete</p>
+            <p *ngIf="data.servicesDelete && (data.servicesDownload || data.serviceReAssign)">,&nbsp;</p>
+            <p *ngIf="data.servicesDownload">Download</p>
+            <p *ngIf="data.serviceReAssign && (data.servicesDownload)">,&nbsp;</p>
+            <p *ngIf="data.serviceReAssign">Re-Assign</p>
+            <p *ngIf="!data.servicesView && !data.servicesCreate && !data.servicesEdit && !data.servicesDelete && !data.servicesDownload && !data.serviceReAssign"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuServices="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.servicesView" (click)="contactsSett($event)"
+              name="low5service" id="service-checkbox-5">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.servicesCreate" (click)="contactsSett($event)"
+              name="medium6service" id="service-checkbox-6">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.servicesEdit" (click)="contactsSett($event)"
+              name="high7service" id="service-checkbox-7">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.servicesDelete" (click)="contactsSett($event)"
+              name="high28service" id="service-checkbox-8">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.servicesDownload" (click)="contactsSett($event)"
+              name="serviceDownload" id="service-checkbox-8sd">Download</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.serviceReAssign" (click)="contactsSett($event)"
+              name="serviceReAssign" id="serviceReAssign-uii">Re-Assign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- followups -->
+    <mat-list-item *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.followupsAccess">
+      <div class="col-3 custclass">{{data.fieldNameFollowup}}s</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.followUpDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedFoll"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedFoll" mat-button [matMenuTriggerFor]="menuFoll">
+          <span style="display: flex">
+            <p *ngIf="data.follView">View</p>
+            <p *ngIf="data.follView && (data.follCreate || data.follEdit || data.follDelete || data.followUpReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.follCreate">Create</p>
+            <p *ngIf="data.follCreate && (data.follEdit || data.follDelete || data.followUpReAssign)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.follEdit">Edit</p>
+            <p *ngIf="data.follEdit && (data.follDelete || data.followUpReAssign)">,&nbsp;</p>
+            <p *ngIf="data.follDelete">Delete</p>
+            <p *ngIf="data.followUpReAssign && data.follDelete">,&nbsp;</p>
+            <p *ngIf="data.followUpReAssign">Re-Assign</p>
+            <p *ngIf="!data.follView && !data.follCreate && !data.follEdit && !data.follDelete && !data.followUpReAssign"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuFoll="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.follView" (click)="contactsSett($event)" name="low18"
+              id="color-checkbox-18">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.follCreate" (click)="contactsSett($event)"
+              name="medium19" id="color-checkbox-19">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.follEdit" (click)="contactsSett($event)"
+              name="low120" id="color-checkbox-20">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.follDelete" (click)="contactsSett($event)"
+              name="medium121" id="color-checkbox-21">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.followUpReAssign" (click)="contactsSett($event)"
+              name="followUpReAssign" id="followUpReAssign-21">Re-Assign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- tasks -->
+    <mat-list-item *ngIf="commonService.userPlan.activitiesAccess && commonService.userPlan.tasksAccess">
+      <div class="col-3 custclass">{{data.fieldNameTask}}s</div>
+      <div class="col-3">
+        <mat-form-field style="width: 150px; font-size: 12px;">
+          <mat-label class="required">Data Access Rule </mat-label>
+          <mat-select [(value)]="data.taskDataAccessRule">
+            <mat-option value="All">All</mat-option>
+            <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+            <mat-option value="Own">Own</mat-option>
+            <mat-option value="Team">Team</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedTask"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedTask" mat-button [matMenuTriggerFor]="menuTask">
+          <span style="display: flex">
+            <p *ngIf="data.taskReAssign">Re-Assign</p>
+            <p *ngIf="!data.taskReAssign" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuTask="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.taskReAssign" (click)="contactsSett($event)"
+              name="taskReAssign" id="taskReAssign-21">Re-Assign</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- remaining dataaccess rule -->
+    <div mat-line>
+      <br>
+      <mat-form-field style="width: 320px">
+        <mat-label class="required">Data Access Rule </mat-label>
+        <mat-select [(value)]="data.dialogdataAccessRule">
+          <mat-option value="All">All</mat-option>
+          <mat-option *ngIf="commonService.userPlan.branchEnabled" value="Branch">Branch</mat-option>
+          <mat-option value="Own">Own</mat-option>
+          <mat-option value="Team">Team</mat-option>
+        </mat-select>
+        <mat-hint>Data Access Rule for {{commonService.userPlan.documentsAccess ? data.fieldNameSale+'s documents,' : ''}}{{commonService.userPlan.collectionsAccess ? data.fieldNameCollection+'s,' :''}}
+          {{commonService.userPlan.documentsAccess ? data.fieldNameExpense : ''}}s</mat-hint>
+      </mat-form-field>
+    </div>
+    <br>
+
+    <!-- Estimate -->
+    <mat-list-item *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.estimatesAccess">
+      <div class="col-6 custclass">{{data.fieldNameEstimate}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSalesEst"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedSalesEst" mat-button [matMenuTriggerFor]="menuSalesEst">
+          <span style="display: flex">
+            <p *ngIf="data.salesDViewEst">View</p>
+            <p *ngIf="data.salesDViewEst && (data.salesDCreateEst || data.salesDEditEst || data.estDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDCreateEst">Create</p>
+            <p *ngIf="data.salesDCreateEst && (data.salesDEditEst || data.estDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDEditEst">Edit</p>
+            <p *ngIf="data.salesDEditEst && (data.estDownload)">,&nbsp;</p>
+            <p *ngIf="data.estDownload">Download</p>
+            <p *ngIf="!data.salesDViewEst && !data.salesDCreateEst && !data.salesDEditEst && !data.estDownload"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuSalesEst="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDViewEst" (click)="contactsSett($event)"
+              name="low9" id="color-checkbox-9">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDCreateEst" (click)="contactsSett($event)"
+              name="medium10" id="color-checkbox-10">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDEditEst" (click)="contactsSett($event)"
+              name="high11" id="color-checkbox-11">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.estDownload" (click)="contactsSett($event)"
+              name="high11estd" id="color-checkbox-11-estd">Download</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- Quotation -->
+    <mat-list-item *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.quotationsAccess">
+      <div class="col-6 custclass">{{data.fieldNameQuotation}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSalesQuot"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedSalesQuot" mat-button [matMenuTriggerFor]="menuSalesQuot">
+          <span style="display: flex">
+            <p *ngIf="data.salesDViewQuot">View</p>
+            <p *ngIf="data.salesDViewQuot && (data.salesDCreateQuot || data.salesDEditQuot || data.quotDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDCreateQuot">Create</p>
+            <p *ngIf="data.salesDCreateQuot && (data.salesDEditQuot || data.quotDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDEditQuot">Edit</p>
+            <p *ngIf="(data.salesDEditQuot && data.quotDownload)">,&nbsp;</p>
+            <p *ngIf="data.quotDownload">Download</p>
+            <p *ngIf="!data.salesDViewQuot && !data.salesDCreateQuot && !data.salesDEditQuot && !data.quotDownload"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuSalesQuot="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDViewQuot" (click)="contactsSett($event)"
+              name="low9" id="color-checkbox-9">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDCreateQuot" (click)="contactsSett($event)"
+              name="medium10" id="color-checkbox-10">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDEditQuot" (click)="contactsSett($event)"
+              name="high11" id="color-checkbox-11">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.quotDownload" (click)="contactsSett($event)"
+              name="high11-quotd" id="color-checkbox-11-quotDo">Download</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- Invoice -->
+    <mat-list-item *ngIf="commonService.userPlan.documentsAccess && commonService.userPlan.invoicesAccess">
+      <div class="col-6 custclass">{{data.fieldNameInvoice}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSalesInv"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedSalesInv" mat-button [matMenuTriggerFor]="menuSalesInv">
+          <span style="display: flex">
+            <p *ngIf="data.salesDViewInv">View</p>
+            <p *ngIf="data.salesDViewInv && (data.salesDCreateInv || data.salesDEditInv || data.invDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDCreateInv">Create</p>
+            <p *ngIf="data.salesDCreateInv && (data.salesDEditInv || data.invDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.salesDEditInv">Edit</p>
+            <p *ngIf="(data.salesDEditInv && data.invDownload)">,&nbsp;</p>
+            <p *ngIf="data.invDownload">Download</p>
+            <p *ngIf="!data.salesDViewInv && !data.salesDCreateInv && !data.salesDEditInv && !data.invDownload"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuSalesInv="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDViewInv" (click)="contactsSett($event)"
+              name="low9" id="color-checkbox-9">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDCreateInv" (click)="contactsSett($event)"
+              name="medium10" id="color-checkbox-10">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.salesDEditInv" (click)="contactsSett($event)"
+              name="high11" id="color-checkbox-11">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.invDownload" (click)="contactsSett($event)"
+              name="high11-invd" id="color-checkbox-11-invd">Download</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- Dashboard -->
+    <mat-list-item *ngIf="commonService.userPlan.dashboardAccess">
+      <div class="col-6 custclass">Dashboard</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedDashB"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedDashB" mat-button [matMenuTriggerFor]="menuDB">
+          <span style="display: flex">
+            <p *ngIf="data.DBView">View Dashboard</p>
+            <p *ngIf="data.DBView && (data.DBReportsView || data.DBDownloadReports)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.DBReportsView">View Reports</p>
+            <p *ngIf="data.DBReportsView && (data.DBDownloadReports)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.DBDownloadReports">Download Reports</p>
+            <p *ngIf="!data.DBView && !data.DBReportsView && !data.DBDownloadReports" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuDB="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.DBView" (click)="contactsSett($event)" name="low12"
+              id="color-checkbox-12">View Dashboard</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.DBReportsView" (click)="contactsSett($event)"
+              name="low12331" id="color-checkbox-12331">View Reports</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.DBDownloadReports" (click)="contactsSett($event)"
+              name="medium13" id="color-checkbox-13">Download Reports</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- notes -->
+    <mat-list-item>
+      <div class="col-6 custclass">Notes</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedNotes"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedNotes" mat-button [matMenuTriggerFor]="menuNotes">
+          <span style="display: flex">
+            <p *ngIf="data.notesView">View</p>
+            <p *ngIf="data.notesView && (data.notesCreate || data.notesEdit || data.notesDelete)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.notesCreate">Create</p>
+            <p *ngIf="data.notesCreate && (data.notesEdit || data.notesDelete)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.notesEdit">Edit</p>
+            <p *ngIf="data.notesEdit && data.notesDelete">,&nbsp;</p>
+            <p *ngIf="data.notesDelete">Delete</p>
+            <p *ngIf="!data.notesView && !data.notesCreate && !data.notesEdit && !data.notesDelete"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuNotes="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.notesView" (click)="contactsSett($event)"
+              name="low14" id="color-checkbox-14">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.notesCreate" (click)="contactsSett($event)"
+              name="medium15" id="color-checkbox-15">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.notesEdit" (click)="contactsSett($event)"
+              name="high16" id="color-checkbox-16">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.notesDelete" (click)="contactsSett($event)"
+              name="high517" id="color-checkbox-17">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- attachments for uploadFiles -->
+    <mat-list-item *ngIf="commonService.userPlan.uploadFilesAccess">
+      <div class="col-6 custclass">Upload Files</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedAtt"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedAtt" mat-button [matMenuTriggerFor]="menuAtt">
+          <span style="display: flex">
+            <p *ngIf="data.attView">View</p>
+            <p *ngIf="data.attView && (data.attAdd || data.attRemove)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.attAdd">Add</p>
+            <p *ngIf="data.attAdd && (data.attRemove)">,&nbsp;</p>
+            <p *ngIf="data.attRemove">Delete</p>
+            <p *ngIf="!data.attView && !data.attAdd && !data.attRemove" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuAtt="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.attView" (click)="contactsSett($event)" name="low22"
+              id="color-checkbox-22">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.attAdd" (click)="contactsSett($event)"
+              name="medium23" id="color-checkbox-23">Add</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.attRemove" (click)="contactsSett($event)"
+              name="high24" id="color-checkbox-24">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- attachments for contacts -->
+    <mat-list-item *ngIf="commonService.userPlan.uploadFilesAccess && commonService.userPlan.contactFileUploadAccess">
+      <div class="col-6 custclass">{{data.fieldNameContact}} Attachments</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedContAtt"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedContAtt" mat-button [matMenuTriggerFor]="menuAttCont">
+          <span style="display: flex">
+            <p *ngIf="data.contattView">View</p>
+            <p *ngIf="data.contattView && (data.contattAdd || data.contattRemove)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.contattAdd">Add</p>
+            <p *ngIf="data.contattAdd && (data.contattRemove)">,&nbsp;</p>
+            <p *ngIf="data.contattRemove">Delete</p>
+            <p *ngIf="!data.contattView && !data.contattAdd && !data.contattRemove" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuAttCont="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contattView" (click)="contactsSett($event)"
+              name="low2299" id="color-checkbox-9922">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contattAdd" (click)="contactsSett($event)"
+              name="medium2399" id="color-checkbox-2399">Add</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.contattRemove" (click)="contactsSett($event)"
+              name="high2499" id="color-checkbox-2499">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- attachments for sales -->
+    <mat-list-item *ngIf="commonService.userPlan.uploadFilesAccess && commonService.userPlan.saleFileUploadAccess">
+      <div class="col-6 custclass">{{data.fieldNameSale}} Attachments</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSaleAtt"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedSaleAtt" mat-button [matMenuTriggerFor]="menuAttSale">
+          <span style="display: flex">
+            <p *ngIf="data.saleattView">View</p>
+            <p *ngIf="data.saleattView && (data.saleattAdd || data.saleattRemove)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.saleattAdd">Add</p>
+            <p *ngIf="data.saleattAdd && (data.saleattRemove)">,&nbsp;</p>
+            <p *ngIf="data.saleattRemove">Delete</p>
+            <p *ngIf="!data.saleattView && !data.saleattAdd && !data.saleattRemove" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuAttSale="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.saleattView" (click)="contactsSett($event)"
+              name="low2288" id="color-checkbox-2288">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.saleattAdd" (click)="contactsSett($event)"
+              name="medium2388" id="color-checkbox-2388">Add</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.saleattRemove" (click)="contactsSett($event)"
+              name="high2488" id="color-checkbox-2488">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- attachments for services -->
+    <mat-list-item *ngIf="commonService.userPlan.uploadFilesAccess && commonService.userPlan.serviceFileUploadAccess">
+      <div class="col-6 custclass">{{data.fieldNameService}} Attachments</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedServiceAtt"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedServiceAtt" mat-button [matMenuTriggerFor]="menuAttService">
+          <span style="display: flex">
+            <p *ngIf="data.serviceattView">View</p>
+            <p *ngIf="data.serviceattView && (data.serviceattAdd || data.serviceattRemove)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.serviceattAdd">Add</p>
+            <p *ngIf="data.serviceattAdd && (data.serviceattRemove)">,&nbsp;</p>
+            <p *ngIf="data.serviceattRemove">Delete</p>
+            <p *ngIf="!data.serviceattView && !data.serviceattAdd && !data.serviceattRemove" style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuAttService="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.serviceattView" (click)="contactsSett($event)"
+              name="low2245" id="color-checkbox-2245">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.serviceattAdd" (click)="contactsSett($event)"
+              name="medium2345" id="color-checkbox-2345">Add</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.serviceattRemove" (click)="contactsSett($event)"
+              name="high2445" id="color-checkbox-2445">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- Settings -->
+    <mat-list-item *ngIf="commonService.userPlan.settingsAccess">
+      <div class="col-6 custclass">Settings</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedSett" [disabled]="data.profileName=='SuperUser' ">
+        </mat-slide-toggle>
+        <button *ngIf="data.isCheckedSett" mat-button [matMenuTriggerFor]="menuSett">
+          <span style="display: flex">
+            <p *ngIf="data.settView">View & Edit</p>
+            <!-- <p *ngIf="data.settView && (data.settEdit)">,&nbsp;</p>
+            <p *ngIf="data.settEdit">Edit</p> -->
+            <!-- <p *ngIf="!data.settView && !data.settEdit " style="opacity: 0.7"> -->
+            <p *ngIf="!data.settView " style="opacity: 0.7">
+              Configure Settings
+            </p>
+            <!-- <p *ngIf="!data.settView && !data.settEdit " style="opacity: 0.7">
+              Configure Settings
+            </p> -->
+          </span>
+        </button>
+        <mat-menu #menuSett="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.settView" (click)="contactsSett($event)"
+              [disabled]="data.profileName=='SuperUser' " name="low121" id="color-checkbox-121">View & Edit</mat-checkbox>
+          </button>
+          <!-- <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.settEdit" (click)="contactsSett($event)"
+              [disabled]="data.profileName=='SuperUser' " name="medium131" id="color-checkbox-131">Edit</mat-checkbox>
+          </button> -->
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- collections -->
+    <mat-list-item *ngIf="commonService.userPlan.collectionsAccess">
+      <div class="col-6 custclass">{{data.fieldNameCollection}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedColl"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedColl" mat-button [matMenuTriggerFor]="menuColl">
+          <span style="display: flex">
+            <p *ngIf="data.collectionsView">View</p>
+            <p
+              *ngIf="data.collectionsView && (data.collectionCreate || data.collectionEdit || data.collectionDelete || data.collDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.collectionCreate">Create</p>
+            <p *ngIf="data.collectionCreate && (data.collectionEdit || data.collectionDelete || data.collDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.collectionEdit">Edit</p>
+            <p *ngIf="data.collectionEdit && (data.collectionDelete || data.collDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.collectionDelete">Delete</p>
+            <p *ngIf="(data.collectionDelete && data.collDownload)">,&nbsp;</p>
+            <p *ngIf="data.collDownload">Download</p>
+            <p *ngIf="!data.collectionsView && !data.collectionCreate && !data.collectionEdit && !data.collectionDelete && !data.collDownload"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuColl="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.collectionsView" (click)="contactsSett($event)"
+              name="low1551" id="color-checkbox-1551">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.collectionCreate" (click)="contactsSett($event)"
+              name="medium2551" id="color-checkbox-2551">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.collectionEdit" (click)="contactsSett($event)"
+              name="high3551" id="color-checkbox-3551">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.collectionDelete" (click)="contactsSett($event)"
+              name="high14551" id="color-checkbox-4551">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.collDownload" (click)="contactsSett($event)"
+              name="high14551-collD" id="color-checkbox-4551-collD">Download</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- expenses -->
+    <mat-list-item *ngIf="commonService.userPlan.expenseAccess">
+      <div class="col-6 custclass">{{data.fieldNameExpense}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedExp"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedExp" mat-button [matMenuTriggerFor]="menuExp">
+          <span style="display: flex">
+            <p *ngIf="data.expView">View</p>
+            <p *ngIf="data.expView && (data.expCreate || data.expEdit || data.expDelete || data.expDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.expCreate">Create</p>
+            <p *ngIf="data.expCreate && (data.expEdit || data.expDelete || data.expDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.expEdit">Edit</p>
+            <p *ngIf="data.expEdit && (data.expDelete || data.expDownload)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.expDelete">Delete</p>
+            <p *ngIf="(data.expDelete && data.expDownload)">,&nbsp;</p>
+            <p *ngIf="data.expDownload">Download</p>
+            <p *ngIf="!data.expView && !data.expCreate && !data.expEdit && !data.expDelete && !data.expDownload"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuExp="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.expView" (click)="contactsSett($event)"
+              name="low1661" id="color-checkbox-1661">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.expCreate" (click)="contactsSett($event)"
+              name="medium2661" id="color-checkbox-2661">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.expEdit" (click)="contactsSett($event)"
+              name="high3661" id="color-checkbox-3661">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.expDelete" (click)="contactsSett($event)"
+              name="high14661" id="color-checkbox-4661">Delete</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.expDownload" (click)="contactsSett($event)"
+              name="high14661-expd" id="color-checkbox-4661-expd">Download</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+
+    <!-- Items -->
+    <mat-list-item *ngIf="commonService.userPlan.productsAccess">
+      <div class="col-6 custclass">{{data.fieldNameItems}}s</div>
+      <div class="col-6">
+        <mat-slide-toggle [(ngModel)]="data.isCheckedItems"></mat-slide-toggle>
+        <button *ngIf="data.isCheckedItems" mat-button [matMenuTriggerFor]="menuitems">
+          <span style="display: flex">
+            <p *ngIf="data.itemsView">View</p>
+            <p *ngIf="data.itemsView && (data.itemsCreate || data.itemsEdit || data.itemsDelete)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.itemsCreate">Create</p>
+            <p *ngIf="data.itemsCreate && (data.itemsEdit || data.itemsDelete)">
+              ,&nbsp;
+            </p>
+            <p *ngIf="data.itemsEdit">Edit</p>
+            <p *ngIf="data.itemsEdit && data.itemsDelete">,&nbsp;</p>
+            <p *ngIf="data.itemsDelete">Delete</p>
+            <p *ngIf="!data.itemsView && !data.itemsCreate && !data.itemsEdit && !data.itemsDelete"
+              style="opacity: 0.7">
+              Configure Settings
+            </p>
+          </span>
+        </button>
+        <mat-menu #menuitems="matMenu">
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.itemsView" (click)="contactsSett($event)"
+              name="itemsView" id="color-checkbox-items-view">View</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.itemsCreate" (click)="contactsSett($event)"
+              name="itemsCreate" id="color-checkbox-itemsCreate">Create</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.itemsEdit" (click)="contactsSett($event)"
+              name="itemsEdit" id="color-checkbox-itemsEdit">Edit</mat-checkbox>
+          </button>
+          <button mat-menu-item>
+            <mat-checkbox class="example-margin" [(ngModel)]="data.itemsDelete" (click)="contactsSett($event)"
+              name="itemsDelete" id="color-checkbox-itemsDelete">Delete</mat-checkbox>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <br />
+  </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick1()">Cancel</button>
+
+  <button color="accent" mat-button
+    [disabled]="!networkCheck.onNetworkCheck() || !data.dialogdataAccessRule || !data.profileName || !data.profileDescription || disableSubmit"
+    [mat-dialog-close]="[data.profileName,
+    data.profileDescription,
+    data.dialogdataAccessRule,
+    data.isCheckedCont,
+    data.isCheckedSale,
+    data.isCheckedSalesEst,
+    data.isCheckedSalesQuot,
+    data.isCheckedSalesInv,
+    data.isCheckedDashB,
+    data.isCheckedNotes,
+    data.isCheckedFoll,
+    data.isCheckedAtt,
+    data.isCheckedSett,
+    data.contactsView,
+    data.contactsCreate,
+    data.contactsEdit,
+    data.contactsDelete,
+    data.salesView,
+    data.salesCreate,
+    data.salesEdit,
+    data.salesDelete,
+    data.salesDViewEst,
+    data.salesDCreateEst,
+    data.salesDEditEst,
+    data.salesDViewQuot,
+    data.salesDCreateQuot,
+    data.salesDEditQuot,
+    data.salesDViewInv,
+    data.salesDCreateInv,
+    data.salesDEditInv,
+    data.DBView,
+    data.DBDownloadReports,
+    data.notesView,
+    data.notesCreate,
+    data.notesEdit,
+    data.notesDelete,
+    data.follView,
+    data.follCreate,
+    data.follEdit,
+    data.follDelete,
+    data.attView,
+    data.attAdd,
+    data.attRemove,
+    data.settView,
+    data.settEdit,
+    data.isCheckedColl,
+    data.isCheckedExp,
+    data.DBReportsView,
+    data.collectionsView,
+    data.collectionCreate,
+    data.collectionEdit,
+    data.collectionDelete,
+    data.expView,
+    data.expCreate,
+    data.expEdit,
+    data.expDelete,
+    data.isCheckedItems,
+    data.itemsView,
+    data.itemsCreate,
+    data.itemsEdit,
+    data.itemsDelete,
+    data.contactsDownload,
+    data.salesDownload,
+    data.estDownload,
+    data.quotDownload,
+    data.invDownload,
+    data.expDownload,
+    data.collDownload,
+    data.contattView,
+    data.contattAdd,
+    data.contattRemove,
+    data.saleattView,
+    data.saleattAdd,
+    data.saleattRemove,
+    data.serviceattView,
+    data.serviceattAdd,
+    data.serviceattRemove,
+    data.isCheckedContAtt,
+    data.isCheckedSaleAtt,
+    data.isCheckedServiceAtt,
+    data.contactReAssign,
+    data.saleReAssign,
+    data.followUpReAssign,
+    data.servicesView,
+    data.servicesEdit,
+    data.servicesCreate,
+    data.servicesDelete,
+    data.serviceReAssign,
+    data.taskReAssign,
+    data.isCheckedService,
+    data.isCheckedTask,
+    data.servicesDownload,
+    data.contactDataAccessRule,
+    data.saleDataAccessRule,
+    data.serviceDataAccessRule,
+    data.taskDataAccessRule,
+    data.followUpDataAccessRule,
+    data.orgDataAccessRule,
+    data.isCheckedOrg,
+    data.orgsView,
+    data.orgsCreate,
+    data.orgsEdit,
+    data.orgsDelete,
+    data.orgsDownload,
+    data.orgReAssign]">
+    Save
+  </button>
+</mat-dialog-actions>

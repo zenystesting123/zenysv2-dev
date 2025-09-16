@@ -1,0 +1,136 @@
+
+
+// pre{
+//     border: white;font-family:'Roboto',-apple-system, BlinkMacSystemFont, 'Segoe UI',  Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+// }
+li{
+    color: black;
+  }
+pre{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #212529;
+    border: none;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+#thead{
+    background-color: white;
+}
+// .img-fluid{
+//     max-width: 200px;
+//     height: 150px;
+//     }
+
+#sketch{
+    height: 100pt;
+    width: 100pt;
+}
+#colorpick{
+    margin-top: 40px;
+}
+#j{
+    justify-content: left;
+    color: black;
+    align-items: flex-end;
+}
+#detail{
+   margin-right: 0%;
+}
+#h{
+    font-size: x-large;
+    font-weight: 500;
+    color: black;
+}
+#k{
+    color: black;
+    
+}
+// *{
+//     font-family:'Roboto',-apple-system, BlinkMacSystemFont, 'Segoe UI',  Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+// }
+
+
+
+td {
+    border: none;
+    color: black;
+        
+      
+        
+}
+.printsection{
+    color: black; 
+    font-size: 20;
+}
+body {
+
+    font-size: 20;
+  }
+  #fontsizereduce{
+      font-size: 10pt;
+       }
+  #orange{
+      background-color: orange;
+      color: white;
+  }
+  #tabheader{
+
+    background-color:#3a9efd ;
+    color: white;
+    margin-bottom: 5pt;
+    height: 40px;
+  }
+  #tabrow{
+    
+    
+     margin-bottom: 0pt;
+     margin-top: 6pt;
+     padding-top: 6pt;
+     padding-bottom: 0pt;
+  }
+ 
+  #index{
+    margin-left: 0%; 
+    margin-right:0%; 
+   
+    margin-bottom: 1pt;
+    margin-top: 1pt;
+    padding-top: 1pt;
+    padding-bottom: 1pt;
+  }
+  .navbar-brand{
+    color:white;
+    margin-left:10px;
+}
+
+.nav_link{
+    color:white; 
+    padding:10px;
+}
+table{
+    page-break-inside: auto;
+}
+tr{
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+img{
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+li{
+    color: black;
+}
+
+.unbreak{
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+// table { page-break-inside:auto }
+// tr    { page-break-inside:avoid; page-break-after:auto }
+// img    { page-break-inside:avoid; page-break-after:auto }

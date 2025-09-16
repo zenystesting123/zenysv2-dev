@@ -1,0 +1,37 @@
+.example-form {
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+::ng-deep .mat-dialog-content {
+  overflow-y: auto !important;
+}
+
+.truncate-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#paddig {
+  padding-bottom: 10px;
+}
+.chipStyling {
+  color: #2a6af6;
+  background-color: #f1f2f4;
+  height: 24px;
+  top: calc(50% - 24px / 2);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.dateTime-wdith{
+  width: 50% !important;
+  padding: 5px;
+}

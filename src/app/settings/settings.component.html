@@ -1,0 +1,276 @@
+<div class="no-v-scroll">
+  <mat-toolbar *ngIf="commonService.userPlan.settingsAccess" class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }">
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon color="accent"> arrow_back </mat-icon>
+    </button>
+    <mat-icon class="text-primary">settings</mat-icon>
+    &nbsp; Settings
+  </mat-toolbar>
+  <div class="bg-light" style="height: 100%;overflow-y:scroll">
+    <br>
+    <div *ngIf="commonService.userPlan.settingsAccess" class="container-xl border bg-white mb-5">
+      <br>
+      <h2 class="title">Customize Modules</h2>
+      <span class="caption text-body">Customize field and module names, add additional fields, configure pipelines and
+        stages etc.</span>
+
+      <div class="row p-3 border-bottom">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">
+              <!-- Contact -->
+              <div *ngIf="commonService.userPlan.contactAccess">
+                <h3>
+                  <span><a [routerLink]="['/dash/settings/custsettings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon
+                          class="material-icons-outlined">people</mat-icon></span>
+                      {{ fieldNameContact }}
+                    </a></span>
+                </h3>
+              </div>
+              <!-- Sales -->
+              <div *ngIf="commonService.userPlan.saleAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/salessettings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon
+                          class="material-icons-outlined">local_mall</mat-icon></span>
+                      {{ fieldNameSale }}</a>
+                  </span>
+                </h3>
+              </div>
+              <!-- Service -->
+              <div *ngIf="commonService.userPlan.serviceAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/service-settings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon
+                          class="material-icons-outlined">support_agent</mat-icon></span>
+                      {{ fieldNameSupport }}</a>
+                  </span>
+                </h3>
+              </div>
+              <!-- Organisation -->
+              <div *ngIf="commonService.userPlan.orgAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/organisation-settings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon
+                          class="material-icons-outlined">business</mat-icon></span>
+                      {{fieldNameOrg}}</a>
+                  </span>
+                </h3>
+              </div>
+              <!-- Fb Integration -->
+              <div *ngIf="commonService.userPlan.fbIntegration">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/fb']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon
+                          class="material-icons-outlined">facebook</mat-icon></span>
+                      Facebook Integration</a>
+                  </span>
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <!-- Tasks -->
+              <div *ngIf="commonService.userPlan.tasksAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/tasksettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon class="material-icons-outlined" mat-list-icon class="material-icons-outlined"
+                          title="{{ fieldNameTask }} Settings">task</mat-icon></span>
+                      {{ fieldNameTask }}</a></span>
+                </h3>
+              </div>
+              <!-- FollowUps -->
+              <div *ngIf="commonService.userPlan.followupsAccess">
+                <h3>
+                  <span><a [routerLink]="['/dash/settings/followupsettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" class="material-icons-outlined"
+                          title="{{ fieldNameFollowup }} Settings">call</mat-icon></span>
+                      {{fieldNameFollowup}}</a></span>
+                </h3>
+              </div>
+              <!-- Payment -->
+              <div *ngIf="commonService.userPlan.collectionsAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/paymentsettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" class="material-icons-outlined"
+                          title="Payment Settings">paid</mat-icon></span>
+                      {{ fieldNamePayment }}</a></span>
+                </h3>
+              </div>
+              <!-- Automations -->
+              <div *ngIf="commonService.userPlan.automation">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/automation-list']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" class="material-icons-outlined"
+                          title="Payment Settings">account_tree</mat-icon></span>
+                      Automations</a></span>
+                </h3>
+              </div>
+
+            </div>
+            <div class="col-4">
+              <!-- Expense -->
+              <div *ngIf="commonService.userPlan.expenseAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/expensesettings']"><span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined">account_balance_wallet</mat-icon></span>
+                      {{ fieldNameExpense }}</a></span>
+                </h3>
+              </div>
+              <!-- Sale Documents -->
+              <div *ngIf="commonService.userPlan.documentsAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/docsettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon
+                          class="material-icons-outlined">article</mat-icon></span>{{fieldNameSale}}s
+                      Documents</a></span>
+                </h3>
+              </div>
+              <!-- Product -->
+              <div *ngIf="commonService.userPlan.productsAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/product-settings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon class="material-icons-outlined" mat-list-icon class="material-icons-outlined"
+                          title="{{ fieldNameProduct }} Settings">inventory_2</mat-icon></span>
+                      {{ fieldNameProduct }}</a></span>
+                </h3>
+              </div>
+              <!-- Lead Capture -->
+              <div *ngIf="commonService.userPlan.leadCaptureAccess">
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/lead-capture-settings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" class="material-icons-outlined"
+                          matTooltip="Lead Capture Settings">groups</mat-icon></span>
+                      Lead Capture</a></span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <h2 *ngIf="commonService.userPlan.emailTemplates || commonService.userPlan.messageTemplates" class="title">Communication </h2>
+      <span *ngIf="commonService.userPlan.emailTemplates || commonService.userPlan.messageTemplates"  class="caption text-body">Set up email, message templates and configure email account for automatically
+        sending emails.</span>
+      <div *ngIf="commonService.userPlan.emailTemplates || commonService.userPlan.messageTemplates"  class="row p-3 border-bottom">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4" *ngIf="commonService.userPlan.emailTemplates">
+              <!-- Email -->
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/emailsettings']">
+
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" title="Email Settings"
+                          class="material-icons-outlined">email</mat-icon></span> Email
+                    </a>
+
+                  </span>
+                </h3>
+              </div>
+            </div>
+            <div class="col-4" *ngIf="commonService.userPlan.messageTemplates">
+              <!-- Message Templates -->
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/messagetemplate']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined" class="material-icons-outlined"
+                          title="Message Template">message</mat-icon></span>
+                      Message Templates
+                    </a></span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <h2 class="title">Account Settings </h2>
+      <span class="caption text-body">Manage user accounts, subscriptions and payment gateway integration.</span>
+      <div class="row p-3">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">
+              <!-- Profile -->
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/profilesettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon mat-list-icon class="material-icons-outlined">person</mat-icon></span>
+                      Profile</a></span>
+                </h3>
+              </div>
+              <!--
+                  <div>
+                    <h3>
+                      <span><a [routerLink]="''"> Payment Gateway </a></span>
+                    </h3>
+                  </div>
+                  -->
+
+            </div>
+            <div class="col-4">
+              <!-- User Settings -->
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/subusersettings']"><span style="vertical-align:middle;"><mat-icon
+                          mat-list-icon class="material-icons-outlined">supervisor_account</mat-icon></span>
+                      User Settings
+                    </a></span>
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <!-- General Settings -->
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/generalsettings']">
+                      <span style="vertical-align:middle;">
+                        <mat-icon class="material-icons-outlined" mat-list-icon class="material-icons-outlined"
+                          title="General Settings">settings_applications</mat-icon></span>
+                      General Settings
+                    </a>
+                  </span>
+                </h3>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- If access is restricted -->
+    <div *ngIf="!commonService.userPlan.settingsAccess" class="container" style="text-align: center">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <br>
+  </div>
+</div>

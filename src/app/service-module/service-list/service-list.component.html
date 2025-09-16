@@ -1,0 +1,338 @@
+<div class="no-v-scroll bg-soft-secondary">
+  <!-- New material Toolbar starts here -->
+  <mat-toolbar *ngIf="!disableserviceView && commonService.userPlan.serviceAccess" class="border-bottom" style="flex: 0 0 64px;z-index: 10"
+    [ngStyle]="{ 'background-color': 'white' }">
+    <!--
+    <button mat-icon-button title="back" (click)="onBack()">
+      <mat-icon class="material-icons-outlined" color="accent"> arrow_back </mat-icon>
+    </button>
+    -->
+
+    <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }">support_agent</mat-icon>
+    &nbsp;
+    <span>{{ fieldNameservice }}</span>&nbsp;
+    <span class="bg-soft-secondary badge text-dark">{{noOfServiceinViewPipeline}}</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <mat-form-field appearance="outline" *ngIf="!disableserviceView && commonService.userPlan.serviceAccess" style="font-size: 14px; height:100%">
+      <mat-label>View</mat-label>
+      <mat-select placeholder="Select view" [(ngModel)]="viewSettingSelected" name="action">
+        <mat-option *ngFor="let view of viewSettingArray, let i = index" [value]="view" (click)="viewChanged(i)">
+          {{view.viewName}}
+        </mat-option>
+        <mat-divider> </mat-divider>
+        <mat-option (click)="editView('Add')" [value]="0">
+          <mat-icon>add</mat-icon>Add view
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button title="Edit view" (click)="editView('Edit')">
+      <mat-icon class="material-icons-outlined" color="accent"> edit </mat-icon>
+    </button>
+     <!-- delete view -->
+    <button mat-icon-button title="Delete view" (click)="deleteView()" *ngIf="viewSettingArray.length > 1" >
+      <mat-icon class="material-icons-outlined" color="warn"> delete </mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+    <div>
+      <!-- Reassign starts here -->
+      <button mat-button color="primary" [matMenuTriggerFor]="reassign" [disabled]="disableReAssign" *ngIf="selection.selected.length > 0">
+        Assign to
+      </button>&nbsp;
+      <mat-menu #reassign="matMenu">
+        <!-- <button mat-menu-item (click)="
+    onMainUserAssigned(selection.selected, userFirstName, userLastName)">
+          {{ userFirstName }} {{ userLastName }}
+        </button> -->
+        <button mat-menu-item *ngFor="let s of subusersToDisplay" (click)="
+    onSubUserAssigned(
+      selection.selected,
+      s.userId,
+      s.firstname,
+      s.lastname,
+      s.branchId
+    )">
+          {{ s.firstname }} {{ s.lastname }}
+        </button>
+      </mat-menu>
+    </div>
+    <mat-form-field appearance="outline" *ngIf="(servicePipelines?.length > 1)" style="font-size: 14px; height: 100%;">
+      <mat-label>Selected {{fieldSettings.selectedServPipeline.displayName}}</mat-label>
+      <mat-select placeholder="Select your option" [(ngModel)]="commonListDataService.selectedServicePipeline" name="action"
+        (selectionChange)="pipelineChangedEvent()">
+        <mat-option *ngFor="let option of servicePipelines" [value]="option.pipelineId">
+          {{ option.pipelineName }}
+        </mat-option>
+        <mat-option *ngIf="commonListDataService.supportView =='table'" value="All Pipelines" >All {{fieldSettings.selectedServPipeline.displayName}}s</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- Re-assign ends here -->
+
+    &nbsp;
+
+    <button mat-icon-button [matMenuTriggerFor]="sortMenu" aria-label="Sort view" *ngIf="!disableserviceView && commonListDataService.supportView =='grid' && commonService.userPlan.serviceAccess"
+      title="Sort data">
+      <mat-icon class="material-icons-outlined" color="accent">sort</mat-icon>
+    </button>
+    <mat-menu #sortMenu="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="sortOptions">Sort by</button>
+      <button mat-menu-item [matMenuTriggerFor]="sortOrder">Sort order</button>
+    </mat-menu>
+    <mat-menu #sortOptions="matMenu">
+      <button mat-menu-item *ngFor="let field of displayFields" (click)="sortCardField(field)">{{field.header}}</button>
+    </mat-menu>
+
+    <mat-menu #sortOrder="matMenu">
+      <button mat-menu-item (click)="setSortOrder('Asc')">Ascending</button>
+      <button mat-menu-item (click)="setSortOrder('Desc')">Descending</button>
+    </mat-menu>
+
+    &nbsp;
+
+    <!-- view filter starts here -->
+    <button mat-icon-button color="accent" class="material-icons-outlined" title="Filter"
+      [matMenuTriggerFor]="view">
+      <mat-icon class="material-icons-outlined">filter_alt_outlined</mat-icon>
+    </button>
+    <mat-menu #view="matMenu">
+      <!-- <button mat-menu-item [matMenuTriggerFor]="assignedTo"
+        *ngIf="dataAccessRuleCheck =='All' || dataAccessRuleCheck =='Team'">
+        {{fieldNameservice}}s assigned to
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="createdBy">
+        {{fieldNameservice}}s created by
+      </button> -->
+      <button mat-menu-item (click)="onShowDialog($event,'assignedTo')"
+      *ngIf="dataAccessRuleCheck != 'Own'">
+      {{fieldNameservice}}s assigned to
+      </button>
+      <button mat-menu-item (click)="onShowDialog($event,'createdBy')">
+        {{fieldNameservice}}s created by
+      </button>
+      <button mat-menu-item *ngIf="actserviceAgeing" (click)="aged_secondaryFilter()">
+       Aged {{fieldNameservice}}s
+      </button>
+      <button mat-menu-item (click)="resetDate()" title="Clear filter">
+        <mat-icon class="material-icons-outlined" color="warn">clear</mat-icon>
+        Clear filter
+      </button>
+    </mat-menu>
+    <mat-menu #assignedTo="matMenu">
+      <button mat-menu-item *ngFor="let s of subUsers" (click)="secondaryFilter('assignedTo',s.userId)">
+        {{ s.firstname }} {{ s.lastname }}
+      </button>
+    </mat-menu>
+    <mat-menu #createdBy="matMenu">
+      <button mat-menu-item *ngFor="let s of userDetailsAll" (click)="secondaryFilter('createdBy',s.userId)">
+        {{ s.firstname }} {{ s.lastname }}
+      </button>
+    </mat-menu>
+    <!-- <mat-menu #aged="matMenu" >
+      <button mat-menu-item *ngFor="let s of userDetailsAll" (click)="aged_secondaryFilter('createdBy',s.userId)">
+        {{ s.firstname }} {{ s.lastname }}
+      </button>
+    </mat-menu> -->
+
+
+
+
+    <button *ngIf="commonListDataService.supportView =='grid'" mat-icon-button [disabled]="!networkCheck.onNetworkCheck()"
+      (click)="customizeCardContent('service')" title="Customize card content">
+      <mat-icon color="accent" class="material-icons-outlined">settings</mat-icon>
+    </button>
+    &nbsp;
+
+    <button mat-icon-button (click)="onToggle()" *ngIf="commonListDataService.supportView =='table' && commonService.userPlan.serviceGridViewEnabled" title="Grid view">
+      <mat-icon class="material-icons-outlined" color="accent">table_chart</mat-icon> &nbsp;
+    </button>
+    <button mat-icon-button (click)="onToggleTab()" *ngIf="commonListDataService.supportView =='grid' && commonService.userPlan.serviceTableViewEnabled" title="Table view">
+      <mat-icon class="material-icons-outlined" color="accent">table_rows</mat-icon> &nbsp;
+    </button>
+    &nbsp;
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="!progressBarStatus" [style.visibility]="progressBarStatus ? 'hidden' : 'visible'"
+    mode="indeterminate">
+  </mat-progress-bar>
+  <!-- ----------------new ends-------------------------------- -->
+  <div  style="overflow-y: scroll;">
+    <!-- If Access is restricted -->
+    <div *ngIf="disableserviceView || !commonService.userPlan.serviceAccess" class="container" style="text-align: center; display: inline;">
+      <br />
+      <h3>No Access</h3>
+    </div>
+    <!-- Table starts here -->
+    <div *ngIf="!disableserviceView && commonListDataService.supportView =='table' && commonService.userPlan.serviceAccess && commonService.userPlan.serviceTableViewEnabled" class="container-fluid" style="margin-bottom: 10px"
+      [style.display]="progressBarStatus">
+      <br>
+      <app-custom-report-table *ngIf="progressBarStatus" [userId]="userId" [columns]="columns"
+        [dataList]="documentsArray.data" [displayName]="displayName" [tableName]="tableName"
+        [userIdsArray]="userIdsArray" [userNamesArray]="userNamesArray" [(selection)]="selection"
+        [accountType]="accountType" [fieldCustomsettings]="fieldSettings"
+        [actAgeing]="actserviceAgeing" [statusPipeline]="serviceStatusPipeline" [statusAge]="serviceStatusAge"
+        [tableDefaultData]="tableDefaultData" [customFields]="fieldListArray" [contactSettings]="contactSettings"
+        [disableDownload]="disableserviceDownload" [inputFieldNameFollowup]="fieldNameFollowup"
+        [inputFieldNameNotes]="fieldNameServiceNotes" [disableEditService]="disableserviceEdit"></app-custom-report-table>
+    </div>
+    <!---------------service List View----------->
+    <div *ngIf="!disableserviceView &&  commonListDataService.supportView =='grid' && commonService.userPlan.serviceAccess && commonService.userPlan.serviceGridViewEnabled" style="height:100%;"
+      [style.display]="progressBarStatus">
+
+      <div class="wrapper d-flex flex-row bd-highlight justify-content-start" *ngIf="serviceLoaded"  style="height:100%">
+        <div class="p-2 bd-highlight" *ngFor="let stage of serviceStatus, let i = index"  style="height:100%">
+          <div cdkDropList #stage="cdkDropList" id="{{ stage }}"  style="height:100%"
+            [cdkDropListData]="getFilteredData(serviceFilter, stage)"
+            [cdkDropListConnectedTo]="getFilteredStatus(serviceStatus, stage)" class="example-list bg-white"
+            (cdkDropListDropped)="drop($event)" [ngClass]="{'collapsed': stageCollapseArray[i]}">
+
+
+            <!--Collapsed header-->
+            <div class="d-flex flex-column bd-highlight justify-content-left  border border-2 rounded" *ngIf="stageCollapseArray[i]" [ngClass]="stageInPipeline(i).border + ' '+ stageInPipeline(i).background " >
+              <div class="p-2 bd-highlight align-items-center">
+                <button mat-icon-button (click)="hideStage(i)" color="accent" title="Expand Stage">
+                  <mat-icon>
+                    <span class="material-symbols-outlined">
+                      keyboard_double_arrow_right
+                    </span>
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="p-2 bd-highlight">
+                <h3 id="titleDesign" style="writing-mode: vertical-rl" [ngClass]="stageInPipeline(i).text ">
+                  {{ commonService.getStatusName('services', this.commonListDataService.selectedServicePipeline,stage) }}
+                  <span class="badge " [ngClass]="stageInPipeline(i).badge + ' '+ stageInPipeline(i).text "
+                  title="Number of {{fieldNameContact}}s">{{getFilteredData(serviceFilter, stage).length}}</span>
+                </h3>
+              </div>
+            </div>
+
+            <div *ngIf="stageCollapseArray[i]==false">
+                          <!--Expanded header-->
+              <div class="box">
+                <div class="row header">
+                <div class="d-flex flex-row bd-highlight justify-content-between border border-2 rounded" [ngClass]="stageInPipeline(i).border + ' '+ stageInPipeline(i).background " >
+              <div class=" bd-highlight">
+                <h3 id="titleDesign" class="mat-h3 mat-subheading-2" [ngClass]="stageInPipeline(i).text ">
+                  {{ commonService.getStatusName('services', this.commonListDataService.selectedServicePipeline,stage) }}
+                  <span class="badge"  [ngClass]="stageInPipeline(i).badge + ' '+ stageInPipeline(i).text "
+                    title="Number of {{fieldNameservices}}s">{{getFilteredData(serviceFilter,
+                    stage).length}}</span>
+                </h3>
+              </div>
+              <div class=" bd-highlight ">
+                <button mat-icon-button (click)="hideStage(i)" color="accent" title="Collapse Stage">
+                  <mat-icon>
+                    <span class="material-symbols-outlined">
+                      keyboard_double_arrow_left
+                    </span>
+                  </mat-icon>
+                </button>
+              </div>
+                </div>
+              </div>
+              <div class="row content">
+              <cdk-virtual-scroll-viewport itemSize="200" class="example-viewport">
+                <div class="card" style="margin:10px" [cdkDragData]="serviceFiltered" [cdkDragDisabled]="disableserviceEdit" cdkDrag *cdkVirtualFor="
+                    let serviceFiltered of getFilteredData(serviceFilter, stage);
+                    trackBy: trackbyserviceList
+                  ">
+                  <div class="card-body">
+                    <div class="d-flex flex-column bd-highlight justify-content-between">
+                      <div class="bd-highlight">
+                        <h3 class="card-title truncate-cell"> <a class="link-primary"
+                            [routerLink]="['/dash/service/service-details/' + serviceFiltered.id]">
+                            {{serviceFiltered.serviceTitle }} </a>
+                        </h3>
+                        <ul class="list-unstyled " style="margin-bottom: 5px;">
+                          <li *ngFor="let field of displayFields">{{field.header}}: {{getFieldValue(field,
+                            serviceFiltered)}} </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div style="padding-bottom: 5px;">
+                      <mat-chip-list aria-label="Aged">
+                        <mat-chip class="truncate-cell2" *ngIf="serviceFiltered.orgId"
+                          title="{{fieldNameOrganization}}" style="
+                                                  color:#2a6af6;
+                                                  background-color: #f1f2f4;
+                                                  height: 24px;
+                                                  top: calc(50% - 24px / 2);
+                                                  font-family: Roboto;
+                                                  font-style: normal;
+                                                  font-weight: 500;
+                                                  font-size: 12px;
+                                                  line-height: 24px;">{{ serviceFiltered.companyName }}</mat-chip>
+                        <mat-chip title="{{fieldNameContact}} name" class="truncate-cell2" style="
+                                                  color: #2a6af6;
+                                                  background-color: #f1f2f4;
+                                                  height: 24px;
+                                                  top: calc(50% - 24px / 2);
+                                                  font-family: Roboto;
+                                                  font-style: normal;
+                                                  font-weight: 500;
+                                                  font-size: 12px;
+                                                  line-height: 24px;">
+                          <a class="link-primary"
+                            [routerLink]="['/dash/contact/customerdetails/',serviceFiltered.customerId]"> {{
+                            serviceFiltered.firstName }} <span
+                              *ngIf="serviceFiltered.secondName">&nbsp;{{serviceFiltered.secondName}}</span> <span
+                              *ngIf="serviceFiltered.surname">&nbsp;{{serviceFiltered.surname}}</span> </a>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </div>
+                    <div class="d-flex flex-row bd-highlight justify-content-between">
+                      <div class="bd-highlight">
+                        <span class="badge bg-soft-danger text-danger" *ngIf="getAgedStatus(serviceFiltered)"
+                          title="Max allowed days in stage crossed">Aged</span>
+                      </div>
+                      <div class="bd-highlight">
+                      </div>
+                      <div class="d-flex flex-row">
+                        <!-- vertical 3 dot button and its actions -->
+                        <button mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                          [matMenuTriggerFor]="menuAdd">
+                          <mat-icon color="accent">add</mat-icon>
+                        </button>
+
+                        <button mat-icon-button aria-label="edit button" [disabled]="disableserviceEdit" (click)="ServiceIsCalled(serviceFiltered.id)">
+                          <mat-icon color="accent">edit</mat-icon>
+                        </button>
+
+                        <span style="margin-top: 5px;">
+                          <ngx-avatar name="{{ commonService.getAssignedToName(serviceFiltered.assignedTo).split(' ')[0] }}" textSizeRatio="2"
+                            size="30" title="Assigned to {{commonService.getAssignedToName(serviceFiltered.assignedTo)}}">
+                          </ngx-avatar>
+                        </span>
+
+                        <mat-menu #menuAdd="matMenu">
+
+                          <!-- add task -->
+                          <button mat-menu-item
+                            (click)="addTask(serviceFiltered.id, serviceFiltered.customerId, serviceFiltered.orgId, serviceFiltered.companyName, serviceFiltered.firstName, serviceFiltered.secondName, serviceFiltered.surname, serviceFiltered.serviceTitle)">
+                            <mat-icon color="accent">add_task</mat-icon>{{ fieldNameTask }}
+                          </button>
+
+                          <!-- add followUp -->
+                          <button mat-menu-item
+                            (click)="onCreateFollowUps(serviceFiltered.id, serviceFiltered.customerId, serviceFiltered.companyName, serviceFiltered.firstName, serviceFiltered.secondName, serviceFiltered.serviceTitle, serviceFiltered.assignedTo, serviceFiltered.assignedToName,serviceFiltered.orgId,serviceFiltered.surname)"
+                            [ngClass]="{ isDisabled: disableFoll }">
+                            <mat-icon color="accent">call</mat-icon>{{ fieldNameFollowup }}
+                          </button>
+
+                        </mat-menu>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </cdk-virtual-scroll-viewport>
+            </div>
+            <div class="row footer">
+            </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>

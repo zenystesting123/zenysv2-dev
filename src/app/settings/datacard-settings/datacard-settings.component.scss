@@ -1,0 +1,26 @@
+.sizing{
+    height: 200px;
+    width: 90px;
+    border: 1px solid black;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.formHeading{
+    color: rgb(81, 81, 213);
+}
+.normalHeading{
+    display: block;
+}
+.list :hover{
+    color: rgb(92, 92, 235);
+}
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

@@ -1,0 +1,31 @@
+.no-v-scroll {
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+//customisation field styling
+.flex-container {
+    display: flex;
+  }
+  .custField{
+  flex: .5 .5 auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  }
+  
+  .flex-width{
+    flex-basis: 25%;
+    margin-top: auto;
+  margin-bottom: auto;
+  }
+  
+  .fix-width{
+    width:200px;
+  }
+  //fieldname styling
+  .flex-containerField {
+    display: flex;
+    column-gap: 10px;
+  }

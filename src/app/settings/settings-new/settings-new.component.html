@@ -1,0 +1,318 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <button mat-icon-button title="back" (click)="onBack()">
+        <mat-icon color="primary"> arrow_back </mat-icon>
+      </button>
+      <span class="text-left" style="font-weight: bolder; font-size: 15px">
+        SETTINGS</span
+      ></mat-card
+    >
+  </div>
+</div>
+<div class="m-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-bordered shadow-none h-100">
+        <div class="card-body">
+          <h2 class="text-center">CUSTOMISATION</h2>
+          <div class="row">
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span
+                    ><a [routerLink]="['/dash/settings/custsettings']">
+                     <span style="vertical-align:middle;"> <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >people</mat-icon
+                      ></span>
+                      {{ fieldNameContact }}
+                    </a></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/salessettings']">
+                      <span style="vertical-align:middle;">  <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >local_mall</mat-icon
+                      ></span>
+                      {{ fieldNameSale }}</a
+                    >
+                  </span>
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/service-settings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >support_agent</mat-icon
+                      ></span>
+                      {{ fieldNameSupport }}</a
+                    >
+                  </span>
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/organisation-settings']">
+                      <span style="vertical-align:middle;"> <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >business</mat-icon
+                      ></span>
+                      {{fieldNameOrg}}</a
+                    >
+                  </span>
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/tasksettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        class="material-icons-outlined"
+                        mat-list-icon
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="{{ fieldNameTask }} Settings"
+                        >task</mat-icon
+                      ></span>
+                      {{ fieldNameTask }}</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span
+                    ><a [routerLink]="['/dash/settings/followupsettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        mat-list-icon
+                        class="material-icons-outlined"
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="{{ fieldNameFollowup }} Settings"
+                        >call</mat-icon
+                      ></span>
+                      FollowUp</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/paymentsettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        mat-list-icon
+                        class="material-icons-outlined"
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="Payment Settings"
+                        >paid</mat-icon
+                      ></span>
+                      {{ fieldNamePayment }}</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/automation-list']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        mat-list-icon
+                        class="material-icons-outlined"
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="Payment Settings"
+                        >account_tree</mat-icon
+                      ></span>
+                      Automations</a
+                    ></span
+                  >
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/expensesettings']"><span style="vertical-align:middle;">
+                      <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >account_balance_wallet</mat-icon
+                      ></span>
+                      {{ fieldNameExpense }}</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/docsettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >article</mat-icon
+                      ></span> Document</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/product-settings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        class="material-icons-outlined"
+                        mat-list-icon
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="{{ fieldNameProduct }} Settings"
+                        >inventory_2</mat-icon
+                      ></span>
+                      {{ fieldNameProduct }}</a
+                    ></span
+                  >
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="card card-bordered shadow-none h-100">
+        <div class="card-body">
+          <h2 class="text-center">COMMUNICATION</h2>
+          <div class="row">
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <span style="vertical-align:middle;">
+                    <mat-icon
+                      mat-list-icon
+                      [ngStyle]="{ color: '#1976D2' }"
+                      title="Email Settings"
+                      class="material-icons-outlined"
+                      >email</mat-icon
+                    ></span>
+                    <a [routerLink]="['/dash/settings/emailsettings']">
+                      Email Templates
+                    </a></span
+                  >
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/messagetemplate']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        mat-list-icon
+                        class="material-icons-outlined"
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="Message Template"
+                        >message</mat-icon
+                      ></span>
+                      Message Templates
+                    </a></span
+                  >
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <span style="vertical-align:middle;">
+                    <mat-icon
+                      mat-list-icon
+                      [ngStyle]="{ color: '#1976D2' }"
+                      title="Email Settings"
+                      class="material-icons-outlined"
+                      >email</mat-icon
+                    ></span>
+                    <a [routerLink]="''"> Email Configuration </a></span
+                  >
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="card card-bordered shadow-none h-100">
+        <div class="card-body">
+          <h2 class="text-center">ACCOUNT SETTINGS</h2>
+          <div class="row">
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/profilesettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >person</mat-icon
+                      ></span>
+                      Profile</a
+                    ></span
+                  >
+                </h3>
+              </div>
+              <div>
+                <h3>
+                  <span><a [routerLink]="''"> Payment Gateway </a></span>
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/subusersettings']"
+                      ><span style="vertical-align:middle;"><mat-icon mat-list-icon [ngStyle]="{ color: '#1976D2' }"
+                        >supervisor_account</mat-icon
+                      ></span>
+                      User Settings
+                    </a></span
+                  >
+                </h3>
+              </div>
+            </div>
+            <div class="col-4">
+              <div>
+                <h3>
+                  <span>
+                    <a [routerLink]="['/dash/settings/generalsettings']">
+                      <span style="vertical-align:middle;">
+                      <mat-icon
+                        class="material-icons-outlined"
+                        mat-list-icon
+                        [ngStyle]="{ color: '#1976D2' }"
+                        title="General Settings"
+                        >settings_applications</mat-icon
+                      ></span>
+                      General Settings
+                    </a>
+                  </span>
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="pad">
+    <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    <h4>{{form?.leadname}}</h4>
+    <hr>
+    <h6>
+        <i class="ft-message-square primary"></i>&nbsp; {{form?.description}}<br><br>
+        <i class="ft-grid primary"></i>&nbsp; {{form?.category}}<br><br>
+        <i class="ft-phone primary"></i>&nbsp; {{form?.contactPhone}}<br><br>
+        <i class="ft-mail primary"></i>&nbsp; {{form?.email}}<br><br>
+        <!-- <i class="ft-grid primary"></i>&nbsp; {{form?.leadScore}}<br><br> -->
+        <div class="rig">
+             <i class="ft-clock"></i>&nbsp; {{form?.date | date:"mediumDate"}}<br><br>
+       </div>
+    </h6>
+    <!-- <button type="button" class="bt btn-primary"  (click)="onPurchase()" >Purchase Lead</button> -->
+</div>

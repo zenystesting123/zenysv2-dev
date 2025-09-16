@@ -1,0 +1,169 @@
+
+<!-- --------------logo upload starts--------------------- -->
+<div *ngIf="view=='drag'">
+<div class="dropzone"
+  dropZone
+  (hovered)="toggleHover($event)"
+  (dropped)="startUpload($event)"
+  [class.hovering]="isHovering">
+
+  <h3>Drop Logo</h3>
+  <p>Drag and Drop a file </p>
+  <div class="file">
+  <label  class="file-label">
+
+    <input type="file" (change)="startUpload($event.target.files)">
+    <span class="file-cta">
+      <span class="file-icon">
+        <i class="fa fa-upload"></i>
+      </span>
+      <span class="file-label">
+        or choose a file....
+      </span>
+    </span>
+
+  </label>
+
+  </div>
+</div>
+
+<div *ngIf="percentage1|async as pct">upload
+  <progress [value]="pct" max="100"></progress>
+</div>
+<!-- <div *ngIf="(snapshot |async) as snap">
+{{ snap.bytesTransferred | fileSize }} of {{ snap.totalBytes | fileSize }}
+</div> -->
+<div class="center1" *ngIf="downloadURL |async as url">
+  <h4 class="center">preview</h4>
+  <img  width="150" height="150" [src]="url">
+  <!-- <a [href]="url">Download</a> -->
+
+</div>
+<!-- logo upload ends -->
+<!-- -----signature upload-------- -->
+  <h2 class="hea">&</h2>
+  <div class="dropzone"
+  dropZone
+  (hovered)="toggleHover1($event)"
+  (dropped)="startUpload1($event)"
+  [class.hovering]="isHovering">
+
+  <h3>Drop Signature</h3>
+  <p>Drag and Drop a file </p>
+    <div class="file">
+      <label  class="file-label">
+
+      <input type="file" (change)="startUpload1($event.target.files)">
+      <span class="file-cta">
+      <span class="file-icon">
+      <i class="fa fa-upload"></i>
+      </span>
+      <span class="file-label">
+      or choose a file....
+      </span>
+      </span>
+      </label>
+  </div>
+</div>
+
+<div *ngIf="percentage2|async as pct">upload
+  <progress [value]="pct" max="100"></progress>
+  </div>
+  <div class="center1" *ngIf="downloadURL1 |async as url">
+  <h4 class="center">preview</h4>
+  <img width="150" height="150"  [src]="url">
+  <!-- <a [href]="url">Download</a> -->
+
+</div>
+</div>
+<!-- ------------signature upload ends-------------- -->
+<div *ngIf="view=='choose'">
+  <br><br>
+  <!-- <div class="col-12">
+
+    <div class="col-6 rig">
+      <h4>Upload Signature</h4>
+      <input type="file" (change)="startUpload1($event.target.files)">
+      <div *ngIf="percentage2|async as pct">upload
+        <progress [value]="pct" max="100"></progress>
+        </div>
+        <div *ngIf="downloadURL1 |async as url">
+        <img width="150" height="150"  [src]="url">
+   
+      
+      </div>
+    
+    </div>
+    <div class="col-6 rig">
+      <h4>Upload Logo</h4>
+      <input type="file" (change)="startUpload($event.target.files)">
+      <div *ngIf="percentage1|async as pct">upload
+        <progress [value]="pct" max="100"></progress>
+      </div>
+
+      <div *ngIf="downloadURL |async as url">
+        <img  width="150" height="150" [src]="url">
+       
+      
+      </div>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <mat-checkbox [(ngModel)]="logoStatus"
+      (ngModelChange)="logoStatusUpdate()">Add logo in documents
+      </mat-checkbox>  
+      <mat-card class="example-card csize" *ngIf="logoStatus">
+        <mat-card-header>
+          <mat-card-title>Company Logo</mat-card-title>
+
+        </mat-card-header>
+        <div *ngIf="dbL">
+          <img mat-card-imag src="https://firebasestorage.googleapis.com/v0/b/zenysdevelopment-f6491.appspot.com/o/Templates%2Fdefault-image-720x530.jpg?alt=media&token=bfdf9a1d-25a8-4b82-a5c0-fac10a0d3759" alt="Card image cap" class="resize">
+        </div>
+        <div *ngIf="prvL">
+          <div *ngIf="downloadURL |async as url">
+            <img mat-card-imag [src]="logo" alt="Card image cap" class="resize">
+          </div>
+        </div>
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" (click)="openL()" mat-raised-button color="accent">Upload Logo</button>
+          <input type="file" class="custom-file-input logo-selector" id="inputGroupFile01"
+            (change)="startUpload($event.target.files)" style="display: none" accept="image/png, image/jpeg">
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="col-sm-12 col-md-4">
+      <mat-checkbox [(ngModel)]="signStatus"
+      (ngModelChange)="signStatusUpdate()">Add Signature in documents
+      </mat-checkbox>  
+      <mat-card class="example-card csize" *ngIf="signStatus">
+        <mat-card-header>
+          <mat-card-title>Signature</mat-card-title>
+
+        </mat-card-header>
+        <div *ngIf="dbS">
+          <img mat-card-imag src="https://firebasestorage.googleapis.com/v0/b/zenysdevelopment-f6491.appspot.com/o/Templates%2Fdefault-image-720x530.jpg?alt=media&token=bfdf9a1d-25a8-4b82-a5c0-fac10a0d3759" alt="Card image cap" class="resize">
+        </div>
+        <div *ngIf="prvS">
+          <div *ngIf="downloadURL1 |async as url">
+            <img mat-card-imag [src]="sign" alt="Card image cap" class="resize">
+          </div>
+        </div>
+
+        <mat-card-content>
+
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" (click)="openS()" mat-raised-button color="accent">Upload Signature</button>
+          <input type="file" class="custom-file-input sign-selector" id="inputGroupFile01"
+          (change)="startUpload1($event.target.files)" style="display: none" accept="image/png, image/jpeg">
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+  </div>
+  <br><br><br>&nbsp;
+</div>

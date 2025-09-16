@@ -1,0 +1,50 @@
+<h4 mat-dialog-title>Select a Contact</h4>
+<div mat-dialog-content>
+  <form class="example-form">
+    <mat-form-field class="example-full-width" >
+      <mat-label>Contact Name</mat-label>
+      <input matInput
+        type="text"
+        placeholder="Choose Contact"
+        aria-label="Contact"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+        [(ngModel)]="selectedCust"
+      />
+      <mat-error class="form-text text-muted danger">select a valid customer!</mat-error>
+      <button
+        mat-button
+        *ngIf="selectedCust"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="selectedCust = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option" >
+         {{ option.firstName }} {{ option.secondName }} | 
+          {{companycheck(option.companyName)}}
+          <!-- {{option.companyName !== 'N/A' || option.companyName === 'N/A' ? option.companyName : "Individual"}} -->
+        </mat-option>
+      </mat-autocomplete>
+     
+    </mat-form-field>
+  </form>
+
+  <div mat-dialog-actions>
+    <button  mat-raised-button (click)="onNoClick()">Cancel</button>
+    <button 
+      mat-raised-button color="accent"
+      [mat-dialog-close]="data" [disabled]="!selectedCust"
+      (click)="onSubmit(selectedCust.id)"
+      cdkFocusInitial
+    >
+      Ok
+    </button>
+  </div><br>
+</div>

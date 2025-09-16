@@ -1,0 +1,342 @@
+<!-- desktop view starts here -->
+<div class="no-v-scroll">
+
+  <!-- PROGRESS BAR -->
+  <!-- <mat-progress-bar *ngIf="mode == 'edit'" [style.visibility]="progressBarStatus ? 'hidden' : 'visible'" mode="indeterminate">
+  </mat-progress-bar> -->
+  <!-- CONTENT -->
+  <div class="container-fluid" style="overflow-y: auto; background-color: white;">
+
+    <!-- IF ACCESS -->
+    <div class="container-fluid" style="min-height: 900px;">
+      <div class="row">
+        <!-- LEFT SIDE COLUMN DISPLAYING ALREADY CREATED FORMS -->
+        <div *ngIf="mode == 'edit'" class="col-lg-3">
+          <div style="color: black">
+            <br />
+            <br />
+            <br />
+            <br />
+            <!-- If no forms -->
+            <div *ngIf="activeFormsLength == 0" style="padding: 10px">
+              <h3> Add your first form! </h3>
+            </div>
+            <!-- List of forms -->
+            <div *ngIf="activeFormsLength > 0">
+              <h3> Choose the form to configure: </h3>
+              <mat-nav-list>
+                <a mat-list-item *ngFor="let elem of forms; let i = index;" (click)="onSelectForm(i)"
+                  [aria-selected]="true"  class="list-item">
+                  <div mat-line>
+                    <div class="row">
+                      <div class="col-lg-1"><mat-icon color="primary">article</mat-icon></div>
+                      <div class="col-lg-9">{{elem}}</div>
+                      <div class="col-lg-2"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-1"></div>
+                      <div class="col-lg-9" style="font:small">{{pageName[i]}}</div>
+                      <div class="col-lg-2"></div>
+                    </div>
+                  </div>
+                </a>
+              </mat-nav-list>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE-WITH STEPPER -->
+        <div [class]="mode == 'create' ? 'col-lg-12 form-div' : 'col-lg-9 form-div'">
+          <div style="color: black">
+            <div *ngIf="(mode == 'edit' && activeFormsLength > 0) || mode == 'create' "
+              class="header-div d-flex flex-row bd-highlight border justify-content-around mb-3">
+              <div
+                class="d-flex flex-row bd-highlight mb-1 justify-content-between">
+                <div class="p-2 bd-highlight">
+                  <h2 class="bold" style="font-size: large">{{page_Name}} / {{selectedFormName}}</h2>
+                </div>
+              </div> 
+              
+              <span class="example-spacer"></span>
+              <button *ngIf="mode == 'edit'" color="warn" matSuffix mat-icon-button matTooltip="Delete form" aria-label="Delete"
+                (click)="deleteForm(this.form_id_selected)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <div style="padding: 16px; background-color: white;">
+              <!-- No forms message -->
+              <div class="row" *ngIf="activeFormsLength == 0 && mode == 'edit'">
+                <h3>
+                  No forms are added yet!
+                </h3>
+              </div>
+              <!-- Stepper -->
+              <div class="row" *ngIf="(mode == 'edit' && activeFormsLength > 0)|| mode == 'create'">
+                <mat-horizontal-stepper #stepper [linear]="false">
+                  <mat-step>
+                    <br>
+                    <!-- Save/Next button-->
+                    <div style="float:right; padding-right: 20px;">
+                      <!-- <button mat-button matStepperPrevious color="primary" (click)="saveChanges()">Save</button> -->
+                      <button mat-button matStepperNext color="primary">Next</button>
+                    </div>
+                    <br>
+                    <br>
+                    <!--------------Field Settings list--------------->
+                    <ng-template matStepLabel>Mapped fields</ng-template>
+                    <form #inputFieldsForm="ngForm" autocomplete="off">
+                      <div class="row">
+                        <div class="col-10">
+                          <span>Please map your fb page fields with CRM fields</span>
+                          <div cdkDropList class="example-list" [cdkDropListDisabled]="true">
+                            <div *ngFor="let elem of columns; let i = index;">
+                              <div *ngIf="elem.mappedField" class="example-box" cdkDrag [cdkDragDisabled]="true"
+                                style="border-bottom: solid 1px #ccc;cursor: default !important;">
+                                {{elem.header}}
+                                <!-- Dropdown to select mapped fields -->
+                                <mat-form-field *ngIf="elem.mappedField" appearance="fill"
+                                  [ngStyle]="{ float: 'right', 'margin-right': '0px' }">
+                                  <mat-label>Mapped To</mat-label>
+                                  <mat-select [(ngModel)]="elem.mappedTo"
+                                    name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                    (selectionChange)="updateM(i)" [required]="elem.mandatory">
+                                    <mat-option *ngFor="let s of mapToFields;" [disabled]="mappedFields.includes(s.columnDef)"
+                                      (onSelectionChange)="updateMappedFields(s,i)" value="{{ s.columnDef }}">{{
+                                      s.header }}
+                                    </mat-option>
+                                  </mat-select>
+                                  <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-2"></div>
+                        <br>
+                      </div>
+                    </form>
+                  </mat-step>
+                  <mat-step>
+                    <br>
+                    <!-- Back/Save/Next button-->
+                    <div style="float:right; padding-right: 20px;">
+                      <button mat-button matStepperPrevious>Back</button>
+                      <button mat-button color="primary" matStepperNext [disabled]="leadCaptureForm.invalid || (selectedAssignedToArrayName.length == 0 && selectedAssignedToRole == 'By User') "
+                        (click)="saveDefaultValue(leadCaptureForm)">Save</button>
+                      <!-- <button mat-button color="accent" matStepperNext>Next</button> -->
+                    </div>
+                    <br>
+                    <br>
+                    <ng-template matStepLabel>Default values</ng-template>
+                    <div class="row">
+                      <div class="col-10">
+                        <form #leadCaptureForm="ngForm" autocomplete="off">
+                          <span>Configure default fields values for unmapped fields:</span>
+                          <div cdkDropList class="example-list" [cdkDropListDisabled]="true">
+                            <div *ngFor="let elem of columns; let i = index;">
+                              <div *ngIf="(elem.mappedField ? elem.mappedTo ? true : false : true) &&
+                              ((elem.customField && elem.isActive ? true : false) || !elem.customField) "
+                                class="example-box" cdkDrag [cdkDragDisabled]="true"
+                                style="border-bottom: solid 1px #ccc;cursor: default !important;">
+
+                                <div style="align-items: left;">
+                                  {{elem.header}}
+                                </div>
+                                <div style="align-items: right !important;">
+                                  <div *ngIf="elem.inputType=='inputField'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <input matInput [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory">
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+
+                                  <div *ngIf="elem.inputType=='category' && elem.columnDef=='selectedContactPipeline'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <mat-select [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory" (valueChange)="pipelineChangedEvent($event)">
+                                        <mat-option *ngFor="let s of customerPipelines; let i = index" [value]="s.pipelineId">{{ s.pipelineName }}
+                                        </mat-option>
+                                      </mat-select>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                  <div *ngIf="elem.inputType=='category' && elem.columnDef=='status'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <mat-select [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory">
+                                        <mat-option *ngFor="let s of statusArray; let i = index" [value]="s.stageId">{{ s.name }}
+                                        </mat-option>
+                                      </mat-select>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                  <div
+                                    *ngIf="elem.inputType=='category' && elem.columnDef!='selectedContactPipeline' && elem.columnDef!='status'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <mat-select [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory">
+                                        <mat-option *ngFor="let s of elem.categories" value="{{ s }}">{{ s }}
+                                        </mat-option>
+                                      </mat-select>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                  <div *ngIf="elem.inputType=='textarea'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <textarea matInput [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory"></textarea>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                  <div *ngIf="elem.inputType=='date'" style="width: 85%; margin-left:15%">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <input matInput [matDatepicker]="picker" [(ngModel)]="elem.defaultValue" 
+                                        #f="ngModel" name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory"
+                                        [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''" />
+                                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                      <mat-datepicker #picker></mat-datepicker>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+
+                                  </div>
+                                  <!--Date time picker-->
+                                  <div *ngIf="elem.inputType == 'date_time'" style="padding-right: 0px !important;">
+                                    <mat-form-field style="width: 48%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <input matInput [matDatepicker]="addtfield_date_time"
+                                        [ngModel]="elem.defaultValue" #f1="ngModel"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory"
+                                        [value]="elem.defaultValue ? (!!elem.defaultValue.toDate ? elem.defaultValue.toDate() : elem.defaultValue) : ''" />
+
+                                      <mat-datepicker-toggle matSuffix [for]="addtfield_date_time">
+                                      </mat-datepicker-toggle>
+                                      <mat-datepicker #addtfield_date_time></mat-datepicker>
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+
+                                    <!--time-->
+                                    <mat-form-field style="width: 48%;" appearance="fill">
+                                      <mat-label>Time</mat-label>
+                                      <input matInput type="time" [(ngModel)]="elem.defaultValue2"
+                                        [disabled]="!f1.value"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}1" />
+                                    </mat-form-field>
+                                  </div>
+                                  <!--Date time picker ends-->
+                                  <div *ngIf="elem.inputType=='number'">
+                                    <mat-form-field style="width: 100%;" appearance="fill">
+                                      <mat-label>Default Value</mat-label>
+                                      <input matInput type="number" [(ngModel)]="elem.defaultValue"
+                                        name="{{elem.customField ? elem.custIndex : elem.columnDef}}"
+                                        [required]="elem.mandatory">
+                                      <mat-error>This field is required</mat-error>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="example-box" cdkDrag [cdkDragDisabled]="true"
+                              style="border-bottom: solid 1px #ccc;cursor: default !important;">
+                              <div style="align-items: left;">
+                                Assigned To Role
+                              </div>
+                              <div style="align-items: right !important;">
+                                <mat-form-field style="width: 100%;" appearance="fill">
+                                  <mat-label>Default Value</mat-label>
+                                  <mat-select [(ngModel)]="selectedAssignedToRole" name="assignedToRole"
+                                    (ngModelChange)="changeAssignedArray()" [required]="true">
+                                    <mat-option value="By User">By User
+                                    </mat-option>
+                                    <mat-option value="By Profile">By Profile
+                                    </mat-option>
+                                  </mat-select>
+                                  <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="example-box1" cdkDrag *ngIf="selectedAssignedToRole == 'By User'"
+                              [cdkDragDisabled]="true"
+                              style="border-bottom: solid 1px #ccc;cursor: default !important;">
+                              <div>
+                                Assigned To
+                              </div>
+                              <div>
+                                <!-- mat autocomplete for selecting subuser-->
+                                <mat-form-field class="example-full-width" appearance="fill">
+                                  <!-- <mat-label>Assigned to</mat-label> -->
+                                  <mat-chip-list #chipGrid>
+                                    <mat-chip *ngFor="let assignee of selectedAssignedToArrayName; let i=index;"
+                                        [removable]="true" (removed)="remove(i, assignee)">
+                                      {{assignee}}
+                                      <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                  </mat-chip-list>
+                                  <br>
+                                    <input matInput
+                                      #searchInput [formControl]="searchCtrl"
+                                      [matChipInputFor]="chipGrid"
+                                      [matAutocomplete]="auto"
+                                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                      />
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                                      <mat-option *ngFor="let option of filteredOptions | async;" [value]="option" [disabled]="selectedAssignedToArrayName.includes(option.name)">
+                                        <mat-checkbox [checked]="selectedAssignedToArrayName.includes(option.name)" (change)="toggleSelection(option)" (click)="$event.stopPropagation()">
+                                          {{option.name}}
+                                        </mat-checkbox>
+                                      </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="selectedAssignedToArrayName.length == 0 && selectedAssignedToRole == 'By User'">This field is required</mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="example-box" cdkDrag *ngIf="selectedAssignedToRole == 'By Profile'"
+                              [cdkDragDisabled]="true"
+                              style="border-bottom: solid 1px #ccc;cursor: default !important;">
+                              <div style="align-items: left;">
+                                Select Profile
+                              </div>
+                              <div style="align-items: right !important;">
+                                <mat-form-field style="width: 100%;">
+                                  <mat-label>Default Value</mat-label>
+                                  <mat-select [(ngModel)]="selectedProfileName" name="profile" [required]="true">
+                                    <mat-option *ngFor="let s of profilesList" [value]="s">{{ s }}
+                                    </mat-option>
+                                  </mat-select>
+                                  <mat-error>This field is required</mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="col-2"></div>
+                      <br>
+                    </div>
+                  </mat-step>
+
+                </mat-horizontal-stepper>
+              </div>
+              <br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+</div>
+<!-- desktop view ends here -->
