@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
 import { CommonService } from 'src/app/common.service';
 import { ViewBuilderComponent } from 'src/app/view-builder/view-builder.component';
-import { saleViewSettingsDef, ProductListItem, SalesWithItemArray, customFieldsReport, saleSettings, defaultSaleSettings, ProductSettings, defaultProductSettings, modules } from 'src/app/data-models';
+import { saleViewSettingsDef, ProductListItem, SalesWithItem, customFieldsReport, saleSettings, defaultSaleSettings, ProductSettings, defaultProductSettings, modules } from 'src/app/data-models';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -69,7 +69,7 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
   customFieldsProduct: customFieldsReport[]=[];
   customFieldsProductValue: customFieldsReport[] = [];
   customFieldSale: any = [];// for storing custome field sale
-  alertPopupStatus:boolean=false;// to open the alert dialoge once 
+  alertPopupStatus:boolean=false;// to open the alert dialoge once
   constructor(
     public dialog: MatDialog,
     private location: Location,
@@ -94,7 +94,7 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
             this.superUserId = allData.userId;
           }
           this.customFieldSale = allData.superUserDetails.customFieldsSale;// for getting custom field sale
-          
+
           this.customFieldsProduct = allData.superUserDetails.customFieldsProduct;
           this.customFieldsProductValue=[]
           this.displayedColumns=[
@@ -121,10 +121,10 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
             this.customFieldsProductValue.push(element);
             if(element.isActive){
               this.displayedColumns.push(element.fieldName);
-            }             
+            }
           });
 
-          
+
 
           //checking data rule for view and download
           if (allData.usrProfileData) {
@@ -146,11 +146,11 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
               allData.superUserDetails.fieldNames.fieldNameContact;
             this.fieldNameSale = allData.superUserDetails.fieldNames.fieldNameSale;
             this.fieldNameItems =
-              allData.superUserDetails.fieldNames.fieldNameItems;   
+              allData.superUserDetails.fieldNames.fieldNameItems;
               this.fieldNameFollowup =
               allData.superUserDetails.fieldNames.fieldNameFollowup;
               this.fieldNameContactNotes =
-              allData.superUserDetails.fieldNames.fieldNameContactNotes ? allData.superUserDetails.fieldNames.fieldNameContactNotes:'Note';       
+              allData.superUserDetails.fieldNames.fieldNameContactNotes ? allData.superUserDetails.fieldNames.fieldNameContactNotes:'Note';
           }
           [this.cardFields, this.displayFields] =
             this.commonService.getCardFields('sale',this.fieldNameContactNotes,this.fieldNameFollowup);// getting sale card fields
@@ -253,7 +253,7 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.saleFilterSubscription && !this.saleFilterSubscription.closed) {
         this.saleFilterSubscription?.unsubscribe();
       }
-      let dataRead: SalesWithItemArray[] = []
+      let dataRead: SalesWithItem[] = []
       this.saleFilterSubscription = this.commonService
         .readPrimaryData(this.superUserId, 'sales', queryData, this.userIdArray)
         .subscribe((data) => {
@@ -261,7 +261,7 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
             return {
               id: e.payload.doc.id,
               ...(e.payload.doc.data() as {}),
-            } as SalesWithItemArray;
+            } as SalesWithItem;
           });
           // filter - createdby is included in user id array
           dataRead = dataRead.filter((element) =>
@@ -348,7 +348,7 @@ export class SalesProductComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
   }
-  //delete view 
+  //delete view
   deleteView() {
     let dialogref = this.dialog.open(ConfirmationpopupComponent, {
       width: '400px',

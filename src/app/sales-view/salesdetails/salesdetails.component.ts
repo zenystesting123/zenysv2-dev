@@ -398,7 +398,7 @@ export class SalesdetailsComponent implements OnInit {
   branches = []; //branches of users
   prevNote: any;
   currentStage: string;
-  itemsArray: any[]; //to hold the product field of sales details doc
+  itemsArray: any; //to hold the product field of sales details doc
   deletedProducts: any = {};
   addedProducts: any = {};
   saleWaTemp: messageTemplateModel[] = []; //to hold the fetched sale whatsapp message templates

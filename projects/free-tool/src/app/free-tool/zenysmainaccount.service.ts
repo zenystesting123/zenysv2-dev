@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { changeLogModel } from 'src/app/data-models';
 import { environment } from '../../environments/environment';
 import { Profile } from './data.model';
-import { MainAccountInitService } from '../../../../src/app/main-account-init.service';
+import { MainAccountInitService } from 'src/app/main-account-init.service';
 import { Observable, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
