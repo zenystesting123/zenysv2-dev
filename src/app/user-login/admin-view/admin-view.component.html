@@ -1,0 +1,325 @@
+<div class="admin-view-container">
+  <!-- Admin Header with Logout -->
+  <div class="admin-header">
+    <div class="admin-header-content">
+      <h1 class="admin-title">
+        <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+        Admin Panel
+      </h1>
+      <button
+        mat-button
+        color="warn"
+        (click)="logout()"
+        class="logout-button">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="!isFormReady" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p class="loading-text">Loading form...</p>
+  </div>
+
+  <div class="form-card" *ngIf="isFormReady && addUserForm">
+    <div class="form-header">
+      <h2 class="form-title">
+        <mat-icon class="title-icon">person_add</mat-icon>
+        Add New User
+      </h2>
+      <p class="form-subtitle">Create a new user account with payment information</p>
+
+    </div>
+
+    <div class="form-content">
+      <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()" class="user-form">
+        <!-- Basic Information Section -->
+        <div class="section-card">
+          <div class="section-header">
+            <h3 class="section-title">
+              <mat-icon>person</mat-icon>
+              Basic Information
+            </h3>
+          </div>
+          <div class="section-content">
+            <div class="basic-info-grid">
+              <!-- Username Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Username</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="username"
+                  placeholder="Enter username"
+                  autocomplete="username">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="getFieldError('username')">
+                  {{ getFieldError('username') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Email Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="email"
+                  placeholder="Enter email address"
+                  autocomplete="email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="getFieldError('email')">
+                  {{ getFieldError('email') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Password Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  [type]="hidePassword ? 'password' : 'text'"
+                  formControlName="password"
+                  placeholder="Enter password"
+                  autocomplete="new-password">
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="hidePassword = !hidePassword"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hidePassword">
+                  <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="getFieldError('password')">
+                  {{ getFieldError('password') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Second Row: Country Code, Contact Number, Plan, and Number of Users -->
+              <div class="compact-row">
+                <!-- Country Code Field -->
+                <mat-form-field appearance="outline" class="compact-field country-code">
+                  <mat-label>Country Code</mat-label>
+                  <mat-select formControlName="countryCode" (selectionChange)="onCountryCodeSelected($event.value)">
+                    <mat-option *ngFor="let country of countryCodeOptions" [value]="country.dial_code">
+                      {{ country.dial_code }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matSuffix>public</mat-icon>
+                </mat-form-field>
+
+                <!-- Contact Number Field -->
+                <mat-form-field appearance="outline" class="compact-field contact-number">
+                  <mat-label>Contact Number</mat-label>
+                  <input
+                    matInput
+                    type="tel"
+                    formControlName="contactNumber"
+                    placeholder="Enter contact number"
+                    autocomplete="tel">
+                  <mat-icon matSuffix>phone</mat-icon>
+                  <mat-error *ngIf="getFieldError('contactNumber')">
+                    {{ getFieldError('contactNumber') }}
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Plan Selection Field -->
+                <mat-form-field appearance="outline" class="compact-field plan">
+                  <mat-label>Plan</mat-label>
+                  <mat-select formControlName="plan">
+                    <mat-option *ngFor="let plan of planOptions" [value]="plan.value">
+                      {{ plan.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matSuffix>business_center</mat-icon>
+                </mat-form-field>
+
+                <!-- Number of Users Field -->
+                <mat-form-field appearance="outline" class="compact-field no-of-users">
+                  <mat-label>No. of Users</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="noOfUsers"
+                    placeholder="Users"
+                    min="1"
+                    max="1000">
+                  <mat-icon matSuffix>group</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment History Section -->
+        <div class="section-card">
+          <div class="section-header">
+            <h3 class="section-title">
+              <mat-icon>payment</mat-icon>
+              Payment History
+            </h3>
+            <p class="section-subtitle">First payment record for the user</p>
+          </div>
+          <div class="section-content">
+            <div formGroupName="paymentHistory" class="payment-history-grid">
+              <!-- Payment Mode Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Payment Mode</mat-label>
+                <mat-select formControlName="paymentMode" (selectionChange)="modeSelected($event)">
+                  <mat-option *ngFor="let mode of paymentModeOptions" [value]="mode.value">
+                    {{ mode.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>payment</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'paymentMode')">
+                  {{ getFieldError('paymentHistory', 'paymentMode') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Amount Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Amount</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="amount"
+                  placeholder="Enter amount"
+                  min="0"
+                  step="0.01">
+                <mat-icon matSuffix>attach_money</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'amount')">
+                  {{ getFieldError('paymentHistory', 'amount') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Currency Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Currency</mat-label>
+                <mat-select formControlName="currency">
+                  <mat-option *ngFor="let currency of currencyOptions" [value]="currency.isoCode">
+                    {{ currency.isoCode }} - {{ currency.currencyName }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>monetization_on</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'currency')">
+                  {{ getFieldError('paymentHistory', 'currency') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Package Duration Field -->
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Package Duration</mat-label>
+                <mat-select formControlName="packageDuration">
+                  <mat-option *ngFor="let duration of packageDurationOptions" [value]="duration.value">
+                    {{ duration.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>schedule</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'packageDuration')">
+                  {{ getFieldError('paymentHistory', 'packageDuration') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Payment ID Field (Manual Payment) -->
+              <mat-form-field appearance="outline" class="form-field" *ngIf="paymentMode === 'manual'">
+                <mat-label>Payment ID</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="paymentId"
+                  placeholder="Enter payment ID">
+                <mat-icon matSuffix>receipt_long</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'paymentId')">
+                  {{ getFieldError('paymentHistory', 'paymentId') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Subscription ID Field (Subscription Payment) -->
+              <mat-form-field appearance="outline" class="form-field" *ngIf="paymentMode === 'subscription'">
+                <mat-label>Subscription ID</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="subscriptionId"
+                  placeholder="Enter subscription ID">
+                <mat-icon matSuffix>receipt</mat-icon>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'subscriptionId')">
+                  {{ getFieldError('paymentHistory', 'subscriptionId') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Subscription Start Date Field (Subscription Payment) -->
+              <mat-form-field appearance="outline" class="form-field" *ngIf="paymentMode === 'subscription'">
+                <mat-label>Subscription Start Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="subscriptionStartPicker"
+                  formControlName="subscriptionStart"
+                  placeholder="Select subscription start date">
+                <mat-datepicker-toggle matSuffix [for]="subscriptionStartPicker"></mat-datepicker-toggle>
+                <mat-datepicker #subscriptionStartPicker></mat-datepicker>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'subscriptionStart')">
+                  {{ getFieldError('paymentHistory', 'subscriptionStart') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Subscription End Date Field (Subscription Payment) -->
+              <mat-form-field appearance="outline" class="form-field" *ngIf="paymentMode === 'subscription'">
+                <mat-label>Subscription End Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="subscriptionEndPicker"
+                  formControlName="subscriptionEnd"
+                  placeholder="Select subscription end date">
+                <mat-datepicker-toggle matSuffix [for]="subscriptionEndPicker"></mat-datepicker-toggle>
+                <mat-datepicker #subscriptionEndPicker></mat-datepicker>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'subscriptionEnd')">
+                  {{ getFieldError('paymentHistory', 'subscriptionEnd') }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Charge At Field (Subscription Payment) -->
+              <mat-form-field appearance="outline" class="form-field" *ngIf="paymentMode === 'subscription'">
+                <mat-label>Charge At</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="chargeAtPicker"
+                  formControlName="chargeAt"
+                  placeholder="Select charge date">
+                <mat-datepicker-toggle matSuffix [for]="chargeAtPicker"></mat-datepicker-toggle>
+                <mat-datepicker #chargeAtPicker></mat-datepicker>
+                <mat-error *ngIf="getFieldError('paymentHistory', 'chargeAt')">
+                  {{ getFieldError('paymentHistory', 'chargeAt') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-actions">
+      <button
+        mat-button
+        type="button"
+        color="warn"
+        (click)="resetForm()"
+        class="action-button">
+        Reset
+      </button>
+
+      <button
+        mat-button
+        type="submit"
+        color="primary"
+        [disabled]="!isFormValid"
+        (click)="onSubmit()"
+        class="action-button submit-button">
+        Add User
+      </button>
+    </div>
+  </div>
+</div>

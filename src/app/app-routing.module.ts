@@ -66,6 +66,8 @@ import { TaskListComponent } from './table/task/task-list/task-list.component';
 import { LoginPageComponent } from './login-signup/login-page/login-page.component';
 import { CustomerGridComponent } from './table/customer/customer-grid/customer-grid.component';
 import { SupportListComponent } from './table/support/support-list/support-list.component';
+import { UserLoginComponent } from './user-login/user-login/user-login.component';
+import { AdminViewComponent } from './user-login/admin-view/admin-view.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
@@ -85,6 +87,20 @@ const routes: Routes = [
       title: 'login',
     },
   },
+  {
+    path: 'user-login',
+    component: UserLoginComponent,
+    data: {
+      title: 'user-login',
+    },
+  },
+{
+  path: 'admin',
+  component: AdminViewComponent,
+  data: {
+    title: 'admin',
+  },
+},
   {
     path: 'zenysinternaldashboard',
     loadChildren:
@@ -271,7 +287,7 @@ const routes: Routes = [
         path:"inv-paginator-table",
         component:InvoiceTableComponent
       },
-      
+
 
       {
         path:"customer-list",

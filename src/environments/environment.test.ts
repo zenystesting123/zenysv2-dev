@@ -193,6 +193,7 @@ export const environment = {
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
   LogoutTime: 900000,
+  adminEmail: 'admin@mail.com' // Admin email for special access
 };
 
 /*

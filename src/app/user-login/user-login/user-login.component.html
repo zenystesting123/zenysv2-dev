@@ -1,0 +1,85 @@
+<div class="bg-light" style="height: 100vh;">
+  <br> <br>
+  <div class="container border bg-white" style="  padding: 50px; margin-top: 150px; max-width:800px;
+   border-radius: 5px;">
+    <div class="d-flex flex-column justify-content-center" style="padding: auto;">
+      <div class="row">
+        <div class="col-md-6">
+          <img src="assets/images/login.png" alt="pic1" style="
+        padding: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
+        opacity: 1;
+        background: transparent 0% 0% no-repeat padding-box;
+      " />
+        </div>
+        <!-- LOGIN FORM IF SIGNIN WITH EMAIL SELECTED -->
+        <div class="col-md-6" *ngIf="scenario=='login'">
+          <mat-card>
+            <h2 style="color: #1565C0;">Sign in with email</h2>
+            <!-- login form starts here -->
+            <form [formGroup]="loginForm" (ngSubmit)="onSUbmitLoginForm()">
+              <mat-form-field class="fullWidth">
+                <input matInput placeholder="Email address" formControlName="email" />
+                <mat-error *ngIf="email?.errors?.required">Email is required</mat-error>
+                <mat-error *ngIf="email?.errors?.email">Provide a valid email address</mat-error>
+              </mat-form-field>
+              <mat-form-field class="fullWidth">
+                <input matInput placeholder="Password" formControlName="password" type="password" />
+                <mat-error *ngIf="password?.errors?.required">Password is required</mat-error>
+                <mat-error *ngIf="password?.errors?.minLength">Minimum six characters required</mat-error>
+              </mat-form-field>
+              <br>
+              <div class="d-flex justify-content-between">
+                <div style="padding-top: 8px">
+                  <a href="javascript:void(0)" (click)="resetPassword()">Trouble Signing in?</a>
+                </div>
+                <div>
+                  <button mat-raised-button color="primary" type="submit"
+                    [disabled]="disableLoginBtn || !loginForm.valid || isLoading">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    {{ isLoading ? 'Signing in...' : 'Login' }}
+                  </button>
+                </div>
+              </div>
+              <br>
+            </form>
+            <!-- login form ends gere -->
+          </mat-card>
+        </div>
+        <!-- RESET PASSWORD FORM IF TROUBLE IN SIGNING IN SELECTED -->
+        <div class="col-md-6" *ngIf="scenario == 'resetPassword'">
+          <mat-card>
+            <h2 style="color: #1565C0;">Recover Password</h2>
+
+            Get instructions sent to this email that explain how to reset your password
+            <br>
+            <!--reset pwd form starts here -->
+            <form [formGroup]="resetPwdForm" (ngSubmit)="onSUbmitResetForm()">
+              <mat-form-field class="fullWidth">
+                <input matInput placeholder="Email address" formControlName="resetMail" />
+                <mat-error *ngIf="resetMail?.errors?.required">Email is required</mat-error>
+                <mat-error *ngIf="resetMail?.errors?.email">Provide a valid email address</mat-error>
+              </mat-form-field>
+              <br>
+              <div align="end">
+                <button mat-raised-button (click)="selectedLandingLogin()" [disabled]="disableResetBtn || isLoading">Cancel</button>
+                &nbsp;&nbsp;
+                <button mat-raised-button color="primary" type="submit"
+                  [disabled]="disableResetBtn || !resetPwdForm.valid || isLoading">
+                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ isLoading ? 'Sending...' : 'Send' }}
+                </button>
+              </div>
+            </form>
+            <!-- reset pwd form ends gere -->
+
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
