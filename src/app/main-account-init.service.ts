@@ -18,7 +18,7 @@ export class MainAccountInitService {
   ) {}
 
   /**
-   * Get the main account ID, creating it if it doesn't exist
+   * Get the main account ID, skipping creation if it doesn't exist
    */
   getMainAccountId(): Observable<string> {
     if (this.mainAccountId) {
@@ -31,13 +31,15 @@ export class MainAccountInitService {
           this.mainAccountId = environment.ZenysMainAccount;
           return of(this.mainAccountId);
         } else {
-          return this.createMainAccount();
+          // Skip creation if account doesn't exist - just log and return null
+          console.warn('No main account exists - customer addition will be skipped');
+          return of(null);
         }
       }),
       catchError(error => {
         console.error('Error getting main account:', error);
-        // Fallback: use current user ID or create a temporary account
-        return this.createFallbackAccount();
+        console.warn('No main account exists - customer addition will be skipped');
+        return of(null);
       })
     );
   }
@@ -161,43 +163,16 @@ export class MainAccountInitService {
       }),
       catchError(error => {
         console.error('Error creating main account:', error);
-        return this.createFallbackAccount();
+        return of(null);
       })
     );
   }
 
-  /**
-   * Create a fallback account using current user or generate a temporary one
-   */
-  private createFallbackAccount(): Observable<string> {
-    return this.afAuth.authState.pipe(
-      switchMap(user => {
-        if (user) {
-          // Use current user as main account
-          this.mainAccountId = user.uid;
-          return of(user.uid);
-        } else {
-          // Generate a temporary account ID
-          const tempAccountId = 'temp_main_' + Date.now();
-          this.mainAccountId = tempAccountId;
-          console.warn('Using temporary main account ID:', tempAccountId);
-          return of(tempAccountId);
-        }
-      }),
-      catchError(() => {
-        // Ultimate fallback
-        const fallbackId = 'fallback_main_' + Date.now();
-        this.mainAccountId = fallbackId;
-        console.warn('Using fallback main account ID:', fallbackId);
-        return of(fallbackId);
-      })
-    );
-  }
 
   /**
    * Initialize the main account and return both ID and name
    */
-  initializeMainAccount(): Observable<{accountId: string, assignedToName: string}> {
+  initializeMainAccount(): Observable<{accountId: string | null, assignedToName: string}> {
     return this.getMainAccountId().pipe(
       map(accountId => ({
         accountId,

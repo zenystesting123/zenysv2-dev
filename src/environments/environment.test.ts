@@ -189,7 +189,7 @@ export const environment = {
     Europe: 'EUR',
     US: 'USD',
   },
-  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1',
+  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', //Will be skipped if doesn't exist
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
   LogoutTime: 900000,

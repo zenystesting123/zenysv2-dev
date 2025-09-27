@@ -222,7 +222,7 @@ export const environment = {
     Europe: 'EUR',
     US: 'USD',
   },
-  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', // Will be created if doesn't exist
+  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', // Will be skipped if doesn't exist
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
   englishChannelId:'ak2bWsReIEZVXxcObGsfx9DMQpM2',

@@ -13,7 +13,7 @@ import { switchMap, catchError } from 'rxjs/operators';
 export class ZenysmainaccountService {
   custStatus: string='';
   pipelineId:number;
-  zenysMainAccountID: string = '';
+  zenysMainAccountID: string | null = null;
   assignedToName: string = '';
   contactSequentialNumber:number
   customerPipelines:Pipelines[]=[];
@@ -32,20 +32,28 @@ export class ZenysmainaccountService {
   private initializeMainAccount(): void {
     this.mainAccountInit.initializeMainAccount().subscribe({
       next: ({accountId, assignedToName}) => {
-        this.zenysMainAccountID = accountId;
-        this.assignedToName = assignedToName;
-        this.isInitialized = true;
+        if (accountId) {
+          this.zenysMainAccountID = accountId;
+          this.assignedToName = assignedToName;
+          this.isInitialized = true;
 
-        // Load data after initialization
-        this.loadMainAccountData();
+          // Load data after initialization
+          this.loadMainAccountData();
+        } else {
+          console.warn('No main account available - skipping customer addition');
+          this.zenysMainAccountID = null;
+          this.assignedToName = 'SuperUser';
+          this.isInitialized = true;
+          // Skip loading data when no main account exists
+        }
       },
       error: (error) => {
         console.error('Failed to initialize main account:', error);
-        // Fallback to environment values
-        this.zenysMainAccountID = environment.ZenysMainAccount || 'fallback_account';
-        this.assignedToName = environment.ZenysAssignedToName || 'SuperUser';
+        console.warn('No main account available - skipping customer addition');
+        this.zenysMainAccountID = null;
+        this.assignedToName = 'SuperUser';
         this.isInitialized = true;
-        this.loadMainAccountData();
+        // Skip loading data when no main account exists
       }
     });
   }

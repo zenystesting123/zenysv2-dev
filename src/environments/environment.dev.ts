@@ -4,7 +4,7 @@ export const environment = {
     'pk_live_51IhrAaSCUjCHJT5XNEg7uLZ9ulxitFkdV9rhoDRdjIkzA9jAIu8iCXzIGgi63cpxNEYuN7T5P5lN4gpO3b8L3jqZ00rprpBxyy',
   clientId:
     '1059747170002-mb13fen3gnln217t3sfjuvsa80u7ildr.apps.googleusercontent.com', //for GAPI
-  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', //For automatically creating contact under Zenys account
+  ZenysMainAccount: 'yKQgLQv52WUiTRFTrqt3kFQhogy1', //Will be skipped if doesn't exist
   ZenysAssignedToName: 'SuperUser',
   docViewerDomain: 'zenysdocviewer.web.app',
   currentUrl: 'https://zenysdevelopment.web.app/',
