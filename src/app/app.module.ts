@@ -190,6 +190,8 @@ import { SupportGridViewComponent } from './table/support/support-grid-view/supp
 import { SupportTableViewComponent } from './table/support/support-table-view/support-table-view.component';
 import { SupportGridComponent } from './table/support/support-grid/support-grid.component';
 import { SupportCustomViewSelectComponent } from './table/support/support-custom-view-select/support-custom-view-select.component';
+import { UserLoginComponent } from './user-login/user-login/user-login.component';
+import { AdminViewComponent } from './user-login/admin-view/admin-view.component';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -555,6 +557,8 @@ var firebaseConfig = environment.firebaseConfig;
     SupportTableViewComponent,
     SupportGridComponent,
     SupportCustomViewSelectComponent,
+    UserLoginComponent,
+    AdminViewComponent,
     // DashboardgridComponent,
     // DashboardDialog
   ],

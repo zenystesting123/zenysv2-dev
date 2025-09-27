@@ -229,7 +229,8 @@ export const environment = {
   leadCaptureDomain: 'https://leadcapturedev.web.app',
   EmailEncryptKeySize: 16, //Encryption key size used for email encryption
   EmailEncryptIV: 1203199320052021, //IV used for email encryption
-  outlookClientId: '80404e05-2cc6-489e-ad21-3084a772ab9a' //Client Id for accessing outlook account
+  outlookClientId: '80404e05-2cc6-489e-ad21-3084a772ab9a', //Client Id for accessing outlook account
+  adminEmail: 'admin@mail.com' // Admin email for special access
 };
 
 /*
