@@ -1,162 +1,295 @@
+<!--
+  ===================================================================================
+  LOGIN PAGE COMPONENT TEMPLATE
+  ===================================================================================
+  
+  This template provides a comprehensive authentication interface with multiple scenarios:
+  - Landing page with authentication options
+  - Login form with email/password
+  - Signup form for new user registration
+  - Password reset form
+  - Google sign-in prompt
+  
+  Features:
+  - Responsive design for mobile and desktop
+  - Form validation with error messages
+  - Loading states and disabled button states
+  - Password visibility toggle
+  - Accessibility features (ARIA labels, roles)
+  
+  ===================================================================================
+-->
+
+<!-- Main container with full viewport height and light background -->
 <div class="bg-light" style="height: 100vh;">
   <br> <br>
-  <div class="container border bg-white" style="  padding: 50px; margin-top: 150px; max-width:800px;
-   border-radius: 5px;">
+  
+  <!-- Main content container with white background and border -->
+  <div class="container border bg-white" style="padding: 50px; margin-top: 150px; max-width:800px; border-radius: 5px;">
     <div class="d-flex flex-column justify-content-center" style="padding: auto;">
       <div class="row">
+        
+        <!-- Left column: Login illustration image -->
         <div class="col-md-6">
-          <img src="assets/images/login.png" alt="pic1" style="
-        padding: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 90%;
-        opacity: 1;
-        background: transparent 0% 0% no-repeat padding-box;
-      " />
+          <img src="assets/images/login.png" alt="Login illustration" style="
+            padding: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            opacity: 1;
+            background: transparent 0% 0% no-repeat padding-box;
+          " />
         </div>
-        <!-- LOGIN LANDING PAGE -->
-        <div class="col-md-6" *ngIf="scenario=='landingLogin'">
-          <div>
-            <div>
-              <div class="centered">
-                <h2 style="color: #1565C0;">Sign Up or Login</h2>
-              </div>
-              <div class="centered">
-                <button mat-raised-button class="googleBtn" (click)="signInWithGoogle()">
-                  <img src="assets/img/others/googleicon.png" width="24px" height="24px" />
-                  Sign in with Google
-                </button>
-              </div>
-              <br>
-              <div class="centered">
-                <button mat-raised-button class="emailBtn" (click)="selectedLogin()">
-                  <mat-icon>mail</mat-icon>
-                  Sign in with email
-                </button>
-              </div>
-              <br>
-              <div class="centered text-muted">
-                <span>Are you a new user?&nbsp;<a href="javascript:void(0)" (click)="selectedSignUpLanding()">Sign
-                    Up</a></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- googleSignin -->
-        <div class="col-md-6" *ngIf="scenario==='googleSignin'">
+        
+        <!-- Right column: Dynamic content based on scenario -->
+        
+        <!-- ==================== LANDING PAGE SCENARIO ==================== -->
+        <!-- Initial page showing authentication options -->
+        <div class="col-md-6" *ngIf="scenario === 'landing'">
           <div class="centered">
-            <h2 style="color: #1565C0;">You already have an account</h2>
+            <h2 style="color: #1565C0;">Sign Up or Login</h2>
+          </div>
+          <div class="centered">
+            <button
+              mat-raised-button
+              class="googleBtn"
+              (click)="onGoogleSignIn()"
+              [disabled]="isLoading">
+              <img src="assets/img/others/googleicon.png" width="24px" height="24px" alt="Google" />
+              <span *ngIf="isLoginLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isLoginLoading ? 'Signing in...' : 'Sign in with Google' }}
+            </button>
+          </div>
+          <br>
+          <div class="centered">
+            <button
+              mat-raised-button
+              class="emailBtn"
+              (click)="showLoginForm()"
+              [disabled]="isLoading">
+              <mat-icon>mail</mat-icon>
+              Sign in with email
+            </button>
           </div>
           <br>
           <div class="centered text-muted">
-            You have already used {{googleMail}}. Sign in with Google to continue
+            <span>Are you a new user?&nbsp;
+              <a href="javascript:void(0)" (click)="showSignupForm()">Sign Up</a>
+            </span>
+          </div>
+        </div>
+        
+        <!-- ==================== GOOGLE SIGNIN PROMPT SCENARIO ==================== -->
+        <!-- Shown when user tries to sign up with email but already has Google account -->
+        <div class="col-md-6" *ngIf="scenario === 'googleSignin'">
+          <div class="centered">
+            <h2 style="color: #1565C0;">Account Already Exists</h2>
+          </div>
+          <br>
+          <div class="centered text-muted">
+            You have already used this email with Google. Please sign in with Google to continue.
           </div>
           <br>
           <div class="centered">
-            <button mat-raised-button class="googleBtn" (click)="signInWithGoogle()">
-              <img src="assets/img/others/googleicon.png" width="24px" height="24px" />
-              Sign in with Google
+            <button
+              mat-raised-button
+              class="googleBtn"
+              (click)="onGoogleSignIn()"
+              [disabled]="isLoading">
+              <img src="assets/img/others/googleicon.png" width="24px" height="24px" alt="Google" />
+              <span *ngIf="isLoginLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isLoginLoading ? 'Signing in...' : 'Sign in with Google' }}
             </button>
           </div>
+          <br>
+          <div class="centered">
+            <a href="javascript:void(0)" (click)="showLandingPage()">← Back to options</a>
+          </div>
         </div>
-        <!-- LOGIN FORM IF SIGNIN WITH EMAIL SELECTED -->
-        <div class="col-md-6" *ngIf="scenario=='login'">
+        
+        <!-- ==================== LOGIN FORM SCENARIO ==================== -->
+        <!-- Email/password login form with validation -->
+        <div class="col-md-6" *ngIf="scenario === 'login'">
           <mat-card>
             <h2 style="color: #1565C0;">Sign in with email</h2>
-            <!-- login form starts here -->
-            <form [formGroup]="loginForm" (ngSubmit)="onSUbmitLoginForm()">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+              <!-- Email input field with validation -->
               <mat-form-field class="fullWidth">
-                <input matInput placeholder="Email address" formControlName="email" />
-                <mat-error *ngIf="email?.errors?.required">Email is required</mat-error>
-                <mat-error *ngIf="email?.errors?.email">Provide a valid email address</mat-error>
+                <input
+                  matInput
+                  placeholder="Email address"
+                  formControlName="email"
+                  type="email"
+                  autocomplete="email"
+                  aria-describedby="email-error" />
+                <mat-error id="email-error" *ngIf="email?.errors && email?.touched">
+                  {{ getEmailErrorMessage() }}
+                </mat-error>
               </mat-form-field>
+
+              <!-- Password input field with visibility toggle and validation -->
               <mat-form-field class="fullWidth">
-                <input matInput placeholder="Password" formControlName="password" type="password" />
-                <mat-error *ngIf="password?.errors?.required">Password is required</mat-error>
-                <mat-error *ngIf="password?.errors?.minLength">Minimum six characters required</mat-error>
+                <input
+                  matInput
+                  placeholder="Password"
+                  formControlName="password"
+                  [type]="showPassword ? 'text' : 'password'"
+                  autocomplete="current-password"
+                  aria-describedby="password-error" />
+                <!-- Password visibility toggle button -->
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                  color="accent">
+                  <mat-icon>{{ showPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                </button>
+                <mat-error id="password-error" *ngIf="password?.errors && password?.touched">
+                  {{ getPasswordErrorMessage() }}
+                </mat-error>
               </mat-form-field>
+
               <br>
+              <!-- Action buttons row -->
               <div class="d-flex justify-content-between">
+                <!-- Password reset link -->
                 <div style="padding-top: 8px">
-                  <a href="javascript:void(0)" (click)="resetPassword()">Trouble Signing in?</a>
+                  <a href="javascript:void(0)" (click)="showResetPasswordForm()">Trouble Signing in?</a>
                 </div>
+                <!-- Login submit button with loading state -->
                 <div>
-                  <button mat-raised-button color="primary" type="submit"
-                    [disabled]="disableLoginBtn || !loginForm.valid">Login</button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="disableLoginBtn || !loginForm.valid || isLoading">
+                    <span *ngIf="isLoginLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    {{ isLoginLoading ? 'Signing in...' : 'Login' }}
+                  </button>
                 </div>
               </div>
               <br>
+              <!-- Back to landing page link -->
+              <div class="text-center">
+                <a href="javascript:void(0)" (click)="showLandingPage()">← Back to options</a>
+              </div>
             </form>
-            <!-- login form ends gere -->
           </mat-card>
         </div>
-        <!-- SIGNUP FORM IF SIGNUP IS SELECTED -->
-        <div class="col-md-6" *ngIf="scenario=='landingSignUp'">
+        
+        <!-- ==================== SIGNUP FORM SCENARIO ==================== -->
+        <!-- New user registration form with validation -->
+        <div class="col-md-6" *ngIf="scenario === 'signup'">
           <mat-card>
             <h2 style="color: #1565C0;">Create Account</h2>
-            <!-- signup form starts here -->
-            <form [formGroup]="signupForm" (ngSubmit)="onSUbmitSignUpForm()">
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignup()">
               <mat-form-field class="fullWidth">
-                <input matInput placeholder="Email address" formControlName="mail" />
-                <mat-error *ngIf="mail?.errors?.required">Email is required</mat-error>
-                <mat-error *ngIf="mail?.errors?.email">Provide a valid email address</mat-error>
+                <input
+                  matInput
+                  placeholder="Email address"
+                  formControlName="email"
+                  type="email"
+                  autocomplete="email"
+                  aria-describedby="signup-email-error" />
+                <mat-error id="signup-email-error" *ngIf="signupEmail?.errors && signupEmail?.touched">
+                  {{ getSignupEmailErrorMessage() }}
+                </mat-error>
               </mat-form-field>
+
               <mat-form-field class="fullWidth">
-                <input matInput placeholder="Password" formControlName="pwd" [type]="show ? 'text' : 'password'" />
-                <button matSuffix mat-icon-button *ngIf="show === false" aria-label="Show password" color="accent"
-                  (click)="passwordToggle()">
-                  <mat-icon>visibility_off</mat-icon>
+                <input
+                  matInput
+                  placeholder="Password"
+                  formControlName="password"
+                  [type]="showPassword ? 'text' : 'password'"
+                  autocomplete="new-password"
+                  aria-describedby="signup-password-error" />
+                <button
+                  matSuffix
+                  mat-icon-button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                  color="accent">
+                  <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-                <button matSuffix mat-icon-button *ngIf="show === true" aria-label="Hide password" color="accent"
-                  (click)="passwordToggle()">
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                <mat-error *ngIf="pwd?.errors?.required">Password is required</mat-error>
-                <mat-error *ngIf="pwd?.errors?.minLength">Minimum six characters required</mat-error>
+                <mat-error id="signup-password-error" *ngIf="signupPassword?.errors && signupPassword?.touched">
+                  {{ getSignupPasswordErrorMessage() }}
+                </mat-error>
               </mat-form-field>
+
               <br>
               <div align="end">
-                <button mat-raised-button (click)="selectedLandingLogin()" [disabled]="disableSignUpBtn">Cancel</button>
+                <button
+                  mat-raised-button
+                  (click)="showLandingPage()"
+                  [disabled]="disableSignupBtn || isLoading">
+                  Cancel
+                </button>
                 &nbsp;&nbsp;
-                <button mat-raised-button color="primary" type="submit"
-                  [disabled]="disableSignUpBtn || !signupForm.valid">Save</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="disableSignupBtn || !signupForm.valid || isLoading">
+                  <span *ngIf="isSignupLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ isSignupLoading ? 'Creating...' : 'Create Account' }}
+                </button>
               </div>
             </form>
-            <!-- signup form ends gere -->
+            <br>
+            <div class="text-muted">
+              By creating an account, you agree to the
+              <a href="https://zenys.org/page-terms-and-services.html" target="_blank" rel="noopener">Terms of Service</a>
+              and
+              <a href="https://zenys.org/page-privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+            </div>
           </mat-card>
-          <br>
-          <div class="text-muted">
-            By creating an account, you agree to the <a href="https://zenys.org/page-terms-and-services.html">Terms
-              of
-              Service</a> and <a href="https://zenys.org/page-privacy.html">Privacy Policy</a>.
-          </div>
-
         </div>
-        <!-- RESET PASSWORD FORM IF TROUBLE IN SIGNING IN SELECTED -->
-        <div class="col-md-6" *ngIf="scenario == 'resetPassword'">
+        
+        <!-- ==================== RESET PASSWORD FORM SCENARIO ==================== -->
+        <!-- Password reset form for forgotten passwords -->
+        <div class="col-md-6" *ngIf="scenario === 'resetPassword'">
           <mat-card>
             <h2 style="color: #1565C0;">Recover Password</h2>
+            <p>Get instructions sent to this email that explain how to reset your password</p>
 
-            Get instructions sent to this email that explain how to reset your password
-            <br>
-            <!--reset pwd form starts here -->
-            <form [formGroup]="resetPwdForm" (ngSubmit)="onSUbmitResetForm()">
+            <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmitResetPassword()">
               <mat-form-field class="fullWidth">
-                <input matInput placeholder="Email address" formControlName="resetMail" />
-                <mat-error *ngIf="resetMail?.errors?.required">Email is required</mat-error>
-                <mat-error *ngIf="resetMail?.errors?.email">Provide a valid email address</mat-error>
+                <input
+                  matInput
+                  placeholder="Email address"
+                  formControlName="email"
+                  type="email"
+                  autocomplete="email"
+                  aria-describedby="reset-email-error" />
+                <mat-error id="reset-email-error" *ngIf="resetEmail?.errors && resetEmail?.touched">
+                  {{ getResetEmailErrorMessage() }}
+                </mat-error>
               </mat-form-field>
+
               <br>
               <div align="end">
-                <button mat-raised-button (click)="selectedLandingLogin()" [disabled]="disableResetBtn">Cancel</button>
+                <button
+                  mat-raised-button
+                  (click)="showLandingPage()"
+                  [disabled]="disableResetBtn || isLoading">
+                  Cancel
+                </button>
                 &nbsp;&nbsp;
-                <button mat-raised-button color="primary" type="submit"
-                  [disabled]="disableResetBtn || !resetPwdForm.valid">Send</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="disableResetBtn || !resetPasswordForm.valid || isLoading">
+                  <span *ngIf="isResetLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ isResetLoading ? 'Sending...' : 'Send Reset Email' }}
+                </button>
               </div>
             </form>
-            <!-- reset pwd form ends gere -->
-
           </mat-card>
         </div>
       </div>

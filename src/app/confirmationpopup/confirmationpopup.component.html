@@ -1,3 +1,9 @@
+<h2 mat-dialog-title *ngIf="value.smode == 'success_adm'">
+  SUCCESS
+</h2>
+<h2 mat-dialog-title *ngIf="value.smode == 'errorMsg_adm'">
+  ERROR
+</h2>
 <h2 mat-dialog-title *ngIf="value.smode == 'errorMessage'">
   User not added
 </h2>
@@ -138,6 +144,12 @@
   {{ value.customerName }}
 </h2>
 <mat-dialog-content class="mat-typography">
+  <h3 *ngIf="value.smode == 'success_adm'">
+    {{value.message}}
+  </h3>
+  <h3 *ngIf="value.smode == 'errorMsg_adm'">
+    {{value.message}}
+  </h3>
   <h3 *ngIf="value.smode == 'errorMessage'">
     {{value.message}}
   </h3>

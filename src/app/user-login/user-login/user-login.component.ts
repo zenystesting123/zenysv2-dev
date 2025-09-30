@@ -8,6 +8,7 @@ import { CommonService } from 'src/app/common.service';
 import { Subject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
+import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -40,7 +41,8 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private commonService: CommonService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private authService: AuthService
   ) { }
   ngOnInit(): void {
     this.commonService.userDatas
@@ -79,7 +81,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   resetPassword() {
     this.scenario = 'resetPassword';
   }
-  onSUbmitResetForm() {
+  async onSUbmitResetForm() {
     if (!this.resetPwdForm.valid) {
       return;
     }
@@ -88,29 +90,26 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const { resetMail } = this.resetPwdForm.value;
 
-    firebase.default
-      .auth()
-      .sendPasswordResetEmail(resetMail)
-      .then(() => {
-        this.isLoading = false;
-        this.disableResetBtn = false;
-        this.scenario = 'landingLogin';
-        this.dialog.open(ConfirmationpopupComponent, {
-          width: '400px',
-          data: {
-            smode: 'success',
-            message: 'Password reset email sent successfully. Please check your inbox.',
-            head: 'Email Sent',
-          },
-        });
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        this.disableResetBtn = false;
-        this.showErrorDialog('Reset Failed', err.message);
+    try {
+      await this.authService.sendPasswordResetEmail(resetMail);
+      this.isLoading = false;
+      this.disableResetBtn = false;
+      this.scenario = 'landingLogin';
+      this.dialog.open(ConfirmationpopupComponent, {
+        width: '400px',
+        data: {
+          smode: 'success',
+          message: 'Password reset email sent successfully. Please check your inbox.',
+          head: 'Email Sent',
+        },
       });
+    } catch (err) {
+      this.isLoading = false;
+      this.disableResetBtn = false;
+      this.showErrorDialog('Reset Failed', err.message);
+    }
   }
-  onSUbmitLoginForm() {
+  async onSUbmitLoginForm() {
     if (!this.loginForm.valid) {
       return;
     }
@@ -119,67 +118,16 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const { email, password } = this.loginForm.value;
 
-    // Check for admin access first
-    if (email === environment.adminEmail) {
-      // For admin, we still need to authenticate with Firebase
-      this.authenticateUser(email, password, true);
-    } else {
-      this.authenticateUser(email, password, false);
+    try {
+      await this.authService.signInWithEmailAndPassword(email, password);
+      // Navigation is handled by AuthService
+    } catch (err) {
+      this.isLoading = false;
+      this.disableLoginBtn = false;
+      // Error handling is done in AuthService
     }
   }
 
-  private authenticateUser(email: string, password: string, isAdmin: boolean = false) {
-    firebase.default
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((resp) => {
-        this.loginMail = email;
-        this.isLoading = false;
-
-        if (isAdmin) {
-          this.router.navigate(['/admin']);
-        } else {
-          // Navigate directly to dashboard - the CommonService will handle user details loading
-          this.router.navigate(['/dash/home']);
-        }
-      })
-      .catch(async (err) => {
-        this.isLoading = false;
-        this.disableLoginBtn = false;
-
-        if (err.code === 'auth/wrong-password') {
-          // Check if user signed up with OAuth provider
-          try {
-            const signInMethods = await firebase.default
-              .auth()
-              .fetchSignInMethodsForEmail(email);
-
-            if (signInMethods.length > 0 && signInMethods[0] === 'google.com') {
-              this.dialog.open(ConfirmationpopupComponent, {
-                width: '400px',
-                data: {
-                  smode: 'errorMsg',
-                  message: 'This email was registered with Google. Please use Google Sign-In.',
-                  head: 'Use Google Sign-In',
-                },
-              });
-            } else {
-              this.showErrorDialog('Wrong Password', err.message);
-            }
-          } catch (fetchError) {
-            this.showErrorDialog('Wrong Password', err.message);
-          }
-        } else if (err.code === 'auth/user-not-found') {
-          this.showErrorDialog('User not found', 'There is no user corresponding to this identifier');
-        } else if (err.code === 'auth/invalid-email') {
-          this.showErrorDialog('Invalid Email', 'Please provide a valid email address');
-        } else if (err.code === 'auth/too-many-requests') {
-          this.showErrorDialog('Too Many Attempts', 'Please try again later');
-        } else {
-          this.showErrorDialog('Login Failed', err.message);
-        }
-      });
-  }
 
   private showErrorDialog(head: string, message: string) {
     this.dialog.open(ConfirmationpopupComponent, {

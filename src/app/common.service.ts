@@ -1195,7 +1195,7 @@ export class CommonService {
     let contactModName = 'Customer';
     let saleModName = 'Sale';
     let taskModName = 'Task';
-    let callModName = 'FollowUp';
+    let callModName = 'Call';
     let suppModName = 'Support';
     let estModName = 'Estimate';
     let quotModName = 'Quotation';

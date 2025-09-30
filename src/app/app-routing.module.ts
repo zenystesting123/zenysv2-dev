@@ -14,6 +14,7 @@ import {
   redirectUnauthorizedTo,
   redirectLoggedInTo,
 } from '@angular/fire/auth-guard';
+import { AdminGuard } from './guards/admin.guard';
 import { FullLayoutComponent } from './full-layout/full-layout.component';
 import { DashhomeComponent } from './dashhome/dashhome.component';
 import { CustomersearchComponent } from './customersearch/customersearch.component';
@@ -97,6 +98,7 @@ const routes: Routes = [
 {
   path: 'admin',
   component: AdminViewComponent,
+  canActivate: [AdminGuard],
   data: {
     title: 'admin',
   },

@@ -15,7 +15,7 @@ export class ZenysmainaccountService {
   pipelineId:number;
   zenysMainAccountID: string | null = null;
   assignedToName: string = '';
-  contactSequentialNumber:number
+  contactSequentialNumber: number = 1; // Initialize with default value
   customerPipelines:Pipelines[]=[];
   private isInitialized = false;
 
@@ -134,6 +134,11 @@ export class ZenysmainaccountService {
     return this.ensureInitialized().pipe(
       switchMap(() => this.ensurePipelineDataLoaded()),
       switchMap(() => {
+        // If no main account ID, skip customer creation
+        if (!this.zenysMainAccountID) {
+          console.log('No main account ID available - skipping customer creation');
+          return of(null);
+        }
 
         //console.log(customerId)
         let changeLog = <changeLogModel>{};
@@ -226,7 +231,7 @@ export class ZenysmainaccountService {
       won: won,
       lost: lost,
       changeLog: changeLog,
-      sequenceNumber:this.contactSequentialNumber,
+      sequenceNumber: this.contactSequentialNumber || 1,
       orgId: '',
       additionalFieldsArr: null,
       associatedBranch: '',
@@ -365,7 +370,7 @@ export class ZenysmainaccountService {
       won: won,
       lost: lost,
       changeLog: changeLog,
-      sequenceNumber:this.contactSequentialNumber,
+      sequenceNumber: this.contactSequentialNumber || 1,
       orgId: '',
       lastModifiedDate: new Date().getTime(),
       lastAddedNote: '',
@@ -381,6 +386,10 @@ export class ZenysmainaccountService {
   }
   //for updating contactsequencenumber
 updateContactSequenceNumber() {
+  if (!this.zenysMainAccountID) {
+    console.log('No main account ID available - skipping contact sequence number update');
+    return of(null);
+  }
   return this.db
     .doc('users/' + this.zenysMainAccountID)
     .update({ contactSequentialNumber:this.contactSequentialNumber });

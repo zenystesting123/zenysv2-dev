@@ -1,4 +1,30 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+/**
+ * AdminViewComponent
+ * 
+ * This component provides an administrative interface for creating new users in the system.
+ * It allows authorized administrators to create user accounts with various subscription plans
+ * and payment configurations without requiring the users to go through the normal signup process.
+ * 
+ * Key Features:
+ * - User creation with Firebase Authentication
+ * - Support for multiple subscription plans (Free, Silver, Gold, Diamond)
+ * - Payment history configuration (Manual/Subscription modes)
+ * - Country code selection for phone numbers
+ * - Form validation with custom error messages
+ * - Automatic sample data creation for new users
+ * - Success/Error feedback using ConfirmationpopupComponent
+ * 
+ * Security:
+ * - Admin access verification through AuthService
+ * - Form validation to prevent invalid data submission
+ * - Automatic sign-out of created users to prevent auto-login
+ * 
+ * @author Zenys Development Team
+ * @version 1.0
+ * @since 2024
+ */
+
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Currencies, Currency } from '../../currencies';
 import { AngularFireAnalytics } from '@angular/fire/analytics';
@@ -7,21 +33,50 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { AdminProfile, customFieldNamesData, SubUserProfile, SuperUserProfile } from 'src/app/data-models';
 import { CommonService } from 'src/app/common.service';
-import { take } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { take, takeUntil } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CountryCodeModel, getCountryCodes } from 'src/app/countryCode';
+import { AuthService } from '../../services/auth.service';
+import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationpopupComponent } from '../../confirmationpopup/confirmationpopup.component';
 
 @Component({
   selector: 'app-admin-view',
   templateUrl: './admin-view.component.html',
   styleUrls: ['./admin-view.component.scss']
 })
-export class AdminViewComponent implements OnInit {
+export class AdminViewComponent implements OnInit, OnDestroy {
+  /** Subject for managing component destruction and unsubscribing from observables */
+  private onDestroy$ = new Subject<void>();
+
+  // ==================== FORM PROPERTIES ====================
+  /** Main reactive form for user creation */
   addUserForm: FormGroup;
+  /** Controls password visibility toggle in the form */
   hidePassword = true;
+  /** Indicates if the form has been initialized and is ready for use */
   isFormReady = false;
+  /** Current payment mode selected (manual/subscription) */
   paymentMode: string = '';
+  /** Indicates if the form is currently valid */
   isFormValid = false;
+
+  // ==================== SECURITY & ACCESS CONTROL ====================
+  /** Indicates if the current user has admin privileges */
+  isAdmin = false;
+  /** Loading state for async operations */
+  isLoading = true;
+  /** Indicates if access to this component is denied */
+  accessDenied = false;
+  /** Current authenticated user details */
+  currentUser: any = null;
+  /** Indicates if the form is currently being submitted */
+  isSubmitting = false;
+
+  // ==================== FORM OPTIONS ====================
+  /** Available subscription plan options for user creation */
   planOptions = [
     { value: 'free', label: 'Free' },
     { value: 'silver', label: 'Silver' },
@@ -29,40 +84,132 @@ export class AdminViewComponent implements OnInit {
     { value: 'diamond', label: 'Diamond' }
   ];
 
+  /** Payment mode options for paid plans */
   paymentModeOptions = [
     { value: 'manual', label: 'Manual' },
     { value: 'subscription', label: 'Subscription' }
   ];
 
+  /** Package duration options for subscription plans */
   packageDurationOptions = [
     { value: 'monthly', label: 'Monthly' },
     { value: 'yearly', label: 'Yearly' }
   ];
 
+  /** Available currency options for payment */
   currencyOptions: Currency[] = Currencies.getCurencies();
 
-  // Country code properties
+  // ==================== COUNTRY CODE CONFIGURATION ====================
+  /** List of available country codes for phone number selection */
   countryCodeOptions: CountryCodeModel[] = getCountryCodes.CountryCodes;
+  /** Currently selected country code (defaults to India) */
   selectedCountryCode: CountryCodeModel = {
     name: 'India',
     dial_code: '+91',
     code: 'IN'
   };
 
+  /**
+   * Constructor for AdminViewComponent
+   * 
+   * @param fb FormBuilder service for creating reactive forms
+   * @param cdr ChangeDetectorRef for manual change detection
+   * @param analytics AngularFireAnalytics for tracking user actions
+   * @param serviceInstance CreateProfileService for user profile creation
+   * @param afAuth AngularFireAuth for Firebase authentication
+   * @param commonService CommonService for shared functionality
+   * @param router Router for navigation
+   * @param route ActivatedRoute for accessing route parameters
+   * @param authService AuthService for authentication state management
+   * @param dialog MatDialog for displaying confirmation popups
+   */
   constructor(
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private analytics: AngularFireAnalytics,
-    private serviceInstance: CreateProfileService, //create profile service instance
+    private serviceInstance: CreateProfileService,
     private afAuth: AngularFireAuth,
     private commonService: CommonService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.initializeForm();
-    // Trigger change detection after form is initialized
-    this.cdr.detectChanges();
+    // Check admin access first
+    this.checkAdminAccess();
+
+    // Subscribe to auth state changes
+    this.authService.isAdmin$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(isAdmin => {
+        this.isAdmin = isAdmin;
+        if (!isAdmin) {
+          this.accessDenied = true;
+          this.isLoading = false;
+          // Redirect after a short delay to show access denied message
+          setTimeout(() => {
+            this.router.navigate(['/dash/home'], {
+              queryParams: { error: 'access_denied' }
+            });
+          }, 2000);
+        } else {
+          this.accessDenied = false;
+          this.initializeForm();
+          this.cdr.detectChanges();
+        }
+      });
+
+    // Subscribe to user data
+    this.commonService.userDatas
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(data => {
+        if (data && data.authDetails) {
+          this.currentUser = data.authDetails;
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  private async checkAdminAccess(): Promise<void> {
+    try {
+      // Check if user is authenticated
+      const user = await this.afAuth.currentUser;
+      if (!user) {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: this.router.url }
+        });
+        return;
+      }
+
+      // Check admin status
+      const isAdmin = this.authService.isAdmin();
+
+      if (!isAdmin) {
+        this.accessDenied = true;
+        this.isLoading = false;
+        // Redirect after a short delay to show access denied message
+        setTimeout(() => {
+          this.router.navigate(['/dash/home'], {
+            queryParams: { error: 'access_denied' }
+          });
+        }, 2000);
+        return;
+      }
+
+      this.isAdmin = true;
+      this.isLoading = false;
+    } catch (error) {
+      console.error('Admin access check failed:', error);
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url }
+      });
+    }
   }
 
 
@@ -73,7 +220,7 @@ export class AdminViewComponent implements OnInit {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-Z0-9_]+$/)
+        Validators.pattern(/^[a-zA-Z0-9_\s]+$/)
       ]],
       email: ['', [
         Validators.required,
@@ -85,8 +232,7 @@ export class AdminViewComponent implements OnInit {
       countryCode: ['+91', Validators.required],
       password: ['', [
         Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+        Validators.minLength(6)
       ]],
       plan: ['diamond', Validators.required],
       noOfUsers: ['', [
@@ -95,15 +241,14 @@ export class AdminViewComponent implements OnInit {
         Validators.max(1000)
       ]],
       paymentHistory: this.fb.group({
-        paymentMode: ['', Validators.required],
+        paymentMode: [''],
         amount: ['', [
-          Validators.required,
           Validators.min(0)
         ]],
-        currency: ['INR', Validators.required],
+        currency: ['INR'],
         subscriptionEnd: [''],
         subscriptionId: [''],
-        packageDuration: ['', Validators.required],
+        packageDuration: [''],
         chargeAt: [''],
         subscriptionStart: [''],
         paymentId: ['']
@@ -165,25 +310,12 @@ export class AdminViewComponent implements OnInit {
     const subscriptionStart = paymentHistory?.get('subscriptionStart');
     const paymentId = paymentHistory?.get('paymentId');
 
-    if (paymentMode === 'manual') {
-      // For manual payment, clear and disable subscription fields
-      subscriptionEnd?.clearValidators();
-      subscriptionId?.clearValidators();
-      chargeAt?.clearValidators();
-      subscriptionStart?.clearValidators();
-
-      // Enable payment ID validation
-      paymentId?.setValidators([Validators.required]);
-    } else if (paymentMode === 'subscription') {
-      // For subscription payment, enable subscription fields
-      subscriptionEnd?.setValidators([Validators.required]);
-      subscriptionId?.setValidators([Validators.required]);
-      chargeAt?.setValidators([Validators.required]);
-      subscriptionStart?.setValidators([Validators.required]);
-
-      // Clear payment ID validation
-      paymentId?.clearValidators();
-    }
+    // All payment history fields are now optional - no required validators
+    subscriptionEnd?.clearValidators();
+    subscriptionId?.clearValidators();
+    chargeAt?.clearValidators();
+    subscriptionStart?.clearValidators();
+    paymentId?.clearValidators();
 
     // Update validation
     subscriptionEnd?.updateValueAndValidity();
@@ -249,11 +381,8 @@ export class AdminViewComponent implements OnInit {
       paymentHistory?.get('subscriptionStart')?.enable();
       paymentHistory?.get('paymentId')?.enable();
 
-      // Re-add required validators for payment history
-      paymentHistory?.get('paymentMode')?.setValidators([Validators.required]);
-      paymentHistory?.get('amount')?.setValidators([Validators.required, Validators.min(0)]);
-      paymentHistory?.get('currency')?.setValidators([Validators.required]);
-      paymentHistory?.get('packageDuration')?.setValidators([Validators.required]);
+      // Payment history fields are optional - only add min validator for amount
+      paymentHistory?.get('amount')?.setValidators([Validators.min(0)]);
 
       // Enable noOfUsers and re-add validators
       noOfUsers?.enable();
@@ -280,7 +409,10 @@ export class AdminViewComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.addUserForm.valid) {
+    if (this.addUserForm.valid && !this.isSubmitting) {
+      // Set submitting state to disable the button
+      this.isSubmitting = true;
+      
       // Get form values including disabled fields
       const userData = this.addUserForm.getRawValue();
 
@@ -305,6 +437,8 @@ export class AdminViewComponent implements OnInit {
 
       // Create user with Firebase Auth
       this.createUserWithFirebase(processedUserData);
+    } else if (this.isSubmitting) {
+      console.log('Form is already being submitted');
     } else {
       console.log('Form is invalid');
       this.markFormGroupTouched();
@@ -395,10 +529,10 @@ export class AdminViewComponent implements OnInit {
       }
       if (field.errors['pattern']) {
         if (fieldName === 'username') {
-          return 'Username can only contain letters, numbers, and underscores';
+          return 'Name can only contain letters, numbers, underscores, and spaces';
         }
         if (fieldName === 'password') {
-          return 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character';
+          return 'Password must be at least 6 characters long';
         }
         if (fieldName === 'contactNumber') {
           return 'Please enter a valid contact number (e.g., +1234567890 or 1234567890)';
@@ -481,10 +615,16 @@ export class AdminViewComponent implements OnInit {
     const { email, password, username, contactNumber, plan, noOfUsers, paymentHistory, countryCode } = userData;
 
     // Create user with Firebase Auth
-    firebase.default
+    const firebaseApp = firebase.default.initializeApp(
+      environment.firebaseConfig,
+      'addUserInstance'
+    );
+
+    firebaseApp
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
+        firebaseApp.delete();
         const user = userCredential.user;
         console.log('User created successfully:', user.uid);
 
@@ -598,17 +738,32 @@ export class AdminViewComponent implements OnInit {
         })
         .then(() => {
           console.log('User profile created successfully in database');
+
           // Reset form after successful creation
           this.resetForm();
-          // You can add a success message or navigation here
+
+          // Reset submitting state
+          this.isSubmitting = false;
+
+          // Show success message
+          this.showSuccessMessage('User created successfully!');
         }).catch((error) => {
           console.error('Error creating user profile:', error);
+          
+          // Reset submitting state
+          this.isSubmitting = false;
+          
           // Handle error - maybe show error message to user
+          this.showErrorMessage('Error creating user profile. Please try again.');
         });
 
       })
       .catch((error) => {
         console.error('Error creating user:', error);
+        
+        // Reset submitting state
+        this.isSubmitting = false;
+        
         // Handle Firebase Auth errors
         let errorMessage = 'An error occurred while creating the user.';
 
@@ -621,7 +776,8 @@ export class AdminViewComponent implements OnInit {
         }
 
         console.error('Firebase Auth Error:', errorMessage);
-        // You can show this error message to the user in the UI
+        firebaseApp.delete();
+        this.showErrorMessage(errorMessage);
       });
   }
   addSampleData(userProfileData) {
@@ -736,16 +892,57 @@ export class AdminViewComponent implements OnInit {
     });
   }
 
-  // Method to handle admin logout
-  logout(): void {
-    this.afAuth.signOut().then(() => {
+  /**
+   * Method to handle admin logout
+   * Signs out the admin user and navigates to user-login route
+   */
+  async logout(): Promise<void> {
+    try {
+      // Sign out using Firebase Auth directly to avoid AuthService navigation
+      await this.afAuth.signOut();
+      
+      // Admin status will be updated automatically by Firebase auth state change
       console.log('Admin logged out successfully');
-      // Navigate to login page after logout
+      
+      // Navigate to user-login route
       this.router.navigate(['/user-login']);
-    }).catch((error) => {
+    } catch (error) {
       console.error('Error during logout:', error);
-      // Still navigate to login page even if logout fails
+      // Even if logout fails, navigate to user-login for security
       this.router.navigate(['/user-login']);
+    }
+  }
+
+  // Method to show success message
+  private showSuccessMessage(message: string): void {
+    this.dialog.open(ConfirmationpopupComponent, {
+      width: '400px',
+      data: {
+        smode: 'success_adm',
+        message: message,
+        head: 'Success',
+      },
     });
+  }
+
+  // Method to show error message
+  private showErrorMessage(message: string): void {
+    this.dialog.open(ConfirmationpopupComponent, {
+      width: '400px',
+      data: {
+        smode: 'errorMsg_adm',
+        message: message,
+        head: 'Error',
+      },
+    });
+  }
+
+  // Getter for template
+  get userEmail(): string {
+    return this.currentUser?.email || 'Unknown';
+  }
+
+  get userName(): string {
+    return this.currentUser?.displayName || this.currentUser?.email || 'Admin User';
   }
 }

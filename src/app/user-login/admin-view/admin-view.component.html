@@ -1,27 +1,52 @@
 <div class="admin-view-container">
-  <!-- Admin Header with Logout -->
-  <div class="admin-header">
-    <div class="admin-header-content">
-      <h1 class="admin-title">
-        <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
-        Admin Panel
-      </h1>
-      <button
-        mat-button
-        color="warn"
-        (click)="logout()"
-        class="logout-button">
-        <mat-icon>logout</mat-icon>
-        Logout
+  <!-- Loading Spinner for Security Check -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p class="loading-text">Verifying admin access...</p>
+  </div>
+
+  <!-- Access Denied Message -->
+  <div *ngIf="accessDenied && !isLoading" class="access-denied-container">
+    <div class="access-denied-card">
+      <mat-icon class="access-denied-icon" color="warn">block</mat-icon>
+      <h2 class="access-denied-title">Access Denied</h2>
+      <p class="access-denied-message">
+        You do not have permission to access this page. Only administrators can view this content.
+      </p>
+      <p class="access-denied-submessage">
+        Redirecting you to the home page...
+      </p>
+      <button mat-raised-button color="primary" (click)="router.navigate(['/dash/home'])">
+        Go to Home
       </button>
     </div>
   </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="!isFormReady" class="loading-container">
-    <mat-spinner diameter="60"></mat-spinner>
-    <p class="loading-text">Loading form...</p>
-  </div>
+  <!-- Admin Content (only shown if user is admin) -->
+  <div *ngIf="isAdmin && !isLoading && !accessDenied">
+    <!-- Admin Header with Logout -->
+    <div class="admin-header">
+      <div class="admin-header-content">
+        <h1 class="admin-title">
+          <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+          Admin Panel
+        </h1>
+        <button
+          mat-button
+          color="warn"
+          (click)="logout()"
+          class="logout-button">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner for Form -->
+    <div *ngIf="!isFormReady" class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p class="loading-text">Loading form...</p>
+    </div>
 
   <div class="form-card" *ngIf="isFormReady && addUserForm">
     <div class="form-header">
@@ -45,15 +70,15 @@
           </div>
           <div class="section-content">
             <div class="basic-info-grid">
-              <!-- Username Field -->
+              <!-- Name Field -->
               <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Username</mat-label>
+                <mat-label>Name</mat-label>
                 <input
                   matInput
                   type="text"
                   formControlName="username"
-                  placeholder="Enter username"
-                  autocomplete="username">
+                  placeholder="Enter name"
+                  autocomplete="name">
                 <mat-icon matSuffix>person</mat-icon>
                 <mat-error *ngIf="getFieldError('username')">
                   {{ getFieldError('username') }}
@@ -305,21 +330,25 @@
       <button
         mat-button
         type="button"
-        color="warn"
         (click)="resetForm()"
         class="action-button">
-        Reset
+        Cancel
       </button>
 
       <button
         mat-button
         type="submit"
         color="primary"
-        [disabled]="!isFormValid"
+        [disabled]="!isFormValid || isSubmitting"
         (click)="onSubmit()"
         class="action-button submit-button">
-        Add User
+        <span *ngIf="!isSubmitting">Add User</span>
+        <span *ngIf="isSubmitting">
+          <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
+          Adding User...
+        </span>
       </button>
     </div>
   </div>
+  </div> <!-- End of admin content div -->
 </div>
