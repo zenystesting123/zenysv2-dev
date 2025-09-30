@@ -1,0 +1,80 @@
+{
+  "projects": {
+    "zenysdevelopment": "zenysdevelopment",
+    "default": "zenysdevelopment",
+    "development": "zenysdevelopment",
+    "production": "zenysproduction",
+    "testing": "zenystesting2"
+  },
+  "targets": {
+    "zenysdevelopment": {
+      "hosting": {
+        "ZenysCRM": [
+          "zenysappdev"
+        ],
+        "Zenys": [
+          "zenysdevelopment"
+        ],
+        "customers": [
+          "zenyscustomer"
+        ],
+        "LeadCapture": [
+          "leadcapturedev"
+        ],
+        "employee": [
+          "zenysemployee"
+        ],
+        "docviewer": [
+          "zenysdocviewer"
+        ],
+        "freetools": [
+          "zenysfreetools"
+        ]
+      }
+    },
+    "testing": {
+      "hosting": {
+        "ZenysCRM": [
+          "zenysappdev"
+        ],
+        "Zenys": [
+          "zenystesting2"
+        ],
+        "customers": [
+          "zenyscustomers2"
+        ],
+        "employee": [
+          "zenysemployee2"
+        ],
+        "docviewer": [
+          "zenysdocviewer2"
+        ],
+        "freetools": [
+          "zenysfreetools2"
+        ]
+      }
+    },
+    "zenysproduction": {
+      "hosting": {
+        "Zenys": [
+          "zenysproduction"
+        ],
+        "LeadCapture": [
+          "zenysleadcapture"
+        ],
+        "customers": [
+          "zenyscustomers"
+        ],
+        "employee": [
+          "zenysemployeeprod"
+        ],
+        "docviewer": [
+          "zenysdocviewerprod"
+        ],
+        "freetools": [
+          "zenysfreetoolsprod"
+        ]
+      }
+    }
+  }
+}

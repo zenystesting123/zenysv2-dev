@@ -1,21 +1,29 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
+# -----------------------
+# Compiled output
+# -----------------------
 /dist
 /tmp
 /out-tsc
-# Only exists if Bazel was run
 /bazel-out
 
-# dependencies
+# -----------------------
+# Dependencies
+# -----------------------
 /node_modules
 
-# profiling files
+# -----------------------
+# Profiling files
+# -----------------------
 chrome-profiler-events*.json
 speed-measure-plugin*.json
 
+# -----------------------
 # IDEs and editors
-/.idea
+# -----------------------
+.idea/
 .project
 .classpath
 .c9/
@@ -23,76 +31,41 @@ speed-measure-plugin*.json
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
-# misc
+# -----------------------
+# Misc
+# -----------------------
 /.sass-cache
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
 testem.log
 /typings
+.history/
 
-# System Files
+# -----------------------
+# System files
+# -----------------------
 .DS_Store
 Thumbs.db
-*.json
-firebase.json
-package-lock.json
-package.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-firebase.json
-package.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-firebase.json
-package.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-firebase.json
-package.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-firebase.json
-package.json
-src/app/data-models.ts
-package-lock.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-package-lock.json
-package.json
-.firebaserc
-angular.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-package-lock.json
-package.json
-package.json
-package.json
-package.json
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
+
+# -----------------------
+# Firebase
+# -----------------------
+.firebase/
 firebase-debug.log
+.firebase/hosting.*.cache
+
+# -----------------------
+# Angular environments (keep secrets out of repo)
+# -----------------------
+src/environments/environment.ts
 src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-src/environments/environment.prod.ts
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxsZWFkLWNhcHR1cmU.cache
-.firebase/hosting.ZGlzdFxaZW55cw.cache
-.firebase/hosting.ZGlzdFxmcmVlLXRvb2w.cache
-package-lock.json
-package.json
